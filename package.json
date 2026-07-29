@@ -1,0 +1,51 @@
+{
+  "name": "hyzr-code",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "prepare:python": "node scripts/copy-pyodide.mjs",
+    "dev": "npm run prepare:python && vite",
+    "build": "npm run prepare:python && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "check:bundle": "esbuild src/check-entry.ts --bundle --format=esm --outfile=.check/content.mjs --platform=node --external:kokoro-js --log-level=error && esbuild src/engine/harness.ts --bundle --format=esm --outfile=.check/harness.mjs --platform=node --log-level=error",
+    "check:vocab": "npm run check:bundle && node scripts/check-vocabulary.mjs",
+    "check:refs": "npm run check:bundle && node scripts/check-references.mjs",
+    "check:ids": "npm run check:bundle && node scripts/check-ids.mjs",
+    "check:solutions": "npm run check:bundle && node scripts/check-solutions.mjs",
+    "check:voice": "npm run check:bundle && node scripts/check-voice-pack.mjs",
+    "check:quality": "npm run check:bundle && node scripts/check-course-quality.mjs",
+    "voice:heart": "npm run check:bundle && node scripts/build-voice-pack.mjs --voice af_heart",
+    "voice:heart:python": "npm run check:bundle && node scripts/build-voice-pack.mjs --voice af_heart --language python",
+    "voice:heart:publish": "npm run check:bundle && node scripts/build-voice-pack.mjs --voice af_heart --publish-only",
+    "check": "npm run check:bundle && node scripts/check-ids.mjs && node scripts/check-vocabulary.mjs && node scripts/check-references.mjs && node scripts/check-solutions.mjs && node scripts/check-voice-pack.mjs && node scripts/check-course-quality.mjs"
+  },
+  "dependencies": {
+    "@codemirror/autocomplete": "^6.20.3",
+    "@codemirror/commands": "^6.10.4",
+    "@codemirror/lang-javascript": "^6.2.5",
+    "@codemirror/lang-python": "^6.2.1",
+    "@codemirror/language": "^6.12.4",
+    "@codemirror/search": "^6.7.1",
+    "@codemirror/state": "^6.7.1",
+    "@codemirror/view": "^6.43.7",
+    "@lezer/highlight": "^1.2.1",
+    "kokoro-js": "^1.2.1",
+    "pyodide": "^314.0.3",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.4",
+    "esbuild": "^0.28.1",
+    "ffmpeg-static": "^5.3.0",
+    "typescript": "^5.9.2",
+    "vite": "^8.1.5"
+  },
+  "overrides": {
+    "sharp": "^0.35.3"
+  }
+}

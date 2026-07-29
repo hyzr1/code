@@ -1,0 +1,36 @@
+import type { VisualKind } from "../engine/scenes";
+
+const BOXES = [2, 7, 1, 8, 3, 6];
+
+export default function GuidedVisual({ kind }: { kind: VisualKind }) {
+  if (kind === "hash") {
+    return <div className="guided-visual hash"><span>value</span><i>hash</i><b>bucket</b><em>O(1) avg</em></div>;
+  }
+  if (kind === "stack") {
+    return <div className="guided-visual stack"><small>top</small>{["}", "]", ")"].map((value) => <b key={value}>{value}</b>)}</div>;
+  }
+  if (kind === "heap") {
+    return <div className="guided-visual nodes heap"><b className="n1">1</b><b className="n2">3</b><b className="n3">5</b><b className="n4">8</b><i className="e1"/><i className="e2"/><i className="e3"/></div>;
+  }
+  if (kind === "tree" || kind === "recursion") {
+    return <div className={`guided-visual nodes ${kind}`}><b className="n1">root</b><b className="n2">L</b><b className="n3">R</b><b className="n4">base</b><i className="e1"/><i className="e2"/><i className="e3"/></div>;
+  }
+  if (kind === "graph" || kind === "backtracking") {
+    return <div className={`guided-visual nodes ${kind}`}><b className="n1">A</b><b className="n2">B</b><b className="n3">C</b><b className="n4">D</b><i className="e1"/><i className="e2"/><i className="e3"/><span>frontier →</span></div>;
+  }
+  if (kind === "dp") {
+    return <div className="guided-visual dp">{Array.from({ length: 12 }, (_, i) => <i key={i} className={i < 7 ? "known" : i === 7 ? "now" : ""}>{i < 8 ? i : "?"}</i>)}</div>;
+  }
+  if (kind === "intervals") {
+    return <div className="guided-visual intervals"><i style={{ left: "5%", width: "42%" }}/><i style={{ left: "30%", width: "38%" }}/><b style={{ left: "5%", width: "63%" }}>merged frontier</b></div>;
+  }
+
+  return (
+    <div className={`guided-visual array ${kind}`}>
+      {BOXES.map((value, index) => <i key={index} className={(kind === "window" && index >= 1 && index <= 3) || (kind === "binary" && index >= 2 && index <= 4) ? "active" : ""}>{value}</i>)}
+      {kind === "pointers" ? <><b className="left">L ↑</b><b className="right">↑ R</b></> : null}
+      {kind === "window" ? <b className="window-label">valid window</b> : null}
+      {kind === "binary" ? <b className="window-label">remaining search space</b> : null}
+    </div>
+  );
+}
