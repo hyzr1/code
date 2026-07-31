@@ -102,6 +102,7 @@ export default function App() {
         attempts: current.attempts.slice(),
         sessions: current.sessions.map((s) => ({ ...s })),
         lectureReviews: current.lectureReviews.slice(),
+        manualComplete: { ...current.manualComplete },
       };
       mutate(draft);
       return draft;

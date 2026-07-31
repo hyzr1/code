@@ -1892,6 +1892,37 @@ kbd {
 .guided-visual.intervals i:nth-child(2) { top: 28px; }
 .guided-visual.intervals b { top: 47px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); font-size: 8px; }
 
+/* Foundational-concept visuals ------------------------------------------- */
+.guided-visual.variable,
+.guided-visual.function { display: flex; align-items: center; justify-content: center; gap: 10px; }
+.guided-visual.variable b,
+.guided-visual.function b { min-width: 46px; height: 32px; padding: 0 10px; display: grid; place-items: center; font-style: normal; border: 1px solid var(--border-strong); background: var(--surface-1); }
+.guided-visual.variable b.val,
+.guided-visual.function b.out { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+.guided-visual.variable span,
+.guided-visual.function span { color: var(--accent); font-size: 15px; }
+.guided-visual.function b.fn { border-radius: 40px; border-style: dashed; border-color: var(--accent); color: var(--accent); }
+
+.guided-visual.list,
+.guided-visual.string { display: flex; justify-content: center; gap: 4px; padding-bottom: 22px; }
+.guided-visual.list i,
+.guided-visual.string i { position: relative; width: 34px; height: 32px; display: grid; place-items: center; font-style: normal; border: 1px solid var(--border-strong); background: var(--surface-1); }
+.guided-visual.list i::after,
+.guided-visual.string i::after { content: attr(data-i); position: absolute; bottom: -17px; left: 0; right: 0; text-align: center; color: var(--text-faint); font-size: 9px; }
+.guided-visual.list i.active,
+.guided-visual.string i.active { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+
+.guided-visual.loop { display: flex; align-items: center; justify-content: center; gap: 4px; padding-bottom: 22px; }
+.guided-visual.loop i { position: relative; width: 30px; height: 30px; display: grid; place-items: center; font-style: normal; border: 1px solid var(--border-strong); background: var(--surface-1); }
+.guided-visual.loop i.active { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+.guided-visual.loop i.active::after { content: "\2191"; position: absolute; bottom: -16px; left: 0; right: 0; text-align: center; color: var(--accent); }
+.guided-visual.loop b { margin-left: 12px; padding: 0 12px; height: 30px; display: grid; place-items: center; font-style: normal; border: 1px solid var(--accent); background: var(--accent-soft); color: var(--accent); }
+
+.guided-visual.boolean { display: flex; align-items: center; justify-content: center; gap: 12px; }
+.guided-visual.boolean b { padding: 7px 20px; font-style: normal; border: 1px solid var(--border-strong); border-radius: 40px; }
+.guided-visual.boolean b.t { border-color: var(--pass); color: var(--pass); background: color-mix(in srgb, var(--pass) 14%, transparent); }
+.guided-visual.boolean b.f { color: var(--text-faint); }
+
 .c-keyword { color: #c586c0; }
 .c-atom { color: #569cd6; }
 .c-string { color: #ce9178; }
