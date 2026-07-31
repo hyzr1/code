@@ -3899,10 +3899,31 @@ pre,
   margin: 0;
 }
 .course-hero-top .language-label { display: none; }
+/* A quiet pill: a small accent dot + name + chevron, no boxy monogram. */
 .course-hero-top .language-trigger {
   width: auto;
-  height: 34px;
+  height: 32px;
+  gap: 8px;
+  padding: 0 11px;
+  border-radius: 999px;
+  border-color: var(--border-soft);
+  background: color-mix(in srgb, var(--surface-2) 65%, transparent);
+  box-shadow: none;
 }
+.course-hero-top .language-trigger:hover:not(:disabled),
+.course-hero-top .language-trigger.open {
+  background: var(--surface-2);
+  border-color: var(--border-strong);
+}
+.course-hero-top .language-monogram {
+  display: none;
+}
+.course-hero-top .language-name {
+  font-size: calc(13px * var(--font-scale));
+  font-weight: 600;
+  letter-spacing: 0;
+}
+.course-hero-top .language-trigger .ico { color: var(--text-faint); }
 .course-hero-main {
   display: flex;
   align-items: flex-end;
