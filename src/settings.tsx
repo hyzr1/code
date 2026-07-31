@@ -135,9 +135,11 @@ export const DEFAULTS: Settings = {
     autoplay: true,
     rate: 1,
     muted: false,
-    // Opt-in: the natural voice is a large model download, and that is not
-    // something to start behind someone's back on their first lesson.
-    engine: "system",
+    // Default to the prerecorded narrator. The `af_heart` voice pack ships as
+    // small audio clips (see voicePack.ts) covering the whole course, so a
+    // lesson plays real recorded narration with no model download. Only a line
+    // with no matching clip falls through to on-device Kokoro synthesis.
+    engine: "natural",
     voiceURI: null,
     neuralVoice: "af_heart",
     holdScale: 1,

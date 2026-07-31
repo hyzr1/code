@@ -3,7 +3,7 @@ import type { AttemptLog, Progress } from "../types";
 const KEY = "forge.progress.v1";
 
 export function emptyProgress(): Progress {
-  return { concepts: {}, cleared: {}, attempts: [], sessions: [], lectureReviews: [] };
+  return { concepts: {}, cleared: {}, attempts: [], sessions: [], lectureReviews: [], manualComplete: {} };
 }
 
 export function loadProgress(): Progress {
@@ -17,6 +17,7 @@ export function loadProgress(): Progress {
       attempts: parsed.attempts ?? [],
       sessions: parsed.sessions ?? [],
       lectureReviews: parsed.lectureReviews ?? [],
+      manualComplete: parsed.manualComplete ?? {},
     };
   } catch {
     return emptyProgress();
@@ -84,6 +85,7 @@ export function importProgress(json: string): Progress | null {
       attempts: parsed.attempts ?? [],
       sessions: parsed.sessions ?? [],
       lectureReviews: parsed.lectureReviews ?? [],
+      manualComplete: parsed.manualComplete ?? {},
     };
   } catch {
     return null;

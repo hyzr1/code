@@ -25,6 +25,26 @@ export default function GuidedVisual({ kind }: { kind: VisualKind }) {
     return <div className="guided-visual intervals"><i style={{ left: "5%", width: "42%" }}/><i style={{ left: "30%", width: "38%" }}/><b style={{ left: "5%", width: "63%" }}>merged frontier</b></div>;
   }
 
+  // ---- Foundational-concept visuals -------------------------------------
+  if (kind === "variable") {
+    return <div className="guided-visual variable"><b>name</b><span>=</span><b className="val">value</b></div>;
+  }
+  if (kind === "function") {
+    return <div className="guided-visual function"><b>in</b><span>→</span><b className="fn">f( )</b><span>→</span><b className="out">out</b></div>;
+  }
+  if (kind === "list") {
+    return <div className="guided-visual list">{["a", "b", "c", "d"].map((value, index) => <i key={index} data-i={index} className={index === 1 ? "active" : ""}>{value}</i>)}</div>;
+  }
+  if (kind === "string") {
+    return <div className="guided-visual string">{["H", "e", "l", "l", "o"].map((value, index) => <i key={index} data-i={index} className={index === 0 ? "active" : ""}>{value}</i>)}</div>;
+  }
+  if (kind === "loop") {
+    return <div className="guided-visual loop">{[2, 4, 6].map((value, index) => <i key={index} className={index === 1 ? "active" : ""}>{value}</i>)}<b>total 6</b></div>;
+  }
+  if (kind === "boolean") {
+    return <div className="guided-visual boolean"><b className="t">True</b><b className="f">False</b></div>;
+  }
+
   return (
     <div className={`guided-visual array ${kind}`}>
       {BOXES.map((value, index) => <i key={index} className={(kind === "window" && index >= 1 && index <= 3) || (kind === "binary" && index >= 2 && index <= 4) ? "active" : ""}>{value}</i>)}

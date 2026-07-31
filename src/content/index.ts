@@ -74,19 +74,24 @@ export function lessonProgress(
   progress: Progress,
 ): LessonProgress {
   const ids = lessonUnitIds(lesson);
+  const manual = progress.manualComplete?.[lesson.id] === true;
   const done = ids.filter((id) => progress.cleared[id]).length;
 
   // A lesson with only a lecture (no graded units) counts as done once the
-  // lecture's concepts have been touched.
+  // lecture's concepts have been touched — or when marked complete by hand.
   if (ids.length === 0) {
     const atom = lesson.atomId ? ATOM_BY_ID.get(lesson.atomId) : undefined;
     const seen = atom
       ? atom.teaches.every((c) => (progress.concepts[c]?.reps ?? 0) > 0)
       : false;
-    return { done: seen ? 1 : 0, total: 1, complete: seen };
+    const complete = seen || manual;
+    return { done: complete ? 1 : 0, total: 1, complete };
   }
 
-  return { done, total: ids.length, complete: done === ids.length };
+  // An explicit mark overrides the exercise-cleared count so the whole lesson
+  // reads as finished everywhere the derived state is shown.
+  const complete = done === ids.length || manual;
+  return { done: manual ? ids.length : done, total: ids.length, complete };
 }
 
 /** The next lesson you haven't finished — where "Continue course" goes. */
