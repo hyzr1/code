@@ -50,7 +50,14 @@ export type VisualKind =
   | "graph"
   | "backtracking"
   | "dp"
-  | "recursion";
+  | "recursion"
+  // Foundational-concept visuals, so the early lessons are never all-text.
+  | "variable"
+  | "list"
+  | "string"
+  | "loop"
+  | "boolean"
+  | "function";
 
 /** Roughly 11 seconds of speech. Longer than this and attention drifts. */
 const MAX_WORDS = 34;
@@ -303,6 +310,15 @@ export function buildScenes(atom: Atom): Scene[] {
 }
 
 const VISUALS: [RegExp, VisualKind][] = [
+  // Foundational lessons first, matched on their exact unit ids so they never
+  // collide with a pattern lesson. These keep the early modules from being a
+  // wall of text with nothing to look at.
+  [/^(variables|values|numbers)$/, "variable"],
+  [/^lists$/, "list"],
+  [/^strings$/, "string"],
+  [/^(loops|iteration-tools|aggregation-tools)$/, "loop"],
+  [/^(booleans|branching)$/, "boolean"],
+  [/^(first-function|functions)$/, "function"],
   [/hashing|dicts|sets/, "hash"],
   [/prefix-sums/, "hash"],
   [/two-pointers/, "pointers"],
@@ -409,6 +425,16 @@ function timedFocusSteps(scene: Scene, fallback: number[] = []): FocusStep[] | u
   const fragments = [...prose.matchAll(/[^.!?;,]+(?:[.!?;,]|$)/g)];
   const steps: FocusStep[] = [];
 
+  // A cue's `at` must live on the same axis as playback progress, which is a
+  // fraction of *spoken audio* — time for the recorded/neural voices, expanded
+  // speech characters for the system voice. Measuring it as a fraction of
+  // caption characters (what this used to do) drifts badly: `charCodeAt` is one
+  // character on the page and three words aloud, `=` is one character and
+  // "equals" spoken. So position every cue by how much speech time elapses
+  // before its phrase, using the same `forSpeech` + WPM model the pacing uses.
+  // Rate cancels in the ratio, so it is left at 1.
+  const spokenTotal = Math.max(0.001, speechSeconds(prose, 1));
+
   for (const match of fragments) {
     const fragment = match[0].trim();
     if (!fragment) continue;
@@ -449,7 +475,10 @@ function timedFocusSteps(scene: Scene, fallback: number[] = []): FocusStep[] | u
     const previous = steps.at(-1);
     if (previous?.lines[0] === chosen + 1) continue;
     steps.push({
-      at: (match.index ?? 0) / Math.max(1, prose.length),
+      // Speech time elapsed before this phrase, as a fraction of the whole —
+      // the same axis playback progress reports, so the highlight lands on the
+      // line at the moment the voice reaches it.
+      at: speechSeconds(prose.slice(0, match.index ?? 0), 1) / spokenTotal,
       lines: [chosen + 1],
     });
   }

@@ -237,6 +237,14 @@ export default function LessonView({
     advance();
   };
 
+  const manualComplete = progress.manualComplete?.[lesson.id] === true;
+  const toggleComplete = () => {
+    commit((draft) => {
+      if (draft.manualComplete[lesson.id]) delete draft.manualComplete[lesson.id];
+      else draft.manualComplete[lesson.id] = true;
+    });
+  };
+
   if (!step) {
     return (
       <div
@@ -269,6 +277,13 @@ export default function LessonView({
           <button className="ghost" onClick={leaveLesson}>
             Back to the course
           </button>
+          <button
+            className={`ghost ${manualComplete ? "on" : ""}`}
+            onClick={toggleComplete}
+            aria-pressed={manualComplete}
+          >
+            {manualComplete ? "✓ Marked complete" : "Mark lesson complete"}
+          </button>
         </div>
       </div>
       </div>
@@ -291,6 +306,14 @@ export default function LessonView({
           {lesson.title} · step {index + 1} of {steps.length}
         </span>
         <div className="row lesson-workspace-actions">
+          <button
+            className={`ghost tiny ${manualComplete ? "on" : ""}`}
+            onClick={toggleComplete}
+            title={manualComplete ? "Marked complete — click to undo" : "Mark this lesson complete"}
+            aria-pressed={manualComplete}
+          >
+            {manualComplete ? "✓ Completed" : "Mark complete"}
+          </button>
           {!(step.kind === "atom" && atomMode === "watch") ? (
             <button className="ghost tiny fullscreen-toggle" onClick={() => void toggleFullscreen()}>
               <Icon name={isFullscreen ? "minimize" : "maximize"} size={16} />

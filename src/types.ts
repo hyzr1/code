@@ -298,4 +298,7 @@ export interface Progress {
   attempts: AttemptLog[];
   sessions: { date: string; seconds: number; units: number }[];
   lectureReviews: LectureReview[];
+  /** Lessons the learner explicitly marked complete, keyed by lesson id. This
+   *  overrides the derived (exercises-cleared) completion state. */
+  manualComplete: Record<string, true>;
 }
