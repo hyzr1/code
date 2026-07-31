@@ -229,6 +229,12 @@ export default function App() {
             <CourseView
               progress={progress}
               onOpen={(id) => setRoute({ name: "lesson", id })}
+              onToggleComplete={(id) =>
+                commit((draft) => {
+                  if (draft.manualComplete[id]) delete draft.manualComplete[id];
+                  else draft.manualComplete[id] = true;
+                })
+              }
             />
           </div>
         ) : route.name === "lesson" ? (
