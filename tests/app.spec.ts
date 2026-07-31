@@ -11,6 +11,8 @@ test("loads the course without runtime errors", async ({ page, isMobile }) => {
   await page.goto("/");
   await expect(page).toHaveTitle(/Hyzr Code/);
   await expect(page.getByText("Hyzr Code", { exact: true }).first()).toBeVisible();
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+  await expect(page.locator("html")).toHaveAttribute("data-accent", "violet");
 
   if (!isMobile) {
     await expect(page.getByRole("button", { name: "Start the course", exact: true })).toBeVisible();

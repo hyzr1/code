@@ -2,6 +2,7 @@ import {
   createContext,
   useContext,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useState,
   type ReactNode,
@@ -101,8 +102,8 @@ export const DEFAULTS: Settings = {
     interviewDate: "",
   },
   appearance: {
-    theme: "system",
-    accent: "ochre",
+    theme: "dark",
+    accent: "violet",
     mode: "learn",
     density: "comfortable",
     fontScale: 1,
@@ -212,7 +213,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
 
   // Everything visual is driven by attributes and custom properties on <html>,
   // so a theme change is one repaint rather than a re-render of the tree.
-  useEffect(() => {
+  useLayoutEffect(() => {
     const root = document.documentElement;
     const { accent, density, fontScale, readingFont, reducedMotion } =
       settings.appearance;
