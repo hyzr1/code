@@ -13,9 +13,11 @@ import { TRACKS, weeksUntil } from "../content/tracks";
 export default function CourseView({
   progress,
   onOpen,
+  onToggleComplete,
 }: {
   progress: Progress;
   onOpen: (lessonId: string) => void;
+  onToggleComplete: (lessonId: string) => void;
 }) {
   const { settings } = useSettings();
   const language = settings.learning.language;
@@ -48,26 +50,29 @@ export default function CourseView({
         </div>
       </div>
 
-      <div className="card">
-        <div className="row spread wrap" style={{ gap: 16 }}>
-          <div>
-            <div data-tour="course-language">
-              <LanguagePicker />
-            </div>
-            <h2 className="section" style={{ margin: "0 0 4px" }}>
-              {next ? "Up next" : "Course complete"}
-            </h2>
-            <div style={{ fontSize: 19, fontWeight: 650, letterSpacing: "-0.01em" }}>
+      <div className="card course-hero">
+        <div className="course-hero-top">
+          <span className="course-eyebrow">
+            {next ? "Up next" : "Course complete"}
+          </span>
+          <div data-tour="course-language">
+            <LanguagePicker />
+          </div>
+        </div>
+
+        <div className="course-hero-main">
+          <div className="course-hero-copy">
+            <div style={{ fontSize: 22, fontWeight: 680, letterSpacing: "-0.02em", lineHeight: 1.15 }}>
               {next ? next.title : "Everything built so far is done"}
             </div>
             {next ? (
-              <div className="small muted" style={{ marginTop: 3 }}>
+              <p className="small muted" style={{ margin: "6px 0 0", maxWidth: "54ch" }}>
                 {next.goal}
-              </div>
+              </p>
             ) : null}
           </div>
           {next ? (
-            <button className="primary" onClick={() => onOpen(next.id)}>
+            <button className="primary course-hero-cta" onClick={() => onOpen(next.id)}>
               {doneCount === 0 ? "Start the course" : "Continue"}
             </button>
           ) : null}
@@ -115,22 +120,27 @@ export default function CourseView({
                 {lessons.map((lesson) => {
                   const state = lessonProgress(lesson, progress);
                   return (
-                    <button
+                    <div
                       key={lesson.id}
                       className={`lesson-row ${state.complete ? "complete" : ""}`}
-                      onClick={() => onOpen(lesson.id)}
                     >
-                      <span className="tick">
+                      <button
+                        className="tick"
+                        onClick={() => onToggleComplete(lesson.id)}
+                        aria-pressed={state.complete}
+                        title={state.complete ? "Mark as not complete" : "Mark as complete"}
+                        aria-label={`${state.complete ? "Mark not complete" : "Mark complete"}: ${lesson.title}`}
+                      >
                         {state.complete ? "✓" : "○"}
-                      </span>
-                      <span style={{ flex: 1 }}>
+                      </button>
+                      <button className="lesson-open" onClick={() => onOpen(lesson.id)}>
                         <span className="lesson-title">{lesson.title}</span>
                         <span className="lesson-goal">{lesson.goal}</span>
-                      </span>
-                      <span className="tiny dim" style={{ flexShrink: 0 }}>
+                      </button>
+                      <span className="tiny dim lesson-count">
                         {state.done}/{state.total}
                       </span>
-                    </button>
+                    </div>
                   );
                 })}
               </div>
