@@ -8,6 +8,7 @@
     "dev": "npm run prepare:python && vite",
     "build": "npm run prepare:python && vite build",
     "preview": "vite preview",
+    "test:browser": "playwright test",
     "typecheck": "tsc --noEmit",
     "check:bundle": "esbuild src/check-entry.ts --bundle --format=esm --outfile=.check/content.mjs --platform=node --external:kokoro-js --log-level=error && esbuild src/engine/harness.ts --bundle --format=esm --outfile=.check/harness.mjs --platform=node --log-level=error",
     "check:vocab": "npm run check:bundle && node scripts/check-vocabulary.mjs",
@@ -37,6 +38,7 @@
     "react-dom": "^19.2.8"
   },
   "devDependencies": {
+    "@playwright/test": "^1.61.1",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.4",

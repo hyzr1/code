@@ -155,7 +155,7 @@ function NeuralVoice({
         title="Voice model"
         help={
           packedVoice
-            ? "Installed with Unwashed. Every lecture line is prepared ahead of time and works offline."
+            ? "Installed with Hyzr Code. Every lecture line is prepared ahead of time and works offline."
             : status === "ready"
             ? `Ready, running on the ${device === "webgpu" ? "GPU" : "processor"}. Cached by your browser — this was a one-time download.`
             : status === "loading"
@@ -404,7 +404,7 @@ export default function Settings({
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `forge-progress-${new Date().toISOString().slice(0, 10)}.json`;
+    link.download = `hyzr-code-progress-${new Date().toISOString().slice(0, 10)}.json`;
     link.click();
     URL.revokeObjectURL(url);
     toast("success", "Progress exported", `${progress.attempts.length} attempts saved to file`);
@@ -416,7 +416,7 @@ export default function Settings({
       if (!parsed) {
         toast(
           "error",
-          "That file isn't an Unwashed export",
+          "That file isn't a Hyzr Code export",
           "Expected the JSON produced by Export progress.",
         );
         return;
@@ -1238,7 +1238,7 @@ export default function Settings({
                 </Field>
               </div>
               <div className="card">
-                <h2 className="section">About Unwashed</h2>
+                <h2 className="section">About Hyzr Code</h2>
                 <p className="field-help" style={{ maxWidth: "62ch" }}>
                   For developers who got fluent with an AI in the loop and
                   discovered they can't write it alone any more. Knowing

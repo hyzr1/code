@@ -13,7 +13,7 @@ interface TourStep {
 
 const STEPS: TourStep[] = [
   {
-    eyebrow: "Welcome to Unwashed",
+    eyebrow: "Welcome to Hyzr Code",
     title: "Build the skill AI cannot perform for you",
     body: "You will learn one idea, retrieve it without rereading, then produce working code. The app adapts the sequence from what you can actually recall—not what you merely watched.",
   },
@@ -36,7 +36,7 @@ const STEPS: TourStep[] = [
   },
   {
     eyebrow: "Tailored preparation",
-    title: "Tell Unwashed what job you are preparing for",
+    title: "Tell Hyzr Code what job you are preparing for",
     body: "Settings can tailor the curriculum for FAANG-style SWE, practical software engineering, ML engineering, or quant work—plus your level, deadline, and weekly capacity.",
     selector: '[data-tour="settings"]',
   },

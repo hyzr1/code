@@ -3,6 +3,8 @@ dist/
 .check/
 .voice-pack-cache/
 coverage/
+test-results/
+playwright-report/
 *.log
 .env
 .env.local

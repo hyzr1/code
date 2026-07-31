@@ -1,0 +1,17 @@
+{
+  "name": "Hyzr Code",
+  "short_name": "Hyzr Code",
+  "description": "Structured Python and JavaScript practice for technical interviews.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f7f4ed",
+  "theme_color": "#f7f4ed",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

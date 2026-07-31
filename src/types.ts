@@ -222,7 +222,7 @@ export interface Atom {
   teaches: ConceptId[];
   requires: ConceptId[];
   readingSeconds: number;
-  /** Unwashed-flavoured markdown. See CONTENT-STYLE.md. */
+  /** Hyzr Code-flavoured markdown. See CONTENT-STYLE.md. */
   body: string;
   recall: string;
   language?: CourseLanguage;
