@@ -3555,19 +3555,17 @@ html.lesson-focus-active body {
    truncating the title to nothing or overlapping it. Give it its own row,
    indented to line up under the text rather than the tick. */
 @media (max-width: 660px) {
+  /* Keep the tick + text on the first line and drop the small count onto its
+     own line, indented under the text — otherwise the count crowds the goal
+     and the two overlap on a narrow screen. */
   .lesson-row {
     flex-wrap: wrap;
-    row-gap: 8px;
+    row-gap: 3px;
   }
-  .lesson-row .meta {
+  .lesson-count {
     width: 100%;
-    padding-left: 29px;
-    justify-content: flex-start;
-    gap: 10px;
-  }
-  .lesson-row .meta > span[style] {
-    min-width: 0 !important;
-    text-align: left !important;
+    padding-left: 37px;
+    text-align: left;
   }
 }
 
