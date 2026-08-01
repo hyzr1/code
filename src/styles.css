@@ -3939,6 +3939,89 @@ pre,
   flex-shrink: 0;
 }
 
+/* Optional DIY project galleries between lessons ------------------------- */
+.project-gallery {
+  margin: 12px 2px 10px;
+  padding: 14px 14px 12px;
+  border: 1px solid var(--accent-line);
+  border-radius: var(--r-md);
+  background: color-mix(in srgb, var(--accent) 6%, transparent);
+}
+.project-gallery-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.project-gallery-title {
+  font-weight: 700;
+  font-size: calc(13px * var(--font-scale));
+  letter-spacing: -0.01em;
+}
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.project-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-sm);
+  background: var(--surface-1);
+  transition: border-color var(--t-fast), transform var(--t-fast);
+}
+.project-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+.project-card-title {
+  font-weight: 680;
+  font-size: calc(14px * var(--font-scale));
+  letter-spacing: -0.01em;
+}
+.project-card-hook {
+  color: var(--accent);
+  font-size: calc(12px * var(--font-scale));
+  font-weight: 600;
+}
+.project-card-build {
+  margin: 2px 0 0;
+  color: var(--text-2);
+  font-size: calc(12.5px * var(--font-scale));
+  line-height: 1.45;
+}
+.project-card-uses {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: auto;
+  padding-top: 8px;
+}
+.project-card-uses span {
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: var(--surface-3);
+  color: var(--text-faint);
+  font: 600 10px var(--mono);
+}
+.project-card-stretch {
+  font-size: calc(11.5px * var(--font-scale));
+  color: var(--text-faint);
+  line-height: 1.4;
+}
+.project-card-stretch b {
+  color: var(--accent);
+  font-weight: 700;
+  margin-right: 3px;
+}
+@media (max-width: 720px) {
+  .project-grid { grid-template-columns: 1fr; }
+}
+
 .language-picker {
   position: relative;
   display: flex;

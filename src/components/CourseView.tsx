@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import type { Progress } from "../types";
 import {
   LESSON_BY_ID,
@@ -6,9 +7,12 @@ import {
   lessonProgress,
   modulesFor,
 } from "../content";
+import { LESSON_PROJECTS } from "../content/projects";
 import { useSettings } from "../settings";
 import LanguagePicker from "./LanguagePicker";
 import { TRACKS, weeksUntil } from "../content/tracks";
+
+const plain = (text: string) => text.replace(/`/g, "");
 
 export default function CourseView({
   progress,
@@ -119,28 +123,58 @@ export default function CourseView({
 
                 {lessons.map((lesson) => {
                   const state = lessonProgress(lesson, progress);
+                  const projects = LESSON_PROJECTS[lesson.id];
                   return (
-                    <div
-                      key={lesson.id}
-                      className={`lesson-row ${state.complete ? "complete" : ""}`}
-                    >
-                      <button
-                        className="tick"
-                        onClick={() => onToggleComplete(lesson.id)}
-                        aria-pressed={state.complete}
-                        title={state.complete ? "Mark as not complete" : "Mark as complete"}
-                        aria-label={`${state.complete ? "Mark not complete" : "Mark complete"}: ${lesson.title}`}
+                    <Fragment key={lesson.id}>
+                      <div
+                        className={`lesson-row ${state.complete ? "complete" : ""}`}
                       >
-                        {state.complete ? "✓" : "○"}
-                      </button>
-                      <button className="lesson-open" onClick={() => onOpen(lesson.id)}>
-                        <span className="lesson-title">{lesson.title}</span>
-                        <span className="lesson-goal">{lesson.goal}</span>
-                      </button>
-                      <span className="tiny dim lesson-count">
-                        {state.done}/{state.total}
-                      </span>
-                    </div>
+                        <button
+                          className="tick"
+                          onClick={() => onToggleComplete(lesson.id)}
+                          aria-pressed={state.complete}
+                          title={state.complete ? "Mark as not complete" : "Mark as complete"}
+                          aria-label={`${state.complete ? "Mark not complete" : "Mark complete"}: ${lesson.title}`}
+                        >
+                          {state.complete ? "✓" : "○"}
+                        </button>
+                        <button className="lesson-open" onClick={() => onOpen(lesson.id)}>
+                          <span className="lesson-title">{lesson.title}</span>
+                          <span className="lesson-goal">{lesson.goal}</span>
+                        </button>
+                        <span className="tiny dim lesson-count">
+                          {state.done}/{state.total}
+                        </span>
+                      </div>
+
+                      {projects ? (
+                        <div className="project-gallery">
+                          <div className="project-gallery-head">
+                            <span className="project-gallery-title">🛠 Build one of these</span>
+                            <span className="tiny dim">pick one · optional · your own project</span>
+                          </div>
+                          <div className="project-grid">
+                            {projects.map((p) => (
+                              <div className="project-card" key={p.title}>
+                                <div className="project-card-title">{p.title}</div>
+                                <div className="project-card-hook">{p.hook}</div>
+                                <p className="project-card-build">{plain(p.build)}</p>
+                                <div className="project-card-uses">
+                                  {p.uses.map((u) => (
+                                    <span key={u}>{plain(u)}</span>
+                                  ))}
+                                </div>
+                                {p.stretch ? (
+                                  <div className="project-card-stretch">
+                                    <b>Stretch</b> {plain(p.stretch)}
+                                  </div>
+                                ) : null}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ) : null}
+                    </Fragment>
                   );
                 })}
               </div>
