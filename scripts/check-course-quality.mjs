@@ -113,8 +113,8 @@ const dependencySafe = ratio(pythonLessons, (lesson, index) =>
 );
 const expectedFoundation = [
   "programs", "values", "calls", "variables", "first-function", "numbers", "strings",
-  "fstrings", "booleans", "branching", "lists", "text-split", "loops", "iteration-tools",
-  "aggregation-tools", "names", "functions", "tuples", "dicts", "dict-iteration", "sets",
+  "fstrings", "booleans", "branching", "lists", "text-split", "slicing", "loops", "iteration-tools",
+  "aggregation-tools", "names", "functions", "tuples", "dicts", "dict-iteration", "format-specs", "sets", "unpacking",
   "comprehensions", "sorting", "complexity",
 ].map((id) => `py.lesson.${id}`);
 const foundationOrdered = expectedFoundation.every(
