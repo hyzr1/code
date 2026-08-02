@@ -216,6 +216,20 @@ export interface CourseModule {
   tracks?: CareerTrack[];
 }
 
+/**
+ * One retrieval question shown after a lecture. `why` gives per-option
+ * reasoning aligned index-for-index with `choices`, so the learner sees why
+ * every option is right or wrong — not just a single correct/incorrect verdict.
+ */
+export interface LectureQuestion {
+  question: string;
+  choices: string[];
+  answer: number;
+  /** One-line summary of the concept the question tests. */
+  explanation: string;
+  why?: string[];
+}
+
 export interface Atom {
   id: string;
   title: string;
@@ -226,12 +240,10 @@ export interface Atom {
   body: string;
   recall: string;
   language?: CourseLanguage;
-  check?: {
-    question: string;
-    choices: string[];
-    answer: number;
-    explanation: string;
-  };
+  /** Legacy single-question form. Prefer `checks` for new content. */
+  check?: LectureQuestion;
+  /** A short bank of questions; the lecture check walks through each in turn. */
+  checks?: LectureQuestion[];
 }
 
 // ---------------------------------------------------------------- runner

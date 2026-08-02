@@ -1,4 +1,4 @@
-import type { Atom, CareerTrack, Concept, CourseModule, Lesson, Problem, TestSpec } from "../../types";
+import type { Atom, CareerTrack, Concept, CourseModule, Lesson, LectureQuestion, Problem, TestSpec } from "../../types";
 
 interface ModuleSpec {
   id: string;
@@ -22,7 +22,9 @@ interface UnitSpec {
   trap: string;
   rule: string;
   recall: string;
-  check?: NonNullable<Atom["check"]>;
+  check?: LectureQuestion;
+  /** A bank of retrieval questions shown after the lecture (preferred). */
+  checks?: LectureQuestion[];
   prompt: string;
   fn: string;
   starter: string;
@@ -234,18 +236,59 @@ const UNITS: UnitSpec[] = [
   },
   {
     id: "loops", module: "py.m1", title: "Loops and loop invariants", goal: "Use a `for` loop to process values one at a time and trace how a running result changes.", kind: "mental-model", requires: ["branching", "lists"],
-    model: "A **loop** repeats a block of code. A `for` loop is the clearest choice when you want to visit each value in a collection. In `for number in numbers:`, `numbers` is the collection being visited and `number` is a name that receives one value for the current pass. The indented body runs once for each value. One pass through the body is called an **iteration**.\n\nMany loops build a result gradually. A variable such as `total` that keeps that running result is often called an **accumulator**. Give it a starting value before the loop, update it inside the loop, and return or use it after the loop ends. `total += number` is shorter spelling for `total = total + number`; it reads the old total, adds the current number, and stores the new total.\n\nA `while` loop repeats for as long as its condition is true. It is useful when you do not know the number of repetitions in advance, but something in its body must eventually make the condition false. Otherwise the loop never ends.\n\nLater algorithm lessons use the term **loop invariant** for a fact that remains true after every iteration. In the sum example, that fact is simple: `total` equals the sum of the values visited so far. Saying that sentence makes the update easier to understand and check.",
-    example: `total = 0\nfor number in numbers:\n    total += number\n# invariant: total is the sum of values already visited`,
-    trace: "Before the loop begins, `total` is 0 because no values have been visited. On each iteration, `number` receives the next value. The body adds that one value to the previous total. When there are no values left, the loop ends and `total` contains the sum of the entire collection. For `[2, 4, 6]`, the running totals are 0, then 2, then 6, then 12.",
-    trap: "Do not change the size of a list while a `for` loop is walking through that same list. Removing an item shifts later positions and can make the loop skip a value. Build a separate result list when you need transformed or filtered output.",
-    rule: "For a running result, say what the accumulator means, choose its correct empty starting value, update it once per relevant item, and use the completed value only after the loop ends.",
+    model: "A **loop** repeats a block of code. A `for` loop is the clearest choice when you want to visit each value in a collection. In `for number in numbers:`, `numbers` is the collection being visited and `number` is a name that receives one value for the current pass. The indented lines beneath it are the **body**, and they run once for every value. One full pass through the body is called an **iteration**. A `for` loop stops on its own when the collection runs out, so you never track the count yourself — that is why it is the right tool when you want to touch each item exactly once.\n\nMany loops build a result gradually. A variable such as `total` that keeps that running result is often called an **accumulator**. The pattern is always three steps: give it a starting value *before* the loop, update it *inside* the loop, and read it *after* the loop ends. That starting value must be the one that leaves the result unchanged — `0` for a sum, `1` for a product, an empty string for joined text — so the answer stays correct even when the collection is empty and the body never runs. `total += number` is shorter spelling for `total = total + number`; it reads the old total, adds the current number, and stores the new total.\n\nA `while` loop repeats for as long as a condition stays true, and it re-checks that condition before every pass. Reach for it when the number of repetitions is not a fixed collection but depends on something you test each time — counting down, retrying until something works, or stopping when a running value crosses a limit. The catch is that *you* are responsible for stopping it: at least one line in the body must change the condition so it eventually becomes false. If nothing does, the condition stays true forever and the loop never ends — an **infinite loop**. As a concrete case, a countdown starts a variable at three and subtracts one on each pass; that subtracting step is what finally makes the condition false, and leaving it out makes the program run forever.\n\nLater algorithm lessons use the term **loop invariant** for a fact that remains true after every iteration. In the sum example, that fact is simple: `total` equals the sum of the values visited so far. Saying that sentence makes the update easier to understand and check.",
+    example: `# for: visit each value in a collection, once\ntotal = 0\nfor number in numbers:\n    total += number      # invariant: total = sum of values seen so far\n\n# while: repeat until a condition changes\ncountdown = 3\nwhile countdown > 0:\n    print(countdown)\n    countdown -= 1       # this line is what eventually stops the loop\nprint("liftoff")`,
+    trace: "Take the `for` loop over `[2, 4, 6]`. Before it starts, `total` is 0 because nothing has been visited. Pass one: `number` is 2, so `total` becomes 2. Pass two: `number` is 4, so `total` becomes 6. Pass three: `number` is 6, so `total` becomes 12. The collection is now empty, the loop ends, and `total` is 12 — the full sum.\n\nNow the `while` loop. `countdown` starts at 3. Python checks `3 > 0` (true), prints 3, then `countdown -= 1` makes it 2. It checks `2 > 0` (true), prints 2, drops to 1. It checks `1 > 0` (true), prints 1, drops to 0. It checks `0 > 0` — false — so the loop stops without running the body again, and the line after it prints `liftoff` once. That decrement is what guarantees the loop ends: without it, `countdown` would stay 3, `3 > 0` would be true forever, and nothing after the loop would ever run.",
+    trap: "Two classic loop bugs. First, do not change the size of a list while a `for` loop is walking it — removing an item shifts every later position, so the loop can skip a value; build a separate result list for transformed or filtered output. Second, a `while` loop whose body never changes its condition runs forever, so make sure exactly one line moves that condition toward false and that the line actually runs on every pass, not only inside an `if` that sometimes skips it.",
+    rule: "Use a `for` loop to visit every item in a collection and a `while` loop when repetition is driven by a condition you must eventually make false. For a running result, name what the accumulator means, start it at the value that changes nothing, update it once per relevant item, and read it only after the loop ends.",
     recall: "When the example has visited the first two values of `[2, 4, 6]`, what are `number` and `total`, and what does `total` mean at that moment?",
-    check: {
-      question: "To add up a list's values with a loop, what should `total` be before the loop begins?",
-      choices: ["`0`, the starting value that stays correct even for an empty list", "The first value in the list"],
-      answer: 0,
-      explanation: "An accumulator starts at the identity for its operation — `0` for a sum. Starting at the first value breaks on an empty list and mis-counts otherwise.",
-    },
+    checks: [
+      {
+        question: "You want `total` to hold the sum of a list. What should it be on the line just before the `for` loop, and why?",
+        choices: [
+          "`0` — the value that leaves a sum unchanged, so an empty list still gives the right answer",
+          "The list's first value, so it is not added twice",
+          "`None`, so you can tell the loop has not run yet",
+        ],
+        answer: 0,
+        why: [
+          "Correct. `0` is the identity for addition: adding it changes nothing, so an empty list correctly totals `0` and no real value is ever skipped.",
+          "Seeding with the first value double-counts it once the loop reaches it, and it crashes on an empty list, which has no first value.",
+          "You cannot compute `None + number` — adding a number to `None` raises `TypeError` on the very first iteration.",
+        ],
+        explanation: "An accumulator starts at its operation's identity: `0` for a sum, `1` for a product, an empty string for joined text — so it is correct even when the loop body never runs.",
+      },
+      {
+        question: "This loop never stops: `n = 5`, then `while n > 0:` with a body of only `print(n)`. Why?",
+        choices: [
+          "Nothing in the body changes `n`, so `n > 0` stays true on every pass",
+          "A `while` loop must contain a `for` loop in order to stop",
+          "`n > 0` is not a valid condition for a `while` loop",
+        ],
+        answer: 0,
+        why: [
+          "Correct. A `while` loop stops only when its condition becomes false. Nothing here ever lowers `n`, so the condition never changes. Adding `n -= 1` to the body fixes it.",
+          "Untrue — a `while` needs no `for` inside it. It just needs its own condition to eventually become false.",
+          "`n > 0` is a perfectly valid Boolean condition; the bug is that it is never made false, not that it is invalid.",
+        ],
+        explanation: "Every `while` loop needs a body line that moves its condition toward false. Without one, it is an infinite loop.",
+      },
+      {
+        question: "You have a list of prices and want their total. Which loop fits best?",
+        choices: [
+          "A `for` loop over the list, because you visit each price exactly once",
+          "A `while` loop, because you do not know how many prices there are",
+          "Neither — a loop cannot build a total",
+        ],
+        answer: 0,
+        why: [
+          "Correct. When you have a collection and want to touch every element once, `for price in prices` is the direct, hard-to-get-wrong tool, and it handles any length automatically.",
+          "A `for` loop already works for any length without you tracking a count; a `while` here would make you manage an index by hand for no benefit and more risk of an off-by-one or an infinite loop.",
+          "A running accumulator — start `total = 0`, then add each price — is exactly how loops build totals.",
+        ],
+        explanation: "Use `for` to walk a collection; use `while` when the number of repeats depends on a condition you re-check each pass.",
+      },
+    ],
     prompt: "Return the total of only the even numbers in `numbers` without using Python's `sum` function.\n\nStart a running total at zero. Visit one number at a time. A number is even when dividing it by 2 leaves a remainder of zero, written `number % 2 == 0`. Add only those values, then return the total after the loop.", fn: "sum_evens", starter: `def sum_evens(numbers):\n    pass`, solution: `def sum_evens(numbers):\n    total = 0\n    for number in numbers:\n        if number % 2 == 0:\n            total += number\n    return total`,
     tests: [t("mixed", "assert fn([1, 2, 3, 4]) == 6"), t("empty", "assert fn([]) == 0"), t("negative", "assert fn([-4, -3, 2]) == -2", true), t("all even", "assert fn([2, 4, 6]) == 12", true)],
   },
@@ -1432,6 +1475,7 @@ export const PYTHON_ATOMS: Atom[] = UNITS.map((unit) => ({
   recall: unit.recall,
   language: "python",
   check: unit.check,
+  checks: unit.checks,
 }));
 
 export const PYTHON_PROBLEMS: Problem[] = UNITS.filter(
