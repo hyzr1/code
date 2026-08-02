@@ -28,6 +28,10 @@ import ConceptView from "./components/ConceptView";
 import ProblemView, { type ProblemOutcome } from "./components/ProblemView";
 import { useSettings } from "./settings";
 import OnboardingTour, { hasSeenOnboarding } from "./components/OnboardingTour";
+import TypeHome from "./components/typing/TypeHome";
+import TypeCourse from "./components/typing/TypeCourse";
+import TypeLesson from "./components/typing/TypeLesson";
+import SpeedTest from "./components/typing/SpeedTest";
 
 const TITLES: Record<Route["name"], string> = {
   course: "Course",
@@ -37,6 +41,10 @@ const TITLES: Record<Route["name"], string> = {
   session: "Daily session",
   progress: "Progress",
   concept: "Progress",
+  type: "Type",
+  typeCourse: "Type",
+  typeLesson: "Type",
+  typeTest: "Type",
 };
 
 export default function App() {
@@ -274,6 +282,30 @@ export default function App() {
               commit={commit}
               onExit={() => setRoute({ name: "progress" })}
             />
+          </div>
+        ) : route.name === "type" ? (
+          <div className="page">
+            <TypeHome
+              onCourse={() => setRoute({ name: "typeCourse" })}
+              onTest={() => setRoute({ name: "typeTest" })}
+              onOpenLesson={(id) => setRoute({ name: "typeLesson", id })}
+            />
+          </div>
+        ) : route.name === "typeCourse" ? (
+          <div className="page">
+            <TypeCourse onOpen={(id) => setRoute({ name: "typeLesson", id })} />
+          </div>
+        ) : route.name === "typeLesson" ? (
+          <div className="page">
+            <TypeLesson
+              lessonId={route.id}
+              onExit={() => setRoute({ name: "typeCourse" })}
+              onOpenLesson={(id) => setRoute({ name: "typeLesson", id })}
+            />
+          </div>
+        ) : route.name === "typeTest" ? (
+          <div className="page">
+            <SpeedTest />
           </div>
         ) : (
           <div className="page">

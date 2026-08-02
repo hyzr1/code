@@ -21,7 +21,11 @@ export type Route =
   | { name: "problem"; id: string }
   | { name: "session" }
   | { name: "progress" }
-  | { name: "concept"; id: string };
+  | { name: "concept"; id: string }
+  | { name: "type" }
+  | { name: "typeCourse" }
+  | { name: "typeLesson"; id: string }
+  | { name: "typeTest" };
 
 interface Props {
   route: Route;
@@ -58,6 +62,7 @@ export default function Sidebar({
   const switchRef = useRef<HTMLDivElement>(null);
   const learnRef = useRef<HTMLButtonElement>(null);
   const algoRef = useRef<HTMLButtonElement>(null);
+  const typeRef = useRef<HTMLButtonElement>(null);
   const [indicator, setIndicator] = useState({ left: 0, width: 0 });
 
   /**
@@ -72,7 +77,8 @@ export default function Sidebar({
    */
   useLayoutEffect(() => {
     const measure = () => {
-      const active = mode === "learn" ? learnRef.current : algoRef.current;
+      const active =
+        mode === "learn" ? learnRef.current : mode === "algo" ? algoRef.current : typeRef.current;
       if (!active) return;
       setIndicator({ left: active.offsetLeft, width: active.offsetWidth });
     };
@@ -148,7 +154,9 @@ export default function Sidebar({
       <div className="sidebar-head">
         <button
           className="brand-lockup brand-home"
-          onClick={() => go({ name: mode === "learn" ? "course" : "problems" })}
+          onClick={() =>
+            go({ name: mode === "learn" ? "course" : mode === "type" ? "type" : "problems" })
+          }
           aria-label="Go to home"
         >
           <Mark size={collapsed ? 20 : 21} />
@@ -209,6 +217,18 @@ export default function Sidebar({
           <Icon name="code" size={16} />
           {!collapsed ? "Algo" : null}
         </button>
+        <button
+          ref={typeRef}
+          className={mode === "type" ? "on" : ""}
+          onClick={() => {
+            update("appearance", { mode: "type" });
+            go({ name: "type" });
+          }}
+          title="Type"
+        >
+          <Icon name="type" size={16} />
+          {!collapsed ? "Type" : null}
+        </button>
       </div>
 
       <div className="sidebar-scroll">
@@ -240,6 +260,18 @@ export default function Sidebar({
               "daily",
             )}
           </>
+        ) : mode === "type" ? (
+          <>
+            {!collapsed ? <div className="nav-label">Type</div> : null}
+            {item(route.name === "type", "keyboard", "Overview", () => go({ name: "type" }))}
+            {item(
+              route.name === "typeCourse" || route.name === "typeLesson",
+              "layers",
+              "Course",
+              () => go({ name: "typeCourse" }),
+            )}
+            {item(route.name === "typeTest", "zap", "Speed test", () => go({ name: "typeTest" }))}
+          </>
         ) : (
           <>
             {!collapsed ? <div className="nav-label">Interview practice</div> : null}
@@ -266,7 +298,7 @@ export default function Sidebar({
         )}
         {item(false, "search", "Quick find", onSearch, undefined, "search")}
 
-        {recentIds.length && !collapsed ? (
+        {mode !== "type" && recentIds.length && !collapsed ? (
           <>
             <div className="nav-label">Recents</div>
             {recentIds.map((id) => {

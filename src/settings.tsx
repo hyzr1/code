@@ -35,8 +35,8 @@ export interface Settings {
   appearance: {
     theme: ThemeChoice;
     accent: AccentName;
-    /** Which half of the app the sidebar is showing. */
-    mode: "learn" | "algo";
+    /** Which section of the app the sidebar is showing. */
+    mode: "learn" | "algo" | "type";
     density: "comfortable" | "compact";
     fontScale: number;
     readingFont: "sans" | "serif";

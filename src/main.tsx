@@ -2,17 +2,21 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App";
 import { SettingsProvider } from "./settings";
+import { TypingProvider } from "./components/typing/store";
 import { ToastProvider } from "./components/Toast";
 import AppErrorBoundary from "./components/AppErrorBoundary";
 import "./styles.css";
+import "./components/typing/typing.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <AppErrorBoundary>
       <SettingsProvider>
-        <ToastProvider>
-          <App />
-        </ToastProvider>
+        <TypingProvider>
+          <ToastProvider>
+            <App />
+          </ToastProvider>
+        </TypingProvider>
       </SettingsProvider>
     </AppErrorBoundary>
   </StrictMode>,
