@@ -2907,6 +2907,53 @@ const UNITS: UnitSpec[] = [
     trap: "Storing the wrong fact gives fast access to useless information. Define the lookup question in words before choosing key and value.",
     rule: "State: key means ___; value means ___; after index i the table contains ___.",
     recall: "What three meanings should you define before implementing a hash table solution?",
+    checks: [
+      {
+        question: "What does the hash-map pattern replace?",
+        choices: [
+          "Repeatedly scanning earlier elements — with one-pass table lookups of about O(1)",
+          "Sorting the whole input first",
+          "Recursion",
+        ],
+        answer: 0,
+        why: [
+          "Correct. Instead of re-scanning prior values, you record what you've seen in a dict and look it up directly, turning O(n²) scanning into about O(n).",
+          "Hashing does not require sorting; it trades memory for fast lookups.",
+          "It is a table lookup, not recursion.",
+        ],
+        explanation: "A hash map turns repeated scans for prior values into direct O(1) lookups.",
+      },
+      {
+        question: "Across a loop, what does `counts[value] = counts.get(value, 0) + 1` build?",
+        choices: [
+          "A count of how many times each value has appeared",
+          "A sorted list of the values",
+          "The sum of the values",
+        ],
+        answer: 0,
+        why: [
+          "Correct. Each value's running count starts at `0` (via `.get`) and increases by one each time it is seen.",
+          "It counts occurrences; it does not sort anything.",
+          "It counts occurrences per key, not a single total sum.",
+        ],
+        explanation: "It counts occurrences of each value in one pass.",
+      },
+      {
+        question: "Before coding a hash-map solution, what should you pin down?",
+        choices: [
+          "What the key means and what the value means (the exact lookup question)",
+          "How many lines it will take",
+          "The variable names",
+        ],
+        answer: 0,
+        why: [
+          "Correct. Storing the wrong fact gives fast access to useless data — define the key/value meaning (the question you'll ask the table) first.",
+          "Line count is irrelevant to correctness.",
+          "Naming matters least; the lookup question is what determines success.",
+        ],
+        explanation: "Define what the key and value mean — the lookup question — before coding.",
+      },
+    ],
     prompt: "Return the first character that occurs exactly once, or `None`.", fn: "first_unique", starter: `def first_unique(text):\n    pass`, solution: `from collections import Counter\n\ndef first_unique(text):\n    counts = Counter(text)\n    return next((char for char in text if counts[char] == 1), None)`,
     tests: [t("first", `assert fn("swiss") == "w"`), t("none", `assert fn("aabb") is None`), t("empty", `assert fn("") is None`)], pattern: "Hash map", tier: "problem", minutes: 12, difficulty: [2, 2, 2],
   },
@@ -2918,6 +2965,53 @@ const UNITS: UnitSpec[] = [
     trap: "Without ordering or another monotonic property, moving a pointer may skip the answer.",
     rule: "For every pointer move, say which region becomes impossible and why.",
     recall: "Why is increasing `left` safe when the sorted pair sum is too small?",
+    checks: [
+      {
+        question: "When do two pointers form the actual pattern rather than just two variables?",
+        choices: [
+          "When each move provably discards candidates using an ordered or monotonic fact",
+          "Whenever you have two index variables",
+          "Only on unsorted input",
+        ],
+        answer: 0,
+        why: [
+          "Correct. The pattern's power comes from a movement rule that safely eliminates possibilities; without that, they are just two loops.",
+          "Two index variables alone are not the pattern — the elimination guarantee is.",
+          "It usually needs sorted or symmetric input, not unsorted.",
+        ],
+        explanation: "Two pointers work when a move provably eliminates candidates via an ordered fact.",
+      },
+      {
+        question: "In two-sum on a *sorted* array, the pair sum is too big. Which pointer moves?",
+        choices: [
+          "Move the right pointer left, to decrease the sum",
+          "Move the left pointer right, to increase the sum",
+          "Move both toward the middle",
+        ],
+        answer: 0,
+        why: [
+          "Correct. Since the array is sorted, moving the right pointer left picks a smaller value, lowering the sum toward the target.",
+          "Moving left right would increase the sum, the wrong direction when it is already too big.",
+          "You move exactly one pointer, guided by whether the sum is too big or too small.",
+        ],
+        explanation: "Sorted two-sum: too big means move right pointer left (smaller value).",
+      },
+      {
+        question: "Two pointers usually require the input to be…",
+        choices: [
+          "Sorted or otherwise ordered/symmetric",
+          "Completely random",
+          "Stored in a dictionary",
+        ],
+        answer: 0,
+        why: [
+          "Correct. The elimination argument relies on order or symmetry, so the input is typically sorted first.",
+          "Random order gives no monotonic fact to exploit.",
+          "Two pointers walk a sequence by index, not a dictionary.",
+        ],
+        explanation: "The pattern needs an ordered/symmetric space for its elimination to hold.",
+      },
+    ],
     prompt: "Given a sorted list, return whether two distinct values sum to `target` in O(n) time and O(1) extra space.", fn: "has_pair_sum", starter: `def has_pair_sum(numbers, target):\n    pass`, solution: `def has_pair_sum(numbers, target):\n    left, right = 0, len(numbers) - 1\n    while left < right:\n        total = numbers[left] + numbers[right]\n        if total == target:\n            return True\n        if total < target:\n            left += 1\n        else:\n            right -= 1\n    return False`,
     tests: [t("yes", "assert fn([1, 2, 4, 7], 6) is True"), t("no", "assert fn([1, 2, 4, 7], 20) is False"), t("distinct", "assert fn([3], 6) is False", true)], pattern: "Two pointers", tier: "problem", minutes: 14, difficulty: [2, 2, 2],
   },
@@ -2929,6 +3023,53 @@ const UNITS: UnitSpec[] = [
     trap: "Windows need a condition that can be repaired monotonically. With arbitrary negative numbers, enlarging a sum can decrease it, so the standard positive-sum window logic fails.",
     rule: "Define what makes the window valid, what state represents it, and exactly when the left edge advances.",
     recall: "Why does a two-edge window remain O(n) even though one loop is nested inside another?",
+    checks: [
+      {
+        question: "What is the total work of a sliding window over n items?",
+        choices: [
+          "O(n) — each edge advances at most n times overall",
+          "O(n²) — the inner loop reruns fully each step",
+          "O(log n)",
+        ],
+        answer: 0,
+        why: [
+          "Correct. The left and right edges each move forward at most n times across the whole run, so the total is linear even though one loop is nested.",
+          "It is not O(n²): the inner edge never resets to the start; it only advances.",
+          "It is linear, not logarithmic — there is no halving.",
+        ],
+        explanation: "Each edge moves at most n times total, so a sliding window is O(n).",
+      },
+      {
+        question: "What is the job of the left edge of the window?",
+        choices: [
+          "Shrink the window until the invariant holds again",
+          "Always move with the right edge in lockstep",
+          "Reset to zero each step",
+        ],
+        answer: 0,
+        why: [
+          "Correct. The right edge adds new information; the left edge removes from the back until the window is valid again.",
+          "The edges move independently, not in lockstep.",
+          "Resetting the left edge each step would make it O(n²); it only advances.",
+        ],
+        explanation: "The left edge contracts the window until the invariant is restored.",
+      },
+      {
+        question: "A sliding window fits problems about…",
+        choices: [
+          "A contiguous range — a subarray or substring",
+          "Any subset of elements, in any order",
+          "Sorting the input",
+        ],
+        answer: 0,
+        why: [
+          "Correct. The window represents a contiguous stretch, so it fits 'best/valid subarray or substring' questions.",
+          "Non-contiguous subsets are not what a window models.",
+          "A window does not sort; it slides over a sequence.",
+        ],
+        explanation: "Sliding windows model a contiguous range (subarray/substring).",
+      },
+    ],
     prompt: "Return the length of the longest substring containing no repeated character.", fn: "longest_unique", starter: `def longest_unique(text):\n    pass`, solution: `def longest_unique(text):\n    left = 0\n    best = 0\n    latest = {}\n    for right, char in enumerate(text):\n        if char in latest and latest[char] >= left:\n            left = latest[char] + 1\n        latest[char] = right\n        best = max(best, right - left + 1)\n    return best`,
     tests: [t("ordinary", `assert fn("abcabcbb") == 3`), t("same", `assert fn("bbbb") == 1`), t("empty", `assert fn("") == 0`)], pattern: "Sliding window", tier: "problem", minutes: 20, difficulty: [3, 3, 3],
   },
@@ -2940,6 +3081,53 @@ const UNITS: UnitSpec[] = [
     trap: "Check that the stack is nonempty before reading `stack[-1]` or popping.",
     rule: "If the next answer depends on the most recent unresolved item, test a stack.",
     recall: "Why can a closing bracket only match the top opener?",
+    checks: [
+      {
+        question: "A stack is the right tool when a problem is about…",
+        choices: [
+          "Nested structure or the most-recent-unmatched item (last in, first out)",
+          "Finding the smallest item quickly",
+          "Random access by index",
+        ],
+        answer: 0,
+        why: [
+          "Correct. A stack resolves the most recently opened, still-unfinished item first — exactly nesting/matching problems.",
+          "That is a heap's job, not a stack's.",
+          "A stack only exposes the top; for random access use a list index.",
+        ],
+        explanation: "Use a stack for nested / nearest-unmatched (LIFO) structure.",
+      },
+      {
+        question: "Matching brackets: what do you push, and when do you pop?",
+        choices: [
+          "Push each opening bracket; pop when a closing bracket matches the most recent opener",
+          "Push closers; pop openers",
+          "Push everything and never pop",
+        ],
+        answer: 0,
+        why: [
+          "Correct. Openers wait on the stack; a closer must match the top (most recent) opener, which you then pop.",
+          "It is the reverse: openers are pushed and matched by closers.",
+          "You must pop on each match, or the stack never resolves.",
+        ],
+        explanation: "Push openers; a closer matches and pops the most recent opener.",
+      },
+      {
+        question: "Using a Python list as a stack, what is the cost of `append` and `pop()` from the end?",
+        choices: [
+          "O(1) amortized each",
+          "O(n) each",
+          "O(log n) each",
+        ],
+        answer: 0,
+        why: [
+          "Correct. Appending and popping the end of a list are constant-time (amortized), which is why lists make good stacks.",
+          "Those end operations are constant, not linear; `pop(0)` from the front is the slow one.",
+          "There is no log factor for end operations on a list.",
+        ],
+        explanation: "List `append` and end-`pop()` are O(1) amortized — ideal for a stack.",
+      },
+    ],
     prompt: "Return whether a string containing only `()[]{}` is properly balanced.", fn: "balanced", starter: `def balanced(text):\n    pass`, solution: `def balanced(text):\n    pairs = {")": "(", "]": "[", "}": "{"}\n    stack = []\n    for char in text:\n        if char in "([{":\n            stack.append(char)\n        elif not stack or stack.pop() != pairs[char]:\n            return False\n    return not stack`,
     tests: [t("valid", `assert fn("([]{})") is True`), t("crossed", `assert fn("([)]") is False`), t("open", `assert fn("((") is False`), t("empty", `assert fn("") is True`, true)], pattern: "Stack", tier: "problem", minutes: 14, difficulty: [2, 2, 2],
   },
@@ -2951,6 +3139,53 @@ const UNITS: UnitSpec[] = [
     trap: "Decide whether touching endpoints overlap. `[1, 3]` and `[3, 5]` merge for closed intervals but not necessarily for half-open ranges.",
     rule: "Sort by the coordinate that makes the future comparable to one frontier.",
     recall: "Why is comparing only with the last merged interval sufficient after sorting by start?",
+    checks: [
+      {
+        question: "Why sort intervals by start before merging?",
+        choices: [
+          "It turns global overlap into a local check against the current merged end",
+          "It makes the intervals shorter",
+          "It removes duplicates",
+        ],
+        answer: 0,
+        why: [
+          "Correct. Once sorted by start, any interval can only overlap the running merged one, so you compare against just the last output.",
+          "Sorting reorders intervals; it does not change their lengths.",
+          "Sorting does not deduplicate; it enables the single-pass merge.",
+        ],
+        explanation: "Sorting by start makes overlap a local check against the merged frontier.",
+      },
+      {
+        question: "After sorting by start, two intervals overlap when…",
+        choices: [
+          "The next interval's start is at or before the current merged end",
+          "Their lengths are equal",
+          "They have the same start",
+        ],
+        answer: 0,
+        why: [
+          "Correct. If the next start is not beyond the current end, the ranges touch and should merge.",
+          "Length is irrelevant to overlap.",
+          "They need not share a start — only that the next start falls within the current range.",
+        ],
+        explanation: "Overlap: the next start is ≤ the current merged end.",
+      },
+      {
+        question: "In the single merge pass, each interval either…",
+        choices: [
+          "Extends the current merged interval's end, or starts a new merged interval",
+          "Gets deleted",
+          "Splits into two",
+        ],
+        answer: 0,
+        why: [
+          "Correct. If it overlaps, extend the current end; otherwise, close the current interval and begin a new one.",
+          "Nothing is deleted; every interval joins a merged group.",
+          "Intervals merge or start fresh; they are not split.",
+        ],
+        explanation: "Each interval extends the frontier or opens a new merged interval.",
+      },
+    ],
     prompt: "Merge overlapping closed intervals and return them sorted. Do not mutate the input.", fn: "merge_intervals", starter: `def merge_intervals(intervals):\n    pass`, solution: `def merge_intervals(intervals):\n    if not intervals:\n        return []\n    ordered = sorted(intervals)\n    merged = [list(ordered[0])]\n    for start, end in ordered[1:]:\n        if start <= merged[-1][1]:\n            merged[-1][1] = max(merged[-1][1], end)\n        else:\n            merged.append([start, end])\n    return merged`,
     tests: [t("overlap", "assert fn([[1, 3], [2, 6], [8, 10]]) == [[1, 6], [8, 10]]"), t("touch", "assert fn([[1, 2], [2, 3]]) == [[1, 3]]"), t("empty", "assert fn([]) == []"), t("no mutation", "data=[[2,3],[1,2]]; fn(data); assert data==[[2,3],[1,2]]", true)], pattern: "Intervals", tier: "problem", minutes: 20, difficulty: [3, 3, 3],
   },
@@ -2962,6 +3197,53 @@ const UNITS: UnitSpec[] = [
     trap: "Mixing inclusive and exclusive bounds creates off-by-one loops. Pick one invariant and make every update preserve it.",
     rule: "Phrase the task as 'find the first position where predicate P becomes true.'",
     recall: "What do `low` and `high` mean in the half-open lower-bound search?",
+    checks: [
+      {
+        question: "Binary search works when the search space has what property?",
+        choices: [
+          "A predicate that flips false-to-true monotonically across an ordered space",
+          "Randomly ordered values",
+          "Exactly two elements",
+        ],
+        answer: 0,
+        why: [
+          "Correct. If 'is this position good?' turns from false to true just once across a sorted/monotonic space, you can binary-search the boundary.",
+          "Random order has no monotonic boundary to find.",
+          "It works on any size, not just two elements.",
+        ],
+        explanation: "Binary search needs a monotonic predicate over an ordered space.",
+      },
+      {
+        question: "Each step of binary search does what to the search space?",
+        choices: [
+          "Halves it, giving about O(log n) steps",
+          "Removes one element, giving O(n) steps",
+          "Doubles it",
+        ],
+        answer: 0,
+        why: [
+          "Correct. Discarding half each step means only about log₂(n) steps to pin down the boundary.",
+          "It discards half, not one element — that is what makes it logarithmic.",
+          "It shrinks, never grows, the interval.",
+        ],
+        explanation: "Halving each step gives O(log n).",
+      },
+      {
+        question: "Why maintain a half-open interval `[low, high)`?",
+        choices: [
+          "It keeps the invariant clear — the first true position always stays inside — and avoids off-by-one bugs",
+          "It is faster than a closed interval",
+          "It only works for even-length inputs",
+        ],
+        answer: 0,
+        why: [
+          "Correct. A consistent half-open range makes the loop's invariant precise, so you update `low`/`high` without off-by-one mistakes.",
+          "Speed is identical; the benefit is correctness/clarity.",
+          "It works for any length; parity is irrelevant.",
+        ],
+        explanation: "A half-open `[low, high)` keeps the invariant clean and avoids off-by-one errors.",
+      },
+    ],
     prompt: "Return the first index where `values[index] >= target`, or `len(values)` if none.", fn: "lower_bound", starter: `def lower_bound(values, target):\n    pass`, solution: `def lower_bound(values, target):\n    low, high = 0, len(values)\n    while low < high:\n        mid = (low + high) // 2\n        if values[mid] < target:\n            low = mid + 1\n        else:\n            high = mid\n    return low`,
     tests: [t("found", "assert fn([1, 3, 3, 7], 3) == 1"), t("between", "assert fn([1, 3, 7], 5) == 2"), t("past", "assert fn([1, 3], 9) == 2"), t("empty", "assert fn([], 1) == 0", true)], pattern: "Binary search", tier: "problem", minutes: 18, difficulty: [3, 3, 3],
   },
@@ -2973,6 +3255,53 @@ const UNITS: UnitSpec[] = [
     trap: "Define whether boundaries are inclusive or exclusive before writing indexes. Mixing a length-n prefix with a length-(n+1) formula is the usual off-by-one failure.",
     rule: "Use an initial zero and half-open ranges; the algebra then matches Python slicing.",
     recall: "If prefix[i] sums values before i, what expression sums [left, right)?",
+    checks: [
+      {
+        question: "With a prefix-sum array built, how fast is any range-sum query?",
+        choices: [
+          "O(1) — one subtraction of two prefix values",
+          "O(n) — you re-add the range each time",
+          "O(log n)",
+        ],
+        answer: 0,
+        why: [
+          "Correct. After an O(n) setup, each range sum is a single subtraction, so queries are constant time.",
+          "Re-adding each range would be the slow approach prefix sums exist to replace.",
+          "There is no log factor — it is a direct subtraction.",
+        ],
+        explanation: "Prefix sums answer any range sum in O(1) after O(n) setup.",
+      },
+      {
+        question: "If `prefix[i]` is the sum of values before index `i`, the sum of `[left, right)` is…",
+        choices: [
+          "`prefix[right] - prefix[left]`",
+          "`prefix[right] + prefix[left]`",
+          "`prefix[right - left]`",
+        ],
+        answer: 0,
+        why: [
+          "Correct. Subtracting the sum-before-left from the sum-before-right leaves exactly the values in the range.",
+          "Adding them double-counts; you must subtract.",
+          "Indexing by the difference has no meaning here — subtract the two prefixes.",
+        ],
+        explanation: "Range `[left, right)` = `prefix[right] - prefix[left]`.",
+      },
+      {
+        question: "When is a prefix-sum array most worth building?",
+        choices: [
+          "When you make many range-sum queries over a fixed array",
+          "For a single sum of the whole array",
+          "When the array changes on every query",
+        ],
+        answer: 0,
+        why: [
+          "Correct. The O(n) setup pays off across many O(1) queries; that is the whole point.",
+          "For one total sum, a plain `sum()` is simpler — no prefix array needed.",
+          "If the array keeps changing, a plain prefix array goes stale; that needs a different structure.",
+        ],
+        explanation: "Prefix sums shine for many range queries over a fixed array.",
+      },
+    ],
     prompt: "Given `[left, right]` inclusive queries, return every range sum after one preprocessing pass.", fn: "range_sums", starter: `def range_sums(values, queries):\n    pass`, solution: `def range_sums(values, queries):\n    prefix = [0]\n    for value in values:\n        prefix.append(prefix[-1] + value)\n    return [prefix[right + 1] - prefix[left] for left, right in queries]`,
     tests: [t("ranges", "assert fn([3,-1,4,2], [[0,1],[1,3],[2,2]]) == [2,5,4]"), t("none", "assert fn([1,2], []) == []"), t("single", "assert fn([7], [[0,0]]) == [7]")], pattern: "Prefix sum", tier: "problem", minutes: 15, difficulty: [3, 2, 3],
   },
@@ -2984,6 +3313,53 @@ const UNITS: UnitSpec[] = [
     trap: "Store indices when distance or position matters. Storing only values loses where the answer belongs.",
     rule: "Define the unresolved promise of one stack entry and the event that finally resolves it.",
     recall: "Why can the inner while loop pop O(n) items without making the whole algorithm O(n²)?",
+    checks: [
+      {
+        question: "What does a monotonic stack keep?",
+        choices: [
+          "Unresolved candidates in sorted (monotonic) order",
+          "Every element ever seen, in input order",
+          "Only the maximum element",
+        ],
+        answer: 0,
+        why: [
+          "Correct. It holds items still waiting for their answer, maintained in increasing or decreasing order.",
+          "It discards items that can no longer be the answer, so it does not keep everything.",
+          "It keeps a monotonic run of candidates, not just one value.",
+        ],
+        explanation: "A monotonic stack holds unresolved candidates in sorted order.",
+      },
+      {
+        question: "When a new value breaks the stack's order, what happens?",
+        choices: [
+          "It resolves (pops) one or more waiting candidates whose answer is now known",
+          "The whole stack is cleared",
+          "The new value is discarded",
+        ],
+        answer: 0,
+        why: [
+          "Correct. The new value is the answer those popped candidates were waiting for (e.g. next greater element), so they are resolved and removed.",
+          "Only the items that violate the order are popped, not the entire stack.",
+          "The new value is usually pushed after resolving others, not discarded.",
+        ],
+        explanation: "A violating value pops and resolves the candidates it answers.",
+      },
+      {
+        question: "Why is a monotonic stack O(n) despite its inner while loop?",
+        choices: [
+          "Each index is pushed once and popped once, so total pops are at most n",
+          "The inner loop never runs",
+          "It sorts first in O(n log n)",
+        ],
+        answer: 0,
+        why: [
+          "Correct. Across the whole run every index enters and leaves the stack a single time, bounding total work at O(n).",
+          "The inner loop does run; it just cannot pop more than n items in total.",
+          "No sorting happens; the linear bound comes from the once-in, once-out accounting.",
+        ],
+        explanation: "Each index is pushed and popped once, so the total is O(n).",
+      },
+    ],
     prompt: "Return the next strictly greater value to the right for each position, or `-1` when none exists.", fn: "next_greater", starter: `def next_greater(values):\n    pass`, solution: `def next_greater(values):\n    result = [-1] * len(values)\n    stack = []\n    for index, value in enumerate(values):\n        while stack and values[stack[-1]] < value:\n            result[stack.pop()] = value\n        stack.append(index)\n    return result`,
     tests: [t("ordinary", "assert fn([2,1,2,4,3]) == [4,2,4,-1,-1]"), t("decreasing", "assert fn([3,2,1]) == [-1,-1,-1]"), t("duplicates", "assert fn([2,2,3]) == [3,3,-1]")], pattern: "Monotonic stack", tier: "problem", minutes: 18, difficulty: [4, 3, 4],
   },
@@ -2995,6 +3371,53 @@ const UNITS: UnitSpec[] = [
     trap: "Edge direction is semantic. Decide whether `[a,b]` means a before b or a depends on b, then build graph and indegree consistently.",
     rule: "Ready means zero remaining prerequisites; processed count proves whether the ordering covered the whole graph.",
     recall: "What does a nonempty unprocessed remainder mean after the ready queue becomes empty?",
+    checks: [
+      {
+        question: "A topological order exists for which graphs?",
+        choices: [
+          "Directed acyclic graphs (no cycle)",
+          "Any graph at all",
+          "Only fully connected graphs",
+        ],
+        answer: 0,
+        why: [
+          "Correct. If there is a cycle, no ordering can put every prerequisite before its dependent, so a topo order needs a DAG.",
+          "A graph with a cycle has no valid topological order.",
+          "Connectivity is irrelevant; acyclicity is the requirement.",
+        ],
+        explanation: "Topological order exists exactly for directed acyclic graphs.",
+      },
+      {
+        question: "In Kahn's algorithm, which node do you remove next?",
+        choices: [
+          "A node with zero indegree — all its prerequisites are done",
+          "The node with the most edges",
+          "A random unvisited node",
+        ],
+        answer: 0,
+        why: [
+          "Correct. A zero-indegree node has nothing left blocking it, so it is ready; removing it exposes newly ready nodes.",
+          "Edge count does not determine readiness; indegree zero does.",
+          "It must be a ready (indegree-zero) node, not an arbitrary one.",
+        ],
+        explanation: "Kahn repeatedly removes a zero-indegree (ready) node.",
+      },
+      {
+        question: "The ready queue empties but some nodes remain unprocessed. What does that mean?",
+        choices: [
+          "There is a cycle — those nodes can never all become ready, so no topo order exists",
+          "The algorithm has a bug",
+          "The graph is empty",
+        ],
+        answer: 0,
+        why: [
+          "Correct. Leftover nodes are stuck waiting on each other in a cycle, which is exactly how Kahn detects a cycle.",
+          "It is not a bug; it is the cycle-detection result.",
+          "Leftover nodes mean the graph was non-empty and cyclic.",
+        ],
+        explanation: "Leftover nodes after the queue empties signal a cycle (no valid order).",
+      },
+    ],
     prompt: "Edges `[before, after]` describe dependencies. Return one valid order of `0..count-1`, or `[]` if impossible.", fn: "dependency_order", starter: `def dependency_order(count, edges):\n    pass`, solution: `from collections import deque\n\ndef dependency_order(count, edges):\n    graph = [[] for _ in range(count)]\n    indegree = [0] * count\n    for before, after in edges:\n        graph[before].append(after)\n        indegree[after] += 1\n    ready = deque(i for i, degree in enumerate(indegree) if degree == 0)\n    order = []\n    while ready:\n        node = ready.popleft()\n        order.append(node)\n        for neighbor in graph[node]:\n            indegree[neighbor] -= 1\n            if indegree[neighbor] == 0:\n                ready.append(neighbor)\n    return order if len(order) == count else []`,
     tests: [t("chain", "assert fn(3, [[0,1],[1,2]]) == [0,1,2]"), t("cycle", "assert fn(2, [[0,1],[1,0]]) == []"), t("valid branching", "r=fn(4, [[0,2],[1,2],[2,3]]); assert set(r)=={0,1,2,3} and r.index(2)>r.index(0) and r.index(2)>r.index(1)", true)], pattern: "Topological sort", tier: "problem", minutes: 22, difficulty: [4, 4, 4],
   },
@@ -3006,6 +3429,53 @@ const UNITS: UnitSpec[] = [
     trap: "Never attach an arbitrary node directly. Find both roots first or a union can split the representation's meaning.",
     rule: "A root identifies a component; only roots are merged; size chooses the attachment direction.",
     recall: "What two optimizations keep the parent trees shallow?",
+    checks: [
+      {
+        question: "What question does union-find (disjoint-set) answer efficiently?",
+        choices: [
+          "Are these two items in the same connected group? (and merge groups)",
+          "What is the shortest path between two nodes?",
+          "What is the sorted order of the items?",
+        ],
+        answer: 0,
+        why: [
+          "Correct. It tracks which component each item belongs to, answering connectivity and merging groups near-instantly.",
+          "Shortest paths need BFS/Dijkstra; union-find only tracks membership.",
+          "It does not sort; it groups.",
+        ],
+        explanation: "Union-find answers connectivity and merges components fast.",
+      },
+      {
+        question: "What do `find` and `union` do?",
+        choices: [
+          "`find` follows parent links to the root; `union` attaches one root under another",
+          "`find` sorts; `union` deletes",
+          "`find` prints; `union` copies",
+        ],
+        answer: 0,
+        why: [
+          "Correct. Each set is identified by a root; `find` walks up to it, and `union` joins two sets by linking roots.",
+          "Neither sorts nor deletes; they navigate and merge trees.",
+          "They manipulate the parent structure, not print or copy.",
+        ],
+        explanation: "`find` walks to the root; `union` links two roots.",
+      },
+      {
+        question: "Which two optimizations keep union-find nearly O(1) per operation?",
+        choices: [
+          "Path compression and union by size (or rank)",
+          "Sorting and binary search",
+          "Caching and recursion",
+        ],
+        answer: 0,
+        why: [
+          "Correct. Path compression flattens trees during `find`, and union by size keeps them shallow, giving near-constant amortized operations.",
+          "Sorting/binary search are unrelated to union-find's structure.",
+          "Those are general techniques, not the two that flatten disjoint-set trees.",
+        ],
+        explanation: "Path compression + union by size make operations effectively constant.",
+      },
+    ],
     prompt: "Return the number of connected components among `count` numbered vertices after adding all undirected edges.", fn: "component_count", starter: `def component_count(count, edges):\n    pass`, solution: `def component_count(count, edges):\n    parent = list(range(count))\n    size = [1] * count\n    def find(node):\n        while node != parent[node]:\n            parent[node] = parent[parent[node]]\n            node = parent[node]\n        return node\n    components = count\n    for left, right in edges:\n        a, b = find(left), find(right)\n        if a == b:\n            continue\n        if size[a] < size[b]:\n            a, b = b, a\n        parent[b] = a\n        size[a] += size[b]\n        components -= 1\n    return components`,
     tests: [t("two", "assert fn(5, [[0,1],[1,2],[3,4]]) == 2"), t("all", "assert fn(3, [[0,1],[1,2],[0,2]]) == 1"), t("none", "assert fn(4, []) == 4")], pattern: "Union find", tier: "problem", minutes: 22, difficulty: [4, 4, 4],
   },
@@ -3017,6 +3487,53 @@ const UNITS: UnitSpec[] = [
     trap: "BFS is not a shortest weighted-path algorithm merely because it visits everything. It optimizes edge count, which matches cost only when edges are equal.",
     rule: "Equal costs: queue. Nonnegative varying costs: min-heap. Negative costs: do not use Dijkstra.",
     recall: "What property makes first discovery final in BFS?",
+    checks: [
+      {
+        question: "When does plain BFS find shortest paths?",
+        choices: [
+          "When every edge has the same cost — distance equals edge count",
+          "For any edge costs, including negative",
+          "Only on trees",
+        ],
+        answer: 0,
+        why: [
+          "Correct. With equal edge weights, processing by number of edges is exactly processing by distance, so first discovery is shortest.",
+          "Varying or negative costs break the equal-cost assumption BFS relies on.",
+          "BFS shortest paths work on general graphs with equal weights, not just trees.",
+        ],
+        explanation: "BFS gives shortest paths when all edges cost the same.",
+      },
+      {
+        question: "For nonnegative but *varying* edge costs, which algorithm fits?",
+        choices: [
+          "Dijkstra, using a min-heap to always finalize the nearest unfinished node",
+          "Plain BFS",
+          "Depth-first search",
+        ],
+        answer: 0,
+        why: [
+          "Correct. Dijkstra pops the closest node from a min-heap, which is provably final when costs are nonnegative.",
+          "Plain BFS assumes equal weights, so it fails with varying costs.",
+          "DFS does not find shortest paths by cost.",
+        ],
+        explanation: "Dijkstra (min-heap) handles nonnegative varying edge costs.",
+      },
+      {
+        question: "What breaks Dijkstra?",
+        choices: [
+          "Negative edge weights — they need a different algorithm",
+          "Too many nodes",
+          "Undirected edges",
+        ],
+        answer: 0,
+        why: [
+          "Correct. A negative edge can improve an already-finalized node, violating Dijkstra's core assumption; use Bellman-Ford instead.",
+          "Node count affects speed, not correctness.",
+          "Dijkstra handles undirected graphs fine.",
+        ],
+        explanation: "Negative edges break Dijkstra; they need a different algorithm.",
+      },
+    ],
     prompt: "Return a dictionary of shortest unweighted distances from `start` in an adjacency dictionary.", fn: "unweighted_distances", starter: `def unweighted_distances(graph, start):\n    pass`, solution: `from collections import deque\n\ndef unweighted_distances(graph, start):\n    distance = {start: 0}\n    queue = deque([start])\n    while queue:\n        node = queue.popleft()\n        for neighbor in graph.get(node, []):\n            if neighbor not in distance:\n                distance[neighbor] = distance[node] + 1\n                queue.append(neighbor)\n    return distance`,
     tests: [t("layers", "g={'a':['b','c'],'b':['d'],'c':['d'],'d':[]}; assert fn(g,'a') == {'a':0,'b':1,'c':1,'d':2}"), t("unreachable omitted", "assert fn({'a':[],'z':[]}, 'a') == {'a':0}"), t("missing start", "assert fn({}, 'x') == {'x':0}")], pattern: "Shortest path", tier: "problem", minutes: 18, difficulty: [3, 3, 3],
   },
@@ -3028,6 +3545,53 @@ const UNITS: UnitSpec[] = [
     trap: "Loop direction is part of the algorithm. Reversing the inner loop may read stale or prematurely updated states from the wrong row.",
     rule: "Write the full state and recurrence first; compress dimensions only when you can name what each slot means before and after update.",
     recall: "In the one-row version, what do dp[col] and dp[col-1] mean at update time?",
+    checks: [
+      {
+        question: "Two-dimensional DP fits problems whose state is…",
+        choices: [
+          "Two independent coordinates — like two string positions or a grid cell",
+          "Always a single number",
+          "Unrelated to position",
+        ],
+        answer: 0,
+        why: [
+          "Correct. A 2D table indexes by two coordinates, one per dimension of the state.",
+          "A single number is 1D DP; this is for two-coordinate states.",
+          "The state is exactly the two positions/coordinates.",
+        ],
+        explanation: "2D DP handles states with two independent coordinates.",
+      },
+      {
+        question: "Why does the fill order of the DP table matter?",
+        choices: [
+          "Every cell must be computed only after the cells it depends on are already done",
+          "It changes the answer randomly",
+          "It only affects variable names",
+        ],
+        answer: 0,
+        why: [
+          "Correct. A recurrence reads neighboring cells, so you must fill in an order that has those dependencies ready first.",
+          "A correct order gives a deterministic answer, not a random one.",
+          "It affects correctness, not naming.",
+        ],
+        explanation: "Fill the table so each cell's dependencies are already computed.",
+      },
+      {
+        question: "In the one-row (space-compressed) version, before you overwrite it, what is `dp[col]`?",
+        choices: [
+          "The value from the *previous* row at this column (the update reuses it as the 'up' neighbor)",
+          "Always zero",
+          "The final answer",
+        ],
+        answer: 0,
+        why: [
+          "Correct. `dp[col]` still holds last row's value until you overwrite it, so it serves as the up-neighbor while `dp[col-1]` is the already-updated left neighbor.",
+          "It is not reset to zero between rows; it carries the prior row's value.",
+          "It is an intermediate value, not the final answer, until the last row.",
+        ],
+        explanation: "In one-row DP, `dp[col]` is the previous row's value until overwritten.",
+      },
+    ],
     prompt: "A robot moves only right or down. Return the number of paths through a `rows × columns` empty grid.", fn: "grid_paths", starter: `def grid_paths(rows, columns):\n    pass`, solution: `def grid_paths(rows, columns):\n    if rows <= 0 or columns <= 0:\n        return 0\n    dp = [1] * columns\n    for _ in range(1, rows):\n        for col in range(1, columns):\n            dp[col] += dp[col - 1]\n    return dp[-1]`,
     tests: [t("three by seven", "assert fn(3,7) == 28"), t("one row", "assert fn(1,5) == 1"), t("square", "assert fn(3,3) == 6"), t("empty", "assert fn(0,4) == 0")], pattern: "2D dynamic programming", tier: "problem", minutes: 18, difficulty: [3, 3, 3],
   },
@@ -3039,6 +3603,53 @@ const UNITS: UnitSpec[] = [
     trap: "Reading arbitrary heap positions as sorted order is wrong. Only the root has a global ordering guarantee.",
     rule: "Use a heap when you repeatedly need the next extreme or a bounded best frontier.",
     recall: "Why does a min-heap—not a max-heap—naturally maintain the k largest items?",
+    checks: [
+      {
+        question: "What does a binary heap give you?",
+        choices: [
+          "The smallest item at the top, with O(log n) push and pop — but not a fully sorted order",
+          "A fully sorted list at all times",
+          "O(1) access to any element by index",
+        ],
+        answer: 0,
+        why: [
+          "Correct. A heap only guarantees the min at the top and repairs order in O(log n); the rest is partially ordered.",
+          "It is not fully sorted — only the top is guaranteed.",
+          "Only the top is directly accessible; arbitrary indexing is not the point.",
+        ],
+        explanation: "A heap gives the min at top with O(log n) push/pop; it is not fully sorted.",
+      },
+      {
+        question: "To keep the k *largest* items seen, which heap do you use?",
+        choices: [
+          "A size-k min-heap — its top is the smallest of the k, so a bigger new value evicts it",
+          "A size-k max-heap",
+          "A sorted list rebuilt each time",
+        ],
+        answer: 0,
+        why: [
+          "Correct. The min-heap's top is the weakest of your current top-k, so you compare and replace it in O(log k).",
+          "A max-heap puts the biggest on top, which does not help you evict the weakest of the k.",
+          "Rebuilding a sorted list each step is O(n log n) — the heap avoids that.",
+        ],
+        explanation: "A size-k min-heap keeps the k largest: evict its (smallest) top when a bigger value arrives.",
+      },
+      {
+        question: "Cost of one push or pop on a heap of n items?",
+        choices: [
+          "O(log n)",
+          "O(1)",
+          "O(n)",
+        ],
+        answer: 0,
+        why: [
+          "Correct. Restoring the heap order after a push or pop takes about log n swaps.",
+          "Peeking the top is O(1), but push/pop must repair order in O(log n).",
+          "It is logarithmic, not linear.",
+        ],
+        explanation: "Heap push/pop are O(log n).",
+      },
+    ],
     prompt: "Return the kth largest value using O(k) additional space.", fn: "kth_largest", starter: `def kth_largest(values, k):\n    pass`, solution: `import heapq\n\ndef kth_largest(values, k):\n    heap = []\n    for value in values:\n        heapq.heappush(heap, value)\n        if len(heap) > k:\n            heapq.heappop(heap)\n    return heap[0]`,
     tests: [t("third", "assert fn([3, 2, 1, 5, 6, 4], 2) == 5"), t("duplicates", "assert fn([3, 2, 3, 1, 2, 4, 5, 5, 6], 4) == 4"), t("one", "assert fn([-2], 1) == -2")], pattern: "Heap / top-k", tier: "problem", minutes: 18, difficulty: [3, 2, 3],
   },
@@ -3050,6 +3661,53 @@ const UNITS: UnitSpec[] = [
     trap: "Do not share a mutable accumulator across recursive branches unless backtracking restores it precisely.",
     rule: "Write the meaning of `solve(node)` in one sentence before the base case.",
     recall: "What does the recursive `depth(node)` promise to its caller?",
+    checks: [
+      {
+        question: "How do DFS and BFS differ on a tree?",
+        choices: [
+          "DFS follows one branch deep (recursion/stack); BFS visits level by level (a queue)",
+          "DFS uses a queue; BFS uses recursion",
+          "They visit nodes in the same order",
+        ],
+        answer: 0,
+        why: [
+          "Correct. DFS dives down one path using recursion or a stack; BFS spreads outward by distance using a queue.",
+          "It is reversed: a queue drives BFS, recursion/stack drives DFS.",
+          "They produce different visit orders — depth-first versus breadth-first.",
+        ],
+        explanation: "DFS goes deep (stack/recursion); BFS goes by level (queue).",
+      },
+      {
+        question: "When writing a recursive tree function, what should you nail down first?",
+        choices: [
+          "Exactly what value it returns for one subtree",
+          "How many nodes the tree has",
+          "The variable names",
+        ],
+        answer: 0,
+        why: [
+          "Correct. A clear contract — 'for this subtree, I return ___' — lets you combine children's results correctly.",
+          "You rarely need the total node count; you need the per-subtree contract.",
+          "Naming is minor; the return contract is what makes recursion correct.",
+        ],
+        explanation: "Define exactly what the function returns for one subtree.",
+      },
+      {
+        question: "BFS visits nodes in order of…",
+        choices: [
+          "Distance (number of edges) from the start",
+          "Alphabetical value",
+          "Random order",
+        ],
+        answer: 0,
+        why: [
+          "Correct. A queue processes all nodes at distance 1, then 2, and so on — breadth first.",
+          "BFS ignores values; it goes by distance.",
+          "The order is fully determined by distance, not random.",
+        ],
+        explanation: "BFS visits by increasing distance from the start.",
+      },
+    ],
     prompt: "Nodes are dictionaries with optional `left` and `right` keys. Return the maximum root-to-leaf depth; `None` has depth 0.", fn: "tree_depth", starter: `def tree_depth(node):\n    pass`, solution: `def tree_depth(node):\n    if node is None:\n        return 0\n    return 1 + max(tree_depth(node.get("left")), tree_depth(node.get("right")))`,
     tests: [t("empty", "assert fn(None) == 0"), t("one", "assert fn({}) == 1"), t("deep", `tree={"left":{"left":{}},"right":{}}\nassert fn(tree)==3`)], pattern: "Tree DFS", tier: "problem", minutes: 18, difficulty: [3, 2, 3],
   },
@@ -3061,6 +3719,53 @@ const UNITS: UnitSpec[] = [
     trap: "Recursive DFS can exceed Python's recursion limit on a deep graph; an explicit stack is safer for untrusted depth.",
     rule: "Define what one frontier item represents and mark it visited at the moment it is scheduled.",
     recall: "Why should BFS mark a node visited when enqueuing rather than when dequeuing?",
+    checks: [
+      {
+        question: "What must a graph traversal keep to avoid running forever?",
+        choices: [
+          "A visited set, so each node is processed only once",
+          "A sorted copy of the graph",
+          "The total number of edges",
+        ],
+        answer: 0,
+        why: [
+          "Correct. Graphs can have cycles, so a visited set stops you from revisiting nodes and looping endlessly.",
+          "No sorting is needed; the visited set is what prevents repeats.",
+          "Counting edges does not prevent cycles; tracking visited nodes does.",
+        ],
+        explanation: "A visited set keeps each node processed once, avoiding cycles.",
+      },
+      {
+        question: "With an adjacency list, DFS and BFS both run in…",
+        choices: [
+          "O(V + E) — each vertex once, each edge a constant number of times",
+          "O(V × E)",
+          "O(V²) always",
+        ],
+        answer: 0,
+        why: [
+          "Correct. Every vertex is handled once and every edge is looked at a constant number of times, giving O(V + E).",
+          "It is additive, not multiplicative, with an adjacency list.",
+          "O(V²) is the adjacency-*matrix* cost, not adjacency-list traversal.",
+        ],
+        explanation: "Adjacency-list traversal is O(V + E).",
+      },
+      {
+        question: "Why mark a node visited when you *enqueue* it in BFS (not when you dequeue)?",
+        choices: [
+          "So the same node is never added to the queue twice",
+          "It makes the queue shorter to type",
+          "It changes the traversal to DFS",
+        ],
+        answer: 0,
+        why: [
+          "Correct. Marking on enqueue prevents a node reachable by several edges from being queued multiple times.",
+          "It is about correctness/efficiency, not typing.",
+          "It does not change BFS into DFS; the queue still drives level order.",
+        ],
+        explanation: "Mark on enqueue so a node is never queued twice.",
+      },
+    ],
     prompt: "Given an adjacency dictionary, return whether a path exists from `start` to `target`.", fn: "path_exists", starter: `def path_exists(graph, start, target):\n    pass`, solution: `from collections import deque\n\ndef path_exists(graph, start, target):\n    queue = deque([start])\n    visited = {start}\n    while queue:\n        node = queue.popleft()\n        if node == target:\n            return True\n        for neighbor in graph.get(node, []):\n            if neighbor not in visited:\n                visited.add(neighbor)\n                queue.append(neighbor)\n    return False`,
     tests: [t("path", `g={"a":["b"],"b":["c"],"c":[]}\nassert fn(g,"a","c") is True`), t("cycle no path", `g={"a":["b"],"b":["a"]}\nassert fn(g,"a","z") is False`), t("self", "assert fn({}, 'a', 'a') is True")], pattern: "Graph BFS", tier: "problem", minutes: 20, difficulty: [3, 3, 3],
   },
@@ -3072,6 +3777,53 @@ const UNITS: UnitSpec[] = [
     trap: "Forgetting the undo step leaks a choice into sibling branches. Copying at every recursive call is correct but can obscure and increase the cost.",
     rule: "State the choice set, completion condition, invalid-prefix rule, and undo operation.",
     recall: "Why is `path.copy()` needed when an answer is recorded?",
+    checks: [
+      {
+        question: "What is the core loop of backtracking?",
+        choices: [
+          "Choose, recurse, then undo the choice before trying the next",
+          "Choose and never undo",
+          "Try every combination at random",
+        ],
+        answer: 0,
+        why: [
+          "Correct. You make a choice, explore deeper, then reverse it so the shared state is clean for the next choice.",
+          "Without undoing, the shared path would carry stale choices into other branches.",
+          "It is a systematic depth-first search, not random.",
+        ],
+        explanation: "Backtracking = choose, recurse, undo.",
+      },
+      {
+        question: "Why call `path.copy()` when you record a completed answer?",
+        choices: [
+          "The `path` list keeps mutating as you backtrack; you must store a snapshot",
+          "Copying makes it run faster",
+          "It is never needed",
+        ],
+        answer: 0,
+        why: [
+          "Correct. `path` is one shared, changing list; appending it directly would store a reference that later gets undone. A copy freezes the current answer.",
+          "It is about correctness, not speed.",
+          "Without the copy, every stored answer would end up mutated (often empty).",
+        ],
+        explanation: "`path` mutates as you backtrack, so store a copy of a found answer.",
+      },
+      {
+        question: "What is pruning in backtracking?",
+        choices: [
+          "Rejecting a partial choice early when it cannot lead to a valid answer",
+          "Deleting the final answer",
+          "Sorting the choices",
+        ],
+        answer: 0,
+        why: [
+          "Correct. Cutting off dead branches before fully exploring them saves huge amounts of work.",
+          "Pruning removes hopeless partial paths, not final answers.",
+          "Sorting is a separate concern from pruning.",
+        ],
+        explanation: "Pruning cuts partial paths that cannot reach a valid answer.",
+      },
+    ],
     prompt: "Return every subset of `values`; order of subsets does not matter.", fn: "subsets", starter: `def subsets(values):\n    pass`, solution: `def subsets(values):\n    result = []\n    path = []\n    def search(index):\n        if index == len(values):\n            result.append(path.copy())\n            return\n        search(index + 1)\n        path.append(values[index])\n        search(index + 1)\n        path.pop()\n    search(0)\n    return result`,
     tests: [t("three", "result=fn([1,2,3]); assert len(result)==8 and [] in result and [1,2,3] in result"), t("empty", "assert fn([]) == [[]]"), t("independent lists", "r=fn([1]); r[0].append(9); assert r[0] is not r[1]", true)], pattern: "Backtracking", tier: "problem", minutes: 24, difficulty: [4, 3, 4],
   },
@@ -3083,6 +3835,53 @@ const UNITS: UnitSpec[] = [
     trap: "A table without a state definition is memorized code. It breaks as soon as the output or constraint changes.",
     rule: "Write: `state means ___`; `transition considers ___`; `base case is ___`; `answer lives at ___`.",
     recall: "Why are the only choices for the final house 'skip it' or 'take it plus i-2'?",
+    checks: [
+      {
+        question: "When does dynamic programming apply?",
+        choices: [
+          "When different choice paths reach the same subproblem (overlapping subproblems)",
+          "Only when the input is sorted",
+          "Whenever recursion is used at all",
+        ],
+        answer: 0,
+        why: [
+          "Correct. DP pays off when the same subproblem recurs, so caching its answer avoids redoing exponential work.",
+          "Sorting is unrelated to whether subproblems overlap.",
+          "Recursion without overlapping subproblems does not need DP.",
+        ],
+        explanation: "DP fits when the same subproblem is reached many ways.",
+      },
+      {
+        question: "What must a DP *state* contain?",
+        choices: [
+          "Everything the future needs — enough that the answer is independent of how you got there",
+          "The entire input, copied",
+          "Only the current index",
+        ],
+        answer: 0,
+        why: [
+          "Correct. A good state captures all the information later decisions depend on, so the subproblem is self-contained.",
+          "Copying the whole input is wasteful; capture only what the future needs.",
+          "Sometimes an index is enough, but only if that is truly all the future depends on.",
+        ],
+        explanation: "A state holds all information future decisions depend on.",
+      },
+      {
+        question: "What is the difference between top-down and bottom-up DP?",
+        choices: [
+          "Top-down memoizes a recursion; bottom-up fills a table in dependency order",
+          "They give different answers",
+          "Top-down is always wrong",
+        ],
+        answer: 0,
+        why: [
+          "Correct. Both compute the same recurrence — one caches recursive calls, the other iterates a table from base cases up.",
+          "They compute the same values; only the mechanism differs.",
+          "Top-down memoization is a perfectly valid, correct approach.",
+        ],
+        explanation: "Top-down = memoized recursion; bottom-up = table in dependency order.",
+      },
+    ],
     prompt: "Return the maximum sum of non-adjacent nonnegative values.", fn: "max_non_adjacent", starter: `def max_non_adjacent(values):\n    pass`, solution: `def max_non_adjacent(values):\n    previous_two = 0\n    previous_one = 0\n    for value in values:\n        current = max(previous_one, previous_two + value)\n        previous_two, previous_one = previous_one, current\n    return previous_one`,
     tests: [t("ordinary", "assert fn([2, 7, 9, 3, 1]) == 12"), t("pair", "assert fn([5, 1, 1, 5]) == 10"), t("empty", "assert fn([]) == 0"), t("one", "assert fn([8]) == 8", true)], pattern: "Dynamic programming", tier: "problem", minutes: 24, difficulty: [4, 3, 4],
   },
@@ -3094,6 +3893,53 @@ const UNITS: UnitSpec[] = [
     trap: "Silently clamping invalid inputs hides client defects and makes retries appear successful with the wrong data. Returning several unrelated error shapes makes callers branch on accidents instead of a stable contract.",
     rule: "Validate once at the boundary, state the invariant that becomes true, and keep success and failure shapes stable.",
     recall: "What may core code safely assume after a boundary validator accepts page and size?",
+    checks: [
+      {
+        question: "Where should input validation live?",
+        choices: [
+          "At the boundary — once data enters the core, the rest of the program can trust it",
+          "Scattered throughout every function",
+          "Only in the database",
+        ],
+        answer: 0,
+        why: [
+          "Correct. Validate once at the edge; then core logic can rely on the data's shape instead of re-checking everywhere.",
+          "Re-validating everywhere is repetitive and error-prone; concentrate it at the boundary.",
+          "The database is too late and too far; reject bad input at the entry point.",
+        ],
+        explanation: "Validate at the boundary so the core can trust its inputs.",
+      },
+      {
+        question: "What does an API contract define?",
+        choices: [
+          "Accepted inputs, returned outputs, and failure behavior",
+          "The programming language used",
+          "The server's hardware",
+        ],
+        answer: 0,
+        why: [
+          "Correct. A contract is the promise about inputs, outputs, and how failures are reported — the testable interface.",
+          "Language is an implementation detail, not the contract.",
+          "Hardware is irrelevant to the interface contract.",
+        ],
+        explanation: "A contract specifies inputs, outputs, and failure behavior.",
+      },
+      {
+        question: "After a boundary validator accepts the request, core code may…",
+        choices: [
+          "Assume the inputs are valid and skip re-checking them",
+          "Re-validate everything again to be safe",
+          "Ignore the inputs",
+        ],
+        answer: 0,
+        why: [
+          "Correct. That is the payoff of boundary validation — the core is freed from defensive re-checks.",
+          "Re-checking defeats the purpose and clutters the core with boundary logic.",
+          "The core uses the inputs; it just does not need to re-validate them.",
+        ],
+        explanation: "Validated-at-the-boundary means the core can trust the data.",
+      },
+    ],
     prompt: "Implement `page_window(page, size)`. Page starts at 1, size must be 1 through 100, and invalid input raises ValueError. Return `(offset, size)`.", fn: "page_window", starter: `def page_window(page, size):\n    pass`, solution: `def page_window(page, size):\n    if page < 1 or size < 1 or size > 100:\n        raise ValueError("invalid pagination")\n    return ((page - 1) * size, size)`,
     tests: [t("first", "assert fn(1, 25) == (0, 25)"), t("later", "assert fn(3, 20) == (40, 20)"), t("bad page", "\ntry:\n fn(0, 10); assert False\nexcept ValueError: pass", true), t("bad size", "\ntry:\n fn(1, 101); assert False\nexcept ValueError: pass", true)], tier: "problem", minutes: 12, difficulty: [3, 2, 3],
   },
@@ -3105,6 +3951,53 @@ const UNITS: UnitSpec[] = [
     trap: "Checking whether a key exists and updating the balance in separate database transactions leaves a race: two workers can both observe absence. The conceptual operation must be atomic.",
     rule: "For every retried write, identify the stable request identity, the durable result, and the atomic boundary that joins deduplication to mutation.",
     recall: "Why is deduplication insufficient if recording the key and changing the balance are not atomic?",
+    checks: [
+      {
+        question: "What does an idempotency key achieve?",
+        choices: [
+          "A retried request applies its effect at most once, even if delivered several times",
+          "It encrypts the request",
+          "It makes requests faster",
+        ],
+        answer: 0,
+        why: [
+          "Correct. The server remembers the key and skips the effect on a duplicate, turning at-least-once delivery into effectively once.",
+          "It is about deduplicating effects, not encryption.",
+          "It is about correctness under retries, not speed.",
+        ],
+        explanation: "An idempotency key makes a repeated request apply its effect once.",
+      },
+      {
+        question: "Why is retrying a write dangerous without idempotency?",
+        choices: [
+          "A lost response means the client cannot tell if the write already happened, so a retry may double it",
+          "Retries are always rejected",
+          "The server forgets all state",
+        ],
+        answer: 0,
+        why: [
+          "Correct. The server may have committed before the response was lost; a blind retry then applies the effect twice.",
+          "Retries are not automatically rejected — that is the problem.",
+          "The server keeps its state; the ambiguity is on the client side.",
+        ],
+        explanation: "A lost response hides whether the write committed, so a retry can duplicate it.",
+      },
+      {
+        question: "Why must recording the key and applying the effect be atomic (all-or-nothing)?",
+        choices: [
+          "A crash between them could apply the effect without recording the key, breaking dedup on retry",
+          "Atomicity makes it faster",
+          "It is never required",
+        ],
+        answer: 0,
+        why: [
+          "Correct. If they can partially complete, a retry might reapply the effect because the key was never recorded — so they must commit together.",
+          "This is about correctness, not speed.",
+          "Without atomicity the whole guarantee falls apart, so it is required.",
+        ],
+        explanation: "Record the key and apply the effect atomically, or dedup can fail on retry.",
+      },
+    ],
     prompt: "Return `(new_balance, new_seen)` after applying a credit once per key. Do not mutate the caller's set.", fn: "apply_credit", starter: `def apply_credit(balance, seen, key, amount):\n    pass`, solution: `def apply_credit(balance, seen, key, amount):\n    if key in seen:\n        return balance, seen.copy()\n    return balance + amount, seen | {key}`,
     tests: [t("first", "assert fn(10, set(), 'a', 5) == (15, {'a'})"), t("duplicate", "assert fn(15, {'a'}, 'a', 5) == (15, {'a'})"), t("does not mutate", "s={'x'}; fn(4,s,'y',2); assert s == {'x'}", true)], tier: "problem", minutes: 14, difficulty: [4, 2, 4],
   },
@@ -3116,6 +4009,53 @@ const UNITS: UnitSpec[] = [
     trap: "Caching a mutable answer forever can make a fast system consistently wrong. A cache key that omits a relevant input can also leak one user's result into another request.",
     rule: "Before adding a cache, name the repeated computation, complete cache key, eviction rule, and acceptable staleness.",
     recall: "In LRU, what state changes on a hit even though no value is fetched from the backing store?",
+    checks: [
+      {
+        question: "What does a cache trade away for lower latency?",
+        choices: [
+          "Extra memory and the complexity of keeping entries fresh (invalidation)",
+          "Nothing — caches are free wins",
+          "Correctness of results",
+        ],
+        answer: 0,
+        why: [
+          "Correct. A cache spends memory and adds invalidation/staleness concerns in exchange for avoiding repeated work.",
+          "Caches are not free — memory and staleness are the costs.",
+          "A correct cache returns correct values; the cost is memory and invalidation, not correctness.",
+        ],
+        explanation: "A cache trades memory + invalidation complexity for lower repeated-work latency.",
+      },
+      {
+        question: "What does an LRU cache evict when it is full?",
+        choices: [
+          "The least recently used key",
+          "The most recently used key",
+          "A random key",
+        ],
+        answer: 0,
+        why: [
+          "Correct. LRU assumes recently used items are likely to be used again, so it drops the one used longest ago.",
+          "Evicting the most recent would throw away what you likely need next.",
+          "Random eviction ignores locality; LRU uses recency.",
+        ],
+        explanation: "LRU evicts the least recently used key.",
+      },
+      {
+        question: "On a cache *hit*, what changes even though no value is fetched from the store?",
+        choices: [
+          "That key becomes the most recently used — the recency order updates",
+          "Nothing changes",
+          "The value is deleted",
+        ],
+        answer: 0,
+        why: [
+          "Correct. LRU must record that the key was just touched, moving it to most-recently-used so it is evicted last.",
+          "Recency state must update, or eviction order would be wrong.",
+          "A hit returns the value; it does not delete it.",
+        ],
+        explanation: "A hit marks the key most-recently-used (updates recency order).",
+      },
+    ],
     prompt: "Return the number of misses produced by an LRU cache of `capacity` for a sequence of keys. Assume only key presence matters.", fn: "lru_misses", starter: `def lru_misses(capacity, keys):\n    pass`, solution: `def lru_misses(capacity, keys):\n    recent = []\n    misses = 0\n    for key in keys:\n        if key in recent:\n            recent.remove(key)\n        else:\n            misses += 1\n            if len(recent) == capacity:\n                recent.pop(0)\n        recent.append(key)\n    return misses`,
     tests: [t("locality", "assert fn(2, ['A','B','A','C','A']) == 3"), t("thrash", "assert fn(2, ['A','B','C','A']) == 4"), t("empty", "assert fn(3, []) == 0")], pattern: "LRU cache", tier: "problem", minutes: 18, difficulty: [4, 3, 4],
   },
@@ -3127,6 +4067,53 @@ const UNITS: UnitSpec[] = [
     trap: "A single precise-looking answer without assumptions is false confidence. Average throughput alone hides bursts, retries, fan-out, replication, and headroom.",
     rule: "Write units beside every number, calculate an average, apply explicit peak and safety factors, then identify which assumption dominates.",
     recall: "Why should an interview estimate keep average load and peak factor as separate steps?",
+    checks: [
+      {
+        question: "What is back-of-the-envelope capacity estimation really doing?",
+        choices: [
+          "Bounding the answer to the right order of magnitude — a sanity check, not a prediction",
+          "Computing an exact future value",
+          "Guessing randomly",
+        ],
+        answer: 0,
+        why: [
+          "Correct. The goal is a defensible order-of-magnitude bound to catch designs that cannot possibly work.",
+          "It is deliberately approximate, not exact.",
+          "It is structured reasoning from stated assumptions, not a random guess.",
+        ],
+        explanation: "Capacity estimation bounds the order of magnitude; it is a sanity check.",
+      },
+      {
+        question: "Why keep average load and the peak factor as separate steps?",
+        choices: [
+          "You must size for peak, and separating them makes the peak assumption explicit and checkable",
+          "It looks more impressive",
+          "Averages are useless",
+        ],
+        answer: 0,
+        why: [
+          "Correct. Systems fail at peak, not average; stating the peak multiplier separately keeps the assumption visible and easy to revise.",
+          "It is about correctness of the estimate, not appearance.",
+          "The average is a needed baseline; the peak factor scales it.",
+        ],
+        explanation: "Separate average and peak so you can size for peak with an explicit factor.",
+      },
+      {
+        question: "What is an essential early step in any estimate?",
+        choices: [
+          "Convert every quantity to compatible units before combining them",
+          "Pick the largest number you can think of",
+          "Skip units to save time",
+        ],
+        answer: 0,
+        why: [
+          "Correct. Mismatched units (per-second vs per-day, bits vs bytes) are the most common estimation error; normalize first.",
+          "Numbers must come from assumptions, not from picking a big one.",
+          "Ignoring units is exactly how these estimates go wrong.",
+        ],
+        explanation: "Convert to compatible units before combining quantities.",
+      },
+    ],
     prompt: "Return the ceiling of peak requests per second from `daily_requests` and a positive `peak_factor`.", fn: "peak_rps", starter: `def peak_rps(daily_requests, peak_factor):\n    pass`, solution: `def peak_rps(daily_requests, peak_factor):\n    import math\n    if daily_requests < 0 or peak_factor <= 0:\n        raise ValueError("invalid estimate")\n    return math.ceil(daily_requests / 86_400 * peak_factor)`,
     tests: [t("round", "assert fn(8_640_000, 4) == 400"), t("ceil", "assert fn(1, 1) == 1"), t("invalid", "\ntry:\n fn(10,0); assert False\nexcept ValueError: pass", true)], tier: "problem", minutes: 12, difficulty: [3, 2, 3],
   },
@@ -3138,6 +4125,53 @@ const UNITS: UnitSpec[] = [
     trap: "A broadcast that runs is not necessarily meaningful. Accidental alignment can duplicate values along the wrong axis without raising an error.",
     rule: "Annotate every axis with its domain meaning and predict the output shape before performing an operation.",
     recall: "If X has shape `(n, d)` and weights has shape `(d,)`, what must the score shape mean?",
+    checks: [
+      {
+        question: "Most ML shape errors are really…",
+        choices: [
+          "Contract failures — the axes did not mean what you assumed",
+          "Hardware failures",
+          "Random",
+        ],
+        answer: 0,
+        why: [
+          "Correct. Writing what each axis means (examples? features?) turns cryptic shape errors into a clear mismatch you can fix.",
+          "They are logic/contract errors, not hardware.",
+          "They are deterministic consequences of mismatched axis meanings.",
+        ],
+        explanation: "Shape errors are axis-meaning (contract) failures; label each axis.",
+      },
+      {
+        question: "`X` has shape `(n, d)` (n examples, d features) and `weights` has shape `(d,)`. What is `X @ weights`?",
+        choices: [
+          "Shape `(n,)` — one score per example",
+          "Shape `(d,)`",
+          "A single number",
+        ],
+        answer: 0,
+        why: [
+          "Correct. Multiplying each example's d features by the d weights collapses the feature axis, leaving one score per example.",
+          "`(d,)` is the weights' shape, not the output; the feature axis is consumed.",
+          "It is a vector of n scores, not one scalar.",
+        ],
+        explanation: "`(n, d) @ (d,)` gives `(n,)` — one score per example.",
+      },
+      {
+        question: "A feature matrix is usually which shape?",
+        choices: [
+          "`(examples, features)` — rows are examples, columns are features",
+          "`(features, examples)` always",
+          "A 1-D list",
+        ],
+        answer: 0,
+        why: [
+          "Correct. The common convention is one row per example, one column per feature.",
+          "That transposed layout exists but is not the usual default; be explicit when you use it.",
+          "A feature matrix is 2-D (examples × features), not 1-D.",
+        ],
+        explanation: "Feature matrices are typically `(examples, features)`.",
+      },
+    ],
     prompt: "Return one dot-product score per row. Raise ValueError if any row length differs from `weights`.", fn: "linear_scores", starter: `def linear_scores(rows, weights):\n    pass`, solution: `def linear_scores(rows, weights):\n    scores = []\n    for row in rows:\n        if len(row) != len(weights):\n            raise ValueError("shape mismatch")\n        scores.append(sum(value * weight for value, weight in zip(row, weights)))\n    return scores`,
     tests: [t("scores", "assert fn([[1,0,2],[0,3,1]],[.5,1,-1]) == [-1.5,2]"), t("empty batch", "assert fn([], [1,2]) == []"), t("mismatch", "\ntry:\n fn([[1]], [1,2]); assert False\nexcept ValueError: pass", true)], tier: "problem", minutes: 14, difficulty: [3, 2, 3],
   },
@@ -3149,6 +4183,53 @@ const UNITS: UnitSpec[] = [
     trap: "Splitting first does not save a pipeline if feature engineering was already computed over the full dataset. Leakage can happen before the split code appears.",
     rule: "Recreate the information boundary and grouping structure of deployment; fit every learned preprocessing step on training only.",
     recall: "Why can global normalization leak validation information even when labels were never copied into training?",
+    checks: [
+      {
+        question: "What is data leakage?",
+        choices: [
+          "Using information at training time that would not be available at prediction time",
+          "Losing rows of data",
+          "A memory leak in the program",
+        ],
+        answer: 0,
+        why: [
+          "Correct. If training sees anything the deployed model would not have, your evaluation is optimistic and misleading.",
+          "It is about information, not lost rows.",
+          "It is a statistical/evaluation flaw, not a memory leak.",
+        ],
+        explanation: "Leakage = training uses info unavailable at prediction time.",
+      },
+      {
+        question: "Why can normalizing with statistics computed over ALL data leak, even without touching labels?",
+        choices: [
+          "The mean/std include the validation rows, so training indirectly 'sees' them",
+          "It cannot leak without labels",
+          "Normalization is always safe",
+        ],
+        answer: 0,
+        why: [
+          "Correct. Fitting the scaler on the whole dataset bakes validation-set information into the training features.",
+          "Leakage does not require labels — shared preprocessing statistics are enough.",
+          "Normalization is safe only when fit on training data alone.",
+        ],
+        explanation: "Global normalization leaks because its stats include validation data.",
+      },
+      {
+        question: "How do you avoid preprocessing leakage?",
+        choices: [
+          "Fit preprocessing on the training split only, then apply it to validation/test",
+          "Fit it on everything for consistency",
+          "Skip preprocessing entirely",
+        ],
+        answer: 0,
+        why: [
+          "Correct. Learn the transform's parameters from training data, then apply (not re-fit) them to held-out data.",
+          "Fitting on everything is exactly the leak.",
+          "Preprocessing is fine; it just must be fit on training only.",
+        ],
+        explanation: "Fit preprocessing on training only, then apply to held-out data.",
+      },
+    ],
     prompt: "Given `(timestamp, value)` rows, return `(train, validation)` sorted by time, using `timestamp < cutoff` for training. Do not mutate input.", fn: "time_split", starter: `def time_split(rows, cutoff):\n    pass`, solution: `def time_split(rows, cutoff):\n    ordered = sorted(rows, key=lambda row: row[0])\n    train = [row for row in ordered if row[0] < cutoff]\n    validation = [row for row in ordered if row[0] >= cutoff]\n    return train, validation`,
     tests: [t("split", "assert fn([(3,'c'),(1,'a'),(2,'b')], 3) == ([(1,'a'),(2,'b')],[(3,'c')])"), t("boundary", "assert fn([(5,'x')],5) == ([],[(5,'x')])"), t("immutable", "r=[(2,'b'),(1,'a')]; fn(r,2); assert r == [(2,'b'),(1,'a')]", true)], tier: "problem", minutes: 14, difficulty: [4, 2, 4],
   },
@@ -3160,6 +4241,53 @@ const UNITS: UnitSpec[] = [
     trap: "Optimizing one aggregate metric before defining the decision and its costs can improve a dashboard while harming users. Always inspect slices and the confusion matrix.",
     rule: "Choose metrics from the cost of each error, report the threshold, and inspect performance across important data slices.",
     recall: "Which denominator changes when a model produces more false-positive alerts?",
+    checks: [
+      {
+        question: "Why can accuracy be misleading on a rare class?",
+        choices: [
+          "A model that always predicts the majority class scores high accuracy while missing every rare case",
+          "Accuracy is always wrong",
+          "Accuracy needs more than two classes",
+        ],
+        answer: 0,
+        why: [
+          "Correct. If 99% of cases are negative, predicting 'negative' always is 99% accurate but catches no positives.",
+          "Accuracy is fine for balanced problems; it just hides rare-class failure.",
+          "The issue is class imbalance, not the number of classes.",
+        ],
+        explanation: "Accuracy hides failure on a rare class under imbalance.",
+      },
+      {
+        question: "What do precision and recall each ask?",
+        choices: [
+          "Precision: of predicted positives, how many were correct? Recall: of actual positives, how many were found?",
+          "They are the same question",
+          "Precision counts negatives; recall counts totals",
+        ],
+        answer: 0,
+        why: [
+          "Correct. Precision measures the quality of positive predictions; recall measures coverage of the real positives.",
+          "They measure different things and often trade off.",
+          "Both are about the positive class, framed by different denominators.",
+        ],
+        explanation: "Precision = correct among predicted positives; recall = found among actual positives.",
+      },
+      {
+        question: "The model raises more false-positive alerts. Which metric drops, and why?",
+        choices: [
+          "Precision — its denominator (predicted positives) grows with wrong positives",
+          "Recall — it depends on false positives",
+          "Neither is affected",
+        ],
+        answer: 0,
+        why: [
+          "Correct. More false positives inflate 'predicted positives' without adding correct ones, so precision falls; recall (over actual positives) is unaffected by them.",
+          "Recall's denominator is actual positives, which false positives do not change.",
+          "Precision is directly affected by false positives.",
+        ],
+        explanation: "More false positives lower precision (predicted-positive denominator grows).",
+      },
+    ],
     prompt: "Return `(precision, recall, f1)` from nonnegative tp, fp, fn. Use 0.0 when a denominator is zero.", fn: "classification_metrics", starter: `def classification_metrics(tp, fp, fn):\n    pass`, solution: `def classification_metrics(tp, fp, fn):\n    if min(tp, fp, fn) < 0:\n        raise ValueError("counts must be nonnegative")\n    precision = tp / (tp + fp) if tp + fp else 0.0\n    recall = tp / (tp + fn) if tp + fn else 0.0\n    f1 = 2 * precision * recall / (precision + recall) if precision + recall else 0.0\n    return precision, recall, f1`,
     tests: [t("ordinary", "p,r,f=fn(8,2,4); assert abs(p-.8)<1e-9 and abs(r-2/3)<1e-9 and abs(f-8/11)<1e-9"), t("none", "assert fn(0,0,0) == (0.0,0.0,0.0)"), t("bad", "\ntry:\n fn(-1,0,0); assert False\nexcept ValueError: pass", true)], tier: "problem", minutes: 16, difficulty: [4, 2, 4],
   },
@@ -3171,6 +4299,53 @@ const UNITS: UnitSpec[] = [
     trap: "A decreasing training loss does not prove the model learned a transferable relationship. Data leakage, overfitting, or a broken validation path can create the same curve.",
     rule: "Log the objective and validation evidence, inspect gradient scale, and treat optimization behavior separately from generalization.",
     recall: "What does a consistently decreasing training loss establish, and what does it not establish?",
+    checks: [
+      {
+        question: "What does gradient descent do each step?",
+        choices: [
+          "Moves the parameters a small step opposite the loss's local slope",
+          "Jumps to the exact minimum in one step",
+          "Moves parameters in a random direction",
+        ],
+        answer: 0,
+        why: [
+          "Correct. The gradient points uphill, so stepping against it reduces the loss a little at a time.",
+          "It is iterative; a single jump to the minimum is not how it works.",
+          "The direction is set by the gradient, not randomness.",
+        ],
+        explanation: "Gradient descent steps downhill, opposite the loss gradient.",
+      },
+      {
+        question: "What happens if the learning rate is too large?",
+        choices: [
+          "Steps overshoot and the loss can bounce or diverge",
+          "Training is always more accurate",
+          "Nothing changes",
+        ],
+        answer: 0,
+        why: [
+          "Correct. Too-big steps jump past the minimum and can grow the loss instead of shrinking it. Too small, and progress is painfully slow.",
+          "A large rate risks divergence, not guaranteed accuracy.",
+          "Step size strongly affects convergence.",
+        ],
+        explanation: "Too-large a learning rate overshoots/diverges; too-small is slow.",
+      },
+      {
+        question: "A steadily *decreasing training loss* proves what?",
+        choices: [
+          "That the model is fitting the training data — NOT that it will generalize to new data",
+          "That the model is ready to deploy",
+          "That there is no bug",
+        ],
+        answer: 0,
+        why: [
+          "Correct. Falling training loss only shows learning on seen data; generalization must be checked on held-out data (it may be overfitting).",
+          "Low training loss can mean overfitting, not readiness.",
+          "It says nothing about bugs elsewhere.",
+        ],
+        explanation: "Decreasing training loss shows fitting the training set, not generalization.",
+      },
+    ],
     prompt: "Starting at `weight`, perform `steps` gradient updates for `(weight-target)^2` and return the final weight.", fn: "fit_scalar", starter: `def fit_scalar(weight, target, rate, steps):\n    pass`, solution: `def fit_scalar(weight, target, rate, steps):\n    for _ in range(steps):\n        gradient = 2 * (weight - target)\n        weight -= rate * gradient\n    return weight`,
     tests: [t("one", "assert fn(0,10,.25,1) == 5"), t("converges", "assert abs(fn(0,10,.25,20)-10) < .001"), t("zero steps", "assert fn(3,9,.1,0) == 3")], tier: "problem", minutes: 15, difficulty: [4, 2, 4],
   },
@@ -3182,6 +4357,53 @@ const UNITS: UnitSpec[] = [
     trap: "A positive expectation does not determine risk, drawdown, or geometric growth. Two bets with the same mean can have radically different distributions.",
     rule: "Define the random variable and full distribution first; compute its expectation, then analyze dispersion and constraints separately.",
     recall: "Why can an expected payoff of one dollar describe a game that never pays exactly one dollar?",
+    checks: [
+      {
+        question: "What is expected value?",
+        choices: [
+          "The probability-weighted average of all possible outcomes",
+          "The single most likely outcome",
+          "The largest possible outcome",
+        ],
+        answer: 0,
+        why: [
+          "Correct. Each outcome is weighted by its probability and summed — a long-run average.",
+          "The most likely outcome is the mode, not the expectation.",
+          "The maximum is one outcome, not the weighted average.",
+        ],
+        explanation: "Expected value is the probability-weighted average of outcomes.",
+      },
+      {
+        question: "Can the expected value be an outcome that never actually happens in one trial?",
+        choices: [
+          "Yes — it is a long-run average, not a single result (e.g. an EV of $1 in a game paying only $0 or $5)",
+          "No — the EV must be a possible outcome",
+          "Only for dice",
+        ],
+        answer: 0,
+        why: [
+          "Correct. The average of the possible payoffs need not equal any single payoff.",
+          "The EV often is not among the possible single results.",
+          "This is general, not specific to dice.",
+        ],
+        explanation: "EV is a long-run average and need not be a possible single outcome.",
+      },
+      {
+        question: "What is special about linearity of expectation?",
+        choices: [
+          "`E[A + B] = E[A] + E[B]` holds even when A and B are dependent",
+          "It only works for independent variables",
+          "It only works for two variables",
+        ],
+        answer: 0,
+        why: [
+          "Correct. Expectation adds across sums regardless of dependence, which makes many hard counts easy.",
+          "Unlike variance, it does NOT require independence.",
+          "It extends to any number of terms.",
+        ],
+        explanation: "Linearity of expectation adds across sums even under dependence.",
+      },
+    ],
     prompt: "Given `(value, probability)` outcomes, validate the distribution and return expected value. Accept total probability within 1e-9 of one.", fn: "expected_value", starter: `def expected_value(outcomes):\n    pass`, solution: `def expected_value(outcomes):\n    if any(probability < 0 for _, probability in outcomes):\n        raise ValueError("negative probability")\n    total = sum(probability for _, probability in outcomes)\n    if abs(total - 1.0) > 1e-9:\n        raise ValueError("probabilities must sum to one")\n    return sum(value * probability for value, probability in outcomes)`,
     tests: [t("game", "assert abs(fn([(-2,.75),(10,.25)])-1) < 1e-9"), t("certain", "assert fn([(7,1.0)]) == 7"), t("invalid", "\ntry:\n fn([(1,.2)]); assert False\nexcept ValueError: pass", true)], tier: "problem", minutes: 13, difficulty: [3, 2, 3],
   },
@@ -3193,6 +4415,53 @@ const UNITS: UnitSpec[] = [
     trap: "`P(evidence | hypothesis)` is not `P(hypothesis | evidence)`. Swapping them discards the prior and is one of the most common probability errors.",
     rule: "Write each conditional in words, expand the evidence denominator across mutually exclusive hypotheses, then sanity-check against the prior.",
     recall: "Where does the base rate enter the posterior calculation?",
+    checks: [
+      {
+        question: "What does Bayes' rule do?",
+        choices: [
+          "Combines a prior with a likelihood to produce an updated (posterior) probability",
+          "Sorts probabilities",
+          "Proves a hypothesis true",
+        ],
+        answer: 0,
+        why: [
+          "Correct. It updates a belief (prior) using how well the evidence fits each hypothesis (likelihood).",
+          "It updates beliefs, it does not sort.",
+          "It yields a probability, never certainty.",
+        ],
+        explanation: "Bayes' rule updates a prior with a likelihood into a posterior.",
+      },
+      {
+        question: "Where does the base rate enter the calculation?",
+        choices: [
+          "As the prior — it weights how likely each hypothesis was before the evidence",
+          "It does not; only the test result matters",
+          "As the final answer",
+        ],
+        answer: 0,
+        why: [
+          "Correct. The base rate is the prior probability, and ignoring it causes the base-rate fallacy.",
+          "The base rate is essential — a positive test on a rare condition is often still probably a false positive.",
+          "It is an input (the prior), not the output.",
+        ],
+        explanation: "The base rate is the prior in Bayes' rule.",
+      },
+      {
+        question: "A test is quite accurate but the condition is very rare. A positive result means…",
+        choices: [
+          "It may well still be a false positive — the low base rate keeps the posterior low",
+          "The person almost certainly has the condition",
+          "The test is broken",
+        ],
+        answer: 0,
+        why: [
+          "Correct. When positives are dominated by the huge healthy population's false positives, a positive test often still means low probability of the condition.",
+          "Ignoring the base rate here is the classic base-rate fallacy.",
+          "The test is fine; the rarity is what drives the counterintuitive result.",
+        ],
+        explanation: "With a rare condition, a positive test can still be probably false — the base rate dominates.",
+      },
+    ],
     prompt: "Return `P(H|E)` from prior `P(H)`, true-positive likelihood `P(E|H)`, and false-positive likelihood `P(E|not H)`.", fn: "bayes_update", starter: `def bayes_update(prior, likelihood, false_positive):\n    pass`, solution: `def bayes_update(prior, likelihood, false_positive):\n    if any(value < 0 or value > 1 for value in (prior, likelihood, false_positive)):\n        raise ValueError("probabilities must be in [0, 1]")\n    evidence = prior * likelihood + (1 - prior) * false_positive\n    if evidence == 0:\n        raise ValueError("evidence has zero probability")\n    return prior * likelihood / evidence`,
     tests: [t("base rate", "assert abs(fn(.01,.9,.05)-(.009/.0585)) < 1e-9"), t("certain", "assert fn(1, .4, .8) == 1"), t("impossible", "\ntry:\n fn(.5,0,0); assert False\nexcept ValueError: pass", true)], tier: "problem", minutes: 16, difficulty: [4, 2, 4],
   },
@@ -3204,6 +4473,53 @@ const UNITS: UnitSpec[] = [
     trap: "Enumerating every subset to count them turns a polynomial arithmetic question into exponential work. Using `/` also converts exact integers into floats.",
     rule: "Decide whether order and replacement matter before choosing a formula; preserve exact integer arithmetic throughout.",
     recall: "Why is replacing k with `min(k, n-k)` valid and useful?",
+    checks: [
+      {
+        question: "What is the difference between permutations and combinations?",
+        choices: [
+          "Permutations count ordered arrangements; combinations count unordered selections",
+          "They are the same",
+          "Permutations are always smaller",
+        ],
+        answer: 0,
+        why: [
+          "Correct. If order matters it is a permutation; if only the chosen set matters it is a combination.",
+          "They differ by whether order counts.",
+          "Permutations are larger (they count each ordering separately).",
+        ],
+        explanation: "Permutations = ordered; combinations = unordered.",
+      },
+      {
+        question: "Why is `C(n, k) = C(n, n-k)`?",
+        choices: [
+          "Choosing k to include is the same as choosing the n-k to leave out",
+          "It is a coincidence",
+          "Only when k = 0",
+        ],
+        answer: 0,
+        why: [
+          "Correct. Every selection of k items uniquely determines the n-k left behind, so the counts match.",
+          "It is a real symmetry, not coincidence.",
+          "It holds for all k, not just k = 0.",
+        ],
+        explanation: "Choosing k to keep = choosing n-k to drop, so `C(n,k)=C(n,n-k)`.",
+      },
+      {
+        question: "Why compute `n choose k` using `min(k, n-k)`?",
+        choices: [
+          "By symmetry the answer is the same, but the smaller value means fewer multiplications and less overflow risk",
+          "It gives a different, larger answer",
+          "It only works when k is even",
+        ],
+        answer: 0,
+        why: [
+          "Correct. `C(n,k)=C(n,n-k)`, so using the smaller of the two keeps the computation cheaper and safer.",
+          "The answer is identical; only the work changes.",
+          "Parity of k is irrelevant.",
+        ],
+        explanation: "Symmetry lets you use the smaller of k and n-k for a cheaper computation.",
+      },
+    ],
     prompt: "Return the exact binomial coefficient `n choose k`, or 0 when k is outside 0..n, without factorials.", fn: "choose", starter: `def choose(n, k):\n    pass`, solution: `def choose(n, k):\n    if k < 0 or k > n:\n        return 0\n    k = min(k, n - k)\n    result = 1\n    for i in range(1, k + 1):\n        result = result * (n - k + i) // i\n    return result`,
     tests: [t("five", "assert fn(5,3) == 10"), t("edges", "assert fn(8,0) == 1 and fn(8,8) == 1"), t("outside", "assert fn(4,5) == 0"), t("large exact", "assert fn(50,6) == 15890700", true)], tier: "problem", minutes: 15, difficulty: [4, 2, 4],
   },
@@ -3215,6 +4531,53 @@ const UNITS: UnitSpec[] = [
     trap: "Reporting a simulated number without sample size, uncertainty, or convergence checks gives precision theater. Re-seeding inside the loop can repeat the same draw.",
     rule: "Use a local seeded generator, validate the sampling model, measure convergence, and report uncertainty with the estimate.",
     recall: "If standard error scales as `1/sqrt(n)`, about how much more sampling buys ten times smaller error?",
+    checks: [
+      {
+        question: "What does a Monte Carlo estimate do?",
+        choices: [
+          "Approximates a hard expectation by averaging many random sampled outcomes",
+          "Computes the exact answer with algebra",
+          "Sorts the outcomes",
+        ],
+        answer: 0,
+        why: [
+          "Correct. When an expectation is hard to derive, you simulate outcomes and average them.",
+          "It is an approximation from samples, not an exact derivation.",
+          "It averages samples; it does not sort.",
+        ],
+        explanation: "Monte Carlo estimates an expectation by averaging sampled outcomes.",
+      },
+      {
+        question: "How does the sampling error typically shrink with sample count n?",
+        choices: [
+          "Proportional to `1/sqrt(n)`",
+          "Proportional to `1/n`",
+          "It does not shrink",
+        ],
+        answer: 0,
+        why: [
+          "Correct. Independent-sample error falls like one over the square root of n — diminishing returns.",
+          "It falls slower than `1/n`; the square root makes extra samples less valuable.",
+          "More samples do reduce error, just slowly.",
+        ],
+        explanation: "Monte Carlo error scales like `1/sqrt(n)`.",
+      },
+      {
+        question: "To make the error 10 times smaller, about how many more samples do you need?",
+        choices: [
+          "About 100 times as many (because error ∝ 1/sqrt(n))",
+          "About 10 times as many",
+          "Twice as many",
+        ],
+        answer: 0,
+        why: [
+          "Correct. Since error scales as 1/sqrt(n), cutting it by 10 needs 10² = 100 times the samples.",
+          "10x more samples only cuts error by about sqrt(10) ≈ 3.2x.",
+          "Doubling barely helps — error drops by only about 1.4x.",
+        ],
+        explanation: "10x less error needs ~100x more samples (1/sqrt(n) scaling).",
+      },
+    ],
     prompt: "Estimate pi with `samples` unit-square draws from a local `random.Random(seed)`. Raise ValueError unless samples is positive.", fn: "estimate_pi", starter: `def estimate_pi(samples, seed=0):\n    pass`, solution: `def estimate_pi(samples, seed=0):\n    import random\n    if samples <= 0:\n        raise ValueError("samples must be positive")\n    rng = random.Random(seed)\n    inside = 0\n    for _ in range(samples):\n        x, y = rng.random(), rng.random()\n        inside += x * x + y * y <= 1\n    return 4 * inside / samples`,
     tests: [t("reproducible", "assert fn(1000,7) == fn(1000,7)"), t("reasonable", "assert abs(fn(20000,3)-3.14159) < .06"), t("invalid", "\ntry:\n fn(0); assert False\nexcept ValueError: pass", true)], tier: "problem", minutes: 18, difficulty: [4, 3, 4],
   },
