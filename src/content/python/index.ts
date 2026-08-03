@@ -2095,12 +2095,53 @@ const UNITS: UnitSpec[] = [
     trap: "An iterator is consumed. Iterating it a second time produces nothing unless you create a new iterator.",
     rule: "Use lazy iteration when the source is large, infinite, expensive, or naturally streamed.",
     recall: "What is the difference between an iterable and the iterator it creates?",
-    check: {
-      question: "You loop an iterator to the end, then loop the same iterator again. What is produced the second time?",
-      choices: ["Nothing — an iterator is consumed once", "It restarts from the beginning"],
-      answer: 0,
-      explanation: "An iterator is a one-way, stateful stream. Create a fresh iterator from the iterable to walk it again.",
-    },
+    checks: [
+      {
+        question: "You loop an iterator to the end, then loop the same iterator again. What is produced the second time?",
+        choices: [
+          "Nothing — an iterator is consumed once",
+          "It restarts from the beginning",
+          "An error",
+        ],
+        answer: 0,
+        why: [
+          "Correct. An iterator is a one-way, stateful stream; once exhausted it yields nothing. Make a fresh iterator from the iterable to walk it again.",
+          "It does not restart — iterators do not rewind. The iterable can make a new iterator, but the old one is spent.",
+          "It is not an error; looping an exhausted iterator simply produces no items.",
+        ],
+        explanation: "An iterator is consumed once; create a new one to iterate again.",
+      },
+      {
+        question: "What happens when you *call* a generator function (one with `yield`)?",
+        choices: [
+          "It returns a generator without running the body yet; the body advances on each `next`",
+          "It runs the whole body immediately and returns a list",
+          "It raises `StopIteration`",
+        ],
+        answer: 0,
+        why: [
+          "Correct. Calling a generator function creates a generator object; the body runs lazily, pausing at each `yield` and resuming on the next `next`.",
+          "It does not run eagerly or build a list — that laziness is the point of a generator.",
+          "`StopIteration` is raised only when the generator is exhausted, not when you first call it.",
+        ],
+        explanation: "Calling a generator function returns a lazy generator; the body advances on each `next`.",
+      },
+      {
+        question: "What is the difference between an *iterable* and an *iterator*?",
+        choices: [
+          "An iterable can produce iterators; an iterator is the one-way stream you actually advance",
+          "They are the same thing",
+          "An iterator can be looped many times; an iterable only once",
+        ],
+        answer: 0,
+        why: [
+          "Correct. An iterable (like a list) can hand out fresh iterators; an iterator holds the position and is consumed as you advance it.",
+          "They are different roles: one makes streams, the other is the stream.",
+          "It is the reverse — an iterator is consumed once, while an iterable can produce a new iterator each time you loop it.",
+        ],
+        explanation: "An iterable produces iterators; the iterator is the consumable stream.",
+      },
+    ],
     prompt: "Write generator `take(limit, iterable)` that yields at most the first `limit` values without converting the input to a list.", fn: "take", starter: `def take(limit, iterable):\n    pass`, solution: `def take(limit, iterable):\n    for index, value in enumerate(iterable):\n        if index >= limit:\n            return\n        yield value`,
     tests: [t("takes", "assert list(fn(3, range(10))) == [0, 1, 2]"), t("short", "assert list(fn(5, [1, 2])) == [1, 2]"), t("zero", "assert list(fn(0, [1])) == []")],
   },
@@ -2170,12 +2211,53 @@ const UNITS: UnitSpec[] = [
     trap: "Returning a file handle created inside `with` returns a closed resource. Return the data or let the caller own the context.",
     rule: "If an operation has an acquire/release pair, expose it as a context manager.",
     recall: "Which special method runs when the body raises, and what cleanup guarantee does that enable?",
-    check: {
-      question: "If the body of a `with` block raises, does the context manager's cleanup still run?",
-      choices: ["Yes — `__exit__` runs on both success and failure", "No — an exception skips cleanup"],
-      answer: 0,
-      explanation: "`with` guarantees `__exit__` runs even when the body raises. That reliable cleanup is the whole point.",
-    },
+    checks: [
+      {
+        question: "If the body of a `with` block raises, does the context manager's cleanup still run?",
+        choices: [
+          "Yes — `__exit__` runs on both success and failure",
+          "No — an exception skips cleanup",
+          "Only if you add a `finally`",
+        ],
+        answer: 0,
+        why: [
+          "Correct. `with` guarantees `__exit__` runs even when the body raises — that reliable cleanup is the whole point.",
+          "An exception does not skip it; `with` is designed to clean up on the error path too.",
+          "No extra `finally` is needed — the context manager already guarantees cleanup.",
+        ],
+        explanation: "`with` runs `__exit__` on both success and failure.",
+      },
+      {
+        question: "What problem does `with open(...) as f:` solve compared to `f = open(...)`?",
+        choices: [
+          "It automatically closes the file afterward, even if an error happens",
+          "It reads the file faster",
+          "It makes the file editable",
+        ],
+        answer: 0,
+        why: [
+          "Correct. The `with` block guarantees the file is closed when the block ends, success or failure — no manual close or `finally` needed.",
+          "It is about guaranteed cleanup, not speed.",
+          "`with` does not change whether a file is editable; it manages the open/close lifecycle.",
+        ],
+        explanation: "`with` guarantees the resource is cleaned up (the file closed) when the block ends.",
+      },
+      {
+        question: "You `open` a file inside a `with` block and `return` the file object. What is wrong?",
+        choices: [
+          "The file is already closed when the caller gets it — return the data instead",
+          "Nothing — the file stays open",
+          "It raises immediately",
+        ],
+        answer: 0,
+        why: [
+          "Correct. Leaving the `with` block closes the file, so the returned handle is closed and useless. Return the read data, or let the caller own the `with`.",
+          "It does not stay open — the `with` closes it as soon as the block ends.",
+          "It does not raise on return; the bug shows up later when the caller tries to use the closed file.",
+        ],
+        explanation: "The `with` closes the file on exit, so return the data, not the handle.",
+      },
+    ],
     prompt: "Use `contextlib.contextmanager` to implement `temporarily(mapping, key, value)`: set a value inside the context, then restore the old state afterward.", fn: "temporarily", starter: `from contextlib import contextmanager\n\n@contextmanager\ndef temporarily(mapping, key, value):\n    pass`, solution: `from contextlib import contextmanager\n\n@contextmanager\ndef temporarily(mapping, key, value):\n    missing = object()\n    old = mapping.get(key, missing)\n    mapping[key] = value\n    try:\n        yield\n    finally:\n        if old is missing:\n            mapping.pop(key, None)\n        else:\n            mapping[key] = old`,
     tests: [t("restores", `data = {"x": 1}\nwith fn(data, "x", 9): assert data["x"] == 9\nassert data["x"] == 1`), t("removes new", `data = {}\nwith fn(data, "x", 9): pass\nassert "x" not in data`, true)],
   },
@@ -2187,12 +2269,53 @@ const UNITS: UnitSpec[] = [
     trap: "Never use `eval` to parse data. It executes code. JSON is data-only and should still be size-limited and validated at trust boundaries.",
     rule: "Decode, parse, validate, then convert to domain objects—four separate steps.",
     recall: "What does successful JSON parsing prove, and what does it not prove?",
-    check: {
-      question: "A successful `json.loads(text)` proves what?",
-      choices: ["Only that the text is valid JSON — not that it has the shape or types you expect", "That the data matches your schema"],
-      answer: 0,
-      explanation: "Parsing checks syntax only. You still must validate the shape and types at the trust boundary.",
-    },
+    checks: [
+      {
+        question: "A successful `json.loads(text)` proves what?",
+        choices: [
+          "Only that the text is valid JSON — not that it has the shape or types you expect",
+          "That the data matches your schema",
+          "That the file exists",
+        ],
+        answer: 0,
+        why: [
+          "Correct. Parsing checks syntax only. You still must validate the shape and types yourself at the trust boundary.",
+          "It does not check your schema — valid JSON can still be missing keys or have the wrong types.",
+          "`loads` parses a string you already have; it says nothing about files on disk.",
+        ],
+        explanation: "Parsing checks JSON syntax only; validate shape and types separately.",
+      },
+      {
+        question: "Why should you never use `eval` to parse incoming data?",
+        choices: [
+          "`eval` executes arbitrary code, which is a serious security hole — use `json.loads` for data",
+          "`eval` is slower than `json.loads`",
+          "`eval` cannot read numbers",
+        ],
+        answer: 0,
+        why: [
+          "Correct. `eval` runs whatever code is in the text, so untrusted input could do anything. `json.loads` only reads data.",
+          "Speed is not the concern; the concern is that `eval` runs code.",
+          "`eval` can read numbers — the real problem is that it executes code.",
+        ],
+        explanation: "`eval` runs code; use `json.loads` to safely parse data.",
+      },
+      {
+        question: "Why pass `encoding=\"utf-8\"` when reading a text file?",
+        choices: [
+          "To decode the bytes into text correctly and predictably, regardless of the machine's default",
+          "To make the file smaller",
+          "It is optional and never matters",
+        ],
+        answer: 0,
+        why: [
+          "Correct. Files are bytes; an explicit encoding turns them into text the same way everywhere, avoiding surprises from a machine's default.",
+          "Encoding is about how bytes map to characters, not file size.",
+          "It does matter — relying on the default encoding causes bugs across different systems.",
+        ],
+        explanation: "An explicit encoding decodes bytes to text reliably across machines.",
+      },
+    ],
     prompt: "Return compact, key-sorted JSON for a dictionary so equivalent inputs produce stable text.", fn: "stable_json", starter: `import json\n\ndef stable_json(data):\n    pass`, solution: `import json\n\ndef stable_json(data):\n    return json.dumps(data, sort_keys=True, separators=(",", ":"))`,
     tests: [t("stable", `assert fn({"b": 2, "a": 1}) == '{"a":1,"b":2}'`), t("nested", `assert fn({"x": [2, 1]}) == '{"x":[2,1]}'`)],
   },
@@ -2204,12 +2327,53 @@ const UNITS: UnitSpec[] = [
     trap: "`Any` disables checking and spreads uncertainty. Use `object` for an unknown value that callers must narrow safely.",
     rule: "Annotate public boundaries and tricky invariants first; let inference handle obvious local variables.",
     recall: "What relationship does `T` preserve in the `first` example?",
-    check: {
-      question: "Do Python type hints enforce types at runtime?",
-      choices: ["No — they guide tools and readers; Python normally does not check them while running", "Yes — a wrong type raises immediately"],
-      answer: 0,
-      explanation: "Annotations document contracts for static checkers and editors. They are not runtime checks unless you add them.",
-    },
+    checks: [
+      {
+        question: "Do Python type hints enforce types at runtime?",
+        choices: [
+          "No — they guide tools and readers; Python normally does not check them while running",
+          "Yes — a wrong type raises immediately",
+          "Only for function return values",
+        ],
+        answer: 0,
+        why: [
+          "Correct. Annotations document intent for editors and static checkers; Python does not verify them at runtime unless you add explicit checks.",
+          "A wrong type does not raise just because of a hint — Python runs the code regardless.",
+          "Neither parameters nor returns are runtime-checked from hints alone.",
+        ],
+        explanation: "Hints guide tools and readers; they are not runtime checks by default.",
+      },
+      {
+        question: "What is the main value of adding type hints?",
+        choices: [
+          "Better editor autocomplete and static checkers catching mismatches before you run",
+          "Making the program run faster",
+          "Automatically converting values to the right type",
+        ],
+        answer: 0,
+        why: [
+          "Correct. Hints power autocomplete and let tools like mypy flag mismatches early, and they document a function's contract for readers.",
+          "Hints do not change runtime speed.",
+          "Hints do not convert values; a wrong type is not fixed automatically.",
+        ],
+        explanation: "Hints improve tooling, catch mismatches early, and document intent.",
+      },
+      {
+        question: "What does the return type `str | None` mean?",
+        choices: [
+          "The function returns either a string or `None`",
+          "The function returns a string named None",
+          "The function must return both",
+        ],
+        answer: 0,
+        why: [
+          "Correct. The `|` forms a union: the value is a `str` on some paths and `None` on others, so callers should handle the `None` case.",
+          "It is not a named string; `None` is the separate absence value the function may return.",
+          "It returns one or the other on a given call, not both.",
+        ],
+        explanation: "`str | None` is a union: a string or None.",
+      },
+    ],
     prompt: "Implement annotated `only_strings(values: list[object]) -> list[str]` using `isinstance`.", fn: "only_strings", starter: `def only_strings(values: list[object]) -> list[str]:\n    pass`, solution: `def only_strings(values: list[object]) -> list[str]:\n    return [value for value in values if isinstance(value, str)]`,
     tests: [t("narrows", `assert fn(["a", 2, "b", None]) == ["a", "b"]`), t("empty", "assert fn([]) == []")],
   },
@@ -2221,12 +2385,53 @@ const UNITS: UnitSpec[] = [
     trap: "A test that reproduces the implementation can make the same mistake. Derive expected values independently from the specification.",
     rule: "Test boundaries, invariants, and failures; avoid asserting private call order unless that order is the contract.",
     recall: "Name five useful input partitions for a collection-processing function.",
-    check: {
-      question: "Why derive a test's expected value from the spec rather than by copying the implementation?",
-      choices: ["A test that mirrors the code can repeat the same mistake", "It runs faster"],
-      answer: 0,
-      explanation: "Independently derived expected values catch bugs; a test that reproduces the implementation validates nothing new.",
-    },
+    checks: [
+      {
+        question: "Why derive a test's expected value from the spec rather than by copying the implementation?",
+        choices: [
+          "A test that mirrors the code can repeat the same mistake and validate nothing",
+          "It runs faster",
+          "It uses less memory",
+        ],
+        answer: 0,
+        why: [
+          "Correct. If the test computes the expected value the same way the code does, a bug in the code hides in the test too. Derive it independently from the spec.",
+          "Speed is not the point; independence is.",
+          "Memory is irrelevant; the issue is whether the test can actually catch a bug.",
+        ],
+        explanation: "Independently-derived expected values catch bugs; copying the implementation does not.",
+      },
+      {
+        question: "Which set of inputs tends to find the most bugs?",
+        choices: [
+          "Partitions: empty, single, ordinary, boundary, and invalid cases",
+          "Many random ordinary (happy-path) examples",
+          "One example that you know works",
+        ],
+        answer: 0,
+        why: [
+          "Correct. Bugs cluster at edges — empty, one item, boundaries, invalid input. Covering those partitions finds far more than repeated happy cases.",
+          "Many similar happy-path examples exercise the same path repeatedly and miss edges.",
+          "A single passing example proves very little about the rest of the input space.",
+        ],
+        explanation: "Test partitions (empty/single/ordinary/boundary/invalid) to find edge-case bugs.",
+      },
+      {
+        question: "What should a single good test do?",
+        choices: [
+          "Name one behavior, set up the smallest state, do one action, and check one observable result",
+          "Exercise as many behaviors as possible at once",
+          "Check the function's internal variables",
+        ],
+        answer: 0,
+        why: [
+          "Correct. A focused test that checks one behavior makes failures easy to read and diagnose.",
+          "Bundling many behaviors into one test makes a failure ambiguous and hard to localize.",
+          "Tests should check observable results (return values, effects), not internal implementation details.",
+        ],
+        explanation: "A good test checks one behavior via an observable result.",
+      },
+    ],
     prompt: "Implement `median(values)` for a nonempty numeric list. Do not mutate the input.", fn: "median", starter: `def median(values):\n    pass`, solution: `def median(values):\n    ordered = sorted(values)\n    middle = len(ordered) // 2\n    if len(ordered) % 2:\n        return ordered[middle]\n    return (ordered[middle - 1] + ordered[middle]) / 2`,
     tests: [t("odd", "assert fn([9, 1, 4]) == 4"), t("even", "assert fn([1, 4, 2, 3]) == 2.5"), t("does not mutate", "data = [3, 1, 2]; fn(data); assert data == [3, 1, 2]", true)],
   },
@@ -2238,12 +2443,53 @@ const UNITS: UnitSpec[] = [
     trap: "Changing several lines before rerunning destroys evidence. You no longer know which hypothesis was correct or which change caused a regression.",
     rule: "One hypothesis, one discriminating observation, one change.",
     recall: "What exact location are you seeking when you walk backward from a failure?",
-    check: {
-      question: "You change five lines at once, rerun, and the test passes. What is the problem?",
-      choices: ["You do not know which change fixed it — change one thing per hypothesis", "Nothing, it passed"],
-      answer: 0,
-      explanation: "Debugging is controlled search: one hypothesis, one discriminating observation, one change at a time.",
-    },
+    checks: [
+      {
+        question: "You change five lines at once, rerun, and the test passes. What is the problem?",
+        choices: [
+          "You do not know which change fixed it — change one thing per hypothesis",
+          "Nothing, it passed",
+          "You should have changed ten lines",
+        ],
+        answer: 0,
+        why: [
+          "Correct. With five changes at once, you cannot tell which one mattered (or whether others introduced new bugs). Change one thing, then observe.",
+          "It passing is not enough — you learned nothing reliable about the cause.",
+          "More changes make it worse, not better; isolate one hypothesis at a time.",
+        ],
+        explanation: "Debugging is controlled search: one change per hypothesis.",
+      },
+      {
+        question: "What is a good first step when debugging a vague failure?",
+        choices: [
+          "Reproduce it reliably and shrink the input to the smallest case that still fails",
+          "Rewrite the whole function from scratch",
+          "Add print statements to every line at once",
+        ],
+        answer: 0,
+        why: [
+          "Correct. A reliable, minimal reproduction removes noise and points straight at where state first goes wrong.",
+          "Rewriting blindly may hide the bug without teaching you the cause, and can add new ones.",
+          "Logging everything increases data while reducing signal; probe specific hypotheses instead.",
+        ],
+        explanation: "Reproduce reliably and shrink the input to isolate the failure.",
+      },
+      {
+        question: "How do you read a Python stack trace?",
+        choices: [
+          "It is the path of calls; the exception is at the bottom, and you read upward to see how you got there",
+          "The top line is always the real bug",
+          "It is random and not useful",
+        ],
+        answer: 0,
+        why: [
+          "Correct. The trace lists the call path; the actual error and its location are at the bottom, and the frames above show how execution reached it.",
+          "The top frame is the outermost call, not necessarily where the error is; the bottom shows the failing line.",
+          "A stack trace is precise and one of the most useful debugging tools.",
+        ],
+        explanation: "A stack trace is the call path; read from the exception (bottom) upward.",
+      },
+    ],
     prompt: "Implement `first_difference(left, right)`, returning the first unequal index or the shorter length when only lengths differ; return `None` when equal.", fn: "first_difference", starter: `def first_difference(left, right):\n    pass`, solution: `def first_difference(left, right):\n    for index, (a, b) in enumerate(zip(left, right)):\n        if a != b:\n            return index\n    if len(left) != len(right):\n        return min(len(left), len(right))\n    return None`,
     tests: [t("value", "assert fn([1, 9], [1, 3]) == 1"), t("length", "assert fn([1], [1, 2]) == 1"), t("equal", "assert fn('abc', 'abc') is None")],
   },
@@ -2255,12 +2501,53 @@ const UNITS: UnitSpec[] = [
     trap: "Circular imports mean two modules need each other before either has finished initializing. Move shared abstractions downward or pass dependencies inward rather than hiding the cycle inside a local import.",
     rule: "Dependencies should point from policy toward stable lower-level mechanisms, with side effects behind explicit entry-point functions.",
     recall: "Why can a module's top-level side effect happen merely because another module imports one function from it?",
-    check: {
-      question: "Importing one function from a module can trigger the module's top-level code. Why?",
-      choices: ["Import runs the whole module body once, then caches it", "It does not — only that one function is loaded"],
-      answer: 0,
-      explanation: "Import executes the module's top level once (cached in `sys.modules`). Keep side effects inside functions, not at import time.",
-    },
+    checks: [
+      {
+        question: "Importing one function from a module can trigger the module's top-level code. Why?",
+        choices: [
+          "Import runs the whole module body once, then caches it",
+          "It does not — only that one function is loaded",
+          "Because functions always print when imported",
+        ],
+        answer: 0,
+        why: [
+          "Correct. An import executes the entire module top-to-bottom (once), then caches it, so any top-level code runs even if you imported just one name.",
+          "Python cannot run only one function in isolation; it executes the whole module body to define everything first.",
+          "Functions do not print on import; the top-level code runs because the module body executes.",
+        ],
+        explanation: "Import runs the whole module body once (then caches it in `sys.modules`).",
+      },
+      {
+        question: "You import the same module in three files. How many times does its top-level code run?",
+        choices: [
+          "Once per process — after the first import it is cached and reused",
+          "Three times, once per import",
+          "Never",
+        ],
+        answer: 0,
+        why: [
+          "Correct. The first import runs and caches the module in `sys.modules`; later imports reuse the cached module without re-running it.",
+          "It does not re-run per import; the cache prevents that.",
+          "It runs on the first import — just not again after.",
+        ],
+        explanation: "A module's top level runs once per process; later imports reuse the cache.",
+      },
+      {
+        question: "Where should a module put code with side effects (like reading a file)?",
+        choices: [
+          "Inside a function, so it runs only when called — not at import time",
+          "At the top level, so it runs on import",
+          "In a comment",
+        ],
+        answer: 0,
+        why: [
+          "Correct. Top-level side effects fire the moment anyone imports the module, often surprisingly. Put them in functions the caller invokes deliberately.",
+          "Top-level side effects run on import, which is exactly the surprise to avoid.",
+          "A comment does not run at all; the goal is to run the effect deliberately, via a function.",
+        ],
+        explanation: "Keep side effects inside functions, not at import-time top level.",
+      },
+    ],
     prompt: "Implement `public_names(namespace)`, returning sorted keys that do not begin with an underscore.", fn: "public_names", starter: `def public_names(namespace):\n    pass`, solution: `def public_names(namespace):\n    return sorted(name for name in namespace if not name.startswith("_"))`,
     tests: [t("filters", `assert fn({"run": 1, "_cache": 2, "Model": 3}) == ["Model", "run"]`), t("empty", "assert fn({}) == []")],
   },
@@ -2272,12 +2559,53 @@ const UNITS: UnitSpec[] = [
     trap: "Timing one tiny call with a wall clock mostly measures noise. Use `timeit` for microbenchmarks and profile the real end-to-end path before deciding what matters.",
     rule: "Set a target, capture a baseline, change one bottleneck, then measure again while keeping correctness tests green.",
     recall: "What different questions do asymptotic analysis, profiling, and microbenchmarking answer?",
-    check: {
-      question: "Before optimizing a slow program, you should first…",
-      choices: ["Profile a representative workload to see where time is actually spent", "Rewrite whichever syntax looks slowest"],
-      answer: 0,
-      explanation: "Complexity predicts growth; profiling shows where this program spends time. Fix the algorithm before micro-tuning syntax.",
-    },
+    checks: [
+      {
+        question: "Before optimizing a slow program, you should first…",
+        choices: [
+          "Profile a representative workload to see where time is actually spent",
+          "Rewrite whichever syntax looks slowest",
+          "Add caching everywhere",
+        ],
+        answer: 0,
+        why: [
+          "Correct. Measure first — a profiler shows where the time really goes, which is often not where you would guess.",
+          "Guessing from how code looks wastes effort on parts that may not matter.",
+          "Caching blindly adds complexity and bugs; find the real hotspot first.",
+        ],
+        explanation: "Profile a real workload before optimizing — measure, don't guess.",
+      },
+      {
+        question: "What is the difference between complexity analysis and profiling?",
+        choices: [
+          "Complexity predicts how cost grows with input size; profiling shows where *this* program spends time now",
+          "They are the same",
+          "Profiling predicts growth; complexity measures the current run",
+        ],
+        answer: 0,
+        why: [
+          "Correct. Big-O tells you scaling; a profiler tells you which functions dominate the actual runtime today.",
+          "They answer different questions — one is theoretical scaling, the other is measured hotspots.",
+          "It is the reverse: complexity is the theory of growth, profiling is the measurement.",
+        ],
+        explanation: "Complexity predicts growth; profiling measures where time is spent.",
+      },
+      {
+        question: "You found the slow part. What usually gives the biggest win?",
+        choices: [
+          "Improving the algorithm (e.g. O(n²) to O(n)) before micro-tuning syntax",
+          "Renaming variables to be shorter",
+          "Removing all comments",
+        ],
+        answer: 0,
+        why: [
+          "Correct. A better algorithm changes how cost scales, which dwarfs line-level tweaks on large inputs.",
+          "Variable names have no effect on runtime.",
+          "Comments are ignored at runtime and have no performance impact.",
+        ],
+        explanation: "Fix the algorithm first; it beats micro-optimizing syntax.",
+      },
+    ],
     prompt: "Return the most frequent value; break ties by whichever appears first. Make one counting pass and one selection pass.", fn: "mode_first", starter: `def mode_first(values):\n    pass`, solution: `def mode_first(values):\n    counts = {}\n    for value in values:\n        counts[value] = counts.get(value, 0) + 1\n    best = values[0]\n    for value in values:\n        if counts[value] > counts[best]:\n            best = value\n    return best`,
     tests: [t("mode", `assert fn([2, 1, 2, 3]) == 2`), t("first tie", `assert fn(["b", "a", "a", "b"]) == "b"`), t("one", "assert fn([9]) == 9")],
   },
@@ -2289,12 +2617,53 @@ const UNITS: UnitSpec[] = [
     trap: "`await fetch(a); await fetch(b)` is deliberately serial. Also, blocking file or CPU work inside the event loop freezes every task sharing that thread.",
     rule: "Use async when concurrency is high and waiting dominates; keep task ownership structured and cancellation-safe.",
     recall: "At what kind of point can another asyncio task run, and why does CPU-bound work block the loop?",
-    check: {
-      question: "`await fetch(a); await fetch(b)` runs the two fetches how?",
-      choices: ["Serially — the second waits for the first to finish", "Concurrently, at the same time"],
-      answer: 0,
-      explanation: "Two sequential `await`s run one after another. Use a task group or `gather` to overlap the waiting.",
-    },
+    checks: [
+      {
+        question: "`await fetch(a); await fetch(b)` runs the two fetches how?",
+        choices: [
+          "Serially — the second waits for the first to finish",
+          "Concurrently, at the same time",
+          "In separate processes",
+        ],
+        answer: 0,
+        why: [
+          "Correct. Each `await` pauses until that call completes before the next line runs, so the two fetches happen one after another.",
+          "They do not overlap just because they are async; you must explicitly start both (e.g. `gather`) to overlap the waiting.",
+          "asyncio uses one process and one thread; it does not spawn processes.",
+        ],
+        explanation: "Sequential `await`s run one after another; use `gather` to overlap.",
+      },
+      {
+        question: "What kind of work does asyncio actually speed up?",
+        choices: [
+          "Many operations that spend time *waiting* (network, disk) — it overlaps the waiting",
+          "Heavy CPU number-crunching",
+          "Everything, automatically",
+        ],
+        answer: 0,
+        why: [
+          "Correct. While one task waits on I/O, the event loop runs other ready tasks, so lots of waiting overlaps instead of stacking up.",
+          "asyncio does not make CPU-bound code faster — the work still runs on one thread.",
+          "It only helps when there is waiting to overlap; pure computation sees no benefit.",
+        ],
+        explanation: "asyncio overlaps I/O waiting; it does not speed up CPU work.",
+      },
+      {
+        question: "How do you actually run two async fetches concurrently?",
+        choices: [
+          "Start both together, e.g. `await asyncio.gather(fetch(a), fetch(b))`",
+          "Put each on its own line with `await`",
+          "Wrap them in a `for` loop",
+        ],
+        answer: 0,
+        why: [
+          "Correct. `gather` (or a task group) launches both coroutines so their waiting overlaps, then awaits both.",
+          "Two separate `await` lines run serially — the second only starts after the first finishes.",
+          "A loop of `await`s still runs them one at a time; you must start them together.",
+        ],
+        explanation: "Use `gather` (or a task group) to overlap awaited work.",
+      },
+    ],
     prompt: "Implement async `gather_ordered(functions)` that calls zero-argument async functions concurrently and returns results in input order.", fn: "gather_ordered", starter: `import asyncio\n\nasync def gather_ordered(functions):\n    pass`, solution: `import asyncio\n\nasync def gather_ordered(functions):\n    return await asyncio.gather(*(function() for function in functions))`,
     tests: [t("ordered", `import asyncio\nasync def a(): await asyncio.sleep(0.01); return "a"\nasync def b(): return "b"\nassert await fn([a, b]) == ["a", "b"]`), t("empty", "assert await fn([]) == []", true)],
   },
@@ -2306,12 +2675,53 @@ const UNITS: UnitSpec[] = [
     trap: "Concurrency is not automatically parallelism, and parallelism is not automatically faster. Shared mutable state adds races; tiny tasks add more scheduling overhead than useful work.",
     rule: "First classify the bottleneck as CPU, waiting I/O, or external service capacity; then measure task size and data-transfer cost.",
     recall: "Why can threads improve network throughput even though the GIL limits Python bytecode execution?",
-    check: {
-      question: "Why can threads still speed up network-heavy work despite the GIL?",
-      choices: ["Threads release the GIL while waiting on I/O, so other threads run", "The GIL does not apply to threads"],
-      answer: 0,
-      explanation: "Threads help when calls release the lock while waiting on I/O. CPU-bound Python needs separate processes.",
-    },
+    checks: [
+      {
+        question: "Why can threads still speed up network-heavy work despite the GIL?",
+        choices: [
+          "Threads release the GIL while waiting on I/O, so other threads run",
+          "The GIL does not apply to threads",
+          "Network calls run without Python",
+        ],
+        answer: 0,
+        why: [
+          "Correct. While a thread waits on I/O, it lets go of the GIL, so other threads can make progress — overlapping the waiting.",
+          "The GIL very much applies to threads; the point is that it is released during I/O waits.",
+          "The network call is still driven by Python; the benefit is the released lock during the wait.",
+        ],
+        explanation: "Threads release the GIL during I/O waits, so I/O-bound work overlaps.",
+      },
+      {
+        question: "You have CPU-heavy Python work to parallelize. What actually helps?",
+        choices: [
+          "Separate processes — each has its own interpreter and can use another core",
+          "More threads — the GIL lets them run Python in parallel",
+          "Nothing can help",
+        ],
+        answer: 0,
+        why: [
+          "Correct. The GIL blocks threads from running Python bytecode in parallel, so CPU work needs separate processes for real parallelism.",
+          "Threads cannot run Python bytecode simultaneously because of the GIL; they do not speed up CPU-bound code.",
+          "Processes do help CPU-bound work; the limitation is only on threads.",
+        ],
+        explanation: "CPU-bound Python needs separate processes; threads are blocked by the GIL.",
+      },
+      {
+        question: "What does the GIL (global interpreter lock) do?",
+        choices: [
+          "It lets only one thread execute Python bytecode at a time",
+          "It speeds up all Python code",
+          "It prevents you from using threads at all",
+        ],
+        answer: 0,
+        why: [
+          "Correct. In standard CPython, the GIL serializes Python bytecode execution, so only one thread runs Python at once.",
+          "The GIL is a lock, not a speedup; it constrains threaded parallelism.",
+          "You can still use threads — they just cannot run Python bytecode simultaneously (though they help during I/O waits).",
+        ],
+        explanation: "The GIL allows one thread to run Python bytecode at a time.",
+      },
+    ],
     prompt: "Implement `execution_model(cpu_bound, many_connections)` returning `\"processes\"` for CPU work, `\"asyncio\"` for many waiting connections, and `\"threads\"` otherwise.", fn: "execution_model", starter: `def execution_model(cpu_bound, many_connections):\n    pass`, solution: `def execution_model(cpu_bound, many_connections):\n    if cpu_bound:\n        return "processes"\n    if many_connections:\n        return "asyncio"\n    return "threads"`,
     tests: [t("cpu", `assert fn(True, True) == "processes"`), t("many io", `assert fn(False, True) == "asyncio"`), t("ordinary io", `assert fn(False, False) == "threads"`)],
   },
@@ -2381,12 +2791,53 @@ const UNITS: UnitSpec[] = [
     trap: "Recursion over a long linear list risks `RecursionError`. Prefer a loop when the structure is naturally flat.",
     rule: "Before coding, name the smaller input and the measure that strictly decreases.",
     recall: "What three proof obligations make a recursive function safe?",
-    check: {
-      question: "What guarantees a recursive function terminates?",
-      choices: ["A base case plus strict progress toward it on every call", "Python's tail-call optimization"],
-      answer: 0,
-      explanation: "You need a base case, progress toward it, and a combination step. Python does NOT optimize tail calls, so deep recursion can raise `RecursionError`.",
-    },
+    checks: [
+      {
+        question: "What guarantees a recursive function terminates?",
+        choices: [
+          "A base case plus strict progress toward it on every call",
+          "Python's tail-call optimization",
+          "Being written with `def`",
+        ],
+        answer: 0,
+        why: [
+          "Correct. You need a base case (a smallest case that stops) and each call must move closer to it; otherwise it recurses forever.",
+          "Python does NOT optimize tail calls, so you cannot rely on that; deep recursion can raise `RecursionError`.",
+          "Using `def` does not make recursion terminate; the base case and progress do.",
+        ],
+        explanation: "Termination needs a base case and progress toward it every call.",
+      },
+      {
+        question: "Very deep recursion in Python can raise `RecursionError`. Why?",
+        choices: [
+          "Each unfinished call takes a stack frame, and Python does not optimize tail calls",
+          "Python forbids recursion beyond 10 levels",
+          "Recursion is not allowed in Python",
+        ],
+        answer: 0,
+        why: [
+          "Correct. Every pending call keeps a frame on the call stack, and since Python does not reuse frames for tail calls, deep recursion can exceed the limit.",
+          "The default limit is around a thousand, not ten, and it is about stack depth, not a fixed rule.",
+          "Recursion is fully allowed; it just costs stack frames.",
+        ],
+        explanation: "Each call uses a stack frame; no tail-call optimization means deep recursion can overflow.",
+      },
+      {
+        question: "What is the *base case* of a recursive function?",
+        choices: [
+          "The smallest case that is answered directly, without recursing further",
+          "The first line of the function",
+          "The largest possible input",
+        ],
+        answer: 0,
+        why: [
+          "Correct. The base case stops the recursion by returning an answer directly, so the chain of calls can unwind.",
+          "It is not about line position; it is the condition that returns without another recursive call.",
+          "The base case is the *smallest*/simplest case, not the largest.",
+        ],
+        explanation: "The base case answers the simplest input directly and stops the recursion.",
+      },
+    ],
     prompt: "Recursively return the sum of all integers in a nested list, where members are integers or nested lists.", fn: "nested_sum", starter: `def nested_sum(values):\n    pass`, solution: `def nested_sum(values):\n    total = 0\n    for value in values:\n        if isinstance(value, list):\n            total += nested_sum(value)\n        else:\n            total += value\n    return total`,
     tests: [t("nested", "assert fn([1, [2, [3]], 4]) == 10"), t("empty", "assert fn([]) == 0"), t("deep", "assert fn([[[5]]]) == 5", true), t("negatives", "assert fn([1, [-2, 3]]) == 2", true)],
   },
@@ -2398,12 +2849,53 @@ const UNITS: UnitSpec[] = [
     trap: "Pattern matching from keywords alone is brittle. 'Contiguous' suggests a window, but negative values may invalidate the monotonic movement that window needs.",
     rule: "Do not announce a pattern until you can state the repeated work it removes and the invariant that makes it correct.",
     recall: "What two statements should justify a chosen data structure?",
-    check: {
-      question: "Before announcing \"this is a sliding window,\" you should be able to state…",
-      choices: ["The repeated work it removes and the invariant that makes it correct", "How many lines of code it saves"],
-      answer: 0,
-      explanation: "Derive the pattern from the repeated work it eliminates and the invariant it maintains; keyword-matching alone is brittle.",
-    },
+    checks: [
+      {
+        question: "Before announcing \"this is a sliding window,\" you should be able to state…",
+        choices: [
+          "The repeated work it removes and the invariant that makes it correct",
+          "How many lines of code it saves",
+          "Which famous problem it came from",
+        ],
+        answer: 0,
+        why: [
+          "Correct. A pattern is justified by the repeated work it eliminates and the invariant it maintains — not by keyword-matching the problem.",
+          "Line count is irrelevant to whether the approach is correct.",
+          "The source problem does not justify the approach; the repeated work and invariant do.",
+        ],
+        explanation: "Justify a pattern by the repeated work it removes and the invariant it keeps.",
+      },
+      {
+        question: "In the interview derivation method, what comes early — before choosing a clever data structure?",
+        choices: [
+          "Work tiny examples and find the brute-force solution and its repeated work",
+          "Immediately pick a hash map",
+          "Start coding the optimized version",
+        ],
+        answer: 0,
+        why: [
+          "Correct. Understand the problem on small examples and get a brute force first; its repeated work is what a data structure is chosen to remove.",
+          "Jumping to a data structure before understanding the bottleneck is guesswork.",
+          "Coding the optimized version before deriving it leads to bugs and dead ends.",
+        ],
+        explanation: "Examples, then brute force, then find its repeated work, then choose a structure.",
+      },
+      {
+        question: "What role do the problem's constraints (like input size) play?",
+        choices: [
+          "They hint at the target complexity you need (e.g. n up to 100000 suggests about O(n log n))",
+          "They are decoration and can be ignored",
+          "They tell you the exact code to write",
+        ],
+        answer: 0,
+        why: [
+          "Correct. Input bounds imply how fast your solution must be, which points you toward the right complexity class and approach.",
+          "Constraints are a strong signal, not decoration — they often reveal the intended approach.",
+          "They suggest the complexity target, not literal code.",
+        ],
+        explanation: "Constraints imply the target complexity, guiding the approach.",
+      },
+    ],
     prompt: "Return indices of two distinct values summing to `target`, or `None`. Use one pass and a lookup table.", fn: "pair_sum", starter: `def pair_sum(numbers, target):\n    pass`, solution: `def pair_sum(numbers, target):\n    seen = {}\n    for index, number in enumerate(numbers):\n        needed = target - number\n        if needed in seen:\n            return [seen[needed], index]\n        seen[number] = index\n    return None`,
     tests: [t("pair", "assert fn([2, 7, 11, 15], 9) == [0, 1]"), t("distinct", "assert fn([3, 3], 6) == [0, 1]"), t("none", "assert fn([1, 2], 8) is None", true)],
   },
