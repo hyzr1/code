@@ -1848,7 +1848,7 @@ kbd {
   min-height: 1.75em;
   white-space: pre;
   display: grid;
-  grid-template-columns: 24px 13px 1fr;
+  grid-template-columns: 24px 13px minmax(0, 1fr);
   margin: 0 -9px;
   padding: 0 9px;
   border-radius: 4px;

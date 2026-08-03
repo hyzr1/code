@@ -408,10 +408,41 @@ const FOCUS_SIGNALS: Array<{ prose: RegExp; code: RegExp }> = [
   { prose: /\b(?:import|imports)\b/i, code: /\bimport\b|\brequire\s*\(/ },
 ];
 
+/**
+ * Split raw markdown prose into sentence-ish fragments *without* breaking
+ * inside an inline-code span. Splitting on a bare `.` would tear `a.copy()`
+ * into pieces; a backtick span is treated as atomic so code survives intact.
+ * Each fragment keeps its start offset in the raw string, for cue timing.
+ */
+function splitFragments(raw: string): { text: string; start: number }[] {
+  const out: { text: string; start: number }[] = [];
+  let buf = "";
+  let start = 0;
+  let inCode = false;
+  for (let i = 0; i < raw.length; i += 1) {
+    const ch = raw[i];
+    if (buf === "") start = i;
+    if (ch === "`") inCode = !inCode;
+    buf += ch;
+    if (!inCode && /[.!?;,]/.test(ch)) {
+      out.push({ text: buf, start });
+      buf = "";
+    }
+  }
+  if (buf.trim()) out.push({ text: buf, start });
+  return out;
+}
+
+/** A code line with any trailing `# comment` removed, for matching quoted code. */
+function codeOf(line: string): string {
+  return line.replace(/\s*#.*$/, "");
+}
+
 /** Build eye-guidance cues from the same explanation the learner hears. */
 function timedFocusSteps(scene: Scene, fallback: number[] = []): FocusStep[] | undefined {
   if (!scene.code) return undefined;
-  const prose = plainText(scene.caption).replace(/\s+/g, " ").trim();
+  const raw = scene.caption ?? "";
+  const prose = plainText(raw).replace(/\s+/g, " ").trim();
   const lines = scene.code.split("\n");
   if (!prose || !lines.some((line) => line.trim())) {
     return fallback.length
@@ -419,32 +450,38 @@ function timedFocusSteps(scene: Scene, fallback: number[] = []): FocusStep[] | u
       : undefined;
   }
 
-  // Commas matter here: teaching prose often explains an assignment, then the
-  // final call, inside one sentence. Treating the sentence as one unit would
-  // leave both lines lit together—the exact behavior this timeline replaces.
-  const fragments = [...prose.matchAll(/[^.!?;,]+(?:[.!?;,]|$)/g)];
+  // Split on the raw caption (backtick-aware) so quoted code stays whole, and
+  // commas still separate "explains the assignment, then the call" into two cues.
+  const fragments = splitFragments(raw);
   const steps: FocusStep[] = [];
 
-  // A cue's `at` must live on the same axis as playback progress, which is a
-  // fraction of *spoken audio* — time for the recorded/neural voices, expanded
-  // speech characters for the system voice. Measuring it as a fraction of
-  // caption characters (what this used to do) drifts badly: `charCodeAt` is one
-  // character on the page and three words aloud, `=` is one character and
-  // "equals" spoken. So position every cue by how much speech time elapses
-  // before its phrase, using the same `forSpeech` + WPM model the pacing uses.
-  // Rate cancels in the ratio, so it is left at 1.
+  // A cue's `at` must live on the same axis as playback progress: a fraction of
+  // *spoken audio*. Position each cue by how much speech time elapses before its
+  // phrase, using the same `forSpeech` + WPM model the pacing uses.
   const spokenTotal = Math.max(0.001, speechSeconds(prose, 1));
 
-  for (const match of fragments) {
-    const fragment = match[0].trim();
+  for (const frag of fragments) {
+    const fragment = plainText(frag.text).trim();
     if (!fragment) continue;
+
+    // The strongest signal by far: the sentence literally quotes a line of code
+    // in backticks, e.g. "`b = a` does not copy". Honour that exact code over
+    // any loose keyword overlap — this is what stops "copy" in the prose from
+    // jumping to an unrelated `a.copy()` line.
+    const spans = [...frag.text.matchAll(/`([^`]+)`/g)]
+      .map((m) => m[1].trim())
+      .filter((s) => s.length >= 3 && /[=(.]/.test(s));
+
     const words = (fragment.match(/[A-Za-z_]\w*/g) ?? [])
       .map((word) => word.toLocaleLowerCase())
       .filter((word) => word.length > 2 && !FOCUS_STOP_WORDS.has(word));
 
     const scores = lines.map((line) => {
       if (!line.trim()) return -1;
+      const code = codeOf(line);
       let score = 0;
+      // Exact quoted-code match dominates everything else.
+      for (const span of spans) if (code.includes(span)) score += 100;
       const lower = line.toLocaleLowerCase();
       for (const word of words) {
         if (new RegExp(`\\b${word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "i").test(lower)) {
@@ -478,7 +515,7 @@ function timedFocusSteps(scene: Scene, fallback: number[] = []): FocusStep[] | u
       // Speech time elapsed before this phrase, as a fraction of the whole —
       // the same axis playback progress reports, so the highlight lands on the
       // line at the moment the voice reaches it.
-      at: speechSeconds(prose.slice(0, match.index ?? 0), 1) / spokenTotal,
+      at: speechSeconds(plainText(raw.slice(0, frag.start)), 1) / spokenTotal,
       lines: [chosen + 1],
     });
   }
