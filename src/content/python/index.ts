@@ -942,12 +942,53 @@ const UNITS: UnitSpec[] = [
     trap: "The `f` prefix is required. Without it, `\"{name}\"` is the literal six characters `{name}`, not the value. And an f-string builds text: `f\"{score}\"` produces the string `\"91\"`, which is not the same value as the number `91`.",
     rule: "Prefer an f-string to build text from values: write each value inside `{}` and let the f-string convert it.",
     recall: "Why does `f\"count: {n}\"` insert the value of `n`, while `\"count: {n}\"` keeps the braces as literal text?",
-    check: {
-      question: "With `name` = `\"Ada\"` and `age` = `30`, what does `f\"{name} is {age}\"` produce?",
-      choices: ["\"Ada is 30\" — each `{}` is replaced by its value, converted to text", "\"{name} is {age}\" — the braces stay literal"],
-      answer: 0,
-      explanation: "The `f` prefix turns each `{...}` into the value of the expression inside, converting numbers to text automatically. Without the `f`, the braces would be literal characters.",
-    },
+    checks: [
+      {
+        question: "With `name` = `\"Ada\"` and `age` = `30`, what does `f\"{name} is {age}\"` produce?",
+        choices: [
+          "\"Ada is 30\" — each `{}` is replaced by its value, converted to text",
+          "\"{name} is {age}\" — the braces stay literal",
+          "An error, because `age` is a number",
+        ],
+        answer: 0,
+        why: [
+          "Correct. The `f` turns each `{...}` into the value inside, and it converts the number `30` to text automatically.",
+          "The braces stay literal only WITHOUT the `f` prefix. With `f`, they are replaced.",
+          "Mixing numbers and strings in an f-string is fine — it converts the number for you.",
+        ],
+        explanation: "An f-string replaces each `{...}` with its value, converting numbers to text.",
+      },
+      {
+        question: "What happens if you forget the `f` and write `\"Hi {name}\"`?",
+        choices: [
+          "You get the literal text `Hi {name}`, not the value of `name`",
+          "It still inserts the value of `name`",
+          "It raises an error",
+        ],
+        answer: 0,
+        why: [
+          "Correct. Without the `f` prefix, the braces are just ordinary characters, so `{name}` stays as literal text.",
+          "The `f` is what enables the replacement; without it, nothing is inserted.",
+          "It is not an error — you simply get the braces as literal characters.",
+        ],
+        explanation: "The `f` prefix is required; without it, `{name}` is literal text.",
+      },
+      {
+        question: "What does `f\"{score}\"` produce when `score` is the number `91`?",
+        choices: [
+          "The string `\"91\"` — an f-string always builds text",
+          "The number `91`",
+          "An error",
+        ],
+        answer: 0,
+        why: [
+          "Correct. An f-string always produces a string, so the number is converted to the text `\"91\"`.",
+          "The result is text, not a number; `\"91\"` is not the same value as `91`.",
+          "No error — it converts the number to text.",
+        ],
+        explanation: "An f-string always produces a string; `f\"{91}\"` is the text `\"91\"`.",
+      },
+    ],
     prompt: "Return the line `\"<name>: <score>\"` built with a single f-string.\n\nFor example, `score_line(\"Ada\", 91)` returns `\"Ada: 91\"`.", fn: "score_line", starter: `def score_line(name, score):\n    pass`, solution: `def score_line(name, score):\n    return f"{name}: {score}"`,
     tests: [t("pair", `assert fn("Ada", 91) == "Ada: 91"`), t("number", `assert fn("Bo", 0) == "Bo: 0"`), t("empty name", `assert fn("", 5) == ": 5"`)],
   },
@@ -959,12 +1000,53 @@ const UNITS: UnitSpec[] = [
     trap: "`\",\".join([1, 2])` raises `TypeError`: `join` only accepts strings, so convert numbers first with `str`. And `\"a  b\".split()` collapses repeated whitespace, while `\"a  b\".split(\" \")` keeps an empty string between the two spaces—choose the one whose rule you actually want.",
     rule: "Use `text.split()` to turn text into a list of words, and `separator.join(pieces)` to turn a list of strings back into text.",
     recall: "What does `\" \".join([\"a\", \"b\", \"c\"])` produce, and why does `\",\".join([1, 2])` raise an error?",
-    check: {
-      question: "What does `\" \".join([\"a\", \"b\", \"c\"])` produce?",
-      choices: ["\"a b c\" — the separator is placed between the items", "\"abc\" — the separator is ignored"],
-      answer: 0,
-      explanation: "`join` puts the separator string between each pair of items, so three items joined by a space become one string with two spaces inside it.",
-    },
+    checks: [
+      {
+        question: "What does `\" \".join([\"a\", \"b\", \"c\"])` produce?",
+        choices: [
+          "\"a b c\" — the separator is placed between the items",
+          "\"abc\" — the separator is ignored",
+          "[\"a\", \"b\", \"c\"] — a list",
+        ],
+        answer: 0,
+        why: [
+          "Correct. `join` puts the separator (a space) between each pair of items, giving one string `\"a b c\"`.",
+          "The separator is not ignored; it goes between the items.",
+          "`join` returns a single string, not a list — it is the opposite of `split`.",
+        ],
+        explanation: "`join` puts the separator between items and returns one string.",
+      },
+      {
+        question: "What does `\"  the  quick  \".split()` return (no argument)?",
+        choices: [
+          "`[\"the\", \"quick\"]` — it splits on whitespace and drops the empty pieces",
+          "`[\"\", \"the\", \"\", \"quick\", \"\"]` — it keeps every gap",
+          "`\"the quick\"` — a cleaned string",
+        ],
+        answer: 0,
+        why: [
+          "Correct. With no argument, `split` breaks on runs of whitespace and ignores leading, trailing, and repeated spaces.",
+          "That would happen with `split(\" \")` (a specific separator), which keeps empty pieces. Plain `split()` drops them.",
+          "`split` returns a list, not a string.",
+        ],
+        explanation: "`split()` with no argument splits on whitespace and drops empty pieces.",
+      },
+      {
+        question: "Why does `\",\".join([1, 2])` raise an error?",
+        choices: [
+          "`join` only accepts strings; convert the numbers first with `str`",
+          "You cannot join a list of two items",
+          "The separator cannot be a comma",
+        ],
+        answer: 0,
+        why: [
+          "Correct. `join` requires every item to already be a string, so numbers must be converted (e.g. `str(1)`) first.",
+          "Any number of items is fine; the problem is that the items are numbers, not strings.",
+          "A comma is a perfectly valid separator; the error is about the numeric items.",
+        ],
+        explanation: "`join` needs string items; convert numbers with `str` first.",
+      },
+    ],
     prompt: "Return the first whitespace-separated word in `text`, or `\"\"` when there are none.\n\nFor example, `first_word(\"  the quick brown  \")` returns `\"the\"`.", fn: "first_word", starter: `def first_word(text):\n    pass`, solution: `def first_word(text):\n    words = text.split()\n    if not words:\n        return ""\n    return words[0]`,
     tests: [t("first", `assert fn("the quick brown") == "the"`), t("trims", `assert fn("   solo  ") == "solo"`), t("empty", `assert fn("   ") == ""`, true)],
   },
@@ -1051,12 +1133,53 @@ const UNITS: UnitSpec[] = [
     trap: "A slice never raises for out-of-range bounds—`letters[1:99]` simply stops at the end—so it will not catch a bad range the way `letters[99]` catches a bad index. And `letters[::-1]` reverses into a new list; reversing in place is `letters.reverse()`.",
     rule: "Use the third slice number for a step, `[::-1]` to reverse, and `[:]` for a shallow copy; a slice never mutates the original.",
     recall: "What does `values[::-1]` produce, and does it change `values`?",
-    check: {
-      question: "What does `\"hello\"[::-1]` produce?",
-      choices: ["\"olleh\" — a reversed copy", "\"hello\" — the step is ignored"],
-      answer: 0,
-      explanation: "A step of -1 walks the sequence backward into a new copy. The original string is unchanged, since strings are immutable.",
-    },
+    checks: [
+      {
+        question: "What does `\"hello\"[::-1]` produce?",
+        choices: [
+          "\"olleh\" — a reversed copy",
+          "\"hello\" — the step is ignored",
+          "An error",
+        ],
+        answer: 0,
+        why: [
+          "Correct. A step of `-1` walks the sequence backward, building a reversed copy. The original is unchanged.",
+          "The step is not ignored; `-1` reverses the order.",
+          "It is valid — negative steps are allowed and reverse the sequence.",
+        ],
+        explanation: "`[::-1]` reverses into a new copy.",
+      },
+      {
+        question: "For `nums = [0, 1, 2, 3, 4]`, what is `nums[::2]`?",
+        choices: [
+          "`[0, 2, 4]` — every second item, starting at the first",
+          "`[1, 3]` — every second item, starting at the second",
+          "`[0, 1, 2, 3, 4]` — the step is ignored",
+        ],
+        answer: 0,
+        why: [
+          "Correct. A step of `2` takes every second item starting from index 0: `0, 2, 4`.",
+          "It starts at the beginning (index 0), not index 1, unless you give a start.",
+          "The step is applied, so you do not get the whole list back.",
+        ],
+        explanation: "`[::2]` takes every second item starting at the first.",
+      },
+      {
+        question: "You want a separate copy of a list so changes don't affect the original. Which slice does that?",
+        choices: [
+          "`values[:]` — a full slice makes a new (shallow) copy",
+          "`values` — same list, not a copy",
+          "`values[0]` — the first item",
+        ],
+        answer: 0,
+        why: [
+          "Correct. A slice always builds a new sequence, so `values[:]` copies the whole list into a fresh one.",
+          "`values` is just another name for the same list — changes would show through both.",
+          "`values[0]` is a single item, not a copy of the list.",
+        ],
+        explanation: "`values[:]` makes a new shallow copy; a slice never changes the original.",
+      },
+    ],
     prompt: "Return `text` reversed, using a slice.\n\nFor example, `reverse(\"abc\")` returns `\"cba\"`.", fn: "reverse", starter: `def reverse(text):\n    pass`, solution: `def reverse(text):\n    return text[::-1]`,
     tests: [t("word", `assert fn("abc") == "cba"`), t("empty", `assert fn("") == ""`, true), t("single", `assert fn("a") == "a"`, true)],
   },
