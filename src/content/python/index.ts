@@ -2901,12 +2901,12 @@ const UNITS: UnitSpec[] = [
   },
   {
     id: "hashing", module: "py.m9", title: "Hash maps: remember the past", goal: "Replace repeated lookup with a one-pass table.", kind: "pattern", requires: ["method", "dicts"],
-    model: "Hashing is the pattern for remembering facts about values already seen: index by complement, count by value, group by signature, or store the best state for a prefix.",
-    example: `counts = {}\nfor value in values:\n    counts[value] = counts.get(value, 0) + 1`,
-    trace: "The table turns a question about all prior elements into one expected O(1) lookup. The key must encode exactly the equivalence relation the problem cares about.",
-    trap: "Storing the wrong fact gives fast access to useless information. Define the lookup question in words before choosing key and value.",
-    rule: "State: key means ___; value means ___; after index i the table contains ___.",
-    recall: "What three meanings should you define before implementing a hash table solution?",
+    model: "The **hash-map pattern** is the most common interview trick: instead of re-scanning the same values again and again (slow), you *remember* what you have seen in a dictionary and look it up instantly. A dictionary lookup is about O(1), so this often turns an O(n²) scan into a single O(n) pass.\n\nThe usual moves:\n- **Count by value** — how many times each thing appears.\n- **Index by complement** — for two-sum, store each number so you can instantly ask 'have I seen `target - x`?'\n- **Group by signature** — bucket items that share a key (e.g. sorted letters for anagrams).\n\n```python\n# count how many times each value appears\ncounts = {}\nfor value in [1, 2, 2, 3]:\n    counts[value] = counts.get(value, 0) + 1\nprint(counts)   # {1: 1, 2: 2, 3: 1}\n```\n\nThe skill is choosing **what to store**. Before coding, say it in words: what does a *key* mean, what does a *value* mean, and after visiting index `i`, what does the table contain? Store the wrong fact and you get fast access to useless information.",
+    example: `counts = {}\nfor value in [1, 2, 2, 3]:\n    counts[value] = counts.get(value, 0) + 1\nprint(counts)   # {1: 1, 2: 2, 3: 1}`,
+    trace: "Starting from an empty `counts`, each value's tally starts at `0` (via `.get(value, 0)`) and goes up by one. For `[1, 2, 2, 3]`: `1` gives `{1: 1}`; `2` gives `{1: 1, 2: 1}`; `2` again gives `{1: 1, 2: 2}`; `3` gives `{1: 1, 2: 2, 3: 1}`. Each lookup and update is about O(1), so the whole count is one O(n) pass instead of rescanning the list for every value.",
+    trap: "Storing the wrong fact gives you fast access to useless information. Define the lookup question in words first — what the key means and what the value means — before choosing them.",
+    rule: "Before coding a hash-map solution, state three things: the key means ___, the value means ___, and after visiting index `i` the table contains ___.",
+    recall: "What three meanings should you define before writing a hash-map solution, and why does it turn repeated scanning into a single pass?",
     checks: [
       {
         question: "What does the hash-map pattern replace?",
@@ -2959,12 +2959,12 @@ const UNITS: UnitSpec[] = [
   },
   {
     id: "two-pointers", module: "py.m9", title: "Two pointers: shrink the search", goal: "Prove which candidates a pointer movement safely discards.", kind: "pattern", requires: ["method", "lists"],
-    model: "Two pointers exploit an ordered or symmetric search space. A movement must eliminate candidates using a monotonic fact; otherwise it is only two variables, not the pattern.",
-    example: `left, right = 0, len(numbers) - 1\nwhile left < right:\n    total = numbers[left] + numbers[right]\n    if total < target:\n        left += 1\n    elif total > target:\n        right -= 1\n    else:\n        return (left, right)`,
-    trace: "In sorted order, a sum that is too small cannot be fixed by pairing the same smallest value with any earlier right value. Advancing left discards only impossible pairs.",
-    trap: "Without ordering or another monotonic property, moving a pointer may skip the answer.",
-    rule: "For every pointer move, say which region becomes impossible and why.",
-    recall: "Why is increasing `left` safe when the sorted pair sum is too small?",
+    model: "The **two-pointers pattern** walks a *sorted* (or symmetric) sequence from both ends, moving one pointer at a time to zero in on an answer — provably skipping candidates it can rule out. That elimination is what makes it the pattern, not just two variables.\n\nClassic example: find a pair that sums to a target in a sorted array.\n\n```python\ndef two_sum_sorted(numbers, target):\n    left, right = 0, len(numbers) - 1\n    while left < right:\n        total = numbers[left] + numbers[right]\n        if total < target:\n            left += 1        # too small -> need a bigger value\n        elif total > target:\n            right -= 1       # too big -> need a smaller value\n        else:\n            return (left, right)\n    return None\n\nprint(two_sum_sorted([1, 3, 4, 7], 10))   # (1, 3)  -> 3 + 7\n```\n\nWhy each move is safe: the array is sorted. If the current sum is *too small*, the smallest value (`numbers[left]`) paired with *anything* to its right is still too small — so `left` can never be part of the answer, and advancing it discards only impossible pairs. Symmetrically for too big. It is O(n) because the two pointers together move at most `n` steps.",
+    example: `def two_sum_sorted(numbers, target):\n    left, right = 0, len(numbers) - 1\n    while left < right:\n        total = numbers[left] + numbers[right]\n        if total < target:\n            left += 1\n        elif total > target:\n            right -= 1\n        else:\n            return (left, right)\n    return None\n\nprint(two_sum_sorted([1, 3, 4, 7], 10))   # (1, 3)`,
+    trace: "For `[1, 3, 4, 7]`, target `10`: `left=0` points at `1`, `right=3` at `7`; total `8` is too small, so `left` advances to index `1` (value `3`). Now `3 + 7 = 10` matches the target, so it returns `(1, 3)`. Each step either advanced `left` or retreated `right`, and because the array is sorted, every skipped pointer position was provably impossible.",
+    trap: "Two pointers rely on order (or another monotonic property). On an *unsorted* array, moving a pointer can skip right past the answer, because 'too small, so advance' no longer holds.",
+    rule: "For every pointer move, be able to say which candidates it just made impossible, and why the sorted order guarantees that.",
+    recall: "Why is advancing `left` safe when the sorted pair sum is too small, and why does the pattern fail on unsorted input?",
     checks: [
       {
         question: "When do two pointers form the actual pattern rather than just two variables?",
@@ -3017,12 +3017,12 @@ const UNITS: UnitSpec[] = [
   },
   {
     id: "sliding-window", module: "py.m9", title: "Sliding windows", goal: "Maintain a valid contiguous region without recomputing it.", kind: "pattern", requires: ["two-pointers", "hashing"],
-    model: "A sliding window keeps state for a contiguous range. The right edge adds information; the left edge removes information until an invariant is restored. Each edge moves at most n times.",
-    example: `left = 0\nseen = {}\nfor right, char in enumerate(text):\n    if char in seen and seen[char] >= left:\n        left = seen[char] + 1\n    seen[char] = right`,
-    trace: "The left edge never moves backward. `seen` stores latest positions, and the active window contains no duplicate character after each iteration.",
-    trap: "Windows need a condition that can be repaired monotonically. With arbitrary negative numbers, enlarging a sum can decrease it, so the standard positive-sum window logic fails.",
-    rule: "Define what makes the window valid, what state represents it, and exactly when the left edge advances.",
-    recall: "Why does a two-edge window remain O(n) even though one loop is nested inside another?",
+    model: "A **sliding window** tracks a *contiguous* stretch of a list or string and slides it along, keeping some running state. The **right edge** adds a new item; the **left edge** shrinks the window until it is 'valid' again. Because each edge only ever moves *forward*, at most `n` times, the whole thing is O(n) even though it looks like a loop inside a loop.\n\nExample: length of the longest substring with no repeated character.\n\n```python\ndef longest_unique(text):\n    left = 0\n    seen = {}          # char -> its latest index\n    best = 0\n    for right, char in enumerate(text):\n        if char in seen and seen[char] >= left:\n            left = seen[char] + 1     # jump left past the duplicate\n        seen[char] = right\n        best = max(best, right - left + 1)\n    return best\n\nprint(longest_unique(\"abcabcbb\"))   # 3   (\"abc\")\n```\n\nThe key idea: whenever the new character was already inside the current window, move `left` just past its previous position so there is no duplicate again. The window always satisfies its rule — 'no repeated character' — after each step. That maintained fact is the **invariant**.",
+    example: `def longest_unique(text):\n    left = 0\n    seen = {}\n    best = 0\n    for right, char in enumerate(text):\n        if char in seen and seen[char] >= left:\n            left = seen[char] + 1\n        seen[char] = right\n        best = max(best, right - left + 1)\n    return best\n\nprint(longest_unique("abcabcbb"))   # 3`,
+    trace: "Walk `\"abcabcbb\"`. The window grows `a`, `ab`, `abc` (best `3`). At the next `a` (index 3), `a` was seen at index 0, which is `>= left`, so `left` jumps to `1` and the window becomes `bca`. Each repeat pushes `left` forward, never backward, so the window always holds distinct characters, and `best` records the largest size seen, `3`. Because `left` and `right` each only advance, total work is O(n).",
+    trap: "A window needs a validity condition you can *repair by moving one edge*. With arbitrary negative numbers, growing a subarray's sum can *decrease* it, so the usual 'shrink from the left until the sum is small enough' logic breaks — the window pattern does not apply.",
+    rule: "Before coding a window, define three things: what makes the window valid, what state you keep to check it, and exactly when the left edge advances.",
+    recall: "Why does a sliding window stay O(n) even though it looks like nested loops, and what does the left edge do when the window becomes invalid?",
     checks: [
       {
         question: "What is the total work of a sliding window over n items?",
@@ -3075,12 +3075,12 @@ const UNITS: UnitSpec[] = [
   },
   {
     id: "stack", module: "py.m9", title: "Stacks and unmatched work", goal: "Use LIFO order to resolve the most recent unfinished item.", kind: "pattern", requires: ["method", "lists"],
-    model: "A stack handles nested or nearest-unmatched structure. Push when work opens; inspect or pop the most recent item when it closes. Python lists provide O(1) amortized `append` and O(1) `pop()` at the end.",
-    example: `pairs = {")": "(", "]": "[", "}": "{"}\nstack = []`,
-    trace: "For a closer, the only legal match is the most recently unmatched opener. Any earlier opener is blocked by what sits above it.",
-    trap: "Check that the stack is nonempty before reading `stack[-1]` or popping.",
-    rule: "If the next answer depends on the most recent unresolved item, test a stack.",
-    recall: "Why can a closing bracket only match the top opener?",
+    model: "A **stack** (last-in, first-out) is the tool when a problem is about **nesting** or the **most-recently-unmatched** thing — like matching brackets. You **push** when something opens, and **pop or inspect the top** when something closes.\n\nExample: are the brackets balanced?\n\n```python\ndef balanced(text):\n    pairs = {\")\": \"(\", \"]\": \"[\", \"}\": \"{\"}\n    stack = []\n    for char in text:\n        if char in \"([{\":\n            stack.append(char)          # an opener waits on the stack\n        elif char in pairs:\n            if not stack or stack[-1] != pairs[char]:\n                return False            # closer doesn't match the most recent opener\n            stack.pop()\n    return not stack                    # valid only if nothing is left open\n\nprint(balanced(\"([]{})\"))   # True\nprint(balanced(\"([)]\"))     # False\n```\n\nWhy the *top* opener is the only legal match: a closer must pair with the most recently opened bracket, because anything opened earlier is blocked by what sits above it. Python lists are perfect stacks — `append` and `pop()` from the end are both O(1).",
+    example: `def balanced(text):\n    pairs = {")": "(", "]": "[", "}": "{"}\n    stack = []\n    for char in text:\n        if char in "([{":\n            stack.append(char)\n        elif char in pairs:\n            if not stack or stack[-1] != pairs[char]:\n                return False\n            stack.pop()\n    return not stack\n\nprint(balanced("([]{})"))   # True\nprint(balanced("([)]"))     # False`,
+    trace: "For `\"([)]\"`: `(` and `[` are pushed, so `stack` is `['(', '[']`. Then `)` arrives; its match is `(`, but the top of the stack is `[` — mismatch — so it returns `False`. That is correct: `)` should have closed the most recent opener, which was `[`. For `\"([]{})\"`, every closer matches the current top, each pop succeeds, and the stack ends empty, so it returns `True`.",
+    trap: "Always check the stack is *nonempty* before reading `stack[-1]` or calling `pop()` — a closing bracket with nothing open should be rejected, not crash.",
+    rule: "If the next answer depends on the most-recently-unresolved item, reach for a stack: push on open, match and pop on close.",
+    recall: "Why can a closing bracket only match the top (most recent) opener, and what must you check before popping?",
     checks: [
       {
         question: "A stack is the right tool when a problem is about…",
@@ -3133,12 +3133,12 @@ const UNITS: UnitSpec[] = [
   },
   {
     id: "intervals", module: "py.m9", title: "Intervals and sorted frontiers", goal: "Merge overlapping ranges with one maintained frontier.", kind: "pattern", requires: ["method", "lists", "sorting"],
-    model: "Sorting intervals by start converts global overlap into a local question: does the next start lie beyond the end of the merged frontier? The last output interval represents the union of everything processed so far.",
-    example: `intervals.sort(key=lambda pair: pair[0])\nmerged = [intervals[0][:]]`,
-    trace: "After sorting, an interval cannot overlap any earlier output interval without also touching the last one, because that last interval reaches farthest to the right.",
-    trap: "Decide whether touching endpoints overlap. `[1, 3]` and `[3, 5]` merge for closed intervals but not necessarily for half-open ranges.",
-    rule: "Sort by the coordinate that makes the future comparable to one frontier.",
-    recall: "Why is comparing only with the last merged interval sufficient after sorting by start?",
+    model: "The **merge-intervals pattern** combines overlapping ranges. The trick is one line: **sort by start**. Once sorted, an interval can only overlap the *most recent* merged one — so you never compare against everything, just the last output.\n\n```python\ndef merge(intervals):\n    intervals.sort(key=lambda pair: pair[0])   # sort by start\n    merged = [intervals[0]]\n    for start, end in intervals[1:]:\n        last_start, last_end = merged[-1]\n        if start <= last_end:                  # overlaps the current frontier\n            merged[-1] = [last_start, max(last_end, end)]   # extend it\n        else:\n            merged.append([start, end])         # gap -> start a new interval\n    return merged\n\nprint(merge([[1, 3], [2, 6], [8, 10]]))   # [[1, 6], [8, 10]]\n```\n\nWhy comparing with only the last merged interval is enough: after sorting by start, the last merged interval reaches farthest to the right, so if the new one does not touch *it*, it cannot touch any earlier one either.",
+    example: `def merge(intervals):\n    intervals.sort(key=lambda pair: pair[0])\n    merged = [intervals[0]]\n    for start, end in intervals[1:]:\n        last_start, last_end = merged[-1]\n        if start <= last_end:\n            merged[-1] = [last_start, max(last_end, end)]\n        else:\n            merged.append([start, end])\n    return merged\n\nprint(merge([[1, 3], [2, 6], [8, 10]]))   # [[1, 6], [8, 10]]`,
+    trace: "Sort by start (already sorted here). Start with `merged = [[1, 3]]`. Next is `[2, 6]`: `2 <= 3`, so it overlaps — extend the frontier to `[1, max(3, 6)]`, which is `[1, 6]`. Next is `[8, 10]`: `8 > 6`, a gap, so start a new interval. Result: `[[1, 6], [8, 10]]`. Each interval was compared only against the last merged one, which reaches farthest right.",
+    trap: "Decide whether *touching* endpoints count as overlapping. `[1, 3]` and `[3, 5]` merge if intervals are closed (they share `3`), but may not if they are half-open. Pick the rule and make the comparison (`<` vs `<=`) match it.",
+    rule: "Sort by the coordinate that makes each new item comparable to a single frontier (usually the start), then merge or extend against just the last output interval.",
+    recall: "Why is comparing only with the last merged interval enough after sorting by start, and how do touching endpoints affect the merge test?",
     checks: [
       {
         question: "Why sort intervals by start before merging?",
@@ -3191,12 +3191,12 @@ const UNITS: UnitSpec[] = [
   },
   {
     id: "binary-search", module: "py.m9", title: "Binary search as boundary finding", goal: "Write binary search from a loop invariant instead of memorizing a template.", kind: "pattern", requires: ["method"],
-    model: "Binary search works when a predicate changes monotonically across an ordered search space. Maintain a half-open interval `[low, high)` that still contains the first true position.",
-    example: `low, high = 0, len(values)\nwhile low < high:\n    mid = (low + high) // 2\n    if values[mid] < target:\n        low = mid + 1\n    else:\n        high = mid`,
-    trace: "Indices below `low` are proven too small; indices at or above `high` are outside the remaining candidate region. Each update removes `mid`, guaranteeing progress.",
-    trap: "Mixing inclusive and exclusive bounds creates off-by-one loops. Pick one invariant and make every update preserve it.",
-    rule: "Phrase the task as 'find the first position where predicate P becomes true.'",
-    recall: "What do `low` and `high` mean in the half-open lower-bound search?",
+    model: "**Binary search** finds a boundary in a *sorted* space by repeatedly halving it — about O(log n) instead of O(n). The most robust way to think about it: 'find the **first** position where some condition becomes true', using a half-open interval `[low, high)`.\n\n```python\ndef lower_bound(values, target):\n    # first index whose value is >= target\n    low, high = 0, len(values)\n    while low < high:\n        mid = (low + high) // 2\n        if values[mid] < target:\n            low = mid + 1     # mid too small -> answer is to the right\n        else:\n            high = mid        # mid might be the answer -> keep it in range\n    return low\n\nprint(lower_bound([1, 3, 5, 7], 5))   # 2\nprint(lower_bound([1, 3, 5, 7], 4))   # 2  (where 4 would go)\n```\n\nThe interval `[low, high)` always holds the answer. Everything below `low` is proven too small; everything at or above `high` is outside the candidates. Each step drops `mid` from consideration, so the range shrinks and the loop must end. Keeping one clear invariant is what makes binary search bug-free.",
+    example: `def lower_bound(values, target):\n    low, high = 0, len(values)\n    while low < high:\n        mid = (low + high) // 2\n        if values[mid] < target:\n            low = mid + 1\n        else:\n            high = mid\n    return low\n\nprint(lower_bound([1, 3, 5, 7], 5))   # 2\nprint(lower_bound([1, 3, 5, 7], 4))   # 2`,
+    trace: "Search `[1, 3, 5, 7]` for the first value `>= 5`. `low=0, high=4`, `mid=2` (`5`): not `< 5`, so `high=2`. `low=0, high=2`, `mid=1` (`3`): `3 < 5`, so `low=2`. Now `low == high == 2`, the loop ends, and it returns `2`, the index of `5`. Each step halved the range, giving about log₂(n) steps.",
+    trap: "Mixing inclusive and exclusive bounds creates off-by-one loops that never end or skip the answer. Pick one invariant — here, half-open `[low, high)` — and make every update preserve it.",
+    rule: "Phrase the task as 'find the first position where condition P becomes true', keep a half-open `[low, high)` that always contains that position, and shrink it each step.",
+    recall: "What do `low` and `high` mean in a half-open binary search, and why does each step guarantee progress?",
     checks: [
       {
         question: "Binary search works when the search space has what property?",
@@ -3249,12 +3249,12 @@ const UNITS: UnitSpec[] = [
   },
   {
     id: "prefix-sums", module: "py.m9", title: "Prefix sums and range algebra", goal: "Turn repeated range work into subtraction between two cumulative states.", kind: "pattern", requires: ["method", "lists"],
-    model: "A prefix array stores the aggregate before each boundary. If prefix[i] is the sum of values before index i, then any half-open range [left, right) is prefix[right] minus prefix[left]. The same algebra extends to counts, parity, and two-dimensional regions.",
-    example: `values = [3, -1, 4, 2]\nprefix = [0]\nfor value in values:\n    prefix.append(prefix[-1] + value)\n\n# sum from index 1 through 2\nprefix[3] - prefix[1]  # 3`,
-    trace: "Both prefixes contain the contribution before `left`; subtraction cancels it, leaving exactly the range. Building costs O(n), then each range query costs O(1).",
-    trap: "Define whether boundaries are inclusive or exclusive before writing indexes. Mixing a length-n prefix with a length-(n+1) formula is the usual off-by-one failure.",
-    rule: "Use an initial zero and half-open ranges; the algebra then matches Python slicing.",
-    recall: "If prefix[i] sums values before i, what expression sums [left, right)?",
+    model: "A **prefix-sum** array lets you get the sum of *any range* in O(1), after an O(n) setup. The idea: `prefix[i]` holds the sum of everything *before* index `i`. Then the sum of a range is just a subtraction.\n\n```python\nvalues = [3, -1, 4, 2]\nprefix = [0]                       # prefix[0] = sum of nothing = 0\nfor value in values:\n    prefix.append(prefix[-1] + value)\n# prefix is now [0, 3, 2, 6, 8]\n\n# sum of values[1:3]  (indices 1 and 2)\nprint(prefix[3] - prefix[1])       # 6 - 3 = 3\n```\n\nWhy it works: `prefix[right]` includes everything up to `right`, and `prefix[left]` includes everything up to `left`. Subtracting cancels the shared front part, leaving exactly the range `[left, right)`. Building the array is one O(n) pass; after that, each range query is a single subtraction. The same idea extends to counts, parity, and 2-D regions.",
+    example: `values = [3, -1, 4, 2]\nprefix = [0]\nfor value in values:\n    prefix.append(prefix[-1] + value)\n\nprint(prefix)                # [0, 3, 2, 6, 8]\nprint(prefix[3] - prefix[1]) # 3  (sum of values[1:3])`,
+    trace: "Build `prefix` starting at `[0]`: add `3` gives `[0, 3]`; add `-1` gives `[0, 3, 2]`; add `4` gives `[0, 3, 2, 6]`; add `2` gives `[0, 3, 2, 6, 8]`. Now the sum of `values[1:3]` (the `-1` and `4`) is `prefix[3] - prefix[1]`, which is `6 - 3`, which is `3`. Both prefixes included the first element `3`; subtracting cancels it, leaving exactly the range.",
+    trap: "Decide whether your range boundaries are inclusive or exclusive *before* writing the indexes. A length-`n` list needs a length-`(n+1)` prefix (with the leading `0`); mixing the two is the classic off-by-one failure.",
+    rule: "Start the prefix array with a `0` and use half-open ranges `[left, right)` — then `prefix[right] - prefix[left]` matches Python slicing exactly.",
+    recall: "If `prefix[i]` is the sum before index `i`, what expression gives the sum of `[left, right)`, and why start the array with a `0`?",
     checks: [
       {
         question: "With a prefix-sum array built, how fast is any range-sum query?",
@@ -3307,12 +3307,12 @@ const UNITS: UnitSpec[] = [
   },
   {
     id: "monotonic-stack", module: "py.m9", title: "Monotonic stacks and next boundaries", goal: "Resolve each item when the first stronger future value appears.", kind: "pattern", requires: ["stack"],
-    model: "A monotonic stack stores unresolved candidates in sorted value order. When a new value violates that order, it resolves one or more candidates. Each index is pushed once and popped once, so the total work is linear despite a nested while loop.",
-    example: `result = [-1] * len(values)\nstack = []  # unresolved indices, values decreasing\nfor index, value in enumerate(values):\n    while stack and values[stack[-1]] < value:\n        result[stack.pop()] = value\n    stack.append(index)`,
-    trace: "The stack holds indices whose next greater value has not appeared. The current value is the first greater one for every smaller index popped because all values between were no greater.",
-    trap: "Store indices when distance or position matters. Storing only values loses where the answer belongs.",
-    rule: "Define the unresolved promise of one stack entry and the event that finally resolves it.",
-    recall: "Why can the inner while loop pop O(n) items without making the whole algorithm O(n²)?",
+    model: "A **monotonic stack** keeps a stack of *unresolved* items in sorted order, and resolves them the moment a new value breaks that order. It is the go-to for 'next greater element' style problems, and it is O(n) because each index is pushed and popped exactly once.\n\n```python\ndef next_greater(values):\n    result = [-1] * len(values)\n    stack = []          # indices whose 'next greater' is still unknown\n    for index, value in enumerate(values):\n        while stack and values[stack[-1]] < value:\n            result[stack.pop()] = value   # this value is their answer\n        stack.append(index)\n    return result\n\nprint(next_greater([2, 1, 3]))   # [3, 3, -1]\n```\n\nThe stack holds indices still waiting for a bigger value to appear. When the current `value` is bigger than what a waiting index points to, it *is* that index's answer, so you pop and record it. Every index enters and leaves the stack once, so even with the inner `while`, total work is linear — not O(n²).",
+    example: `def next_greater(values):\n    result = [-1] * len(values)\n    stack = []\n    for index, value in enumerate(values):\n        while stack and values[stack[-1]] < value:\n            result[stack.pop()] = value\n        stack.append(index)\n    return result\n\nprint(next_greater([2, 1, 3]))   # [3, 3, -1]`,
+    trace: "For `[2, 1, 3]`: push index 0 (`2`). Next value `1` is not greater than `2`, so push index 1 (`1`); the stack is `[0, 1]`. Next value `3`: it is greater than `values[1]=1`, so pop index 1 and set `result[1]=3`; still greater than `values[0]=2`, so pop index 0 and set `result[0]=3`. Push index 2. Index 2 (`3`) never gets a greater value, so `result[2]` stays `-1`. Result: `[3, 3, -1]`. Each index was pushed once and popped once — O(n).",
+    trap: "Store *indices* on the stack, not just values, when you need to know *where* each answer belongs (or the distance to it). Storing only the values loses the positions you need to fill in.",
+    rule: "Define exactly what an item on the stack is *waiting for* (e.g. 'a greater value to its right') and the event that resolves it — then each item is pushed and popped once for O(n).",
+    recall: "Why can the inner `while` loop pop many items without making the algorithm O(n²), and why store indices rather than values?",
     checks: [
       {
         question: "What does a monotonic stack keep?",
