@@ -4621,3 +4621,18 @@ pre,
   border-color: var(--accent);
 }
 .tutor-resume svg { color: var(--accent); }
+
+@media (max-width: 700px) {
+  /* 16px stops iOS Safari from zooming the whole page when the input is
+     focused — the "it zooms in and looks weird" bug. */
+  .tutor-take .composer textarea { font-size: 16px; }
+  /* Keep the nav row within the screen so nothing pushes a horizontal scroll:
+     the pager wraps, and Resume stays on the right. */
+  .tutor-nav {
+    flex-wrap: wrap;
+    row-gap: 8px;
+    column-gap: 6px;
+  }
+  .tutor-nav .spacer { display: none; }
+  .tutor-resume { margin-left: auto; padding: 6px 12px; }
+}

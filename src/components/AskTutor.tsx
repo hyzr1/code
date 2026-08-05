@@ -54,6 +54,13 @@ function speechRecognitionCtor(): (new () => SpeechRec) | null {
   return w.SpeechRecognition ?? w.webkitSpeechRecognition ?? null;
 }
 
+// Kokoro on a phone's WASM is unusably slow (and often just hangs), so on
+// mobile the tutor speaks with the device's own built-in voice — which is
+// instant and, on iOS, genuinely good. Desktop keeps the af_heart voice.
+const isMobileDevice =
+  typeof navigator !== "undefined" &&
+  /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
 function plain(text: string): string {
   return text
     .replace(/`([^`]+)`/g, "$1")
@@ -73,6 +80,7 @@ function groundingPrompt(atom: Atom, scene: Scene): string {
     `"""${code}`,
     ``,
     `Answer directly and simply, as if they are new to programming.`,
+    `Do not add a heading or a bold title, and do not restate the question — start straight with the explanation in plain sentences. Separate paragraphs with a blank line.`,
     `Structure the answer like a short lesson slide: 1-2 sentences of plain-English explanation, then — when it helps — ONE short fenced code block (\`\`\`python) with a tiny concrete example (a handful of lines).`,
     `After the code, add one or two sentences that walk through what the key lines do in order, the way a lecture explains code line by line (for example: "the first line creates the dictionary, and the next line adds a new key"). Keep it brief.`,
     `Put the teaching in the prose, not in code comments. Never paste long code. If they drift off-topic, gently bring them back to the lesson.`,
@@ -233,10 +241,10 @@ export default function AskTutor({
     };
   }, []);
 
-  // Auto-fetch the af_heart voice in the background the moment the tutor opens,
-  // so answers speak in the lecture voice. Idempotent — safe to call once.
+  // Auto-fetch the af_heart voice in the background on desktop so answers speak
+  // in the lecture voice with no wait. Never on mobile (Kokoro can't run there).
   useEffect(() => {
-    if (settings.watch.engine === "natural" && neural.getStatus() === "idle") {
+    if (!isMobileDevice && settings.watch.engine === "natural" && neural.getStatus() === "idle") {
       void neural.load().catch(() => undefined);
     }
   }, [settings.watch.engine]);
@@ -256,11 +264,12 @@ export default function AskTutor({
       const token = ++speakTokenRef.current;
       setSpeaking(true);
       setSpeakProgress(0);
-      // The tutor talks in the lecture's af_heart voice. If its model isn't
-      // downloaded yet, fetch it in the background (a "loading voice" note
-      // shows meanwhile) and then narrate — no robotic system voice once it's
-      // available. Only drop to the system voice if the download itself fails.
-      if (settings.watch.engine === "natural" && neural.getStatus() !== "ready") {
+      // On desktop, talk in the lecture's af_heart voice; fetch its model in the
+      // background if needed (a "loading voice" note shows meanwhile). On mobile,
+      // skip Kokoro entirely and use the device voice — it's the only thing that
+      // actually plays on a phone.
+      const wantNatural = settings.watch.engine === "natural" && !isMobileDevice;
+      if (wantNatural && neural.getStatus() !== "ready") {
         try {
           await neural.load();
         } catch {
@@ -269,10 +278,7 @@ export default function AskTutor({
         if (!activeRef.current || token !== speakTokenRef.current) return;
       }
       const { rate, neuralVoice } = settings.watch;
-      const engine =
-        settings.watch.engine === "natural" && neural.getStatus() === "ready"
-          ? "natural"
-          : "system";
+      const engine = wantNatural && neural.getStatus() === "ready" ? "natural" : "system";
 
       // Stream sentence by sentence so the first line plays after synthesizing
       // just *one* sentence — not the whole answer. Kokoro on WASM is slow
@@ -561,7 +567,7 @@ export default function AskTutor({
         <span className="tutor-count">
           {slides.length ? `${view + 1} / ${slides.length}` : "New question"}
         </span>
-        {settings.watch.engine === "natural" && voiceStatus === "loading" ? (
+        {!isMobileDevice && settings.watch.engine === "natural" && voiceStatus === "loading" ? (
           <span className="tutor-voice-loading" aria-live="polite">
             <Icon name="volume" size={13} /> Loading voice…{" "}
             {Math.round((voiceProgress.percent || 0) * 100)}%
