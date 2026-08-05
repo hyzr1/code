@@ -1,7 +1,6 @@
 import {
   useCallback,
   useEffect,
-  useMemo,
   useRef,
   useState,
   useSyncExternalStore,
@@ -12,20 +11,18 @@ import type { Scene } from "../engine/scenes";
 import * as tutor from "../engine/tutor";
 import type { TutorTier } from "../engine/tutor";
 import * as narrator from "../engine/narrator";
+import * as neural from "../engine/neural";
 import { useSettings } from "../settings";
 import Icon from "./Icon";
 import Markdown from "./Markdown";
 
 /**
- * The in-lesson tutor.
+ * The in-lesson tutor — modeled on the Hyzr chat composer.
  *
- * Opens over the player, already knowing which slide the learner is on — that
- * grounding is what makes it feel part of the lecture rather than a chatbot
- * bolted on. You can type or talk to it; answers stream in as rendered
- * Markdown and are read aloud in the lecture's own voice.
- *
- * Everything runs on the learner's device (see `../engine/tutor`): free, and
- * the conversation never leaves the browser.
+ * Opens over the player already knowing which slide you're on. You type or talk
+ * to it; user turns are bubbles, answers stream as plain Markdown, and each is
+ * read aloud in a voice that actually plays (see `speak`). Everything runs on
+ * the device via WebLLM (see `../engine/tutor`) — free and private.
  */
 
 interface Turn {
@@ -47,7 +44,6 @@ interface SpeechResultLike {
   resultIndex: number;
   results: ArrayLike<ArrayLike<{ transcript: string }> & { isFinal: boolean }>;
 }
-
 function speechRecognitionCtor(): (new () => SpeechRec) | null {
   const w = window as unknown as {
     SpeechRecognition?: new () => SpeechRec;
@@ -56,7 +52,6 @@ function speechRecognitionCtor(): (new () => SpeechRec) | null {
   return w.SpeechRecognition ?? w.webkitSpeechRecognition ?? null;
 }
 
-/** Strip the markdown the caption carries so the model reads clean prose. */
 function plain(text: string): string {
   return text
     .replace(/`([^`]+)`/g, "$1")
@@ -66,7 +61,6 @@ function plain(text: string): string {
     .trim();
 }
 
-/** The system message that anchors the tutor to the current slide. */
 function groundingPrompt(atom: Atom, scene: Scene): string {
   const code = scene.code ? `\n\nThe code on the slide right now:\n${scene.code}` : "";
   return [
@@ -82,16 +76,10 @@ function groundingPrompt(atom: Atom, scene: Scene): string {
   ].join("\n");
 }
 
-const SUGGESTIONS = [
-  "Explain this more simply",
-  "Why does this matter?",
-  "Give me another example",
-];
-
-const TIERS: { id: TutorTier; label: string; hint: string }[] = [
-  { id: "auto", label: "Auto", hint: "Pick the best model for this device" },
-  { id: "fast", label: "Fast", hint: "Smaller model — quicker, lighter download" },
-  { id: "smart", label: "Smart", hint: "Larger model — better answers, bigger download" },
+const TIERS: { id: TutorTier; label: string; desc: string }[] = [
+  { id: "auto", label: "Auto", desc: "Best model for this device" },
+  { id: "fast", label: "Fast", desc: "Quicker, smaller download" },
+  { id: "smart", label: "Smart", desc: "Best answers, larger download" },
 ];
 
 export default function AskTutor({
@@ -113,27 +101,27 @@ export default function AskTutor({
   const [turns, setTurns] = useState<Turn[]>([]);
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
-  const [speakOn, setSpeakOn] = useState(!settings.watch.muted);
+  const [speakOn, setSpeakOn] = useState(true);
   const [speaking, setSpeaking] = useState<number | null>(null);
   const [listening, setListening] = useState(false);
+  const [showModels, setShowModels] = useState(false);
   const [failed, setFailed] = useState<string | null>(null);
 
   const abortRef = useRef<AbortController | null>(null);
   const scrollRef = useRef<HTMLDivElement | null>(null);
-  const inputRef = useRef<HTMLTextAreaElement | null>(null);
+  const taRef = useRef<HTMLTextAreaElement | null>(null);
   const voiceRef = useRef<SpeechSynthesisVoice | null>(null);
   const recognitionRef = useRef<SpeechRec | null>(null);
   const sendRef = useRef<(q: string) => void>(() => {});
 
   const supported = tutor.isSupported();
-  const micSupported = useMemo(() => Boolean(speechRecognitionCtor()), []);
+  const micSupported = Boolean(speechRecognitionCtor());
+  const currentTier = TIERS.find((t) => t.id === tier) ?? TIERS[0];
 
-  // Keep the engine's requested model size in sync with the saved preference.
   useEffect(() => {
     tutor.setTier(settings.watch.tutorTier);
   }, [settings.watch.tutorTier]);
 
-  // Resolve a system voice once, matching the lecture's choice, for spoken answers.
   useEffect(() => {
     narrator.loadVoices().then((all) => {
       voiceRef.current =
@@ -142,18 +130,26 @@ export default function AskTutor({
     });
   }, [settings.watch.voiceURI]);
 
-  // Keep the transcript pinned to the newest message as it streams.
   useEffect(() => {
     const el = scrollRef.current;
     if (el) el.scrollTop = el.scrollHeight;
   }, [turns, busy]);
 
-  // Focus the input on open; Escape closes; tear everything down on close.
+  const autosize = useCallback(() => {
+    const el = taRef.current;
+    if (!el) return;
+    el.style.height = "auto";
+    el.style.height = `${Math.min(el.scrollHeight, 200)}px`;
+  }, []);
+
   useEffect(() => {
     if (open) {
-      const id = setTimeout(() => inputRef.current?.focus(), 120);
+      const id = setTimeout(() => taRef.current?.focus(), 120);
       const onKey = (e: KeyboardEvent) => {
-        if (e.key === "Escape") onClose();
+        if (e.key === "Escape") {
+          if (showModels) setShowModels(false);
+          else onClose();
+        }
       };
       window.addEventListener("keydown", onKey);
       return () => {
@@ -166,21 +162,39 @@ export default function AskTutor({
     recognitionRef.current?.stop();
     setSpeaking(null);
     setListening(false);
-  }, [open, onClose]);
+    setShowModels(false);
+  }, [open, onClose, showModels]);
+
+  // Unlock the Web Audio context inside a user gesture so a spoken answer,
+  // which arrives seconds later after generation, is allowed to play.
+  const unlockAudio = useCallback(() => {
+    try {
+      void neural.audioContext().resume();
+    } catch {
+      // No context yet / not needed; the system voice path doesn't require it.
+    }
+  }, []);
 
   const speak = useCallback(
     (text: string, index: number) => {
       narrator.cancel();
       setSpeaking(index);
+      // Use the natural voice only when its model is already loaded; otherwise
+      // fall back to the always-available system voice so the tutor is never
+      // silently mute waiting on a download.
+      const engine =
+        settings.watch.engine === "natural" && neural.getStatus() === "ready"
+          ? "natural"
+          : "system";
       narrator.speak(text, {
         rate: settings.watch.rate,
         voice: voiceRef.current,
-        engine: settings.watch.engine,
+        engine,
         neuralVoice: settings.watch.neuralVoice,
         onEnd: () => setSpeaking((cur) => (cur === index ? null : cur)),
       });
     },
-    [settings.watch.rate, settings.watch.engine, settings.watch.neuralVoice],
+    [settings.watch.engine, settings.watch.rate, settings.watch.neuralVoice],
   );
 
   const stopSpeaking = useCallback(() => {
@@ -192,13 +206,15 @@ export default function AskTutor({
     async (question: string) => {
       const q = question.trim();
       if (!q || busy) return;
+      unlockAudio();
       setFailed(null);
       setInput("");
+      if (taRef.current) taRef.current.style.height = "auto";
       narrator.cancel();
       setSpeaking(null);
 
       const history = [...turns, { role: "user", content: q } as Turn];
-      const assistantIndex = history.length; // the empty bubble we append next
+      const assistantIndex = history.length;
       setTurns([...history, { role: "assistant", content: "" }]);
       setBusy(true);
 
@@ -231,7 +247,7 @@ export default function AskTutor({
         abortRef.current = null;
       }
     },
-    [atom, scene, turns, busy, speakOn, speak],
+    [atom, scene, turns, busy, speakOn, speak, unlockAudio],
   );
   sendRef.current = send;
 
@@ -245,6 +261,7 @@ export default function AskTutor({
   const startListening = useCallback(() => {
     const Ctor = speechRecognitionCtor();
     if (!Ctor) return;
+    unlockAudio();
     const rec = new Ctor();
     rec.lang = "en-US";
     rec.interimResults = true;
@@ -267,10 +284,10 @@ export default function AskTutor({
       setListening(false);
       recognitionRef.current = null;
       const q = finalText.trim();
-      if (q) sendRef.current(q); // heard a full question — ask it
+      if (q) sendRef.current(q);
     };
 
-    narrator.cancel(); // don't let the mic pick up the tutor's own voice
+    narrator.cancel();
     setSpeaking(null);
     setListening(true);
     try {
@@ -278,7 +295,7 @@ export default function AskTutor({
     } catch {
       setListening(false);
     }
-  }, []);
+  }, [unlockAudio]);
 
   const toggleMic = useCallback(() => {
     if (listening) recognitionRef.current?.stop();
@@ -287,9 +304,9 @@ export default function AskTutor({
 
   if (!open) return null;
 
-  const needsModel = status !== "ready";
   const loadingModel = status === "loading";
   const pct = Math.round((progress.percent || 0) * 100);
+  const placeholder = listening ? "Listening…" : "Ask anything about this slide";
 
   return createPortal(
     <div className="tutor-overlay" role="dialog" aria-modal="true" aria-label="Ask the tutor">
@@ -299,7 +316,7 @@ export default function AskTutor({
           <div className="tutor-head-title">
             <Icon name="sparkles" size={16} />
             <div>
-              <strong>Ask about this</strong>
+              <strong>Tutor</strong>
               <span className="tutor-context">{atom.title}</span>
             </div>
           </div>
@@ -311,56 +328,26 @@ export default function AskTutor({
         {!supported ? (
           <div className="tutor-body tutor-notice">
             <p>
-              The on-device tutor needs <strong>WebGPU</strong>, which this browser
-              doesn't have yet.
+              The tutor needs <strong>WebGPU</strong>, which this browser doesn't have
+              yet.
             </p>
             <p className="dim">
-              Try the latest Chrome or Edge on a computer, or a recent phone, and it
-              will run here for free — no account, no sign-in.
+              Try the latest Chrome or Edge on a computer, or a recent phone — it runs
+              here for free, no account.
             </p>
           </div>
         ) : (
           <>
-            <div className="tutor-body" ref={scrollRef}>
-              {turns.length === 0 && !loadingModel ? (
-                <div className="tutor-intro">
-                  <p>Stuck on this slide? Ask anything — I can see what's on screen.</p>
-                  <p className="dim tutor-privacy">
-                    Runs entirely on your device. The first question downloads a
-                    small model once, then it's instant and private.
-                  </p>
-
-                  <div className="tutor-tier">
-                    <span className="tutor-tier-label">Answer quality</span>
-                    <div className="tutor-seg" role="group" aria-label="Answer quality">
-                      {TIERS.map((t) => (
-                        <button
-                          key={t.id}
-                          className={tier === t.id ? "on" : ""}
-                          title={t.hint}
-                          onClick={() => update("watch", { tutorTier: t.id })}
-                        >
-                          {t.label}
-                        </button>
-                      ))}
-                    </div>
+            <div className={`tutor-thread ${turns.length ? "" : "empty"}`} ref={scrollRef}>
+              {turns.map((t, i) =>
+                t.role === "user" ? (
+                  <div key={i} className="tutor-msg user">
+                    <div className="tutor-bubble">{t.content}</div>
                   </div>
-
-                  <div className="tutor-suggestions">
-                    {SUGGESTIONS.map((s) => (
-                      <button key={s} className="tutor-chip" onClick={() => send(s)}>
-                        {s}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              ) : null}
-
-              {turns.map((t, i) => (
-                <div key={i} className={`tutor-row ${t.role}`}>
-                  <div className={`tutor-msg ${t.role} ${speaking === i ? "speaking" : ""}`}>
-                    {t.role === "assistant" ? (
-                      !t.content && busy ? (
+                ) : (
+                  <div key={i} className="tutor-msg assistant">
+                    <div className="tutor-bubble">
+                      {!t.content && busy ? (
                         <span className="tutor-typing">
                           <i />
                           <i />
@@ -368,23 +355,22 @@ export default function AskTutor({
                         </span>
                       ) : (
                         <Markdown source={t.content} language={atom.language} />
-                      )
-                    ) : (
-                      t.content
-                    )}
+                      )}
+                    </div>
+                    {t.content ? (
+                      <div className="tutor-msg-actions">
+                        <button
+                          className={`tutor-act ${speaking === i ? "on" : ""}`}
+                          onClick={() => (speaking === i ? stopSpeaking() : speak(t.content, i))}
+                          title={speaking === i ? "Stop" : "Play this answer"}
+                        >
+                          <Icon name={speaking === i ? "pause" : "volume"} size={14} />
+                        </button>
+                      </div>
+                    ) : null}
                   </div>
-                  {t.role === "assistant" && t.content ? (
-                    <button
-                      className={`tutor-replay ${speaking === i ? "on" : ""}`}
-                      onClick={() => (speaking === i ? stopSpeaking() : speak(t.content, i))}
-                      title={speaking === i ? "Stop" : "Play this answer"}
-                    >
-                      <Icon name={speaking === i ? "pause" : "volume"} size={13} />
-                      {speaking === i ? "Speaking" : "Play"}
-                    </button>
-                  ) : null}
-                </div>
-              ))}
+                ),
+              )}
 
               {loadingModel ? (
                 <div className="tutor-loading">
@@ -409,24 +395,21 @@ export default function AskTutor({
             </div>
 
             <form
-              className="tutor-input"
+              className="composer"
               onSubmit={(e) => {
                 e.preventDefault();
                 send(input);
               }}
             >
               <textarea
-                ref={inputRef}
+                ref={taRef}
                 rows={1}
                 value={input}
-                placeholder={
-                  listening
-                    ? "Listening…"
-                    : needsModel
-                      ? "Ask a question to start the tutor…"
-                      : "Ask a question…"
-                }
-                onChange={(e) => setInput(e.target.value)}
+                placeholder={placeholder}
+                onChange={(e) => {
+                  setInput(e.target.value);
+                  autosize();
+                }}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && !e.shiftKey) {
                     e.preventDefault();
@@ -434,21 +417,53 @@ export default function AskTutor({
                   }
                 }}
               />
-              <div className="tutor-input-actions">
-                {micSupported ? (
+              <div className="composer-row">
+                <div className="model-picker">
                   <button
                     type="button"
-                    className={`ghost tiny tutor-mic ${listening ? "on" : ""}`}
-                    onClick={toggleMic}
-                    aria-pressed={listening}
-                    title={listening ? "Stop listening" : "Ask by voice"}
+                    className={`tool-btn model-trigger ${tier !== "auto" ? "active" : ""}`}
+                    onClick={() => setShowModels((s) => !s)}
+                    aria-label="Choose answer quality"
                   >
-                    <Icon name="mic" size={15} />
+                    <Icon name="route" size={14} />
+                    <span className="picker-name">{currentTier.label}</span>
+                    <Icon name="chevronDown" size={13} className="chev" />
                   </button>
-                ) : null}
+                  {showModels ? (
+                    <>
+                      <button
+                        className="model-menu-backdrop"
+                        aria-label="Close model menu"
+                        onClick={() => setShowModels(false)}
+                      />
+                      <div className="menu simple-model-menu">
+                        <div className="simple-menu-title">Answer quality</div>
+                        {TIERS.map((t) => (
+                          <button
+                            key={t.id}
+                            className={`simple-model-row ${tier === t.id ? "selected" : ""}`}
+                            onClick={() => {
+                              update("watch", { tutorTier: t.id });
+                              setShowModels(false);
+                            }}
+                          >
+                            <span className="simple-model-copy">
+                              <strong>{t.label}</strong>
+                              <small>{t.desc}</small>
+                            </span>
+                            {tier === t.id ? <Icon name="check" size={15} /> : null}
+                          </button>
+                        ))}
+                      </div>
+                    </>
+                  ) : null}
+                </div>
+
+                <div className="spacer" />
+
                 <button
                   type="button"
-                  className={`ghost tiny tutor-speak ${speakOn ? "on" : ""}`}
+                  className={`round-btn ${speakOn ? "" : "muted"}`}
                   onClick={() => {
                     if (speakOn) narrator.cancel();
                     setSpeakOn((v) => !v);
@@ -456,20 +471,33 @@ export default function AskTutor({
                   aria-pressed={speakOn}
                   title={speakOn ? "Answers are spoken aloud" : "Answers are silent"}
                 >
-                  <Icon name={speakOn ? "volume" : "volumeOff"} size={15} />
+                  <Icon name={speakOn ? "volume" : "volumeOff"} size={16} />
                 </button>
+
+                {micSupported ? (
+                  <button
+                    type="button"
+                    className={`round-btn ${listening ? "rec" : ""}`}
+                    onClick={toggleMic}
+                    aria-pressed={listening}
+                    title={listening ? "Stop listening" : "Ask by voice"}
+                  >
+                    <Icon name="mic" size={16} />
+                  </button>
+                ) : null}
+
                 {busy ? (
-                  <button type="button" className="ghost tiny tutor-stop" onClick={stop}>
-                    Stop
+                  <button type="button" className="send stop" onClick={stop} aria-label="Stop">
+                    <Icon name="pause" size={15} />
                   </button>
                 ) : (
                   <button
                     type="submit"
-                    className="primary tiny tutor-send"
+                    className="send"
                     disabled={!input.trim()}
                     aria-label="Send"
                   >
-                    <Icon name="arrowRight" size={15} />
+                    <Icon name="arrowUp" size={16} />
                   </button>
                 )}
               </div>

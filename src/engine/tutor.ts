@@ -93,16 +93,21 @@ async function pickModel(): Promise<string> {
   }
   const smart = f16 ? "Qwen2.5-3B-Instruct-q4f16_1-MLC" : "Qwen2.5-3B-Instruct-q4f32_1-MLC";
   const fast = f16 ? "Qwen2.5-1.5B-Instruct-q4f16_1-MLC" : "Qwen2.5-1.5B-Instruct-q4f32_1-MLC";
+  const tiny = f16 ? "Qwen2.5-0.5B-Instruct-q4f16_1-MLC" : "Qwen2.5-0.5B-Instruct-q4f32_1-MLC";
+
+  const ua = navigator.userAgent;
+  const mobile = /Mobi|Android|iPhone|iPad|iPod/i.test(ua);
+
+  // Phones (iOS Safari especially) enforce a hard ~1–1.5 GB per-tab memory
+  // budget. A 1.5B/3B model blows past it and the tab OOM-crashes, so mobile is
+  // capped at the 0.5B — the largest that reliably fits. "Smart" on a phone
+  // still means the 1.5B, which is the ceiling before crashes become likely.
+  if (mobile) return tier === "smart" ? fast : tiny;
 
   if (tier === "smart") return smart;
   if (tier === "fast") return fast;
-
-  // Auto: give a capable machine the sharper 3B, a phone or low-memory device
-  // the 1.5B that actually fits.
-  const ua = navigator.userAgent;
-  const mobile = /Mobi|Android|iPhone|iPad|iPod/i.test(ua);
   const memory = (navigator as unknown as { deviceMemory?: number }).deviceMemory ?? 4;
-  return !mobile && memory >= 8 ? smart : fast;
+  return memory >= 8 ? smart : fast;
 }
 
 /**
