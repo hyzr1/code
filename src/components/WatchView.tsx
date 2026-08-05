@@ -314,7 +314,7 @@ export default function WatchView({
             }}
             title="Ask the AI tutor about this slide"
           >
-            <Icon name="sparkles" size={15} />
+            <Icon name="cap" size={15} />
             <span>Ask</span>
           </button>
           {onRead ? (

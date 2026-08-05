@@ -4600,3 +4600,24 @@ pre,
 @keyframes tutorTakeOut {
   to { opacity: 0; transform: translateY(6px) scale(0.99); }
 }
+
+/* Resume-lecture button — a clean accent pill with a back arrow. */
+.tutor-resume {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: 0 0 auto;
+  padding: 7px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--accent-line);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font: 650 12.5px var(--sans);
+  cursor: pointer;
+  transition: background var(--t-fast), border-color var(--t-fast);
+}
+.tutor-resume:hover {
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+  border-color: var(--accent);
+}
+.tutor-resume svg { color: var(--accent); }

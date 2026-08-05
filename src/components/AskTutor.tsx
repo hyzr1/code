@@ -181,6 +181,7 @@ export default function AskTutor({
   const recognitionRef = useRef<SpeechRec | null>(null);
   const sendRef = useRef<(q: string) => void>(() => {});
   const activeRef = useRef(true);
+  const speakTokenRef = useRef(0);
 
   const supported = tutor.isSupported();
   const micSupported = Boolean(speechRecognitionCtor());
@@ -252,6 +253,7 @@ export default function AskTutor({
     async (text: string) => {
       if (!text.trim()) return;
       narrator.cancel();
+      const token = ++speakTokenRef.current;
       setSpeaking(true);
       setSpeakProgress(0);
       // The tutor talks in the lecture's af_heart voice. If its model isn't
@@ -264,25 +266,57 @@ export default function AskTutor({
         } catch {
           // fall through to the system voice below
         }
-        if (!activeRef.current) return;
+        if (!activeRef.current || token !== speakTokenRef.current) return;
       }
+      const { rate, neuralVoice } = settings.watch;
       const engine =
         settings.watch.engine === "natural" && neural.getStatus() === "ready"
           ? "natural"
           : "system";
-      narrator.speak(text, {
-        rate: settings.watch.rate,
-        voice: voiceRef.current,
-        engine,
-        neuralVoice: settings.watch.neuralVoice,
-        onProgress: (value) => setSpeakProgress(value),
-        onEnd: () => setSpeaking(false),
-      });
+
+      // Stream sentence by sentence so the first line plays after synthesizing
+      // just *one* sentence — not the whole answer. Kokoro on WASM is slow
+      // (~0.3-0.6x realtime), so waiting for the full passage is the ~15s lag;
+      // this cuts time-to-first-audio to a single sentence and prefetches the
+      // next while the current one plays.
+      const sentences =
+        text.match(/[^.!?]+[.!?]+(?:\s|$)|[^.!?]+$/g)?.map((s) => s.trim()).filter(Boolean) ??
+        [text];
+      const lengths = sentences.map((s) => s.length);
+      const total = Math.max(1, lengths.reduce((a, b) => a + b, 0));
+      let doneChars = 0;
+
+      const speakSentence = (i: number) => {
+        if (token !== speakTokenRef.current || !activeRef.current) return;
+        if (i >= sentences.length) {
+          setSpeaking(false);
+          return;
+        }
+        // Warm the next sentence's audio so it starts the instant this one ends.
+        if (engine === "natural" && sentences[i + 1]) {
+          neural.prefetch(narrator.forSpeech(sentences[i + 1]), neuralVoice, rate, 1);
+        }
+        const base = doneChars;
+        narrator.speak(sentences[i], {
+          rate,
+          voice: voiceRef.current,
+          engine,
+          neuralVoice,
+          onProgress: (value) =>
+            setSpeakProgress(Math.min(0.999, (base + value * lengths[i]) / total)),
+          onEnd: () => {
+            doneChars += lengths[i];
+            speakSentence(i + 1);
+          },
+        });
+      };
+      speakSentence(0);
     },
     [settings.watch.engine, settings.watch.rate, settings.watch.neuralVoice],
   );
 
   const stopSpeaking = useCallback(() => {
+    speakTokenRef.current += 1;
     narrator.cancel();
     setSpeaking(false);
   }, []);
@@ -295,6 +329,7 @@ export default function AskTutor({
       setFailed(null);
       setInput("");
       if (taRef.current) taRef.current.style.height = "auto";
+      speakTokenRef.current += 1;
       narrator.cancel();
       setSpeaking(false);
 
@@ -344,6 +379,7 @@ export default function AskTutor({
 
   const stop = useCallback(() => {
     abortRef.current?.abort();
+    speakTokenRef.current += 1;
     narrator.cancel();
     setSpeaking(false);
     setBusy(false);
@@ -422,7 +458,7 @@ export default function AskTutor({
       return (
         <div className="tutor-welcome">
           <div className="tutor-welcome-icon">
-            <Icon name="sparkles" size={24} />
+            <Icon name="cap" size={24} />
           </div>
           <p className="tutor-welcome-line">
             Confused about this slide? Ask anything — I'll answer right here, in the
@@ -442,7 +478,7 @@ export default function AskTutor({
     return (
       <div className="tutor-slide" key={view}>
         <div className="tutor-q">
-          <Icon name="sparkles" size={13} />
+          <Icon name="cap" size={13} />
           <span>{current.q}</span>
         </div>
         {thinking ? (
@@ -507,7 +543,7 @@ export default function AskTutor({
         <div className="stage-meta">
           <div className="stage-section">Tutor · {atom.title}</div>
           <div className="stage-focus tutor-adaptive">
-            <Icon name="sparkles" size={12} /> Adaptive
+            <Icon name="cap" size={12} /> Adaptive
           </div>
         </div>
         <div className="stage-body tutor-stage-body">{slideBody()}</div>
@@ -549,8 +585,9 @@ export default function AskTutor({
           <Icon name="next" size={16} />
         </button>
         <span className="spacer" />
-        <button className="primary tiny tutor-resume" onClick={onResume}>
-          Resume lecture ›
+        <button className="tutor-resume" onClick={onResume}>
+          <Icon name="arrowLeft" size={15} />
+          Resume lecture
         </button>
       </div>
 
