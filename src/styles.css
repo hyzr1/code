@@ -4636,3 +4636,16 @@ pre,
   .tutor-nav .spacer { display: none; }
   .tutor-resume { margin-left: auto; padding: 6px 12px; }
 }
+
+/* Voice picker (device voices) — reuses the model-menu look, but the list can
+   be long, so it scrolls. */
+.tutor-take .voice-picker .picker-name { max-width: 92px; }
+.tutor-take .voice-menu {
+  max-height: min(300px, 50dvh);
+  overflow-y: auto;
+}
+@media (max-width: 700px) {
+  /* Give the extra picker room without a horizontal scroll. */
+  .tutor-take .composer-row { flex-wrap: wrap; row-gap: 8px; }
+  .tutor-take .voice-picker .picker-name { max-width: 76px; }
+}

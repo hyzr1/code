@@ -181,6 +181,8 @@ export default function AskTutor({
   const [speakProgress, setSpeakProgress] = useState(0);
   const [listening, setListening] = useState(false);
   const [showModels, setShowModels] = useState(false);
+  const [showVoices, setShowVoices] = useState(false);
+  const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
   const [failed, setFailed] = useState<string | null>(null);
 
   const abortRef = useRef<AbortController | null>(null);
@@ -202,6 +204,7 @@ export default function AskTutor({
 
   useEffect(() => {
     narrator.loadVoices().then((all) => {
+      setVoices(all.filter((v) => v.lang.toLowerCase().startsWith("en")));
       voiceRef.current =
         all.find((v) => v.voiceURI === settings.watch.voiceURI) ?? narrator.pickVoice(all);
     });
@@ -221,6 +224,7 @@ export default function AskTutor({
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         if (showModels) setShowModels(false);
+        else if (showVoices) setShowVoices(false);
         else onResume();
       }
     };
@@ -229,7 +233,7 @@ export default function AskTutor({
       clearTimeout(id);
       window.removeEventListener("keydown", onKey);
     };
-  }, [showModels, onResume]);
+  }, [showModels, showVoices, onResume]);
 
   useEffect(() => {
     activeRef.current = true;
@@ -337,6 +341,8 @@ export default function AskTutor({
       if (taRef.current) taRef.current.style.height = "auto";
       speakTokenRef.current += 1;
       narrator.cancel();
+      // Prime iOS speech inside this tap so the answer autoplays later.
+      narrator.unlockSpeech();
       setSpeaking(false);
 
       const idx = slides.length;
@@ -395,6 +401,7 @@ export default function AskTutor({
     const Ctor = speechRecognitionCtor();
     if (!Ctor) return;
     unlockAudio();
+    narrator.unlockSpeech();
     const rec = new Ctor();
     rec.lang = "en-US";
     rec.interimResults = true;
@@ -437,6 +444,13 @@ export default function AskTutor({
 
   const loadingModel = status === "loading";
   const pct = Math.round((progress.percent || 0) * 100);
+  // On mobile (and desktop system voice), let the learner pick the device voice
+  // — the auto-picked one often isn't the good "Siri"-quality one.
+  const useSystemVoice = isMobileDevice || settings.watch.engine === "system";
+  const currentVoiceName =
+    (settings.watch.voiceURI
+      ? voices.find((v) => v.voiceURI === settings.watch.voiceURI)?.name
+      : narrator.pickVoice(voices)?.name) ?? "Voice";
   const placeholder = listening
     ? "Listening…"
     : slides.length
@@ -661,6 +675,49 @@ export default function AskTutor({
               </>
             ) : null}
           </div>
+
+          {useSystemVoice && voices.length ? (
+            <div className="model-picker voice-picker">
+              <button
+                type="button"
+                className="tool-btn"
+                onClick={() => setShowVoices((s) => !s)}
+                aria-label="Choose voice"
+              >
+                <Icon name="volume" size={14} />
+                <span className="picker-name">{currentVoiceName}</span>
+                <Icon name="chevronDown" size={13} className="chev" />
+              </button>
+              {showVoices ? (
+                <>
+                  <button
+                    className="model-menu-backdrop"
+                    aria-label="Close voice menu"
+                    onClick={() => setShowVoices(false)}
+                  />
+                  <div className="menu simple-model-menu voice-menu">
+                    <div className="simple-menu-title">Voice</div>
+                    {voices.map((v) => (
+                      <button
+                        key={v.voiceURI}
+                        className={`simple-model-row ${settings.watch.voiceURI === v.voiceURI ? "selected" : ""}`}
+                        onClick={() => {
+                          update("watch", { voiceURI: v.voiceURI });
+                          setShowVoices(false);
+                          narrator.unlockSpeech();
+                        }}
+                      >
+                        <span className="simple-model-copy">
+                          <strong>{v.name}</strong>
+                        </span>
+                        {settings.watch.voiceURI === v.voiceURI ? <Icon name="check" size={15} /> : null}
+                      </button>
+                    ))}
+                  </div>
+                </>
+              ) : null}
+            </div>
+          ) : null}
 
           <span className="spacer" />
 

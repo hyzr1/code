@@ -555,6 +555,27 @@ export function cancel(): void {
   window.speechSynthesis.cancel();
 }
 
+/**
+ * Prime the speech engine inside a user gesture.
+ *
+ * iOS Safari only lets `speechSynthesis.speak()` produce sound if the *first*
+ * call happens during a real tap. The tutor's answer is spoken seconds later,
+ * after the model responds — outside any gesture — so iOS silently drops it
+ * (you'd have to press play manually). Speaking a zero-width, muted utterance on
+ * the tap unlocks speech for the rest of the session, so answers autoplay.
+ */
+export function unlockSpeech(): void {
+  if (!isSupported()) return;
+  try {
+    window.speechSynthesis.resume();
+    const primer = new SpeechSynthesisUtterance("​");
+    primer.volume = 0;
+    window.speechSynthesis.speak(primer);
+  } catch {
+    // Best-effort; nothing to recover if the browser refuses.
+  }
+}
+
 export function pause(): void {
   // Suspending the whole context is safe here — narration is the only thing
   // this app ever puts through it.
