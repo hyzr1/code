@@ -288,6 +288,14 @@ body,
   height: 100%;
 }
 
+html {
+  /* iOS Safari "boosts" the font size of some blocks on its own — most visibly
+     the horizontally-scrolling code <pre>, where it inflates individual lines to
+     wildly different sizes. Pin it so on-screen text is exactly the size we set. */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
 body {
   margin: 0;
   background: var(--bg);
@@ -3640,15 +3648,17 @@ html.lesson-focus-active body {
     width: 100%;
     min-width: 0;
     min-height: 320px;
-    padding: 88px 18px 26px;
+    padding: 62px 16px 20px;
+    justify-content: flex-start;
   }
   .stage-meta {
     position: absolute;
-    inset: 15px 16px auto;
+    inset: 13px 14px auto;
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 7px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
     min-width: 0;
   }
   .stage-section,
@@ -3658,11 +3668,13 @@ html.lesson-focus-active body {
     min-width: 0;
   }
   .stage-section {
+    flex: 0 1 auto;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
   .stage-focus {
+    flex: 0 0 auto;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -3702,7 +3714,7 @@ html.lesson-focus-active body {
 
   .scene-rail {
     gap: 3px;
-    margin: 10px 0 12px;
+    margin: 9px 0 9px;
     flex-wrap: nowrap;
   }
   .scene-rail .pip { min-width: 3px; }
@@ -3737,12 +3749,10 @@ html.lesson-focus-active body {
     min-width: 0;
   }
   .controls .control-rate .rate-trigger { width: 100%; }
-  .watch-help {
-    margin-top: 8px;
-    padding: 0 8px;
-    line-height: 1.45;
-  }
-  .watch-actions { margin-top: 16px; }
+  /* Keyboard hints are meaningless on a touch device — reclaim the line for the
+     stage, which flex-grows into whatever space the chrome gives back. */
+  .watch-help { display: none; }
+  .watch-actions { margin-top: 11px; }
 
   .lecture-check h1 { font-size: calc(27px * var(--font-scale)); }
   .lecture-check > .muted { line-height: 1.55; }
