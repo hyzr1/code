@@ -543,6 +543,22 @@ export function focusedLinesAt(scene: Scene, progress: number): number[] {
   return active.lines;
 }
 
+/**
+ * Focus timeline for an ad-hoc (narration, code) pair — no full Atom needed.
+ * Lets the tutor sync a generated slide's code to its spoken prose exactly the
+ * way a lecture scene does.
+ */
+export function focusStepsFor(narration: string, code: string): FocusStep[] | undefined {
+  // Fallback = every non-blank line, so when the prose doesn't explicitly quote
+  // a line the highlight still walks top-to-bottom through the code as the voice
+  // reads — a gentle "reading through it" sync rather than no motion at all.
+  const everyLine = code
+    .split("\n")
+    .map((line, index) => (line.trim() ? index + 1 : 0))
+    .filter((n): n is number => n > 0);
+  return timedFocusSteps({ caption: narration, code } as Scene, everyLine);
+}
+
 function traceItems(code?: string): string[] | undefined {
   if (!code) return undefined;
   const out: string[] = [];
