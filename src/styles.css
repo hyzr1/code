@@ -4722,3 +4722,10 @@ pre,
   .rate-picker { width: 88px; }
   .rate-trigger { height: 42px; border-radius: 999px; padding: 0 15px; }
 }
+
+@media (max-width: 700px) {
+  /* The lesson header (Mark complete / Leave lesson) must never push a
+     horizontal scroll — let it wrap instead. */
+  .lesson-workspace-bar { flex-wrap: wrap; row-gap: 6px; }
+  .lesson-workspace-actions { flex-wrap: wrap; justify-content: flex-end; min-width: 0; }
+}
