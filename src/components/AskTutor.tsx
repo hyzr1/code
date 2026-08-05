@@ -80,6 +80,12 @@ function groundingPrompt(atom: Atom, scene: Scene): string {
   ].join("\n");
 }
 
+const STARTERS = [
+  "Explain this slide simply",
+  "Give me another example",
+  "Why does this matter?",
+];
+
 const TIERS: { id: TutorTier; label: string; desc: string }[] = [
   { id: "cloud", label: "Cloud", desc: "Best & instant — works on any device" },
   { id: "auto", label: "Auto", desc: "On-device, balanced (3B coder)" },
@@ -348,6 +354,24 @@ export default function AskTutor({
                 </div>
               ) : (
                 <>
+              {turns.length === 0 && !loadingModel ? (
+                <div className="tutor-welcome">
+                  <div className="tutor-welcome-icon">
+                    <Icon name="sparkles" size={22} />
+                  </div>
+                  <p className="tutor-welcome-line">
+                    Confused about this slide? Ask me anything — I can see what's on
+                    screen.
+                  </p>
+                  <div className="tutor-starters">
+                    {STARTERS.map((s) => (
+                      <button key={s} type="button" onClick={() => send(s)}>
+                        {s}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
               {turns.map((t, i) =>
                 t.role === "user" ? (
                   <div key={i} className="tutor-msg user">

@@ -4581,3 +4581,53 @@ pre,
 @media (max-width: 560px) {
   .watch-toolbar-actions .read-instead-btn { display: none; }
 }
+
+/* Tutor empty state — inviting, centered, on-brand (not a blank void). */
+.tutor-thread.empty {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.tutor-welcome {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  max-width: 330px;
+  padding: 20px;
+}
+.tutor-welcome-icon {
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.tutor-welcome-line {
+  margin: 0;
+  font-size: 16.5px;
+  line-height: 1.45;
+  color: var(--text);
+}
+.tutor-starters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+.tutor-starters button {
+  padding: 8px 13px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--text-muted);
+  font-size: 12.5px;
+  cursor: pointer;
+  transition: border-color var(--t-fast), color var(--t-fast);
+}
+.tutor-starters button:hover {
+  border-color: var(--accent-line);
+  color: var(--text);
+}

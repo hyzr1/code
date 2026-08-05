@@ -147,7 +147,7 @@ export const DEFAULTS: Settings = {
     neuralVoice: "af_heart",
     holdScale: 1,
     animateCode: true,
-    tutorTier: "auto",
+    tutorTier: "cloud",
   },
   scheduler: {
     interleave: true,
