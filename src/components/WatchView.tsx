@@ -51,6 +51,7 @@ export default function WatchView({
   const [preparing, setPreparing] = useState(false);
   const [showPreparing, setShowPreparing] = useState(false);
   const [askOpen, setAskOpen] = useState(false);
+  const [tutorClosing, setTutorClosing] = useState(false);
   const [narrationProgress, setNarrationProgress] = useState({ index: 0, value: 0 });
   const setRate = (next: number) => update("watch", { rate: next });
   const setMuted = (next: boolean) => update("watch", { muted: next });
@@ -337,7 +338,18 @@ export default function WatchView({
       </div>
 
       {askOpen ? (
-        <AskTutor atom={atom} scene={scene} onResume={() => setAskOpen(false)} />
+        <AskTutor
+          atom={atom}
+          scene={scene}
+          closing={tutorClosing}
+          onResume={() => {
+            setTutorClosing(true);
+            window.setTimeout(() => {
+              setAskOpen(false);
+              setTutorClosing(false);
+            }, 230);
+          }}
+        />
       ) : (
         <>
       <div className="stage">

@@ -4582,3 +4582,21 @@ pre,
   .tutor-a { font-size: clamp(16px, calc(17px * var(--font-scale)), 19px); }
   .tutor-q { font-size: 13px; }
 }
+
+/* "Loading voice" chip while the af_heart model downloads in the background. */
+.tutor-voice-loading {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--accent);
+  font-size: 11.5px;
+  font-weight: 500;
+}
+/* Exit animation so the tutor cross-fades back to the lecture on Resume. */
+.tutor-take.closing {
+  animation: tutorTakeOut 0.22s ease forwards;
+  pointer-events: none;
+}
+@keyframes tutorTakeOut {
+  to { opacity: 0; transform: translateY(6px) scale(0.99); }
+}

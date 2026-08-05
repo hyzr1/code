@@ -73,7 +73,8 @@ function groundingPrompt(atom: Atom, scene: Scene): string {
     `"""${code}`,
     ``,
     `Answer directly and simply, as if they are new to programming.`,
-    `Structure the answer like a short lesson slide: 1-3 sentences of plain-English explanation, then — only if it genuinely helps — ONE short fenced code block (\`\`\`python) with a tiny concrete example (a handful of lines at most).`,
+    `Structure the answer like a short lesson slide: 1-2 sentences of plain-English explanation, then — when it helps — ONE short fenced code block (\`\`\`python) with a tiny concrete example (a handful of lines).`,
+    `After the code, add one or two sentences that walk through what the key lines do in order, the way a lecture explains code line by line (for example: "the first line creates the dictionary, and the next line adds a new key"). Keep it brief.`,
     `Put the teaching in the prose, not in code comments. Never paste long code. If they drift off-topic, gently bring them back to the lesson.`,
     ``,
     `Accuracy matters more than sounding confident. Only state Python facts you are sure are correct.`,
@@ -111,12 +112,24 @@ function focusStepsCached(prose: string, code: string): FocusStep[] | undefined 
   return focusStepsCache.get(key);
 }
 
-/** Just the spoken part of an answer — the prose, with code blocks removed. */
+/**
+ * The clean spoken text of an answer: prose only (no code blocks), and with
+ * Markdown stripped so the voice never reads "star star" / "times" for `**`, or
+ * backticks and bullet dashes aloud.
+ */
 function proseOf(content: string): string {
   return splitBlocks(content)
     .filter((b) => b.type === "text")
     .map((b) => b.value)
     .join(" ")
+    .replace(/^#{1,6}\s*/gm, "") // headings
+    .replace(/^\s*[-*+]\s+/gm, "") // bullet markers
+    .replace(/^\s*\d+\.\s+/gm, "") // numbered list markers
+    .replace(/`([^`]+)`/g, "$1") // inline code
+    .replace(/\*\*([^*]+)\*\*/g, "$1") // bold
+    .replace(/\*([^*]+)\*/g, "$1") // italic
+    .replace(/[*_`#>]/g, " ") // any stray markdown symbols
+    .replace(/\s+/g, " ")
     .trim();
 }
 
@@ -137,15 +150,19 @@ export default function AskTutor({
   atom,
   scene,
   onResume,
+  closing = false,
 }: {
   atom: Atom;
   scene: Scene;
   onResume: () => void;
+  closing?: boolean;
 }) {
   const { settings, update } = useSettings();
   const status = useSyncExternalStore(tutor.subscribe, tutor.getStatus);
   const progress = useSyncExternalStore(tutor.subscribe, tutor.getProgress);
   const tier = useSyncExternalStore(tutor.subscribe, tutor.getTier);
+  const voiceStatus = useSyncExternalStore(neural.subscribe, neural.getStatus);
+  const voiceProgress = useSyncExternalStore(neural.subscribe, neural.getProgress);
 
   const [slides, setSlides] = useState<Slide[]>([]);
   const [view, setView] = useState(0);
@@ -163,6 +180,7 @@ export default function AskTutor({
   const voiceRef = useRef<SpeechSynthesisVoice | null>(null);
   const recognitionRef = useRef<SpeechRec | null>(null);
   const sendRef = useRef<(q: string) => void>(() => {});
+  const activeRef = useRef(true);
 
   const supported = tutor.isSupported();
   const micSupported = Boolean(speechRecognitionCtor());
@@ -204,21 +222,22 @@ export default function AskTutor({
     };
   }, [showModels, onResume]);
 
-  useEffect(
-    () => () => {
+  useEffect(() => {
+    activeRef.current = true;
+    return () => {
+      activeRef.current = false;
       narrator.cancel();
       abortRef.current?.abort();
       recognitionRef.current?.stop();
-    },
-    [],
-  );
+    };
+  }, []);
 
-  // Warm the af_heart voice, but only if already downloaded — no surprise fetch.
+  // Auto-fetch the af_heart voice in the background the moment the tutor opens,
+  // so answers speak in the lecture voice. Idempotent — safe to call once.
   useEffect(() => {
-    if (settings.watch.engine !== "natural" || neural.getStatus() === "ready") return;
-    void neural.hasCachedWeights().then((cached) => {
-      if (cached) void neural.load().catch(() => undefined);
-    });
+    if (settings.watch.engine === "natural" && neural.getStatus() === "idle") {
+      void neural.load().catch(() => undefined);
+    }
   }, [settings.watch.engine]);
 
   const unlockAudio = useCallback(() => {
@@ -230,10 +249,23 @@ export default function AskTutor({
   }, []);
 
   const speak = useCallback(
-    (text: string) => {
+    async (text: string) => {
+      if (!text.trim()) return;
       narrator.cancel();
       setSpeaking(true);
       setSpeakProgress(0);
+      // The tutor talks in the lecture's af_heart voice. If its model isn't
+      // downloaded yet, fetch it in the background (a "loading voice" note
+      // shows meanwhile) and then narrate — no robotic system voice once it's
+      // available. Only drop to the system voice if the download itself fails.
+      if (settings.watch.engine === "natural" && neural.getStatus() !== "ready") {
+        try {
+          await neural.load();
+        } catch {
+          // fall through to the system voice below
+        }
+        if (!activeRef.current) return;
+      }
       const engine =
         settings.watch.engine === "natural" && neural.getStatus() === "ready"
           ? "natural"
@@ -294,8 +326,8 @@ export default function AskTutor({
               return copy;
             }),
         });
-        if (!controller.signal.aborted && answer.trim() && speakOn) {
-          speak(proseOf(answer) || answer);
+        if (!controller.signal.aborted && speakOn) {
+          void speak(proseOf(answer));
         }
       } catch (cause) {
         setFailed(cause instanceof Error ? cause.message : "Something went wrong.");
@@ -470,7 +502,7 @@ export default function AskTutor({
   };
 
   return (
-    <div className="tutor-take">
+    <div className={`tutor-take ${closing ? "closing" : ""}`}>
       <div className="stage tutor-stage">
         <div className="stage-meta">
           <div className="stage-section">Tutor · {atom.title}</div>
@@ -493,10 +525,16 @@ export default function AskTutor({
         <span className="tutor-count">
           {slides.length ? `${view + 1} / ${slides.length}` : "New question"}
         </span>
+        {settings.watch.engine === "natural" && voiceStatus === "loading" ? (
+          <span className="tutor-voice-loading" aria-live="polite">
+            <Icon name="volume" size={13} /> Loading voice…{" "}
+            {Math.round((voiceProgress.percent || 0) * 100)}%
+          </span>
+        ) : null}
         {current?.a ? (
           <button
             className={`ghost tiny tutor-replay ${speaking ? "on" : ""}`}
-            onClick={() => (speaking ? stopSpeaking() : speak(proseOf(current.a) || current.a))}
+            onClick={() => (speaking ? stopSpeaking() : void speak(proseOf(current.a)))}
             title={speaking ? "Stop" : "Play answer"}
           >
             <Icon name={speaking ? "pause" : "volume"} size={15} />
