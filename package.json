@@ -32,6 +32,7 @@
     "@codemirror/state": "^6.7.1",
     "@codemirror/view": "^6.43.7",
     "@lezer/highlight": "^1.2.1",
+    "@mlc-ai/web-llm": "^0.2.84",
     "kokoro-js": "^1.2.1",
     "pyodide": "^314.0.3",
     "react": "^19.2.8",

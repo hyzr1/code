@@ -15,6 +15,7 @@ import Markdown from "./Markdown";
 import GuidedVisual from "./GuidedVisual";
 import Icon from "./Icon";
 import RatePicker from "./RatePicker";
+import AskTutor from "./AskTutor";
 
 /**
  * The lecture as something you watch instead of read.
@@ -48,6 +49,7 @@ export default function WatchView({
   const [index, setIndex] = useState(0);
   const [playing, setPlaying] = useState(settings.watch.autoplay);
   const [preparing, setPreparing] = useState(false);
+  const [askOpen, setAskOpen] = useState(false);
   const [narrationProgress, setNarrationProgress] = useState({ index: 0, value: 0 });
   const setRate = (next: number) => update("watch", { rate: next });
   const setMuted = (next: boolean) => update("watch", { muted: next });
@@ -248,6 +250,8 @@ export default function WatchView({
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
+      // The tutor owns the keyboard while its panel is open.
+      if (document.querySelector(".tutor-overlay")) return;
       const target = event.target;
       const editing =
         target instanceof HTMLInputElement ||
@@ -284,8 +288,20 @@ export default function WatchView({
           Watch · {index + 1} of {scenes.length}
         </span>
         <div className="row watch-toolbar-actions">
+          <button
+            className="ask-tutor-btn"
+            onClick={() => {
+              setPlaying(false);
+              narrator.cancel();
+              setAskOpen(true);
+            }}
+            title="Ask the AI tutor about this slide"
+          >
+            <Icon name="sparkles" size={15} />
+            <span>Ask</span>
+          </button>
           {onRead ? (
-            <button className="ghost tiny" onClick={onRead}>
+            <button className="ghost tiny read-instead-btn" onClick={onRead}>
               Read it instead
             </button>
           ) : null}
@@ -426,6 +442,13 @@ export default function WatchView({
             : atEnd ? "Continue to the exercises" : "Skip to the exercises"}
         </button>
       </div>
+
+      <AskTutor
+        atom={atom}
+        scene={scene}
+        open={askOpen}
+        onClose={() => setAskOpen(false)}
+      />
     </div>
   );
 }

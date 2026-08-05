@@ -4197,3 +4197,260 @@ pre,
   color: var(--text-faint);
   font-size: calc(10.5px * var(--font-scale));
 }
+
+/* ============================================================
+   In-lesson AI tutor — the "Ask about this" panel.
+   Bottom sheet on phones, centered card on wider screens.
+   ============================================================ */
+.ask-tutor-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex: 0 0 auto;
+  padding: 5px 11px;
+  border-radius: 999px;
+  border: 1px solid var(--accent-line);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font: 650 12px var(--sans);
+  cursor: pointer;
+  transition: background var(--t-fast), border-color var(--t-fast);
+}
+.ask-tutor-btn:hover {
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+}
+
+.tutor-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+.tutor-scrim {
+  position: absolute;
+  inset: 0;
+  padding: 0;
+  border: none;
+  background: color-mix(in srgb, var(--bg) 60%, transparent);
+  backdrop-filter: blur(3px);
+  cursor: pointer;
+}
+.tutor-panel {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-height: 86dvh;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-bottom: none;
+  border-radius: var(--r-xl) var(--r-xl) 0 0;
+  box-shadow: 0 -18px 50px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+  animation: tutorUp 0.26s cubic-bezier(0.2, 0, 0.2, 1) both;
+}
+@keyframes tutorUp {
+  from { opacity: 0; transform: translateY(26px); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tutor-panel { animation: none; }
+}
+
+.tutor-head {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 13px 14px;
+  border-bottom: 1px solid var(--border-soft);
+}
+.tutor-head-title {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+  color: var(--accent);
+}
+.tutor-head-title > div {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.25;
+}
+.tutor-head-title strong {
+  color: var(--text);
+  font-size: 14px;
+}
+.tutor-context {
+  color: var(--text-faint);
+  font-size: 11px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tutor-close { flex: 0 0 auto; }
+
+.tutor-body {
+  flex: 1 1 auto;
+  min-height: 96px;
+  overflow-y: auto;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.tutor-notice p { margin: 0 0 8px; font-size: 14px; line-height: 1.5; }
+.tutor-notice p:last-child { margin-bottom: 0; }
+
+.tutor-intro { display: flex; flex-direction: column; gap: 10px; }
+.tutor-intro p { margin: 0; font-size: 14px; line-height: 1.5; }
+.tutor-privacy { font-size: 12px; }
+.tutor-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 2px;
+}
+.tutor-chip {
+  padding: 7px 11px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--text-muted);
+  font-size: 12.5px;
+  cursor: pointer;
+  transition: border-color var(--t-fast), color var(--t-fast);
+}
+.tutor-chip:hover { border-color: var(--accent-line); color: var(--text); }
+
+.tutor-msg {
+  max-width: 88%;
+  padding: 9px 12px;
+  border-radius: 14px;
+  font-size: 14px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.tutor-msg.user {
+  align-self: flex-end;
+  background: var(--accent);
+  color: #fff;
+  border-bottom-right-radius: 5px;
+}
+.tutor-msg.assistant {
+  align-self: flex-start;
+  background: var(--surface-inset);
+  border: 1px solid var(--border-soft);
+  color: var(--text);
+  border-bottom-left-radius: 5px;
+}
+
+.tutor-typing { display: inline-flex; gap: 4px; padding: 3px 0; }
+.tutor-typing i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--text-faint);
+  animation: tutorBlink 1.2s infinite ease-in-out;
+}
+.tutor-typing i:nth-child(2) { animation-delay: 0.2s; }
+.tutor-typing i:nth-child(3) { animation-delay: 0.4s; }
+@keyframes tutorBlink {
+  0%, 80%, 100% { opacity: 0.25; transform: translateY(0); }
+  40% { opacity: 1; transform: translateY(-2px); }
+}
+
+.tutor-loading { align-self: stretch; display: flex; flex-direction: column; gap: 6px; }
+.tutor-progress {
+  height: 5px;
+  border-radius: 3px;
+  background: var(--surface-3);
+  overflow: hidden;
+}
+.tutor-progress span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.3s ease;
+}
+
+.tutor-error {
+  align-self: stretch;
+  font-size: 12.5px;
+  color: #e0776b;
+}
+.linky {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--accent);
+  cursor: pointer;
+  text-decoration: underline;
+  font: inherit;
+}
+
+.tutor-input {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--border-soft);
+  background: var(--surface);
+}
+.tutor-input textarea {
+  flex: 1 1 auto;
+  min-width: 0;
+  resize: none;
+  max-height: 120px;
+  padding: 9px 11px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface-inset);
+  color: var(--text);
+  font: inherit;
+  font-size: 14px;
+  line-height: 1.4;
+}
+.tutor-input textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.tutor-input-actions { display: flex; align-items: center; gap: 6px; flex: 0 0 auto; }
+.tutor-speak,
+.tutor-send {
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.tutor-send { border-radius: 10px; }
+.tutor-send:disabled { opacity: 0.4; }
+.tutor-stop { height: 38px; }
+.tutor-speak.on { color: var(--accent); border-color: var(--accent-line); }
+
+/* Wider than a phone: float a centered card instead of a bottom sheet. */
+@media (min-width: 701px) {
+  .tutor-overlay { align-items: center; padding: 20px; }
+  .tutor-panel {
+    width: min(480px, 100%);
+    max-height: min(680px, 84vh);
+    border: 1px solid var(--border);
+    border-radius: var(--r-xl);
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
+  }
+}
+
+/* Keep the top bar uncluttered on small screens — Ask is the star there. */
+@media (max-width: 560px) {
+  .watch-toolbar-actions .read-instead-btn { display: none; }
+}
