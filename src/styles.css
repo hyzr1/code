@@ -2029,6 +2029,9 @@ kbd {
 .controls .play {
   min-width: 108px;
 }
+/* Desktop shows text labels; the icons are a mobile-only affordance. */
+.controls .control-ico { display: none; }
+.controls .control-label { display: inline; }
 .rate-picker {
   position: relative;
   flex: 0 0 auto;
@@ -2165,13 +2168,13 @@ html.lesson-focus-active body {
   height: 100dvh;
   margin: 0;
   padding:
-    max(12px, env(safe-area-inset-top))
-    max(clamp(14px, 2.4vw, 42px), env(safe-area-inset-right))
-    max(12px, env(safe-area-inset-bottom))
-    max(clamp(14px, 2.4vw, 42px), env(safe-area-inset-left));
+    max(10px, env(safe-area-inset-top))
+    max(clamp(8px, 1.4vw, 32px), env(safe-area-inset-right))
+    max(10px, env(safe-area-inset-bottom))
+    max(clamp(8px, 1.4vw, 32px), env(safe-area-inset-left));
   display: grid;
   grid-template-rows: auto minmax(0, 1fr) auto auto auto;
-  gap: clamp(7px, 1.2vh, 14px);
+  gap: clamp(6px, 1vh, 12px);
   overflow: hidden;
   background: var(--bg);
 }
@@ -2190,9 +2193,9 @@ html.lesson-focus-active body {
   height: auto;
   align-self: stretch;
   padding:
-    clamp(46px, 7vh, 76px)
-    clamp(24px, 6vw, 100px)
-    clamp(24px, 4vh, 52px);
+    clamp(44px, 6.5vh, 72px)
+    clamp(14px, 3vw, 80px)
+    clamp(20px, 3.5vh, 48px);
   border-radius: clamp(12px, 1.5vw, 24px);
   overflow: hidden;
 }
@@ -2281,33 +2284,28 @@ html.lesson-focus-active body {
   .watch.watch-fullscreen .fullscreen-toggle span {
     display: none;
   }
-  .watch:fullscreen .controls,
-  .watch.watch-fullscreen .controls {
-    display: grid;
-    grid-template-columns: 1fr 1.35fr 1fr;
-    gap: 6px;
-  }
-  .watch:fullscreen .controls > button,
-  .watch.watch-fullscreen .controls > button {
-    width: 100%;
-    min-width: 0;
-  }
-  .watch:fullscreen .controls > span[style],
-  .watch.watch-fullscreen .controls > span[style] {
+  /* In fullscreen the point is the lecture — hide the "Read it instead"
+     escape hatch so the top bar is just the counter and the exit button. */
+  .watch:fullscreen .watch-toolbar-actions .ghost.tiny:not(.fullscreen-toggle),
+  .watch.watch-fullscreen .watch-toolbar-actions .ghost.tiny:not(.fullscreen-toggle) {
     display: none;
   }
-  .watch:fullscreen .controls > .preparing,
-  .watch.watch-fullscreen .controls > .preparing {
-    grid-column: 1 / -1;
-    text-align: center;
+  /* Let the single-row mobile controls (icon transport + voice/speed) carry
+     over into fullscreen instead of a taller grid. */
+  .watch:fullscreen .controls,
+  .watch.watch-fullscreen .controls {
+    display: flex;
+    align-items: center;
+    gap: 6px;
   }
-  .watch:fullscreen .controls > .tiny,
-  .watch.watch-fullscreen .controls > .tiny {
-    grid-column: 2;
-  }
-  .watch:fullscreen .controls > .rate,
-  .watch.watch-fullscreen .controls > .rate {
-    grid-column: 3;
+  .watch:fullscreen .controls .control-label,
+  .watch.watch-fullscreen .controls .control-label { display: none; }
+  .watch:fullscreen .controls .control-ico,
+  .watch.watch-fullscreen .controls .control-ico { display: inline-flex; }
+  .watch:fullscreen .controls .control-spacer,
+  .watch.watch-fullscreen .controls .control-spacer {
+    display: block;
+    flex: 1 1 auto;
   }
 }
 
@@ -3606,6 +3604,7 @@ html.lesson-focus-active body {
    viewport height instead of leaving a dead block below the lesson. */
 @media (max-width: 700px) {
   .page {
+    padding-inline: 12px;
     padding-bottom: max(32px, env(safe-area-inset-bottom));
   }
 
@@ -3648,7 +3647,7 @@ html.lesson-focus-active body {
     width: 100%;
     min-width: 0;
     min-height: 320px;
-    padding: 62px 16px 20px;
+    padding: 60px 12px 18px;
     justify-content: flex-start;
   }
   .stage-meta {
@@ -3730,36 +3729,52 @@ html.lesson-focus-active body {
   }
   .scene-rail .pip { min-width: 3px; }
 
+  /* One compact row, like a video player: transport buttons on the left,
+     voice + speed pushed to the right by a flexible spacer. Icon-only so it
+     never wraps to a second line. */
   .controls {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(88px, 1.2fr) minmax(0, 1fr);
-    gap: 7px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
     width: 100%;
   }
+  .controls .control-label { display: none; }
+  .controls .control-ico { display: inline-flex; }
   .controls .control-back,
-  .controls .control-play,
-  .controls .control-next {
-    width: 100%;
-    min-width: 0;
-    padding-inline: 7px;
-  }
-  .controls .control-spacer { display: none; }
-  .controls .preparing {
-    grid-column: 1 / -1;
-    margin: 0;
-    text-align: center;
-  }
+  .controls .control-next,
   .controls .control-voice {
-    grid-column: 2;
+    flex: 0 0 auto;
+    width: 42px;
+    height: 40px;
     min-width: 0;
-    padding-inline: 6px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
+  .controls .control-play {
+    flex: 0 0 auto;
+    width: 56px;
+    height: 44px;
+    min-width: 0;
+    padding: 0;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .controls .control-spacer {
+    display: block;
+    flex: 1 1 auto;
+    min-width: 8px;
+  }
+  .controls .preparing { display: none; }
   .controls .control-rate {
-    grid-column: 3;
-    width: 100%;
+    flex: 0 0 auto;
+    width: 62px;
     min-width: 0;
   }
-  .controls .control-rate .rate-trigger { width: 100%; }
+  .controls .control-rate .rate-trigger { width: 100%; height: 40px; }
   /* Keyboard hints are meaningless on a touch device — reclaim the line for the
      stage, which flex-grows into whatever space the chrome gives back. */
   .watch-help { display: none; }
@@ -3819,14 +3834,13 @@ html.lesson-focus-active body {
   .watch-toolbar .fullscreen-toggle span { display: none; }
   .stage {
     min-height: 300px;
-    padding-inline: 14px;
+    padding-inline: 10px;
   }
-  .stage-meta { inset-inline: 13px; }
+  .stage-meta { inset-inline: 11px; }
   .stage-terms > span,
   .stage-trace > span { flex-basis: 100%; }
-  .controls { grid-template-columns: minmax(0, 1fr) minmax(80px, 1.15fr) minmax(0, 1fr); }
-  .controls button,
-  .controls select { font-size: calc(12px * var(--font-scale)); }
+  .controls { gap: 5px; }
+  .controls .control-rate { width: 58px; }
   .watch-actions { margin-top: 12px; }
   .watch-actions button { width: 100%; }
 

@@ -366,16 +366,32 @@ export default function WatchView({
           className="ghost control-back"
           onClick={() => setIndex((i) => Math.max(0, i - 1))}
           disabled={index === 0}
+          aria-label="Back"
         >
-          ‹ Back
+          <Icon className="ico control-ico" name="prev" size={18} />
+          <span className="control-label">‹ Back</span>
         </button>
 
-        <button className="primary play control-play" onClick={() => setPlaying((p) => !p)}>
-          {playing ? "Pause" : atEnd ? "Replay" : "Play"}
+        <button
+          className="primary play control-play"
+          onClick={() => setPlaying((p) => !p)}
+          aria-label={playing ? "Pause" : "Play"}
+        >
+          <Icon className="ico control-ico" name={playing ? "pause" : "play"} size={18} />
+          <span className="control-label">
+            {playing ? "Pause" : atEnd ? "Replay" : "Play"}
+          </span>
         </button>
 
-        <button className="ghost control-next" onClick={atEnd ? onDone : next}>
-          {atEnd ? (reviewMode ? "Return ›" : "Exercises ›") : "Next ›"}
+        <button
+          className="ghost control-next"
+          onClick={atEnd ? onDone : next}
+          aria-label={atEnd ? (reviewMode ? "Return" : "Exercises") : "Next"}
+        >
+          <Icon className="ico control-ico" name="next" size={18} />
+          <span className="control-label">
+            {atEnd ? (reviewMode ? "Return ›" : "Exercises ›") : "Next ›"}
+          </span>
         </button>
 
         {preparing && playing && !muted ? (
@@ -389,9 +405,11 @@ export default function WatchView({
         <button
           className={`ghost tiny control-voice ${muted ? "on" : ""}`}
           onClick={() => setMuted(!muted)}
+          aria-label={muted ? "Turn narration on" : "Mute narration"}
           title={supported ? "Mute narration" : "Speech not available in this browser"}
         >
-          {muted || !supported ? "Silent" : "Voice on"}
+          <Icon className="ico control-ico" name={muted || !supported ? "volumeOff" : "volume"} size={16} />
+          <span className="control-label">{muted || !supported ? "Silent" : "Voice on"}</span>
         </button>
 
         <RatePicker value={rate} onChange={setRate} />
