@@ -4649,3 +4649,14 @@ pre,
   .tutor-take .composer-row { flex-wrap: wrap; row-gap: 8px; }
   .tutor-take .voice-picker .picker-name { max-width: 76px; }
 }
+
+@media (max-width: 700px) {
+  /* Everything on ONE line — the send button never wraps. Voice picker is
+     icon-only here so the whole row fits. */
+  .tutor-take .composer-row { flex-wrap: nowrap; gap: 6px; }
+  .tutor-take .model-picker,
+  .tutor-take .voice-picker { min-width: 0; }
+  .tutor-take .tool-btn { min-width: 0; padding: 0 10px; }
+  .tutor-take .model-picker .picker-name { max-width: 52px; }
+  .tutor-take .voice-picker .picker-name { display: none; }
+}
