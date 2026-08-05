@@ -81,9 +81,10 @@ function groundingPrompt(atom: Atom, scene: Scene): string {
 }
 
 const TIERS: { id: TutorTier; label: string; desc: string }[] = [
-  { id: "auto", label: "Auto", desc: "Balanced — 3B coder on desktop" },
-  { id: "fast", label: "Fast", desc: "Lighter and quicker (1.5B)" },
-  { id: "smart", label: "Smart", desc: "Strongest 7B — desktop, good GPU" },
+  { id: "cloud", label: "Cloud", desc: "Best & instant — works on any device" },
+  { id: "auto", label: "Auto", desc: "On-device, balanced (3B coder)" },
+  { id: "fast", label: "Fast", desc: "On-device, lighter (1.5B)" },
+  { id: "smart", label: "Smart", desc: "On-device 7B — desktop, good GPU" },
 ];
 
 export default function AskTutor({
@@ -231,7 +232,10 @@ export default function AskTutor({
       ];
 
       try {
-        const answer = await tutor.ask(messages, {
+        // "cloud" answers through the hosted proxy (any device, no download);
+        // every other tier runs the model on-device via WebGPU.
+        const answerFn = tutor.isCloud(tier) ? tutor.cloudAsk : tutor.ask;
+        const answer = await answerFn(messages, {
           signal: controller.signal,
           onToken: (fullSoFar) =>
             setTurns((prev) => {
@@ -251,7 +255,7 @@ export default function AskTutor({
         abortRef.current = null;
       }
     },
-    [atom, scene, turns, busy, speakOn, speak, unlockAudio],
+    [atom, scene, turns, busy, speakOn, speak, unlockAudio, tier],
   );
   sendRef.current = send;
 
@@ -329,20 +333,21 @@ export default function AskTutor({
           </button>
         </header>
 
-        {!supported ? (
-          <div className="tutor-body tutor-notice">
-            <p>
-              The tutor needs <strong>WebGPU</strong>, which this browser doesn't have
-              yet.
-            </p>
-            <p className="dim">
-              Try the latest Chrome or Edge on a computer, or a recent phone — it runs
-              here for free, no account.
-            </p>
-          </div>
-        ) : (
-          <>
+        <>
             <div className={`tutor-thread ${turns.length ? "" : "empty"}`} ref={scrollRef}>
+              {!supported && !tutor.isCloud(tier) ? (
+                <div className="tutor-notice">
+                  <p>
+                    On-device answers need <strong>WebGPU</strong>, which this browser
+                    doesn't have yet.
+                  </p>
+                  <p className="dim">
+                    Switch the model to <strong>Cloud</strong> below to use it here
+                    anyway — or open the tutor in the latest Chrome or Edge on a computer.
+                  </p>
+                </div>
+              ) : (
+                <>
               {turns.map((t, i) =>
                 t.role === "user" ? (
                   <div key={i} className="tutor-msg user">
@@ -396,6 +401,8 @@ export default function AskTutor({
                   </button>
                 </div>
               ) : null}
+                </>
+              )}
             </div>
 
             <form
@@ -506,8 +513,7 @@ export default function AskTutor({
                 )}
               </div>
             </form>
-          </>
-        )}
+        </>
       </div>
     </div>,
     document.body,

@@ -73,8 +73,9 @@ export interface Settings {
     neuralVoice: string;
     holdScale: number;
     animateCode: boolean;
-    /** AI tutor model size: "auto" picks by device, or force fast/smart. */
-    tutorTier: "auto" | "fast" | "smart";
+    /** AI tutor model: "auto" picks on-device by device, fast/smart force a
+     * size, "cloud" uses a hosted model (works on any device). */
+    tutorTier: "auto" | "fast" | "smart" | "cloud";
   };
   scheduler: {
     interleave: boolean;

@@ -42,7 +42,10 @@ export const getProgress = (): TutorProgress => progress;
 export const getError = (): string | null => error;
 export const getModel = (): string | null => model;
 
-export type TutorTier = "auto" | "fast" | "smart";
+export type TutorTier = "auto" | "fast" | "smart" | "cloud";
+
+/** "cloud" runs on a hosted model via /api/tutor, not on-device. */
+export const isCloud = (t: TutorTier): boolean => t === "cloud";
 
 /**
  * The requested model size. Set from settings before the first load. Once the
@@ -168,6 +171,45 @@ export interface AskHandlers {
   /** Called with the full answer so far every time new text arrives. */
   onToken: (full: string) => void;
   signal?: AbortSignal;
+}
+
+/**
+ * Ask a hosted model through the /api/tutor proxy. Works on any device — no
+ * WebGPU, no download — and streams plain text back. Throws a readable message
+ * when the endpoint isn't configured or is rate-limited.
+ */
+export async function cloudAsk(
+  messages: Array<{ role: string; content: string }>,
+  { onToken, signal }: AskHandlers,
+): Promise<string> {
+  const res = await fetch("/api/tutor", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ messages }),
+    signal,
+  });
+  if (!res.ok) {
+    let message = "The cloud tutor is unavailable.";
+    try {
+      const body = await res.json();
+      if (body?.error) message = body.error;
+    } catch {
+      // Non-JSON error body; keep the default message.
+    }
+    throw new Error(message);
+  }
+  if (!res.body) throw new Error("The cloud tutor returned no response.");
+
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder();
+  let full = "";
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    full += decoder.decode(value, { stream: true });
+    onToken(full);
+  }
+  return full;
 }
 
 /**
