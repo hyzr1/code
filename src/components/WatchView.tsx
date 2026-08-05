@@ -225,7 +225,10 @@ export default function WatchView({
         }
       }
     }
-    setPreparing(playbackEngine === "natural");
+    // A packed voice is prerecorded clips — there is nothing to "prepare", so
+    // never show that indicator for it. It is only meaningful when the model
+    // has to synthesize a line live (an unpacked voice).
+    setPreparing(playbackEngine === "natural" && !neural.hasPackedVoice(neuralVoice));
 
     return () => {
       narrator.cancel();
