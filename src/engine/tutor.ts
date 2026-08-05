@@ -91,23 +91,25 @@ async function pickModel(): Promise<string> {
   } catch {
     // Adapter probe failed; assume no f16 and take the safe f32 path.
   }
-  const smart = f16 ? "Qwen2.5-3B-Instruct-q4f16_1-MLC" : "Qwen2.5-3B-Instruct-q4f32_1-MLC";
-  const fast = f16 ? "Qwen2.5-1.5B-Instruct-q4f16_1-MLC" : "Qwen2.5-1.5B-Instruct-q4f32_1-MLC";
-  const tiny = f16 ? "Qwen2.5-0.5B-Instruct-q4f16_1-MLC" : "Qwen2.5-0.5B-Instruct-q4f32_1-MLC";
+  // Qwen2.5-Coder is fine-tuned on programming, so it is markedly more accurate
+  // on code questions than a generic model of the same size — the right family
+  // for a coding tutor. Sizes trade quality against download and GPU memory.
+  const q = f16 ? "q4f16_1" : "q4f32_1";
+  const coder = (size: string) => `Qwen2.5-Coder-${size}-Instruct-${q}-MLC`;
 
   const ua = navigator.userAgent;
   const mobile = /Mobi|Android|iPhone|iPad|iPod/i.test(ua);
 
   // Phones (iOS Safari especially) enforce a hard ~1–1.5 GB per-tab memory
-  // budget. A 1.5B/3B model blows past it and the tab OOM-crashes, so mobile is
-  // capped at the 0.5B — the largest that reliably fits. "Smart" on a phone
-  // still means the 1.5B, which is the ceiling before crashes become likely.
-  if (mobile) return tier === "smart" ? fast : tiny;
+  // budget; anything past the 0.5B OOM-crashes the tab. So mobile is capped at
+  // the 0.5B for every tier — the good tutor is a desktop experience.
+  if (mobile) return coder("0.5B");
 
-  if (tier === "smart") return smart;
-  if (tier === "fast") return fast;
-  const memory = (navigator as unknown as { deviceMemory?: number }).deviceMemory ?? 4;
-  return memory >= 8 ? smart : fast;
+  // Desktop: a strong 7B when asked (needs a real GPU), a solid 3B by default,
+  // a lighter 1.5B for speed.
+  if (tier === "smart") return coder("7B");
+  if (tier === "fast") return coder("1.5B");
+  return coder("3B");
 }
 
 /**

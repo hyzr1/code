@@ -73,13 +73,17 @@ function groundingPrompt(atom: Atom, scene: Scene): string {
     `Answer their question about it directly and simply, as if they are new to programming.`,
     `Keep answers to 2-4 short sentences. Use one tiny concrete example only when it truly helps.`,
     `Never paste long blocks of code. If they drift off-topic, gently bring them back to the lesson.`,
+    ``,
+    `Accuracy matters more than sounding confident. Only state Python facts you are sure are correct.`,
+    `If you are unsure, say "I'm not certain" instead of guessing — never invent syntax rules or make up behavior.`,
+    `Do not confuse similar things (lists vs sets, [] vs {}, tuples vs lists); if a detail is subtle, keep it simple and correct.`,
   ].join("\n");
 }
 
 const TIERS: { id: TutorTier; label: string; desc: string }[] = [
-  { id: "auto", label: "Auto", desc: "Best model for this device" },
-  { id: "fast", label: "Fast", desc: "Quicker, smaller download" },
-  { id: "smart", label: "Smart", desc: "Best answers, larger download" },
+  { id: "auto", label: "Auto", desc: "Balanced — 3B coder on desktop" },
+  { id: "fast", label: "Fast", desc: "Lighter and quicker (1.5B)" },
+  { id: "smart", label: "Smart", desc: "Strongest 7B — desktop, good GPU" },
 ];
 
 export default function AskTutor({
