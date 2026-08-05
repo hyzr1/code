@@ -42,6 +42,25 @@ export const getProgress = (): TutorProgress => progress;
 export const getError = (): string | null => error;
 export const getModel = (): string | null => model;
 
+export type TutorTier = "auto" | "fast" | "smart";
+
+/**
+ * The requested model size. Set from settings before the first load. Once the
+ * engine has loaded a model, changing this has no effect until a reload — the
+ * UI surfaces that ("takes effect next time").
+ */
+let tier: TutorTier = "auto";
+export function setTier(next: TutorTier): void {
+  if (next === tier) return;
+  tier = next;
+  announce();
+}
+export const getTier = (): TutorTier => tier;
+/** Whether switching to `next` would require reloading a different model. */
+export function tierNeedsReload(next: TutorTier): boolean {
+  return Boolean(engine) && next !== tier;
+}
+
 /**
  * On-device generation needs WebGPU. There is no WASM fallback for a language
  * model this size, so where WebGPU is missing the feature declines cleanly
@@ -72,14 +91,18 @@ async function pickModel(): Promise<string> {
   } catch {
     // Adapter probe failed; assume no f16 and take the safe f32 path.
   }
+  const smart = f16 ? "Qwen2.5-3B-Instruct-q4f16_1-MLC" : "Qwen2.5-3B-Instruct-q4f32_1-MLC";
+  const fast = f16 ? "Qwen2.5-1.5B-Instruct-q4f16_1-MLC" : "Qwen2.5-1.5B-Instruct-q4f32_1-MLC";
+
+  if (tier === "smart") return smart;
+  if (tier === "fast") return fast;
+
+  // Auto: give a capable machine the sharper 3B, a phone or low-memory device
+  // the 1.5B that actually fits.
   const ua = navigator.userAgent;
   const mobile = /Mobi|Android|iPhone|iPad|iPod/i.test(ua);
   const memory = (navigator as unknown as { deviceMemory?: number }).deviceMemory ?? 4;
-
-  if (!mobile && f16 && memory >= 8) return "Llama-3.2-3B-Instruct-q4f16_1-MLC";
-  return f16
-    ? "Qwen2.5-1.5B-Instruct-q4f16_1-MLC"
-    : "Qwen2.5-1.5B-Instruct-q4f32_1-MLC";
+  return !mobile && memory >= 8 ? smart : fast;
 }
 
 /**

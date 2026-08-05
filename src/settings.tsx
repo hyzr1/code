@@ -73,6 +73,8 @@ export interface Settings {
     neuralVoice: string;
     holdScale: number;
     animateCode: boolean;
+    /** AI tutor model size: "auto" picks by device, or force fast/smart. */
+    tutorTier: "auto" | "fast" | "smart";
   };
   scheduler: {
     interleave: boolean;
@@ -144,6 +146,7 @@ export const DEFAULTS: Settings = {
     neuralVoice: "af_heart",
     holdScale: 1,
     animateCode: true,
+    tutorTier: "auto",
   },
   scheduler: {
     interleave: true,

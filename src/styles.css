@@ -4328,8 +4328,16 @@ pre,
 }
 .tutor-chip:hover { border-color: var(--accent-line); color: var(--text); }
 
+.tutor-row {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  max-width: 90%;
+}
+.tutor-row.user { align-self: flex-end; align-items: flex-end; }
+.tutor-row.assistant { align-self: flex-start; align-items: flex-start; }
 .tutor-msg {
-  max-width: 88%;
+  max-width: 100%;
   padding: 9px 12px;
   border-radius: 14px;
   font-size: 14px;
@@ -4338,18 +4346,94 @@ pre,
   overflow-wrap: anywhere;
 }
 .tutor-msg.user {
-  align-self: flex-end;
   background: var(--accent);
   color: #fff;
   border-bottom-right-radius: 5px;
 }
 .tutor-msg.assistant {
-  align-self: flex-start;
   background: var(--surface-inset);
   border: 1px solid var(--border-soft);
   color: var(--text);
   border-bottom-left-radius: 5px;
+  white-space: normal;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
 }
+.tutor-msg.assistant.speaking {
+  border-color: var(--accent-line);
+  box-shadow: 0 0 0 2px var(--accent-soft);
+}
+/* Rendered Markdown inside an answer bubble. */
+.tutor-msg.assistant p { margin: 0 0 8px; }
+.tutor-msg.assistant p:last-child { margin-bottom: 0; }
+.tutor-msg.assistant ul,
+.tutor-msg.assistant ol { margin: 6px 0; padding-left: 1.2em; }
+.tutor-msg.assistant li { margin: 2px 0; }
+.tutor-msg.assistant :not(pre) > code {
+  font-family: var(--mono);
+  font-size: 0.86em;
+  background: var(--surface-2);
+  padding: 1px 5px;
+  border-radius: 5px;
+}
+.tutor-msg.assistant pre {
+  margin: 8px 0;
+  padding: 9px 10px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-soft);
+  border-radius: 8px;
+  overflow-x: auto;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  line-height: 1.55;
+}
+.tutor-replay {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border: 1px solid var(--border-soft);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-faint);
+  font-size: 11px;
+  cursor: pointer;
+  transition: color var(--t-fast), border-color var(--t-fast);
+}
+.tutor-replay:hover { color: var(--text-muted); border-color: var(--border); }
+.tutor-replay.on { color: var(--accent); border-color: var(--accent-line); }
+
+.tutor-tier {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.tutor-tier-label {
+  color: var(--text-faint);
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  font-weight: 650;
+}
+.tutor-seg {
+  display: inline-flex;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-inset);
+}
+.tutor-seg button {
+  border: none;
+  background: none;
+  padding: 4px 11px;
+  border-radius: 999px;
+  color: var(--text-muted);
+  font-size: 12px;
+  cursor: pointer;
+  transition: background var(--t-fast), color var(--t-fast);
+}
+.tutor-seg button.on { background: var(--accent); color: #fff; }
 
 .tutor-typing { display: inline-flex; gap: 4px; padding: 3px 0; }
 .tutor-typing i {
@@ -4424,6 +4508,7 @@ pre,
   box-shadow: 0 0 0 3px var(--accent-soft);
 }
 .tutor-input-actions { display: flex; align-items: center; gap: 6px; flex: 0 0 auto; }
+.tutor-mic,
 .tutor-speak,
 .tutor-send {
   width: 38px;
@@ -4437,6 +4522,19 @@ pre,
 .tutor-send:disabled { opacity: 0.4; }
 .tutor-stop { height: 38px; }
 .tutor-speak.on { color: var(--accent); border-color: var(--accent-line); }
+.tutor-mic.on {
+  color: #fff;
+  background: #d1495b;
+  border-color: #d1495b;
+  animation: micPulse 1.3s ease-in-out infinite;
+}
+@keyframes micPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(209, 73, 91, 0.5); }
+  50% { box-shadow: 0 0 0 5px rgba(209, 73, 91, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tutor-mic.on { animation: none; }
+}
 
 /* Wider than a phone: float a centered card instead of a bottom sheet. */
 @media (min-width: 701px) {
