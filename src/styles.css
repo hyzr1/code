@@ -4631,3 +4631,12 @@ pre,
   border-color: var(--accent-line);
   color: var(--text);
 }
+
+/* Tutor answers render as course-style slides: the real code panel sits in the
+   answer, spaced for the bubble rather than the full lecture stage. */
+.tutor-msg.assistant .tutor-bubble .stage-code {
+  margin: 11px 0;
+  font-size: 13px;
+}
+.tutor-msg.assistant .tutor-bubble .stage-code:first-child { margin-top: 2px; }
+.tutor-msg.assistant .tutor-bubble .stage-code:last-child { margin-bottom: 0; }

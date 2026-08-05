@@ -15,6 +15,7 @@ import * as neural from "../engine/neural";
 import { useSettings } from "../settings";
 import Icon from "./Icon";
 import Markdown from "./Markdown";
+import CodeStage from "./CodeStage";
 
 /**
  * The in-lesson tutor — modeled on the Hyzr chat composer.
@@ -70,14 +71,49 @@ function groundingPrompt(atom: Atom, scene: Scene): string {
     plain(scene.caption),
     `"""${code}`,
     ``,
-    `Answer their question about it directly and simply, as if they are new to programming.`,
-    `Keep answers to 2-4 short sentences. Use one tiny concrete example only when it truly helps.`,
-    `Never paste long blocks of code. If they drift off-topic, gently bring them back to the lesson.`,
+    `Answer directly and simply, as if they are new to programming.`,
+    `Structure the answer like a short lesson slide: 1-3 sentences of plain-English explanation, then — only if it genuinely helps — ONE short fenced code block (\`\`\`python) with a tiny concrete example (a handful of lines at most).`,
+    `Put the teaching in the prose, not in code comments. Never paste long code. If they drift off-topic, gently bring them back to the lesson.`,
     ``,
     `Accuracy matters more than sounding confident. Only state Python facts you are sure are correct.`,
     `If you are unsure, say "I'm not certain" instead of guessing — never invent syntax rules or make up behavior.`,
     `Do not confuse similar things (lists vs sets, [] vs {}, tuples vs lists); if a detail is subtle, keep it simple and correct.`,
   ].join("\n");
+}
+
+/**
+ * Split an answer into prose and code blocks so each can be rendered like the
+ * lecture — prose in the course type, code in the real code panel. Tolerates a
+ * still-streaming, unclosed final ``` block (keeps it as code).
+ */
+type Block = { type: "text" | "code"; value: string };
+function splitBlocks(content: string): Block[] {
+  const blocks: Block[] = [];
+  let mode: Block["type"] = "text";
+  let buf: string[] = [];
+  const flush = () => {
+    if (buf.length && buf.join("\n").trim()) blocks.push({ type: mode, value: buf.join("\n") });
+    buf = [];
+  };
+  for (const line of content.split("\n")) {
+    if (line.trim().startsWith("```")) {
+      flush();
+      mode = mode === "text" ? "code" : "text";
+      continue;
+    }
+    buf.push(line);
+  }
+  flush();
+  return blocks;
+}
+
+/** Just the spoken part of an answer — the prose, with code blocks removed. */
+function proseOf(content: string): string {
+  return splitBlocks(content)
+    .filter((b) => b.type === "text")
+    .map((b) => b.value)
+    .join(" ")
+    .trim();
 }
 
 const STARTERS = [
@@ -176,6 +212,16 @@ export default function AskTutor({
     setShowModels(false);
   }, [open, onClose, showModels]);
 
+  // Warm the af_heart voice when the tutor opens, but only if its model is
+  // already downloaded — so spoken answers use the lecture voice with no wait,
+  // and nobody gets a surprise multi-MB download just for opening the tutor.
+  useEffect(() => {
+    if (!open || settings.watch.engine !== "natural" || neural.getStatus() === "ready") return;
+    void neural.hasCachedWeights().then((cached) => {
+      if (cached) void neural.load().catch(() => undefined);
+    });
+  }, [open, settings.watch.engine]);
+
   // Unlock the Web Audio context inside a user gesture so a spoken answer,
   // which arrives seconds later after generation, is allowed to play.
   const unlockAudio = useCallback(() => {
@@ -251,7 +297,7 @@ export default function AskTutor({
             }),
         });
         if (!controller.signal.aborted && answer.trim() && speakOn) {
-          speak(answer, assistantIndex);
+          speak(proseOf(answer) || answer, assistantIndex);
         }
       } catch (cause) {
         setFailed(cause instanceof Error ? cause.message : "Something went wrong.");
@@ -387,14 +433,27 @@ export default function AskTutor({
                           <i />
                         </span>
                       ) : (
-                        <Markdown source={t.content} language={atom.language} />
+                        splitBlocks(t.content).map((b, j) =>
+                          b.type === "code" ? (
+                            <CodeStage
+                              key={j}
+                              code={b.value}
+                              language={atom.language}
+                              animate={false}
+                            />
+                          ) : (
+                            <Markdown key={j} source={b.value} language={atom.language} />
+                          ),
+                        )
                       )}
                     </div>
                     {t.content ? (
                       <div className="tutor-msg-actions">
                         <button
                           className={`tutor-act ${speaking === i ? "on" : ""}`}
-                          onClick={() => (speaking === i ? stopSpeaking() : speak(t.content, i))}
+                          onClick={() =>
+                            speaking === i ? stopSpeaking() : speak(proseOf(t.content) || t.content, i)
+                          }
                           title={speaking === i ? "Stop" : "Play this answer"}
                         >
                           <Icon name={speaking === i ? "pause" : "volume"} size={14} />
