@@ -49,6 +49,7 @@ export default function WatchView({
   const [index, setIndex] = useState(0);
   const [playing, setPlaying] = useState(settings.watch.autoplay);
   const [preparing, setPreparing] = useState(false);
+  const [showPreparing, setShowPreparing] = useState(false);
   const [askOpen, setAskOpen] = useState(false);
   const [narrationProgress, setNarrationProgress] = useState({ index: 0, value: 0 });
   const setRate = (next: number) => update("watch", { rate: next });
@@ -248,6 +249,18 @@ export default function WatchView({
 
   useEffect(() => () => narrator.cancel(), []);
 
+  // Only surface "preparing natural voice" when the wait is actually long. A
+  // packed voice starts almost instantly, so showing it on every load just
+  // flashes a scary-looking message for no reason.
+  useEffect(() => {
+    if (!(preparing && playing && !muted)) {
+      setShowPreparing(false);
+      return;
+    }
+    const id = setTimeout(() => setShowPreparing(true), 1200);
+    return () => clearTimeout(id);
+  }, [preparing, playing, muted]);
+
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       // The tutor owns the keyboard while its panel is open.
@@ -410,7 +423,7 @@ export default function WatchView({
           </span>
         </button>
 
-        {preparing && playing && !muted ? (
+        {showPreparing ? (
           <span className="preparing" aria-live="polite">
             preparing natural voice…
           </span>

@@ -4431,6 +4431,13 @@ pre,
 }
 .tutor-panel .composer textarea::-webkit-scrollbar { display: none; }
 .tutor-panel .composer textarea::placeholder { color: var(--text-faint); }
+/* Only the whole composer glows on focus — the input itself never shows the
+   global :focus-visible outline. */
+.tutor-panel .composer textarea:focus,
+.tutor-panel .composer textarea:focus-visible {
+  outline: none !important;
+  box-shadow: none;
+}
 .tutor-panel .composer-row {
   display: flex;
   align-items: center;
