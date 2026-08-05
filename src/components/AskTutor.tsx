@@ -61,6 +61,16 @@ const isMobileDevice =
   typeof navigator !== "undefined" &&
   /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
+// iOS/macOS ship ~two dozen joke voices (Bubbles, Bells, Zarvox, the robotic
+// "eloquence" family, Fred…). A learner wants a real human voice, so hide them.
+const NOVELTY_VOICE =
+  /^(albert|bad news|bahh|bells|boing|bubbles|cellos|good news|jester|organ|superstar|trinoids|whisper|wobble|zarvox|fred|junior|kathy|ralph|eddy|flo|grandma|grandpa|reed|rocko|sandy|shelley)\b/i;
+function isHumanVoice(v: SpeechSynthesisVoice): boolean {
+  if (NOVELTY_VOICE.test(v.name.trim())) return false;
+  if (/speech\.synthesis\.voice|eloquence/i.test(v.voiceURI || "")) return false;
+  return true;
+}
+
 function plain(text: string): string {
   return text
     .replace(/`([^`]+)`/g, "$1")
@@ -204,7 +214,9 @@ export default function AskTutor({
 
   useEffect(() => {
     narrator.loadVoices().then((all) => {
-      setVoices(all.filter((v) => v.lang.toLowerCase().startsWith("en")));
+      const english = all.filter((v) => v.lang.toLowerCase().startsWith("en"));
+      const human = english.filter(isHumanVoice);
+      setVoices(human.length ? human : english);
       voiceRef.current =
         all.find((v) => v.voiceURI === settings.watch.voiceURI) ?? narrator.pickVoice(all);
     });
