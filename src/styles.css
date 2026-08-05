@@ -4200,7 +4200,8 @@ pre,
 
 
 /* ============================================================
-   In-lesson AI tutor — modeled on the Hyzr chat composer.
+   In-lesson AI tutor — engraved into the lecture stage (Phase 3).
+   Answers take over the stage as adaptive slides, then resume.
    ============================================================ */
 .ask-tutor-btn {
   display: inline-flex;
@@ -4220,160 +4221,146 @@ pre,
   background: color-mix(in srgb, var(--accent) 18%, transparent);
 }
 
-.tutor-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 2000;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-}
-.tutor-scrim {
-  position: absolute;
-  inset: 0;
-  padding: 0;
-  border: none;
-  background: color-mix(in srgb, var(--bg) 60%, transparent);
-  backdrop-filter: blur(3px);
-  cursor: pointer;
-}
-.tutor-panel {
-  position: relative;
-  z-index: 1;
+/* The takeover fills the same space the lecture stage + controls occupied. */
+.tutor-take {
   display: flex;
   flex-direction: column;
-  width: 100%;
-  height: 90dvh;
-  max-height: 90dvh;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-bottom: none;
-  border-radius: 20px 20px 0 0;
-  box-shadow: 0 -18px 50px rgba(0, 0, 0, 0.4);
-  overflow: hidden;
-  animation: tutorUp 0.26s cubic-bezier(0.2, 0, 0.2, 1) both;
+  flex: 1 1 auto;
+  min-height: 0;
+  animation: tutorTakeIn 0.3s cubic-bezier(0.2, 0, 0.2, 1) both;
 }
-@keyframes tutorUp {
-  from { opacity: 0; transform: translateY(26px); }
+@keyframes tutorTakeIn {
+  from { opacity: 0; transform: translateY(8px) scale(0.994); }
   to { opacity: 1; transform: none; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .tutor-panel { animation: none; }
+  .tutor-take { animation: none; }
 }
 
-.tutor-head {
-  flex: 0 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 13px 15px;
-  border-bottom: 1px solid var(--border-soft);
-}
-.tutor-head-title {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  min-width: 0;
-  color: var(--accent);
-}
-.tutor-head-title > div {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  line-height: 1.25;
-}
-.tutor-head-title strong { color: var(--text); font-size: 14px; }
-.tutor-context {
-  color: var(--text-faint);
-  font-size: 11px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.tutor-close { flex: 0 0 auto; }
-
-.tutor-notice { padding: 18px 16px; }
-.tutor-notice p { margin: 0 0 8px; font-size: 14px; line-height: 1.5; }
-.tutor-notice p:last-child { margin-bottom: 0; }
-
-.tutor-thread {
+/* Reuse the lecture .stage frame so it looks like the same surface. */
+.stage.tutor-stage {
   flex: 1 1 auto;
-  overflow-y: auto;
-  padding: 18px 15px 6px;
-  display: flex;
-  flex-direction: column;
+  min-height: 320px;
+  justify-content: flex-start;
+  overflow: hidden;
 }
-
-.tutor-msg { margin-bottom: 20px; animation: tutorMsgIn 0.22s ease both; }
-.tutor-msg:last-child { margin-bottom: 6px; }
-@keyframes tutorMsgIn {
-  from { opacity: 0; transform: translateY(6px); }
-}
-.tutor-msg.user .tutor-bubble {
-  width: fit-content;
-  max-width: min(560px, 85%);
-  margin-left: auto;
-  background: var(--surface-2);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 10px 14px;
-  font-size: 14.5px;
-  line-height: 1.55;
-  color: var(--text);
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-}
-.tutor-msg.assistant .tutor-bubble {
-  font-size: 15px;
-  line-height: 1.66;
-  color: var(--text);
-  overflow-wrap: anywhere;
-}
-.tutor-msg.assistant .tutor-bubble p { margin: 0 0 10px; }
-.tutor-msg.assistant .tutor-bubble > *:last-child { margin-bottom: 0; }
-.tutor-msg.assistant .tutor-bubble ul,
-.tutor-msg.assistant .tutor-bubble ol { margin: 6px 0; padding-left: 1.2em; }
-.tutor-msg.assistant .tutor-bubble li { margin: 3px 0; }
-.tutor-msg.assistant .tutor-bubble :not(pre) > code {
-  font-family: var(--mono);
-  font-size: 0.87em;
-  background: var(--surface-2);
-  padding: 1px 5px;
-  border-radius: 5px;
-}
-.tutor-msg.assistant .tutor-bubble pre {
-  margin: 9px 0;
-  padding: 11px 12px;
-  background: var(--surface-inset);
-  border: 1px solid var(--border-soft);
-  border-radius: 10px;
-  overflow-x: auto;
-  font-family: var(--mono);
-  font-size: 12.5px;
-  line-height: 1.6;
-}
-.tutor-msg-actions { display: flex; gap: 6px; margin-top: 8px; }
-.tutor-act {
-  width: 28px;
-  height: 28px;
+.tutor-adaptive {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  border: 1px solid var(--border-soft);
-  border-radius: 8px;
-  background: transparent;
-  color: var(--text-faint);
-  cursor: pointer;
-  transition: color var(--t-fast), border-color var(--t-fast);
+  gap: 4px;
 }
-.tutor-act:hover { color: var(--text-muted); border-color: var(--border); }
-.tutor-act.on { color: var(--accent); border-color: var(--accent-line); }
+.stage-body.tutor-stage-body {
+  width: 100%;
+  max-height: 100%;
+  overflow-y: auto;
+  scrollbar-width: none;
+  animation: none;
+  display: flex;
+  flex-direction: column;
+}
+.tutor-stage-body::-webkit-scrollbar { display: none; }
 
-.tutor-typing { display: inline-flex; gap: 4px; padding: 4px 0; }
+/* Welcome (empty state) centers; a slide top-aligns. */
+.tutor-welcome {
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 15px;
+  max-width: 340px;
+  padding: 12px;
+}
+.tutor-welcome-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 17px;
+  display: grid;
+  place-items: center;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.tutor-welcome-line {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.45;
+  color: var(--text);
+}
+.tutor-starters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+.tutor-starters button {
+  padding: 8px 14px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--text-muted);
+  font-size: 13px;
+  cursor: pointer;
+  transition: border-color var(--t-fast), color var(--t-fast);
+}
+.tutor-starters button:hover {
+  border-color: var(--accent-line);
+  color: var(--text);
+}
+
+/* A generated slide: the question, then the answer as course-style content. */
+.tutor-slide {
+  animation: sceneIn 0.34s cubic-bezier(0.2, 0, 0.2, 1) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .tutor-slide { animation: none; }
+}
+.tutor-q {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 9px 13px;
+  margin-bottom: 18px;
+  border-left: 2px solid var(--accent);
+  background: var(--accent-soft);
+  border-radius: 0 9px 9px 0;
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.4;
+}
+.tutor-q > svg { color: var(--accent); flex: 0 0 auto; margin-top: 2px; }
+
+.tutor-a {
+  font-size: calc(19px * var(--font-scale));
+  line-height: 1.55;
+  letter-spacing: -0.008em;
+  color: var(--text);
+}
+.tutor-a p { margin: 0 0 13px; }
+.tutor-a > *:last-child { margin-bottom: 0; }
+.tutor-a ul,
+.tutor-a ol { margin: 9px 0; padding-left: 1.3em; }
+.tutor-a li { margin: 4px 0; }
+.tutor-a li::marker { color: var(--accent); }
+.tutor-a :not(pre) > code {
+  font-family: var(--mono);
+  font-size: 0.84em;
+  background: var(--surface-2);
+  padding: 1px 6px;
+  border-radius: 6px;
+}
+.tutor-a .stage-code { margin: 16px 0; }
+
+.tutor-thinking {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 6px 0;
+}
+.tutor-typing { display: inline-flex; gap: 5px; padding: 4px 0; }
 .tutor-typing i {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
   background: var(--text-faint);
   animation: tutorBlink 1.2s infinite ease-in-out;
@@ -4382,13 +4369,25 @@ pre,
 .tutor-typing i:nth-child(3) { animation-delay: 0.4s; }
 @keyframes tutorBlink {
   0%, 80%, 100% { opacity: 0.25; transform: translateY(0); }
-  40% { opacity: 1; transform: translateY(-2px); }
+  40% { opacity: 1; transform: translateY(-3px); }
+}
+.tutor-progress {
+  width: min(260px, 60%);
+  height: 6px;
+  border-radius: 3px;
+  background: var(--surface-3);
+  overflow: hidden;
+}
+.tutor-progress span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.3s ease;
 }
 
-.tutor-loading { display: flex; flex-direction: column; gap: 6px; margin: 4px 0 12px; }
-.tutor-progress { height: 5px; border-radius: 3px; background: var(--surface-3); overflow: hidden; }
-.tutor-progress span { display: block; height: 100%; background: var(--accent); transition: width 0.3s ease; }
-.tutor-error { font-size: 12.5px; color: #e0776b; margin-bottom: 10px; }
+.tutor-notice { max-width: 460px; margin: auto; text-align: center; }
+.tutor-notice p { margin: 0 0 10px; font-size: 15px; line-height: 1.5; }
+.tutor-error { margin-top: 14px; font-size: 13px; color: #e0776b; }
 .linky {
   background: none;
   border: none;
@@ -4399,22 +4398,39 @@ pre,
   font: inherit;
 }
 
-/* Composer — ported from the Hyzr chat composer, scoped to the panel. */
-.tutor-panel .composer {
+/* Navigation row under the stage — step through your questions + resume. */
+.tutor-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+}
+.tutor-count {
+  color: var(--text-faint);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  min-width: 74px;
+}
+.tutor-nav .spacer { flex: 1; }
+.tutor-replay.on { color: var(--accent); border-color: var(--accent-line); }
+.tutor-resume { flex: 0 0 auto; }
+
+/* Composer — the Hyzr chat composer, scoped to the takeover. */
+.tutor-take .composer {
   position: relative;
   flex: 0 0 auto;
-  margin: 8px 12px calc(12px + env(safe-area-inset-bottom));
+  margin-top: 12px;
   background: var(--surface-inset);
   border: 1px solid var(--border);
   border-radius: 16px;
-  padding: 13px 14px 10px;
+  padding: 12px 13px 9px;
   transition: border-color 0.16s, box-shadow 0.16s;
 }
-.tutor-panel .composer:focus-within {
+.tutor-take .composer:focus-within {
   border-color: var(--accent-line);
   box-shadow: 0 0 0 2px var(--accent-soft);
 }
-.tutor-panel .composer textarea {
+.tutor-take .composer textarea {
   width: 100%;
   border: none;
   outline: none;
@@ -4423,29 +4439,27 @@ pre,
   font-family: var(--sans);
   font-size: 15px;
   color: var(--text);
-  min-height: 26px;
-  max-height: 200px;
-  line-height: 1.55;
+  min-height: 24px;
+  max-height: 160px;
+  line-height: 1.5;
   overflow-y: hidden;
   scrollbar-width: none;
 }
-.tutor-panel .composer textarea::-webkit-scrollbar { display: none; }
-.tutor-panel .composer textarea::placeholder { color: var(--text-faint); }
-/* Only the whole composer glows on focus — the input itself never shows the
-   global :focus-visible outline. */
-.tutor-panel .composer textarea:focus,
-.tutor-panel .composer textarea:focus-visible {
+.tutor-take .composer textarea::-webkit-scrollbar { display: none; }
+.tutor-take .composer textarea::placeholder { color: var(--text-faint); }
+.tutor-take .composer textarea:focus,
+.tutor-take .composer textarea:focus-visible {
   outline: none !important;
   box-shadow: none;
 }
-.tutor-panel .composer-row {
+.tutor-take .composer-row {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-top: 10px;
+  margin-top: 9px;
 }
-.tutor-panel .composer-row .spacer { flex: 1; }
-.tutor-panel .tool-btn {
+.tutor-take .composer-row .spacer { flex: 1; }
+.tutor-take .tool-btn {
   display: inline-flex;
   align-items: center;
   gap: 7px;
@@ -4460,22 +4474,22 @@ pre,
   cursor: pointer;
   transition: border-color 0.13s, color 0.13s, background 0.13s;
 }
-.tutor-panel .tool-btn svg { color: var(--text-faint); }
-.tutor-panel .tool-btn:hover { border-color: var(--border); color: var(--text); }
-.tutor-panel .tool-btn.active {
+.tutor-take .tool-btn svg { color: var(--text-faint); }
+.tutor-take .tool-btn:hover { border-color: var(--border); color: var(--text); }
+.tutor-take .tool-btn.active {
   background: var(--accent-soft);
   border-color: var(--accent-line);
   color: var(--accent);
 }
-.tutor-panel .tool-btn.active svg { color: var(--accent); }
-.tutor-panel .tool-btn .chev { color: var(--text-faint); }
-.tutor-panel .picker-name {
+.tutor-take .tool-btn.active svg { color: var(--accent); }
+.tutor-take .tool-btn .chev { color: var(--text-faint); }
+.tutor-take .picker-name {
   max-width: 120px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.tutor-panel .round-btn {
+.tutor-take .round-btn {
   width: 34px;
   height: 34px;
   border-radius: 50%;
@@ -4488,17 +4502,17 @@ pre,
   flex: 0 0 34px;
   transition: background 0.13s, color 0.13s, border-color 0.13s;
 }
-.tutor-panel .round-btn:hover { background: var(--surface-2); color: var(--text); border-color: var(--border); }
-.tutor-panel .round-btn.muted { color: var(--text-faint); }
-.tutor-panel .round-btn.rec {
+.tutor-take .round-btn:hover { background: var(--surface-2); color: var(--text); border-color: var(--border); }
+.tutor-take .round-btn.muted { color: var(--text-faint); }
+.tutor-take .round-btn.rec {
   background: var(--accent-soft);
   border-color: var(--accent-line);
   color: var(--accent);
   animation: recpulse 1.2s ease-in-out infinite;
 }
 @keyframes recpulse { 50% { box-shadow: 0 0 0 4px var(--accent-soft); } }
-@media (prefers-reduced-motion: reduce) { .tutor-panel .round-btn.rec { animation: none; } }
-.tutor-panel .send {
+@media (prefers-reduced-motion: reduce) { .tutor-take .round-btn.rec { animation: none; } }
+.tutor-take .send {
   width: 34px;
   height: 34px;
   border-radius: 50%;
@@ -4511,12 +4525,12 @@ pre,
   flex: 0 0 34px;
   transition: opacity 0.15s, transform 0.1s, background 0.15s;
 }
-.tutor-panel .send:active:not(:disabled) { transform: scale(0.94); }
-.tutor-panel .send:disabled { background: var(--surface-3); color: var(--text-faint); cursor: default; }
-.tutor-panel .send.stop { background: var(--surface-3); color: var(--text); }
+.tutor-take .send:active:not(:disabled) { transform: scale(0.94); }
+.tutor-take .send:disabled { background: var(--surface-3); color: var(--text-faint); cursor: default; }
+.tutor-take .send.stop { background: var(--surface-3); color: var(--text); }
 
-.tutor-panel .model-picker { position: relative; }
-.tutor-panel .model-menu-backdrop {
+.tutor-take .model-picker { position: relative; }
+.tutor-take .model-menu-backdrop {
   position: fixed;
   inset: 0;
   z-index: 5;
@@ -4524,7 +4538,7 @@ pre,
   border: none;
   cursor: default;
 }
-.tutor-panel .menu.simple-model-menu {
+.tutor-take .menu.simple-model-menu {
   position: absolute;
   left: 0;
   bottom: calc(100% + 8px);
@@ -4536,13 +4550,13 @@ pre,
   background: var(--surface);
   box-shadow: 0 16px 44px rgba(0, 0, 0, 0.32);
 }
-.tutor-panel .simple-menu-title {
+.tutor-take .simple-menu-title {
   padding: 2px 8px 6px;
   color: var(--text-faint);
   font-size: 10.5px;
   font-weight: 600;
 }
-.tutor-panel .simple-model-row {
+.tutor-take .simple-model-row {
   width: 100%;
   min-height: 40px;
   display: flex;
@@ -4556,87 +4570,15 @@ pre,
   cursor: pointer;
   text-align: left;
 }
-.tutor-panel .simple-model-row:hover,
-.tutor-panel .simple-model-row.selected { background: var(--surface-2); }
-.tutor-panel .simple-model-copy { display: flex; flex-direction: column; flex: 1; min-width: 0; }
-.tutor-panel .simple-model-copy strong { font-size: 12.5px; font-weight: 560; }
-.tutor-panel .simple-model-copy small { font-size: 10.5px; color: var(--text-faint); }
-.tutor-panel .simple-model-row > svg { flex: 0 0 auto; color: var(--accent); }
+.tutor-take .simple-model-row:hover,
+.tutor-take .simple-model-row.selected { background: var(--surface-2); }
+.tutor-take .simple-model-copy { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+.tutor-take .simple-model-copy strong { font-size: 12.5px; font-weight: 560; }
+.tutor-take .simple-model-copy small { font-size: 10.5px; color: var(--text-faint); }
+.tutor-take .simple-model-row > svg { flex: 0 0 auto; color: var(--accent); }
 
-/* Wider than a phone: a centered card sized like the chat composer column. */
-@media (min-width: 701px) {
-  .tutor-overlay { align-items: center; padding: 24px; }
-  .tutor-panel {
-    width: min(640px, 100%);
-    height: min(760px, 88vh);
-    max-height: 88vh;
-    border: 1px solid var(--border);
-    border-radius: 18px;
-    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
-  }
-  .tutor-panel .composer { margin: 8px 16px 16px; }
+@media (max-width: 700px) {
+  .stage.tutor-stage { min-height: 260px; }
+  .tutor-a { font-size: clamp(16px, calc(17px * var(--font-scale)), 19px); }
+  .tutor-q { font-size: 13px; }
 }
-
-/* Keep the top bar uncluttered on small screens — Ask is the star there. */
-@media (max-width: 560px) {
-  .watch-toolbar-actions .read-instead-btn { display: none; }
-}
-
-/* Tutor empty state — inviting, centered, on-brand (not a blank void). */
-.tutor-thread.empty {
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-.tutor-welcome {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 15px;
-  max-width: 330px;
-  padding: 20px;
-}
-.tutor-welcome-icon {
-  width: 54px;
-  height: 54px;
-  border-radius: 16px;
-  display: grid;
-  place-items: center;
-  background: var(--accent-soft);
-  color: var(--accent);
-}
-.tutor-welcome-line {
-  margin: 0;
-  font-size: 16.5px;
-  line-height: 1.45;
-  color: var(--text);
-}
-.tutor-starters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  justify-content: center;
-}
-.tutor-starters button {
-  padding: 8px 13px;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  background: var(--surface-2);
-  color: var(--text-muted);
-  font-size: 12.5px;
-  cursor: pointer;
-  transition: border-color var(--t-fast), color var(--t-fast);
-}
-.tutor-starters button:hover {
-  border-color: var(--accent-line);
-  color: var(--text);
-}
-
-/* Tutor answers render as course-style slides: the real code panel sits in the
-   answer, spaced for the bubble rather than the full lecture stage. */
-.tutor-msg.assistant .tutor-bubble .stage-code {
-  margin: 11px 0;
-  font-size: 13px;
-}
-.tutor-msg.assistant .tutor-bubble .stage-code:first-child { margin-top: 2px; }
-.tutor-msg.assistant .tutor-bubble .stage-code:last-child { margin-bottom: 0; }

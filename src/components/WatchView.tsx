@@ -336,6 +336,10 @@ export default function WatchView({
         </div>
       </div>
 
+      {askOpen ? (
+        <AskTutor atom={atom} scene={scene} onResume={() => setAskOpen(false)} />
+      ) : (
+        <>
       <div className="stage">
         <div className="stage-meta">
           <div className="stage-section">{scene.section}</div>
@@ -458,13 +462,8 @@ export default function WatchView({
             : atEnd ? "Continue to the exercises" : "Skip to the exercises"}
         </button>
       </div>
-
-      <AskTutor
-        atom={atom}
-        scene={scene}
-        open={askOpen}
-        onClose={() => setAskOpen(false)}
-      />
+        </>
+      )}
     </div>
   );
 }
