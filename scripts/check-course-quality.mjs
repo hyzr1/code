@@ -53,14 +53,19 @@ const patternScenes = patternAtoms.flatMap(buildScenes);
 const visualCoverage = ratio(patternAtoms, (atom) =>
   buildScenes(atom).some((scene) => scene.visualKind),
 );
-const focusedCode = ratio(
+const synchronizedCode = ratio(
   patternScenes.filter((scene) => scene.code),
-  (scene) => scene.focusLines?.length && scene.focusLabel,
+  // A calm code panel is preferable to a false highlight. Count a scene as
+  // guided when every authored highlight has a real timeline, or when the
+  // composer deliberately found no honest line to point at.
+  (scene) =>
+    Boolean(scene.focusLabel) &&
+    (!scene.focusLines?.length || Boolean(scene.focusSteps?.length)),
 );
 const visibleState = ratio(patternAtoms, (atom) =>
   buildScenes(atom).some((scene) => scene.traceItems?.length || scene.keyTerms?.length),
 );
-const visual = points(visualCoverage, 7) + points(focusedCode, 5) + points(visibleState, 3);
+const visual = points(visualCoverage, 7) + points(synchronizedCode, 5) + points(visibleState, 3);
 
 const tested = ratio(interviewProblems, (problem) => problem.tests.length >= 3);
 const scaffolded = ratio(

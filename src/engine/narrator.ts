@@ -27,12 +27,30 @@ const ABBREVIATIONS: [RegExp, string][] = [
 ];
 
 const SPOKEN: [RegExp, string][] = [
+  // Python representations and operators must be handled before the single
+  // character rules below. Otherwise `<class 'str'>` becomes "less than
+  // class str greater than", `->` becomes "minus greater than", and `**`
+  // becomes the especially confusing "star times".
+  [/<class\s+['"]([^'"]+)['"]>/g, "class $1"],
+  // Complexity names must be recognized before the generic arithmetic rules
+  // turn the plus sign inside their parentheses into prose.
+  [/\bO\(n²\)/g, "O of n squared"],
+  [/\bO\(n\^2\)/g, "O of n squared"],
+  [/\bO\(n\)/g, "O of n"],
+  [/\bO\(1\)/g, "O of one"],
+  [/\bO\(log n\)/g, "O of log n"],
+  [/\bO\(n\s*\+\s*m\)/g, "O of n plus m"],
+  [/\bO\(V\s*\+\s*E\)/g, "O of V plus E"],
+  [/->/g, " arrow "],
   // Multi-character operators first — a bare `=` rule would wreck them.
   [/===/g, " triple equals "],
   [/!==/g, " not equals "],
   [/==/g, " double equals "],
+  [/!=/g, " not equal to "],
   [/=>/g, " arrow "],
   // Compound assignment. Unmapped, `+= 1` is read as a pause and a one.
+  [/\*\*=/g, " power equals "],
+  [/\/\/=/g, " floor divide equals "],
   [/\+=/g, " plus equals "],
   [/-=/g, " minus equals "],
   [/\*=/g, " times equals "],
@@ -40,14 +58,35 @@ const SPOKEN: [RegExp, string][] = [
   [/\|\|/g, " or or "],
   [/\?\?/g, " double question mark "],
   [/\?\./g, " question dot "],
+  // Placeholder arguments inside explanatory code are semantic, not a pause.
+  [/([A-Za-z_]\w*)\(\.\.\.\)/g, "$1 call "],
+  [/=\s*\.\.\./g, " equals a function "],
+  [/,\s*\.\.\./g, ", additional arguments "],
   // `...` is two different things. After a bracket or comma it's spread or
   // rest, and "spread" is the word a person says. Anywhere else it's an
   // ellipsis, where the only correct reading is a pause.
   [/([[({,]\s*)\.\.\.(?=[\w"'[{])/g, "$1spread "],
   [/\.\.\./g, ", "],
   [/\+\+/g, " plus plus "],
+  // Python arithmetic. Binary forms run before the unary `*args` forms.
+  [/(\S)\s*\*\*\s*(?=[\w(])/g, "$1 to the power of "],
+  [/(\w|\))\s*\/\/\s*(?=[\w(])/g, "$1 floor divided by "],
+  [/([A-Za-z0-9_)\]])\s*\*\s*(?=[\w(])/g, "$1 times "],
+  [/(^|[\s(,[])\*\*(?=[A-Za-z_])/g, "$1double star "],
+  [/(^|[\s(,[])\*(?=[A-Za-z_])/g, "$1star "],
+  // A code comment marker (`# ...` or `// ...`). Read the annotation as plain
+  // words, never "number sign" / "slash slash". Must run before the private-
+  // field rule below, which only maps `#name` with no following space.
+  [/^\s*#+\s+/g, ""],
+  [/\s+#+\s+/g, ", "],
+  [/^\s*\/\/+\s+/g, ""],
+  // Any remaining double slash is the Python operator being named in prose
+  // (binary uses were handled above). JS comments are removed at line start
+  // or extracted by `describeCode` before reaching this function.
+  [/\/\//g, " floor division "],
   // A private field. Unmapped, this is read as "number sign".
   [/#(?=\w)/g, "hash "],
+  [/@(?=\w)/g, "at "],
 
   // A template literal, read the way a person reads one: the hole becomes the
   // thing inside it, and the backticks are silent. Unmapped, `${name}` comes
@@ -60,11 +99,10 @@ const SPOKEN: [RegExp, string][] = [
   // Maths. Left unmapped, a synthesiser either skips these or spells them out
   // as punctuation — "ten star five" is not a sentence anyone says.
   // `\S` rather than `\w` on the left: `(2 + 3) * 4` has a bracket there.
-  [/(\S)\s*\*\s*(?=[\w(])/g, "$1 times "],
   [/(\d)\s*\/\s*(\d)/g, "$1 divided by $2"],
   // `try/catch`, `keys/values/entries` — a slash between words is a breath,
   // not the word "slash".
-  [/([a-z])\/([a-z])/gi, "$1 $2"],
+  [/([a-z])\/([a-z])/gi, "$1 or $2"],
   [/(\w)\s*\+\s*(\w)/g, "$1 plus $2"],
   [/(\d)\s*-\s*(\d)/g, "$1 minus $2"],
   [/(\w)\s+-\s+(\d)/g, "$1 minus $2"],
@@ -86,6 +124,12 @@ const SPOKEN: [RegExp, string][] = [
   // The empty string is a value with a name. Read as punctuation it is silent,
   // so `join("")` comes out as `join` and the whole point disappears.
   [/""/g, " empty string "],
+  // F-string placeholders and empty mappings should be described without
+  // asking the voice to improvise names for brace punctuation.
+  [/\{\s*\}/g, " braces "],
+  [/\{\s*([^{}]+?)\s*\}/g, " open brace $1 close brace "],
+  [/\|/g, " pipe "],
+  [/&/g, " and "],
 
   // Only negation, never punctuation — a blanket rule turns "Wow!" into
   // "Wow not", and the content is full of emphatic sentences.
@@ -93,15 +137,34 @@ const SPOKEN: [RegExp, string][] = [
   // Likewise: spaced `%` is the operator, attached `%` is a percentage.
   [/(\w)\s+%\s+(\w)/g, "$1 mod $2"],
   [/(\d)\s*%(?!\w)/g, "$1 percent"],
+  [/%/g, " modulo "],
+
+  // A spaced slash joins prose alternatives (`try / except`, `low / high`).
+  // It must run before the standalone slash rule below.
+  [/(\w|\))\s+\/\s+(?=\w)/g, "$1 or "],
+
+  // Standalone operators occur in vocabulary explanations ("`+` adds").
+  // Naming them here prevents a neural voice from skipping the symbol and
+  // turning the sentence into "adds, subtracts" with no subject.
+  [/(^|\s)\+(?=\s|$)/g, "$1plus"],
+  [/(^|\s)-(?=\s|$)/g, "$1minus"],
+  [/(^|\s)\*(?=\s|$)/g, "$1times"],
+  [/(^|\s)\/(?=\s|$)/g, "$1divided by"],
+  [/(^|\s)\^(?=\s|$)/g, "$1caret"],
+  [/\^(\d+)/g, "caret $1"],
+  [/=/g, " equals "],
 
   [/\bNaN\b/g, "nan"],
   [/\bJS\b/g, "JavaScript"],
   [/\bO\(n²\)/g, "O of n squared"],
+  [/\bO\(n\^2\)/g, "O of n squared"],
   [/\bO\(n\)/g, "O of n"],
   [/\bO\(1\)/g, "O of one"],
   [/\bO\(log n\)/g, "O of log n"],
   [/\bO\(n \+ m\)/g, "O of n plus m"],
+  [/\bO\(V \+ E\)/g, "O of V plus E"],
   [/²/g, " squared"],
+  [/log₂\(n\)/gi, "log base 2 of n"],
   // A spaced slash in prose is the word "or" — "negative / zero / positive".
   [/(\w)\s+\/\s+(?=\w)/g, "$1 or "],
   [/→/g, " means "],
@@ -120,8 +183,25 @@ const SPOKEN: [RegExp, string][] = [
  * technical narration, and it costs nothing.
  */
 const IDENTIFIERS: [RegExp, string][] = [
-  // Empty call parens make no sound. "toUpperCase()" should read as a verb.
-  [/\(\)/g, " "],
+  // Numeric separators are for human readability, not separate spoken words.
+  [/(\d)_(?=\d)/g, "$1"],
+  // Protect this acronym before the camel-case splitter turns it into "I Ds".
+  [/\bIDs\b/g, "I D's"],
+  // By this pass braces have already been named. Turn common f-string shapes
+  // into the explanation an instructor would actually say rather than making
+  // the voice recite every quote and brace.
+  [/f(["'])\s*open brace\s+([A-Za-z_]\w*):\.(\d+)f\s+close brace\s*\1/g,
+    "an f-string formatting $2 to $3 decimal places"],
+  [/f(["'])\s*open brace\s+([A-Za-z_]\w*)\s+close brace\s*\1/g,
+    "an f-string containing $2"],
+  // Preserve the distinction between a function value and calling it. This
+  // makes `key=rule` versus `key=rule()` audible instead of reading both as
+  // "key equals rule".
+  [/([A-Za-z_]\w*)\(\.\.\.\)/g, "$1 call "],
+  [/([A-Za-z_]\w*)\(\)/g, "$1 call "],
+  [/__([A-Za-z][A-Za-z0-9_]*)__/g, "dunder $1"],
+  // A method named at the start of a phrase: `.copy()` / `.most_common()`.
+  [/(^|[\s:;,(])\.(?=[A-Za-z])/g, "$1 dot "],
   // A dot between two names is spoken, not swallowed. Requires a letter after,
   // so decimals — `0.30000000000000004` — are left alone.
   [/([A-Za-z0-9])\.([A-Za-z])/g, "$1 dot $2"],
@@ -133,6 +213,17 @@ const IDENTIFIERS: [RegExp, string][] = [
   // ...but these are names, not two words each.
   [/\bJava Script\b/g, "JavaScript"],
   [/\bType Script\b/g, "TypeScript"],
+  [/\bstar\s*\(\s*star\s*\)/gi, "starred-value"],
+  [/\binteger division\s+floor division\b/gi, "floor division"],
+  [/\bgreater than\s+right,\s+less than\s+left,\s+caret\s+center\b/gi,
+    "greater-than means right aligned, less-than means left aligned, and caret means centered"],
+  [/\bthe next next call\b/gi, "the next call"],
+  [/\buse it with with\b/gi, "use it with a with statement"],
+  [/\bat ([A-Za-z_]\w*) written on ([A-Za-z_]\w*)\b/gi,
+    "the $1 decorator on $2"],
+  [/\bmodulo for percentages\b/gi, "percent format for percentages"],
+  [/\bPrecision equals of\b/g, "Precision asks: of"],
+  [/\bRecall equals of\b/g, "Recall asks: of"],
 ];
 
 /** Symbols and identifiers read aloud badly by default, so they get rewritten. */
@@ -143,10 +234,20 @@ export function forSpeech(text: string): string {
   }
   return out
     // A space before punctuation makes the synthesiser drop the pause entirely.
-    .replace(/\s+([,.;:!?])/g, "$1")
+    .replace(/\s+([,;:!?])/g, "$1")
+    // A period is punctuation only when it ends a phrase. In `.2f` it is
+    // syntax, and deleting the space before it turns "does .2f" into the
+    // visibly and audibly broken "does.2f".
+    .replace(/\s+\.(?=\s|$)/g, ".")
+    // A code token ending in `:` followed by prose punctuation should create
+    // one pause, not make the voice pronounce a stutter like "colon period".
+    .replace(/([:;,])\./g, "$1")
     // Several rules can each contribute a comma to the same seam. Doubled up,
     // the voice pauses twice and it sounds like a stumble.
-    .replace(/,[\s,]*,/g, ",")
+    // Collapse only commas separated by whitespace. Literal `,,` inside a
+    // CSV example represents an empty field and must remain audible/visible.
+    .replace(/,\s+,/g, ",")
+    .replace(/\.{2,}/g, ".")
     .replace(/\s+/g, " ")
     .trim();
 }

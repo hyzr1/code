@@ -4,6 +4,7 @@ import {
   buildScenes,
   focusedLinesAt,
   holdSeconds,
+  revealedLineCount,
   revealSeconds,
   speechSeconds,
 } from "../engine/scenes";
@@ -80,6 +81,13 @@ export default function WatchView({
   const next = useCallback(() => {
     setIndex((i) => Math.min(i + 1, scenes.length - 1));
   }, [scenes.length]);
+
+  // A learner can scrub away and return to a slide. Never reuse that slide's
+  // old progress value: it would reveal the finished code and highlight its
+  // last cue for a beat before narration restarts from the beginning.
+  useEffect(() => {
+    setNarrationProgress({ index, value: 0 });
+  }, [index]);
 
   /**
    * Warm the opening scenes as soon as the lecture is on screen.
@@ -377,10 +385,17 @@ export default function WatchView({
               animate={animateCode && scene.codeIsNew !== false}
               language={atom.language}
               focusLines={activeFocusLines}
+              revealThrough={revealedLineCount(scene, sceneProgress)}
             />
           ) : null}
 
-          {scene.visualKind ? <GuidedVisual kind={scene.visualKind} /> : null}
+          {scene.visualKind ? (
+            <GuidedVisual
+              kind={scene.visualKind}
+              variant={scene.visualVariant}
+              topic={scene.visualTopic}
+            />
+          ) : null}
 
           {scene.traceItems?.length ? (
             <div className="stage-trace">

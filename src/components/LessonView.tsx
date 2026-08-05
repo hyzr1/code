@@ -268,7 +268,7 @@ export default function LessonView({
           Everything here is now scheduled to come back — spaced out, mixed in
           with other topics. That's the part that makes it stick.
         </p>
-        <div className="row" style={{ marginTop: 20 }}>
+        <div className="row lesson-complete-actions" style={{ marginTop: 20 }}>
           {hasNext ? (
             <button className="primary" onClick={onNext}>
               Next lesson

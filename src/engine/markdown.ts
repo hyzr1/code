@@ -111,9 +111,9 @@ const NAMED: Record<string, string> = {
   ".": "dot",
   "/": "slash",
   "\\": "backslash",
-  "-": "dash",
+  "-": "minus sign",
   _: "underscore",
-  "#": "hash",
+  "#": "hash symbol",
   "*": "star",
   "|": "pipe",
   ",": "comma",
@@ -126,17 +126,43 @@ const NAMED: Record<string, string> = {
   "}": "close brace",
   "[": "open bracket",
   "]": "close bracket",
+  "(": "open parenthesis",
+  ")": "close parenthesis",
+};
+
+const NAMED_CODE: Record<string, string> = {
+  "{}": "braces",
+  "{...}": "placeholder braces",
+  "[]": "empty brackets",
+  "()": "parentheses",
+  "**": "double star",
+  "//": "floor division",
+  "==": "double equals",
+  "!=": "not equal to",
+  "<=": "less than or equal to",
+  ">=": "greater than or equal to",
+  "->": "arrow",
 };
 
 /** Strip markup so the result can be spoken or measured. */
 export function plainText(text: string): string {
-  return text
-    .replace(/`(.)`/g, (whole, char: string) =>
-      NAMED[char] ? ` ${NAMED[char]} ` : whole,
-    )
+  // Protect code spans before removing emphasis. Without placeholders, the
+  // `*` in `` `4 * 3` `` is mistaken for italic markup and can consume text
+  // all the way to the next code span; narration then says "4 3" and omits
+  // the multiplication operator entirely.
+  const code: string[] = [];
+  const protectedText = text.replace(/`([^`]*)`/g, (_whole, value: string) => {
+    const index = code.push(value) - 1;
+    return `\u0000${index}\u0000`;
+  });
+  return protectedText
     .replace(/\*\*([^*]+)\*\*/g, "$1")
     .replace(/\*([^*]+)\*/g, "$1")
-    .replace(/`([^`]+)`/g, "$1")
+    .replace(/\u0000(\d+)\u0000/g, (_whole, rawIndex: string) => {
+      const value = code[Number(rawIndex)] ?? "";
+      if (NAMED_CODE[value]) return ` ${NAMED_CODE[value]} `;
+      return value.length === 1 && NAMED[value] ? ` ${NAMED[value]} ` : value;
+    })
     .replace(/\s+/g, " ")
     .trim();
 }

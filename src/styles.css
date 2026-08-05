@@ -1902,6 +1902,80 @@ kbd {
   background: color-mix(in srgb, var(--surface-2) 82%, transparent);
   font: 650 11px var(--mono);
 }
+.guided-visual.trap {
+  border-color: color-mix(in srgb, var(--danger) 42%, var(--border-strong));
+  background: color-mix(in srgb, var(--danger) 7%, var(--surface-2));
+}
+.guided-visual.concept-flow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+}
+.guided-visual.concept-flow b {
+  min-width: 74px;
+  max-width: 128px;
+  min-height: 34px;
+  padding: 6px 10px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-sm);
+  background: var(--surface-1);
+}
+.guided-visual.concept-flow b:nth-of-type(2) {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.guided-visual.concept-flow.trap b:nth-of-type(2) {
+  border-color: color-mix(in srgb, var(--danger) 60%, var(--border-strong));
+  background: color-mix(in srgb, var(--danger) 10%, var(--surface-1));
+  color: var(--danger);
+}
+.guided-visual.concept-flow > span { color: var(--text-faint); }
+.guided-visual.types,
+.guided-visual.reference {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.guided-visual.types > b {
+  min-width: 66px;
+  padding: 7px 10px;
+  display: grid;
+  gap: 3px;
+  text-align: center;
+  border: 1px solid var(--border-strong);
+  background: var(--surface-1);
+}
+.guided-visual.types code { color: var(--text); }
+.guided-visual.types small { color: var(--text-faint); font-weight: 500; }
+.guided-visual.types > b.active { border-color: var(--accent); background: var(--accent-soft); }
+.guided-visual.types > b.warn { border-color: var(--danger); color: var(--danger); }
+.guided-visual.reference > b {
+  width: 34px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border-strong);
+  background: var(--surface-1);
+}
+.guided-visual.reference > span { color: var(--accent); font-size: 16px; }
+.guided-visual.reference > em {
+  min-width: 110px;
+  padding: 8px 12px;
+  text-align: center;
+  color: var(--accent);
+  font-style: normal;
+  border: 1px solid var(--accent);
+  background: var(--accent-soft);
+}
+.guided-visual.reference.trap > em { color: var(--danger); border-color: var(--danger); }
+.guided-visual.boolean { position: relative; }
+.guided-visual.boolean small { color: var(--danger); }
 .guided-visual.array { display: flex; justify-content: center; gap: 4px; padding-bottom: 25px; }
 .guided-visual.array i { width: 35px; height: 32px; display: grid; place-items: center; font-style: normal; border: 1px solid var(--border-strong); background: var(--surface-1); }
 .guided-visual.array i.active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
@@ -1916,6 +1990,7 @@ kbd {
 .guided-visual.stack { display: flex; align-items: flex-end; justify-content: center; gap: 3px; padding-top: 20px; }
 .guided-visual.stack small { color: var(--accent); margin-right: 8px; }
 .guided-visual.stack b { width: 35px; height: 31px; display: grid; place-items: center; border: 1px solid var(--border-strong); }
+.guided-visual.stack.trap b:last-child { border-color: var(--danger); color: var(--danger); }
 .guided-visual.nodes { height: 88px; }
 .guided-visual.nodes b { position: absolute; z-index: 2; width: 34px; height: 27px; display: grid; place-items: center; border: 1px solid var(--accent); border-radius: 50%; background: var(--surface-1); }
 .guided-visual.nodes .n1 { left: calc(50% - 17px); top: 7px; }
@@ -1952,7 +2027,7 @@ kbd {
 .guided-visual.list,
 .guided-visual.string { display: flex; justify-content: center; gap: 4px; padding-bottom: 22px; }
 .guided-visual.list i,
-.guided-visual.string i { position: relative; width: 34px; height: 32px; display: grid; place-items: center; font-style: normal; border: 1px solid var(--border-strong); background: var(--surface-1); }
+.guided-visual.string i { position: relative; width: auto; min-width: 34px; height: 32px; padding: 0 7px; display: grid; place-items: center; font-style: normal; border: 1px solid var(--border-strong); background: var(--surface-1); }
 .guided-visual.list i::after,
 .guided-visual.string i::after { content: attr(data-i); position: absolute; bottom: -17px; left: 0; right: 0; text-align: center; color: var(--text-faint); font-size: 9px; }
 .guided-visual.list i.active,
@@ -4728,4 +4803,17 @@ pre,
      horizontal scroll — let it wrap instead. */
   .lesson-workspace-bar { flex-wrap: wrap; row-gap: 6px; }
   .lesson-workspace-actions { flex-wrap: wrap; justify-content: flex-end; min-width: 0; }
+  .lesson-complete-actions { flex-wrap: wrap; align-items: stretch; }
+  .lesson-complete-actions > button { flex: 1 1 150px; min-width: 0; }
+}
+
+@media (max-width: 460px) {
+  .guided-visual.concept-flow { gap: 4px; padding-inline: 7px; }
+  .guided-visual.concept-flow b {
+    flex: 1 1 0;
+    min-width: 0;
+    padding-inline: 4px;
+    overflow-wrap: anywhere;
+  }
+  .guided-visual.concept-flow > span { font-size: 9px; }
 }

@@ -11,13 +11,13 @@
  *
  * Run: npm run check:refs
  */
-import { ATOMS, buildScenes } from "../.check/content.mjs";
+import { ATOMS, buildScenes, focusedLinesAt } from "../.check/content.mjs";
 
 const BACKREF =
   /\b(above|below|earlier|previously|the previous|as we saw|that example|this example|the first statement|the second statement|the last line|that line|this code|the code above|the snippet)\b/i;
 
 /** Phrases that read as backward references but aren't spatial. */
-const BENIGN = /\b(above all|above zero|above some|above the threshold|above it)\b/i;
+const BENIGN = /\b(above all|above zero|above some|above the threshold|above it|nothing below it|cross that line|earlier one)\b/i;
 
 const violations = [];
 
@@ -40,8 +40,8 @@ for (const atom of ATOMS) {
 const sceneTotal = ATOMS.reduce((n, a) => n + buildScenes(a).length, 0);
 
 // Eye guidance must be a real timeline, not a static wash over several lines.
-// Every code scene starts with one valid, visible line and moves forward
-// through monotonically ordered narration cues.
+// A code scene moves through valid narration cues. It may deliberately begin
+// with no highlight when the voice has not named a line yet.
 const focusViolations = [];
 let focusCueTotal = 0;
 for (const atom of ATOMS) {
@@ -50,17 +50,16 @@ for (const atom of ATOMS) {
     const lines = scene.code.split("\n");
     const steps = scene.focusSteps ?? [];
     focusCueTotal += steps.length;
-    if (!steps.length || steps[0].at !== 0) {
-      focusViolations.push(`${atom.id} · scene ${sceneIndex + 1} has no opening focus cue`);
-      return;
-    }
+    if (!steps.length) return;
     let previous = -1;
     for (const step of steps) {
       const line = step.lines[0];
       if (
         step.lines.length !== 1 ||
         step.at < previous || step.at < 0 || step.at > 1 ||
-        !Number.isInteger(line) || !lines[line - 1]?.trim()
+        !Number.isInteger(line) || !lines[line - 1]?.trim() ||
+        /^\s*(?:#|\/\/)/.test(lines[line - 1]) ||
+        focusedLinesAt(scene, step.at)[0] !== line
       ) {
         focusViolations.push(`${atom.id} · scene ${sceneIndex + 1} has an invalid focus cue`);
         break;

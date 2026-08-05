@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react";
-import { LINE_REVEAL_MS } from "../engine/scenes";
 import { highlightLine } from "./highlight";
 import type { CourseLanguage } from "../types";
 
@@ -15,29 +13,19 @@ export default function CodeStage({
   animate = true,
   language = "javascript",
   focusLines = [],
+  revealThrough,
 }: {
   code: string;
   animate?: boolean;
   language?: CourseLanguage;
   focusLines?: number[];
+  /** Controlled, narration-synchronized number of visible source lines. */
+  revealThrough?: number;
 }) {
   const lines = code.split("\n");
-  const [shown, setShown] = useState(animate ? 0 : lines.length);
-
-  useEffect(() => {
-    if (!animate) {
-      setShown(lines.length);
-      return;
-    }
-    setShown(0);
-    let n = 0;
-    const timer = setInterval(() => {
-      n += 1;
-      setShown(n);
-      if (n >= lines.length) clearInterval(timer);
-    }, LINE_REVEAL_MS);
-    return () => clearInterval(timer);
-  }, [code, animate, lines.length]);
+  const shown = animate
+    ? Math.max(0, Math.min(lines.length, revealThrough ?? lines.length))
+    : lines.length;
 
   return (
     <pre className="stage-code">

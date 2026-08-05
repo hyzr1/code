@@ -11,8 +11,12 @@ export { CONCEPTS } from "./content";
 export { forSpeech } from "./engine/narrator";
 export {
   buildScenes,
+  focusStepsFor,
+  focusedLinesAt,
   holdSeconds,
+  revealedLineCount,
   revealSeconds,
   sceneSeconds,
+  splitLong,
   speechSeconds,
 } from "./engine/scenes";
