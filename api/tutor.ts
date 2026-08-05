@@ -16,7 +16,11 @@
 export const config = { runtime: "edge" };
 
 const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
-const DEFAULT_MODEL = "qwen-2.5-coder-32b";
+// Verified on the account's catalog: gpt-oss-120b answers Python questions
+// correctly and concisely with no reasoning-trace leakage. Groq rotates models,
+// so override with TUTOR_MODEL if this ever 404s (e.g. llama-3.3-70b-versatile,
+// openai/gpt-oss-20b, or llama-3.1-8b-instant for higher free-tier limits).
+const DEFAULT_MODEL = "openai/gpt-oss-120b";
 
 // Best-effort per-IP rate limit. In-memory per edge instance — not a hard
 // guarantee, just enough to stop one client hammering the key. Groq's own tier
