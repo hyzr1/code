@@ -417,7 +417,7 @@ export default function WatchView({
           aria-label="Back"
         >
           <Icon className="ico control-ico" name="prev" size={18} />
-          <span className="control-label">‹ Back</span>
+          <span className="control-label">Back</span>
         </button>
 
         <button
@@ -436,10 +436,10 @@ export default function WatchView({
           onClick={atEnd ? onDone : next}
           aria-label={atEnd ? (reviewMode ? "Return" : "Exercises") : "Next"}
         >
-          <Icon className="ico control-ico" name="next" size={18} />
           <span className="control-label">
-            {atEnd ? (reviewMode ? "Return ›" : "Exercises ›") : "Next ›"}
+            {atEnd ? (reviewMode ? "Return" : "Exercises") : "Next"}
           </span>
+          <Icon className="ico control-ico" name="next" size={18} />
         </button>
 
         {showPreparing ? (

@@ -4660,3 +4660,65 @@ pre,
   .tutor-take .model-picker .picker-name { max-width: 52px; }
   .tutor-take .voice-picker .picker-name { display: none; }
 }
+
+/* ------------------------------------------------ desktop lecture controls
+   A cohesive, modern control bar: rounded pills, icons + labels, and an accent
+   play button (instead of the heavy cream one). Mobile keeps its own row. */
+@media (min-width: 701px) {
+  .controls { gap: 9px; }
+  .controls .control-ico { display: inline-flex; }
+  .controls .control-label { display: inline; }
+
+  .controls .control-back,
+  .controls .control-next,
+  .controls .control-voice,
+  .controls .control-play {
+    height: 42px;
+    border-radius: 999px;
+    font-size: calc(13.5px * var(--font-scale));
+    font-weight: 550;
+    gap: 8px;
+  }
+
+  .controls .control-back,
+  .controls .control-next,
+  .controls .control-voice {
+    padding: 0 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+  }
+  .controls .control-back:hover:not(:disabled),
+  .controls .control-next:hover:not(:disabled),
+  .controls .control-voice:hover:not(:disabled) {
+    background: var(--surface-2);
+    color: var(--text);
+    border-color: var(--border-strong);
+  }
+  .controls .control-back .control-ico { margin-left: -3px; }
+  .controls .control-next .control-ico { margin-right: -3px; }
+
+  .controls .control-play {
+    min-width: 128px;
+    padding: 0 22px;
+    background: var(--accent);
+    border: 1px solid var(--accent);
+    color: #fff;
+    font-weight: 600;
+    box-shadow: 0 2px 12px color-mix(in srgb, var(--accent) 28%, transparent);
+  }
+  .controls .control-play:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--accent) 90%, #000);
+    border-color: color-mix(in srgb, var(--accent) 90%, #000);
+  }
+  .controls .control-play .control-ico { margin-left: -2px; }
+
+  .controls .control-voice.on {
+    background: var(--accent-soft);
+    border-color: var(--accent-line);
+    color: var(--accent);
+  }
+
+  .rate-picker { width: 88px; }
+  .rate-trigger { height: 42px; border-radius: 999px; padding: 0 15px; }
+}
