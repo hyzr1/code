@@ -1,4 +1,4 @@
-const CACHE_VERSION = "hyzr-code-v1";
+const CACHE_VERSION = "hyzr-code-v2";
 const APP_SHELL = ["/", "/manifest.webmanifest", "/favicon.svg"];
 
 self.addEventListener("install", (event) => {
@@ -10,7 +10,11 @@ self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches
       .keys()
-      .then((keys) => Promise.all(keys.filter((key) => key !== CACHE_VERSION).map((key) => caches.delete(key))))
+      .then((keys) => Promise.all(
+        keys
+          .filter((key) => key.startsWith("hyzr-code-") && key !== CACHE_VERSION)
+          .map((key) => caches.delete(key)),
+      ))
       .then(() => self.clients.claim()),
   );
 });
@@ -30,6 +34,24 @@ self.addEventListener("fetch", (event) => {
           return response;
         })
         .catch(() => caches.match("/")),
+    );
+    return;
+  }
+
+  // A voice manifest contains byte offsets into its matching lecture files.
+  // Serving a stale manifest beside a newly deployed recording (or vice versa)
+  // turns later slides into unrelated fragments. Always refresh this tiny map;
+  // the versioned request remains available offline as a fallback.
+  if (/^\/voice-packs\/[^/]+\/manifest\.json$/.test(url.pathname)) {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          if (response.ok) {
+            caches.open(CACHE_VERSION).then((cache) => cache.put(request, response.clone())).catch(() => {});
+          }
+          return response;
+        })
+        .catch(() => caches.match(request)),
     );
     return;
   }

@@ -18,6 +18,18 @@ import Icon from "./Icon";
 import RatePicker from "./RatePicker";
 import AskTutor from "./AskTutor";
 
+interface PlaybackRun {
+  cancelled: boolean;
+  phase: "waiting" | "loading" | "speech" | "silent" | "hold";
+  lastTick: number;
+  totalElapsed: number;
+  speechElapsed: number;
+  phaseElapsed: number;
+  holdTarget: number;
+  stallTarget: number;
+  ticker?: ReturnType<typeof setInterval>;
+}
+
 /**
  * The lecture as something you watch instead of read.
  *
@@ -54,6 +66,9 @@ export default function WatchView({
   const [askOpen, setAskOpen] = useState(false);
   const [tutorClosing, setTutorClosing] = useState(false);
   const [narrationProgress, setNarrationProgress] = useState({ index: 0, value: 0 });
+  const [playRequest, setPlayRequest] = useState(0);
+  const playingRef = useRef(playing);
+  const runRef = useRef<PlaybackRun | null>(null);
   const setRate = (next: number) => update("watch", { rate: next });
   const setMuted = (next: boolean) => update("watch", { muted: next });
   /**
@@ -132,92 +147,81 @@ export default function WatchView({
   }, [scenes, engine, muted, neuralVoice, rate]);
 
   /**
-   * Play the current scene, then wait before moving on.
-   *
-   * Three phases, not one: the narration, then whatever is left of the code
-   * reveal, then a hold so you can actually look at what's on screen. Cutting
-   * straight from "voice stops" to "next scene" is what made this feel rushed —
-   * your eyes reach the code about a second after your ears are done.
+   * Own one complete scene playback run. Pause freezes this run instead of
+   * destroying and rebuilding it. Every callback checks object identity, so a
+   * stale clip can never update or advance a newer scene.
    */
   useEffect(() => {
     narrator.cancel();
-    if (!playing || !scene) return;
+    if (!playingRef.current || !scene) return;
 
     advancing.current = false;
-    // Reset when sound actually starts. The neural voice synthesises first, so
-    // the gap between asking and hearing is seconds — measuring the code
-    // reveal from the request would eat the whole reveal before a word is said.
-    let startedAt = Date.now();
-    let holdTimer: ReturnType<typeof setTimeout> | undefined;
-    let progressTimer: ReturnType<typeof setInterval> | undefined;
-
-    const finish = () => {
-      if (advancing.current) return;
-      advancing.current = true;
-      clearTimeout(stallTimer);
-      if (index < scenes.length - 1) next();
-      else setPlaying(false);
-    };
-
-    // Last line of defence. Speech synthesis can die in ways no callback
-    // reports, and a player stuck forever on one scene with the Pause button
-    // showing is the worst possible failure — silent, and it looks deliberate.
-    // Whatever happens below, this scene ends.
     const expected =
       Math.max(speechSeconds(scene.narration, rate), revealSeconds(scene)) +
       holdSeconds(scene, rate);
-    const stallTimer = setTimeout(finish, expected * 2000 + 8000);
+    const run: PlaybackRun = {
+      cancelled: false,
+      phase: "waiting",
+      lastTick: performance.now(),
+      totalElapsed: 0,
+      speechElapsed: 0,
+      phaseElapsed: 0,
+      holdTarget: 0,
+      stallTarget: (expected * 2 + 8) * 1000,
+    };
+    runRef.current = run;
 
-    // Called when the voice stops (or when the silent timer would have).
-    const beginHold = () => {
-      if (advancing.current) return;
-      const elapsed = (Date.now() - startedAt) / 1000;
-      const revealLeft = Math.max(0, revealSeconds(scene) - elapsed);
-      const wait =
-        (revealLeft + holdSeconds(scene, rate) * holdScale) * 1000;
-      holdTimer = setTimeout(finish, wait);
+    const ownsRun = () => !run.cancelled && runRef.current === run;
+    const finish = () => {
+      if (!ownsRun() || advancing.current) return;
+      advancing.current = true;
+      run.cancelled = true;
+      if (run.ticker) clearInterval(run.ticker);
+      runRef.current = null;
+      narrator.cancel();
+      if (index < scenes.length - 1) next();
+      else {
+        playingRef.current = false;
+        setPlaying(false);
+      }
     };
 
-    if (muted || !scene.narration) {
-      const silentSeconds = Math.max(0.1, speechSeconds(scene.narration, rate));
-      const silentStartedAt = Date.now();
-      setNarrationProgress({ index, value: 0 });
-      progressTimer = setInterval(() => {
-        const elapsed = (Date.now() - silentStartedAt) / 1000;
-        const value = Math.min(1, elapsed / silentSeconds);
-        setNarrationProgress({ index, value });
-        if (value >= 1) clearInterval(progressTimer);
-      }, 60);
-      holdTimer = setTimeout(
-        beginHold,
-        silentSeconds * 1000,
-      );
-      return () => {
-        clearTimeout(holdTimer);
-        clearTimeout(stallTimer);
-        clearInterval(progressTimer);
-      };
-    }
+    const beginHold = () => {
+      if (!ownsRun()) return;
+      const revealLeft = Math.max(0, revealSeconds(scene) - run.speechElapsed / 1000);
+      run.phase = "hold";
+      run.phaseElapsed = 0;
+      run.holdTarget =
+        (revealLeft + holdSeconds(scene, rate) * holdScale) * 1000;
+    };
 
-    // Kokoro runs in a worker, so the selected voice can be honored without
-    // blocking rendering, clicks, or code animation.
-    const playbackEngine = engine;
+    run.ticker = setInterval(() => {
+      if (!ownsRun()) return;
+      const now = performance.now();
+      const elapsed = Math.max(0, now - run.lastTick);
+      run.lastTick = now;
+      if (!playingRef.current) return;
 
-    narrator.speak(scene.narration, {
-      rate,
-      voice: voice.current,
-      engine: playbackEngine,
-      neuralVoice,
-      onStart: () => {
-        startedAt = Date.now();
-        setPreparing(false);
-      },
-      onProgress: (value) => setNarrationProgress({ index, value }),
-      onEnd: beginHold,
-    });
+      run.totalElapsed += elapsed;
+      if (run.phase === "speech" || run.phase === "silent") {
+        run.speechElapsed += elapsed;
+      }
+      if (run.phase === "silent") {
+        const silentTarget = Math.max(100, speechSeconds(scene.narration, rate) * 1000);
+        setNarrationProgress({ index, value: Math.min(1, run.speechElapsed / silentTarget) });
+        if (run.speechElapsed >= silentTarget) beginHold();
+      } else if (run.phase === "hold") {
+        run.phaseElapsed += elapsed;
+        if (run.phaseElapsed >= run.holdTarget) {
+          finish();
+          return;
+        }
+      }
 
-    // Maintain a rolling two-slide buffer. Re-scheduling an existing job raises
-    // its priority; it never duplicates the same synthesis.
+      // Count only active time: a learner may leave playback paused forever.
+      if (run.totalElapsed >= run.stallTarget) finish();
+    }, 60);
+
     if (
       engine === "natural" &&
       (neural.hasPackedVoice(neuralVoice) || neural.getStatus() === "ready")
@@ -234,30 +238,85 @@ export default function WatchView({
         }
       }
     }
-    // A packed voice is prerecorded clips — there is nothing to "prepare", so
-    // never show that indicator for it. It is only meaningful when the model
-    // has to synthesize a line live (an unpacked voice).
-    setPreparing(playbackEngine === "natural" && !neural.hasPackedVoice(neuralVoice));
+
+    // React can flush an effect before the browser paints the committed DOM.
+    // A cached next clip then speaks its first word over the previous slide.
+    // Two frames guarantee that the new visual is actually on screen first.
+    let firstFrame = 0;
+    let secondFrame = 0;
+    firstFrame = requestAnimationFrame(() => {
+      secondFrame = requestAnimationFrame(() => {
+        if (!ownsRun() || !playingRef.current) return;
+        setNarrationProgress({ index, value: 0 });
+        if (muted || !scene.narration) {
+          run.phase = "silent";
+          run.speechElapsed = 0;
+          return;
+        }
+
+        run.phase = "loading";
+        setPreparing(engine === "natural" && !neural.hasPackedVoice(neuralVoice));
+        narrator.speak(scene.narration, {
+          rate,
+          voice: voice.current,
+          engine,
+          neuralVoice,
+          onStart: () => {
+            if (!ownsRun()) return;
+            run.phase = "speech";
+            run.speechElapsed = 0;
+            setPreparing(false);
+          },
+          onProgress: (value) => {
+            if (ownsRun()) setNarrationProgress({ index, value });
+          },
+          onEnd: () => {
+            if (ownsRun()) beginHold();
+          },
+        });
+      });
+    });
 
     return () => {
+      run.cancelled = true;
+      cancelAnimationFrame(firstFrame);
+      cancelAnimationFrame(secondFrame);
+      if (run.ticker) clearInterval(run.ticker);
+      if (runRef.current === run) runRef.current = null;
       narrator.cancel();
       setPreparing(false);
-      clearTimeout(holdTimer);
-      clearTimeout(stallTimer);
-      clearInterval(progressTimer);
     };
   }, [
     index,
-    playing,
     muted,
     rate,
     holdScale,
     scene,
+    scenes,
     scenes.length,
     next,
     engine,
     neuralVoice,
+    playRequest,
   ]);
+
+  // Pause and resume the current clip and its timing clock. No restart, no
+  // shared AudioContext suspension, and no timers expiring behind the pause.
+  useEffect(() => {
+    playingRef.current = playing;
+    const run = runRef.current;
+    if (!playing) {
+      if (run) run.lastTick = performance.now();
+      narrator.pause();
+      return;
+    }
+    if (run && !run.cancelled && run.phase !== "waiting") {
+      run.lastTick = performance.now();
+      narrator.resume();
+    } else {
+      setPlayRequest((value) => value + 1);
+    }
+  }, [playing]);
 
   useEffect(() => () => narrator.cancel(), []);
 
@@ -316,7 +375,14 @@ export default function WatchView({
           <button
             className="ask-tutor-btn"
             onClick={() => {
+              playingRef.current = false;
               setPlaying(false);
+              const run = runRef.current;
+              if (run) {
+                run.cancelled = true;
+                if (run.ticker) clearInterval(run.ticker);
+                runRef.current = null;
+              }
               narrator.cancel();
               setAskOpen(true);
             }}

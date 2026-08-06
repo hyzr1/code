@@ -24,6 +24,13 @@ const manifests = new Map<string, Promise<VoicePackManifest | null>>();
 const lectures = new Map<string, Promise<AudioBuffer>>();
 const packedBuffers = new WeakSet<AudioBuffer>();
 const MAX_DECODED_LECTURES = 3;
+// The original pack used stable URLs for mutable manifests and recordings.
+// After a narration rebuild, an older service worker could therefore pair a
+// new cue map with an old Ogg file. Offsets would drift into adjacent scenes
+// and eventually play unrelated words. This revision makes even the previous
+// service worker miss its stale manifest entry; content hashes below make each
+// lecture recording immutable from the browser cache's point of view.
+const MANIFEST_REVISION = "2";
 
 export const isPackedVoice = (voice: string): boolean => PACK_VOICES.has(voice);
 export const isPackedBuffer = (buffer: AudioBuffer): boolean => packedBuffers.has(buffer);
@@ -32,7 +39,9 @@ async function manifestFor(voice: string): Promise<VoicePackManifest | null> {
   if (!isPackedVoice(voice)) return null;
   let pending = manifests.get(voice);
   if (!pending) {
-    pending = fetch(`/voice-packs/${voice}/manifest.json`, { cache: "no-cache" })
+    pending = fetch(`/voice-packs/${voice}/manifest.json?v=${MANIFEST_REVISION}`, {
+      cache: "reload",
+    })
       .then((response) => response.ok ? response.json() as Promise<VoicePackManifest> : null)
       .catch(() => null);
     manifests.set(voice, pending);
@@ -44,12 +53,14 @@ async function lectureAudio(
   voice: string,
   lecture: string,
   file: string,
+  contentHash: string,
   context: AudioContext,
 ): Promise<AudioBuffer> {
-  const key = `${voice}|${lecture}`;
+  const key = `${voice}|${lecture}|${contentHash}`;
   let pending = lectures.get(key);
   if (!pending) {
-    pending = fetch(`/voice-packs/${voice}/${file}`, { cache: "force-cache" })
+    const version = encodeURIComponent(contentHash.slice(0, 24));
+    pending = fetch(`/voice-packs/${voice}/${file}?v=${version}`, { cache: "force-cache" })
       .then(async (response) => {
         if (!response.ok) throw new Error(`Voice pack lecture unavailable (${response.status})`);
         return context.decodeAudioData(await response.arrayBuffer());
@@ -76,7 +87,13 @@ export async function packedAudioFor(
   const lecture = manifest.lectures[cue.lecture];
   if (!lecture) return null;
 
-  const source = await lectureAudio(voice, cue.lecture, lecture.file, context);
+  const source = await lectureAudio(
+    voice,
+    cue.lecture,
+    lecture.file,
+    lecture.contentHash,
+    context,
+  );
   const first = Math.max(0, Math.round(cue.start * source.sampleRate));
   const frames = Math.min(
     source.length - first,

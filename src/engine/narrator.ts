@@ -511,6 +511,13 @@ export function speak(text: string, options: SpeakOptions = {}): void {
         clearInterval(watchdog);
         return;
       }
+      // A real pause can make some browsers report neither `speaking` nor
+      // `pending`. It is not an ended utterance and must never advance chunks
+      // or the slide while the learner has playback paused.
+      if (window.speechSynthesis.paused) {
+        idleTicks = 0;
+        return;
+      }
       if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
         idleTicks = 0;
         return;
@@ -531,21 +538,163 @@ export function speak(text: string, options: SpeakOptions = {}): void {
 
 // ------------------------------------------------------- the neural backend
 
-let source: AudioBufferSourceNode | null = null;
+interface NeuralSession {
+  token: number;
+  context: AudioContext;
+  options: SpeakOptions;
+  rate: number;
+  buffer: AudioBuffer | null;
+  node: AudioBufferSourceNode | null;
+  /** Current position in source-buffer seconds, not wall-clock seconds. */
+  offset: number;
+  startedAt: number;
+  paused: boolean;
+  ended: boolean;
+  started: boolean;
+  lastContextTime: number;
+  stalledTicks: number;
+}
+
+let neuralSession: NeuralSession | null = null;
 let neuralProgressTimer: ReturnType<typeof setInterval> | undefined;
 
-function stopNeural(): void {
+function clearNeuralProgress(): void {
   if (neuralProgressTimer) clearInterval(neuralProgressTimer);
   neuralProgressTimer = undefined;
-  if (!source) return;
-  source.onended = null;
+}
+
+function neuralPosition(session: NeuralSession): number {
+  if (!session.buffer) return session.offset;
+  const played = session.node
+    ? Math.max(0, session.context.currentTime - session.startedAt) * session.rate
+    : 0;
+  return Math.min(session.buffer.duration, session.offset + played);
+}
+
+function detachNeuralNode(session: NeuralSession, keepPosition: boolean): void {
+  const node = session.node;
+  if (!node) return;
+  if (keepPosition) session.offset = neuralPosition(session);
+  node.onended = null;
+  session.node = null;
   try {
-    source.stop();
+    node.stop();
   } catch {
     // Already finished. Stopping a stopped node throws, and it doesn't matter.
   }
-  source.disconnect();
-  source = null;
+  node.disconnect();
+}
+
+function finishNeural(session: NeuralSession): void {
+  if (session.ended || session.token !== token || neuralSession !== session) return;
+  session.ended = true;
+  if (session.buffer) session.offset = session.buffer.duration;
+  detachNeuralNode(session, false);
+  clearNeuralProgress();
+  neuralSession = null;
+  session.options.onProgress?.(1);
+  session.options.onEnd?.();
+}
+
+/**
+ * Start (or restart) one neural clip at its saved source-buffer offset.
+ *
+ * AudioBufferSourceNode cannot be paused. Suspending the shared AudioContext
+ * looked equivalent, but mobile browsers can leave that context interrupted
+ * forever. Recreating only the source node is reliable: pause records the
+ * exact offset and resume starts there without replaying a word.
+ */
+function startNeuralNode(session: NeuralSession): void {
+  if (
+    session.ended || session.paused || !session.buffer || session.node ||
+    session.token !== token || neuralSession !== session
+  ) return;
+
+  if (session.offset >= session.buffer.duration - 0.005) {
+    finishNeural(session);
+    return;
+  }
+
+  const start = () => {
+    if (
+      session.ended || session.paused || !session.buffer || session.node ||
+      session.token !== token || neuralSession !== session ||
+      session.context.state !== "running"
+    ) return;
+
+    const node = session.context.createBufferSource();
+    node.buffer = session.buffer;
+    node.playbackRate.value = session.rate;
+    node.connect(session.context.destination);
+    node.onended = () => {
+      if (session.node !== node) return;
+      session.offset = session.buffer?.duration ?? session.offset;
+      session.node = null;
+      node.disconnect();
+      finishNeural(session);
+    };
+    session.node = node;
+    session.startedAt = session.context.currentTime;
+    session.lastContextTime = session.context.currentTime;
+    session.stalledTicks = 0;
+    node.start(0, session.offset);
+
+    if (!session.started) {
+      session.started = true;
+      session.options.onStart?.();
+      session.options.onProgress?.(0);
+    }
+
+    clearNeuralProgress();
+    neuralProgressTimer = setInterval(() => {
+      if (
+        session.ended || session.token !== token ||
+        neuralSession !== session || !session.buffer
+      ) {
+        clearNeuralProgress();
+        return;
+      }
+      const position = neuralPosition(session);
+      if (position >= session.buffer.duration - 0.005) {
+        finishNeural(session);
+        return;
+      }
+
+      // Browsers occasionally interrupt an AudioContext without rejecting or
+      // ending its source. Detect a frozen audio clock and rebuild this one
+      // source at its saved offset. An explicit Play gesture uses the same path
+      // and can recover even when an automatic resume was denied.
+      const contextTime = session.context.currentTime;
+      if (session.node && contextTime <= session.lastContextTime + 0.0001) {
+        session.stalledTicks += 1;
+      } else {
+        session.stalledTicks = 0;
+      }
+      session.lastContextTime = contextTime;
+      if (session.stalledTicks >= 10) {
+        detachNeuralNode(session, true);
+        clearNeuralProgress();
+        startNeuralNode(session);
+        return;
+      }
+
+      session.options.onProgress?.(
+        Math.min(0.999, position / Math.max(0.01, session.buffer.duration)),
+      );
+    }, 60);
+  };
+
+  if (session.context.state === "running") start();
+  else void session.context.resume().then(start, () => undefined);
+}
+
+function stopNeural(): void {
+  const session = neuralSession;
+  clearNeuralProgress();
+  if (!session) return;
+  session.ended = true;
+  detachNeuralNode(session, false);
+  neuralSession = null;
 }
 
 /**
@@ -572,6 +721,22 @@ function speakNeural(text: string, options: SpeakOptions): void {
    * cannot become an unhandled promise while the model is still generating.
    */
   const context = neural.audioContext();
+  const session: NeuralSession = {
+    token: mine,
+    context,
+    options,
+    rate: options.rate ?? 1,
+    buffer: null,
+    node: null,
+    offset: 0,
+    startedAt: 0,
+    paused: false,
+    ended: false,
+    started: false,
+    lastContextTime: 0,
+    stalledTicks: 0,
+  };
+  neuralSession = session;
   const playbackReady: Promise<boolean> =
     context.state === "running"
       ? Promise.resolve(true)
@@ -593,7 +758,11 @@ function speakNeural(text: string, options: SpeakOptions): void {
         options.neuralVoice,
         options.rate ?? 1,
       );
-      if (mine !== token) return;
+      if (mine !== token || neuralSession !== session || session.ended) return;
+      session.buffer = buffer;
+      // Packed clips were rendered at 1x and use playbackRate. Live Kokoro
+      // already applied the requested speed while generating its samples.
+      session.rate = neural.isPackedBuffer(buffer) ? (options.rate ?? 1) : 1;
 
       // A programmatic autoplay may have no user gesture at all. Do not wait
       // forever for Chrome to unlock it: fail into the existing system-voice
@@ -604,39 +773,23 @@ function speakNeural(text: string, options: SpeakOptions): void {
           setTimeout(() => resolve(false), 1500),
         ),
       ]);
-      if (!unlocked) {
+      // A pause while the asset was loading is deliberate, not an autoplay
+      // failure. Keep the decoded clip ready for the next Play gesture.
+      if (!unlocked && !session.paused) {
         throw new Error("Audio playback was blocked by the browser");
       }
-      if (mine !== token) return;
-
-      const node = context.createBufferSource();
-      node.buffer = buffer;
-      if (neural.isPackedBuffer(buffer)) node.playbackRate.value = options.rate ?? 1;
-      node.connect(context.destination);
-      node.onended = () => {
-        if (mine !== token) return;
-        options.onProgress?.(1);
-        stopNeural();
-        options.onEnd?.();
-      };
-      source = node;
-      node.start();
-      options.onStart?.();
-      options.onProgress?.(0);
-      const startedAt = context.currentTime;
-      const audibleSeconds = buffer.duration / Math.max(0.01, node.playbackRate.value);
-      neuralProgressTimer = setInterval(() => {
-        if (mine !== token) return;
-        const elapsed = context.currentTime - startedAt;
-        options.onProgress?.(Math.min(0.999, elapsed / Math.max(0.01, audibleSeconds)));
-      }, 60);
+      if (mine !== token || neuralSession !== session || session.ended) return;
+      startNeuralNode(session);
     } catch (err) {
       // Download failed, WebGPU died, autoplay blocked — whatever it was, a
       // silent lecture is the worst outcome, so drop to the system voice.
       // But say why: a silent fallback is indistinguishable from the natural
       // voice simply sounding bad, and that is a miserable thing to debug.
       console.warn("[narrator] natural voice failed, using the system voice:", err);
-      if (mine === token) speak(text, { ...options, engine: "system" });
+      if (mine === token && neuralSession === session && !session.ended) {
+        stopNeural();
+        speak(text, { ...options, engine: "system" });
+      }
     }
   })();
 }
@@ -678,18 +831,21 @@ export function unlockSpeech(): void {
 }
 
 export function pause(): void {
-  // Suspending the whole context is safe here — narration is the only thing
-  // this app ever puts through it.
-  if (source) {
-    void neural.audioContext().suspend();
+  const session = neuralSession;
+  if (session && !session.ended) {
+    session.paused = true;
+    detachNeuralNode(session, true);
+    clearNeuralProgress();
     return;
   }
   if (isSupported()) window.speechSynthesis.pause();
 }
 
 export function resume(): void {
-  if (source) {
-    void neural.audioContext().resume();
+  const session = neuralSession;
+  if (session && !session.ended) {
+    session.paused = false;
+    startNeuralNode(session);
     return;
   }
   if (isSupported()) window.speechSynthesis.resume();
