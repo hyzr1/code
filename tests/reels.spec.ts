@@ -15,7 +15,9 @@ async function openReels(page: import("@playwright/test").Page) {
   await page.getByRole("button", { name: "Python Reels" }).click();
   await expect(page.locator(".reel-card.active")).toBeVisible();
   const unlock = page.getByRole("button", { name: "Tap for sound" });
-  if (await unlock.isVisible({ timeout: 1500 }).catch(() => false)) await unlock.click();
+  if (await unlock.waitFor({ state: "visible", timeout: 1800 }).then(() => true).catch(() => false)) {
+    await unlock.click();
+  }
 }
 
 test("reels stay synchronized through pause, resume, and scroll", async ({ page }) => {
@@ -46,7 +48,7 @@ test("reels stay synchronized through pause, resume, and scroll", async ({ page 
   await expect.poll(() => page.locator("audio").evaluate((audio: HTMLAudioElement) => audio.currentTime)).toBeGreaterThan(.1);
 
   expect(audioRequests.some((url) => url.includes("manifest.json?v=1"))).toBe(true);
-  expect(audioRequests.some((url) => /\.ogg\?v=[a-f0-9]+/.test(url))).toBe(true);
+  expect(firstSource).toMatch(/\.(ogg|m4a)\?v=[a-f0-9]+/);
   expect(errors).toEqual([]);
 });
 

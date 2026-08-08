@@ -13,6 +13,7 @@ export default defineConfig({
   projects: [
     { name: "desktop", use: { ...devices["Desktop Chrome"] } },
     { name: "mobile", use: { ...devices["Pixel 7"] } },
+    { name: "iphone-safari", testMatch: /reels\.spec\.ts/, use: { ...devices["iPhone 13"] } },
   ],
   webServer: {
     command: "npm run build && npm run preview -- --host 127.0.0.1 --port 4173",

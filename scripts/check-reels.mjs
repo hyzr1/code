@@ -34,6 +34,10 @@ for (const reel of PYTHON_REELS) {
     const info = await stat(path.join(ROOT, "public", "reels", "audio", asset.file));
     if (info.size < 2_000) errors.push(`${reel.id}: audio file is suspiciously small`);
   } catch { errors.push(`${reel.id}: audio file missing`); }
+  try {
+    const fallback = await stat(path.join(ROOT, "public", "reels", "audio", asset.fallbackFile));
+    if (fallback.size < 2_000) errors.push(`${reel.id}: Safari audio file is suspiciously small`);
+  } catch { errors.push(`${reel.id}: Safari audio file missing`); }
 }
 
 const extra = Object.keys(manifest.reels).filter((id) => !PYTHON_REELS.some((reel) => reel.id === id));

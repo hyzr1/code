@@ -5,6 +5,7 @@ export interface ReelAudioBeat {
 
 export interface ReelAudioAsset {
   file: string;
+  fallbackFile: string;
   duration: number;
   contentHash: string;
   voice: string;
@@ -30,5 +31,7 @@ export function loadReelAudio(): Promise<ReelAudioManifest | null> {
 
 export function reelAudioUrl(asset: ReelAudioAsset): string {
   const version = encodeURIComponent(asset.contentHash.slice(0, 24));
-  return `/reels/audio/${asset.file}?v=${version}`;
+  const audio = typeof document === "undefined" ? null : document.createElement("audio");
+  const supportsOpus = Boolean(audio?.canPlayType('audio/ogg; codecs="opus"'));
+  return `/reels/audio/${supportsOpus ? asset.file : asset.fallbackFile}?v=${version}`;
 }

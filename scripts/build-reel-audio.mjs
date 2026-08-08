@@ -49,11 +49,41 @@ async function encode(input, output) {
   });
 }
 
+async function encodeAac(input, output, rawPcm = false) {
+  await new Promise((resolve, reject) => {
+    const inputArgs = rawPcm
+      ? ["-f", "s16le", "-ar", String(SAMPLE_RATE), "-ac", "1", "-i", input]
+      : ["-i", input];
+    const child = spawn(ffmpegPath, [
+      "-hide_banner", "-loglevel", "error", "-y", ...inputArgs,
+      "-c:a", "aac", "-b:a", "64k", "-movflags", "+faststart", output,
+    ], { stdio: ["ignore", "ignore", "pipe"] });
+    let stderr = "";
+    child.stderr.on("data", (chunk) => { stderr += chunk; });
+    child.on("error", reject);
+    child.on("exit", (code) => code === 0 ? resolve() : reject(new Error(stderr || `ffmpeg exited ${code}`)));
+  });
+}
+
 async function cached(reel, contentHash) {
   try {
     const metadata = JSON.parse(await readFile(path.join(CACHE, `${reel.id}.json`), "utf8"));
-    await readFile(path.join(OUTPUT, `${reel.id}.ogg`));
-    return metadata.contentHash === contentHash ? metadata : null;
+    const opusPath = path.join(OUTPUT, `${reel.id}.ogg`);
+    await readFile(opusPath);
+    if (metadata.contentHash !== contentHash) return null;
+    const fallbackFile = `${reel.id}.m4a`;
+    const fallbackPath = path.join(OUTPUT, fallbackFile);
+    try {
+      await readFile(fallbackPath);
+    } catch {
+      console.log(`[reels] ${reel.id} creating Safari audio fallback`);
+      await encodeAac(opusPath, fallbackPath);
+    }
+    if (metadata.fallbackFile !== fallbackFile) {
+      metadata.fallbackFile = fallbackFile;
+      await writeFile(path.join(CACHE, `${reel.id}.json`), JSON.stringify(metadata));
+    }
+    return metadata;
   } catch {
     return null;
   }
@@ -93,9 +123,11 @@ for (let reelIndex = 0; reelIndex < plans.length; reelIndex += 1) {
   const pcmPath = path.join(CACHE, `${plan.reel.id}.pcm`);
   await writeFile(pcmPath, Buffer.concat(chunks));
   await encode(pcmPath, path.join(OUTPUT, `${plan.reel.id}.ogg`));
+  await encodeAac(pcmPath, path.join(OUTPUT, `${plan.reel.id}.m4a`), true);
   await rm(pcmPath, { force: true });
   plan.metadata = {
     file: `${plan.reel.id}.ogg`,
+    fallbackFile: `${plan.reel.id}.m4a`,
     duration: cursor / SAMPLE_RATE,
     contentHash: plan.contentHash,
     voice: plan.reel.voice,
