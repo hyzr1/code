@@ -4,10 +4,7 @@ import {
   loadReelHistory,
   rankReels,
   saveReelHistory,
-  withFeedback,
-  withToggle,
   withView,
-  type ReelFeedback,
   type ReelHistory,
 } from "../engine/reelFeed";
 import {
@@ -73,8 +70,6 @@ export default function ReelsView({ mobile, onMenu, onOpenLesson }: Props) {
   const [muted, setMuted] = useState(() => localStorage.getItem(MUTED_KEY) === "true");
   const [time, setTime] = useState(0);
   const [needsTap, setNeedsTap] = useState(false);
-  const [feedbackOpen, setFeedbackOpen] = useState(false);
-  const [toast, setToast] = useState("");
   const feedRef = useRef<HTMLDivElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
   const playingRef = useRef(playing);
@@ -118,8 +113,6 @@ export default function ReelsView({ mobile, onMenu, onOpenLesson }: Props) {
   }, [activeIndex, items.length, ranked]);
 
   useEffect(() => {
-    setFeedbackOpen(false);
-    setToast("");
     setTime(0);
     if (viewedTimer.current) clearTimeout(viewedTimer.current);
     if (!active) return;
@@ -209,42 +202,6 @@ export default function ReelsView({ mobile, onMenu, onOpenLesson }: Props) {
     return () => window.removeEventListener("keydown", onKey);
   }, [activeIndex, playing, scrollTo]);
 
-  const interact = (field: "liked" | "saved") => {
-    if (!active) return;
-    setHistory((current) => withToggle(current, field, active));
-  };
-
-  const feedback = (value: ReelFeedback) => {
-    if (!active) return;
-    setHistory((current) => withFeedback(current, active, value));
-    setFeedbackOpen(false);
-    setToast(
-      value === "easy" ? "We'll raise the difficulty" :
-        value === "hard" ? "We'll bring in more foundations" :
-          value === "more" ? "More like this is coming" : "We'll show less like this",
-    );
-    window.setTimeout(() => setToast(""), 1800);
-    if (value === "less") window.setTimeout(() => scrollTo(activeIndex + 1), 220);
-  };
-
-  const share = async () => {
-    if (!active) return;
-    const data = {
-      title: active.title,
-      text: `${active.title} — learn Python on Hyzr Code`,
-      url: `${location.origin}/#reel-${active.id}`,
-    };
-    try {
-      const canNativeShare = typeof navigator.share === "function";
-      if (canNativeShare) await navigator.share(data);
-      else await navigator.clipboard.writeText(data.url);
-      setToast(canNativeShare ? "Shared" : "Link copied");
-      window.setTimeout(() => setToast(""), 1600);
-    } catch {
-      // Closing the native share sheet is not an error worth surfacing.
-    }
-  };
-
   if (!active) return null;
   return (
     <section className="reels" aria-label="Python Reels">
@@ -272,11 +229,7 @@ export default function ReelsView({ mobile, onMenu, onOpenLesson }: Props) {
           <button className="reel-round" onClick={onMenu} aria-label="Open menu">
             <Icon name="menu" size={19} />
           </button>
-        ) : <span className="reels-brand">HYZR</span>}
-        <div className="reels-tabs" role="tablist" aria-label="Reels feed">
-          <button role="tab" aria-selected="false">Following</button>
-          <button role="tab" aria-selected="true">For you</button>
-        </div>
+        ) : <span />}
         <button
           className="reel-round"
           onClick={() => setMuted((value) => !value)}
@@ -305,7 +258,7 @@ export default function ReelsView({ mobile, onMenu, onOpenLesson }: Props) {
           const reelAsset = manifest?.reels[reel.id];
           return (
             <article
-              className={`reel-card palette-${reel.palette} format-${reel.format} ${isActive ? "active" : ""}`}
+              className={`reel-card palette-${reel.palette} format-${reel.format} ${reel.lessonId ? "has-lesson" : ""} ${isActive ? "active" : ""}`}
               key={item.key}
               aria-label={`${reel.title}. ${difficultyLabel[reel.difficulty]}`}
               aria-hidden={!isActive}
@@ -323,11 +276,6 @@ export default function ReelsView({ mobile, onMenu, onOpenLesson }: Props) {
 
               <ReelProgress asset={reelAsset} time={isActive ? time : 0} count={reel.beats.length} />
 
-              <div className="reel-meta-top">
-                <span>{reel.series}</span>
-                <span className={`reel-level d${reel.difficulty}`}>{difficultyLabel[reel.difficulty]}</span>
-              </div>
-
               <div className="reel-canvas" key={`${item.key}-${isActive ? beatState.index : 0}`}>
                 <ReelScene reel={reel} beat={shownBeat} beatIndex={isActive ? beatState.index : 0} />
               </div>
@@ -336,34 +284,11 @@ export default function ReelsView({ mobile, onMenu, onOpenLesson }: Props) {
                 <KineticCaption beat={shownBeat} progress={isActive ? beatState.progress : 0} />
               </div>
 
-              <div className="reel-actions">
-                <Action
-                  icon="heart"
-                  label="Like"
-                  active={history.liked.includes(reel.id)}
-                  onClick={() => interact("liked")}
-                  count={history.liked.includes(reel.id) ? "Liked" : undefined}
-                />
-                <Action
-                  icon="bookmark"
-                  label="Save"
-                  active={history.saved.includes(reel.id)}
-                  onClick={() => interact("saved")}
-                />
-                <Action icon="share" label="Share" onClick={() => void share()} />
-                <Action icon="more" label="Tune feed" onClick={() => setFeedbackOpen(true)} />
-              </div>
-
-              <div className="reel-footer">
-                <div className="reel-author"><span className="python-avatar">Py</span><b>@hyzrcode</b><i>Learned in {durationLabel(reelAsset?.duration ?? 30)}</i></div>
-                <h3>{reel.title}</h3>
-                <div className="reel-tags">{reel.tags.slice(0, 3).map((tag) => <span key={tag}>#{tag}</span>)}</div>
-                {reel.lessonId ? (
-                  <button className="reel-learn" onClick={() => onOpenLesson(reel.lessonId!)}>
-                    <Icon name="book" size={14} /> Learn the full concept
-                  </button>
-                ) : null}
-              </div>
+              {reel.lessonId ? (
+                <button className="reel-learn" onClick={() => onOpenLesson(reel.lessonId!)}>
+                  <Icon name="book" size={14} /> Learn the full concept
+                </button>
+              ) : null}
 
               {!playing && isActive && !needsTap ? (
                 <div className="reel-paused" aria-hidden="true"><Icon name="play" size={29} /></div>
@@ -377,10 +302,6 @@ export default function ReelsView({ mobile, onMenu, onOpenLesson }: Props) {
                   Tap for sound
                 </button>
               ) : null}
-              {feedbackOpen && isActive ? (
-                <FeedbackSheet onPick={feedback} onClose={() => setFeedbackOpen(false)} />
-              ) : null}
-              {toast && isActive ? <div className="reel-toast" role="status">{toast}</div> : null}
             </article>
           );
         })}
@@ -388,10 +309,6 @@ export default function ReelsView({ mobile, onMenu, onOpenLesson }: Props) {
       <div className="reels-key-help">↑ ↓ scroll · space pause · M mute</div>
     </section>
   );
-}
-
-function durationLabel(seconds: number) {
-  return seconds < 55 ? `${Math.max(10, Math.round(seconds / 5) * 5)} sec` : `${Math.round(seconds / 60)} min`;
 }
 
 function togglePlayback(
@@ -485,14 +402,14 @@ function ReelDiagram({ kind, labels = [] }: { kind: NonNullable<ReelBeat["visual
 }
 
 function KineticCaption({ beat, progress }: { beat: ReelBeat; progress: number }) {
-  const text = beat.caption ?? beat.narration;
+  const text = beat.narration;
   const words = text.split(/\s+/).filter(Boolean);
   const weights = words.map((word) => Math.max(1.5, word.replace(/[^\p{L}\p{N}]/gu, "").length ** 0.68));
   const total = weights.reduce((sum, weight) => sum + weight, 0);
   const position = progress * total;
   let cursor = 0;
   return (
-    <div className="reel-caption">
+    <div className="reel-caption" data-narration={text}>
       {words.map((word, index) => {
         const start = cursor;
         cursor += weights[index];
@@ -500,43 +417,6 @@ function KineticCaption({ beat, progress }: { beat: ReelBeat; progress: number }
         const past = position >= cursor;
         return <span className={active ? "active" : past ? "past" : ""} key={`${word}-${index}`}>{word} </span>;
       })}
-    </div>
-  );
-}
-
-function Action({
-  icon,
-  label,
-  active = false,
-  count,
-  onClick,
-}: {
-  icon: "heart" | "bookmark" | "share" | "more";
-  label: string;
-  active?: boolean;
-  count?: string;
-  onClick: () => void;
-}) {
-  return (
-    <button className={active ? "active" : ""} onClick={onClick} aria-label={label} aria-pressed={active || undefined}>
-      <span><Icon name={icon} size={22} /></span>
-      <small>{count ?? label}</small>
-    </button>
-  );
-}
-
-function FeedbackSheet({ onPick, onClose }: { onPick: (value: ReelFeedback) => void; onClose: () => void }) {
-  return (
-    <div className="reel-sheet" role="dialog" aria-label="Tune your feed" onClick={(event) => event.stopPropagation()}>
-      <div className="reel-sheet-grab" />
-      <div className="reel-sheet-title"><b>Tune your feed</b><button onClick={onClose} aria-label="Close"><Icon name="x" size={17} /></button></div>
-      <p>Your next session adapts to this.</p>
-      <div className="reel-sheet-grid">
-        <button onClick={() => onPick("easy")}><span>🥱</span><b>Too easy</b><small>Raise the level</small></button>
-        <button onClick={() => onPick("hard")}><span>🤯</span><b>Too advanced</b><small>Build foundations</small></button>
-        <button onClick={() => onPick("more")}><span>🔥</span><b>More like this</b><small>Follow these topics</small></button>
-        <button onClick={() => onPick("less")}><span>👋</span><b>Not for me</b><small>Skip this style</small></button>
-      </div>
     </div>
   );
 }

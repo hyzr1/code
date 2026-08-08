@@ -50,7 +50,7 @@ test("reels stay synchronized through pause, resume, and scroll", async ({ page 
   expect(errors).toEqual([]);
 });
 
-test("reels fit the viewport and feed controls persist", async ({ page }) => {
+test("reels are distraction-free with verbatim captions", async ({ page }) => {
   await openReels(page);
   const overflow = await page.evaluate(() => ({
     page: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
@@ -58,14 +58,16 @@ test("reels fit the viewport and feed controls persist", async ({ page }) => {
   }));
   expect(overflow).toEqual({ page: false, feed: false });
 
-  await page.getByRole("button", { name: "Like" }).click();
-  await expect(page.getByRole("button", { name: "Like" })).toHaveAttribute("aria-pressed", "true");
-  await page.getByRole("button", { name: "Tune feed" }).click();
-  await expect(page.getByRole("dialog", { name: "Tune your feed" })).toBeVisible();
-  await page.getByRole("button", { name: /Too advanced/ }).click();
-  await expect(page.locator(".reel-toast")).toContainText("foundations");
+  await expect(page.locator(".reels-brand, .reels-tabs, .reel-actions, .reel-author, .reel-tags, .reel-footer")).toHaveCount(0);
+  const caption = await page.locator(".reel-card.active .reel-caption").evaluate((element) => ({
+    spoken: (element as HTMLElement).dataset.narration!.replace(/\s+/g, " ").trim(),
+    shown: element.textContent!.replace(/\s+/g, " ").trim(),
+  }));
+  expect(caption.shown).toBe(caption.spoken);
 
-  const history = await page.evaluate(() => JSON.parse(localStorage.getItem("hyzr.python-reels.v1")!));
-  expect(history.liked).toHaveLength(1);
-  expect(Object.values(history.feedback)).toContain("hard");
+  await page.getByRole("button", { name: "Mute reels" }).click();
+  await expect(page.getByRole("button", { name: "Unmute reels" })).toBeVisible();
+  await expect.poll(() => page.evaluate(() =>
+    JSON.parse(localStorage.getItem("hyzr.python-reels.v1") ?? '{"views":{}}').views,
+  )).not.toEqual({});
 });
