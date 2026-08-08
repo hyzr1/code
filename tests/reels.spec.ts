@@ -65,6 +65,8 @@ test("reels are distraction-free with verbatim captions", async ({ page }) => {
     feed: document.querySelector(".reels-feed")!.scrollWidth > document.querySelector(".reels-feed")!.clientWidth + 1,
   }));
   expect(overflow).toEqual({ page: false, feed: false });
+  await expect(page.locator(".reel-card:not(.reel-placeholder)")).toHaveCount(2);
+  expect(await page.locator(".reel-card").count()).toBeGreaterThan(30);
 
   await expect(page.locator(".reels-brand, .reels-tabs, .reel-actions, .reel-author, .reel-tags, .reel-footer")).toHaveCount(0);
   const caption = await page.locator(".reel-card.active .reel-caption").evaluate((element) => ({

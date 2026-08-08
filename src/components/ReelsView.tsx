@@ -60,10 +60,7 @@ export default function ReelsView({ mobile, onMenu, onOpenLesson }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [settings.profile.experience],
   );
-  const [items, setItems] = useState<FeedItem[]>(() => [
-    ...cycle(ranked, 0),
-    ...cycle(ranked, 1),
-  ]);
+  const [items, setItems] = useState<FeedItem[]>(() => cycle(ranked, 0));
   const [activeIndex, setActiveIndex] = useState(0);
   const [manifest, setManifest] = useState<ReelAudioManifest | null>(null);
   const [playing, setPlaying] = useState(true);
@@ -254,6 +251,21 @@ export default function ReelsView({ mobile, onMenu, onOpenLesson }: Props) {
         {items.map((item, index) => {
           const isActive = index === activeIndex;
           const reel = item.reel;
+          // Real iPhones have a much tighter WebKit graphics budget than
+          // desktop Safari. Keep scroll geometry for the full feed, but only
+          // mount the three cards that can actually be seen next. Otherwise
+          // dozens of gradients, filters, code blocks, and animations become
+          // compositor layers before the first frame and can crash the tab.
+          if (Math.abs(index - activeIndex) > 1) {
+            return (
+              <article
+                className="reel-card reel-placeholder"
+                key={item.key}
+                aria-hidden="true"
+                inert
+              />
+            );
+          }
           const shownBeat = isActive ? reel.beats[beatState.index] : reel.beats[0];
           const reelAsset = manifest?.reels[reel.id];
           return (
