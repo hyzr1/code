@@ -33,6 +33,12 @@ test("reels stay synchronized through pause, resume, and scroll", async ({ page 
   const beforePause = await page.locator("audio").evaluate((audio: HTMLAudioElement) => audio.currentTime);
   await page.locator(".reel-card.active").click({ position: { x: 180, y: 210 } });
   await expect(page.locator(".reel-paused")).toBeVisible();
+  const centers = await page.evaluate(() => {
+    const card = document.querySelector(".reel-card.active")!.getBoundingClientRect();
+    const control = document.querySelector(".reel-paused")!.getBoundingClientRect();
+    return { card: card.left + card.width / 2, control: control.left + control.width / 2 };
+  });
+  expect(Math.abs(centers.card - centers.control)).toBeLessThan(1);
   const paused = await page.locator("audio").evaluate((audio: HTMLAudioElement) => audio.currentTime);
   expect(paused).toBeGreaterThanOrEqual(beforePause - .05);
   await page.waitForTimeout(220);
