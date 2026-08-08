@@ -16,6 +16,7 @@ import Icon, { type IconName } from "./Icon";
 
 export type Route =
   | { name: "course" }
+  | { name: "reels" }
   | { name: "lesson"; id: string }
   | { name: "problems" }
   | { name: "problem"; id: string }
@@ -232,6 +233,9 @@ export default function Sidebar({
       </div>
 
       <div className="sidebar-scroll">
+        {!collapsed ? <div className="nav-label">Discover</div> : null}
+        {item(route.name === "reels", "play", "Python Reels", () => go({ name: "reels" }))}
+
         {mode === "learn" ? (
           <>
             {!collapsed ? <div className="nav-label">Learn</div> : null}

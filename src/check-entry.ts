@@ -9,6 +9,7 @@ export {
 } from "./content";
 export { CONCEPTS } from "./content";
 export { forSpeech } from "./engine/narrator";
+export { PYTHON_REELS } from "./content/reels";
 export {
   buildScenes,
   focusStepsFor,

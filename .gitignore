@@ -2,6 +2,7 @@ node_modules/
 dist/
 .check/
 .voice-pack-cache/
+.reel-audio-cache/
 coverage/
 test-results/
 playwright-report/

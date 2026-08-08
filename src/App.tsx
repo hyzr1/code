@@ -32,9 +32,11 @@ import TypeHome from "./components/typing/TypeHome";
 import TypeCourse from "./components/typing/TypeCourse";
 import TypeLesson from "./components/typing/TypeLesson";
 import SpeedTest from "./components/typing/SpeedTest";
+import ReelsView from "./components/ReelsView";
 
 const TITLES: Record<Route["name"], string> = {
   course: "Course",
+  reels: "Python Reels",
   lesson: "Course",
   problems: "Problems",
   problem: "Problems",
@@ -183,8 +185,8 @@ export default function App() {
         <button className="scrim" onClick={() => setDrawerOpen(false)} aria-label="Close navigation" />
       ) : null}
 
-      <main className="main">
-        {isMobile || crumb ? (
+      <main className={`main ${route.name === "reels" ? "reels-main" : ""}`}>
+        {(isMobile && route.name !== "reels") || crumb ? (
           <header className="topbar">
             {isMobile ? (
               <button
@@ -231,8 +233,14 @@ export default function App() {
           </header>
         ) : null}
 
-        <div className="route" key={`${route.name}-${"id" in route ? route.id : ""}`}>
-        {route.name === "course" ? (
+        <div className={`route ${route.name === "reels" ? "reels-route" : ""}`} key={`${route.name}-${"id" in route ? route.id : ""}`}>
+        {route.name === "reels" ? (
+          <ReelsView
+            mobile={isMobile}
+            onMenu={() => setDrawerOpen(true)}
+            onOpenLesson={(id) => setRoute({ name: "lesson", id })}
+          />
+        ) : route.name === "course" ? (
           <div className="page">
             <CourseView
               progress={progress}

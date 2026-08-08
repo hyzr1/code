@@ -1,4 +1,4 @@
-const CACHE_VERSION = "hyzr-code-v2";
+const CACHE_VERSION = "hyzr-code-v3";
 const APP_SHELL = ["/", "/manifest.webmanifest", "/favicon.svg"];
 
 self.addEventListener("install", (event) => {
@@ -42,7 +42,7 @@ self.addEventListener("fetch", (event) => {
   // Serving a stale manifest beside a newly deployed recording (or vice versa)
   // turns later slides into unrelated fragments. Always refresh this tiny map;
   // the versioned request remains available offline as a fallback.
-  if (/^\/voice-packs\/[^/]+\/manifest\.json$/.test(url.pathname)) {
+  if (/^\/voice-packs\/[^/]+\/manifest\.json$/.test(url.pathname) || url.pathname === "/reels/audio/manifest.json") {
     event.respondWith(
       fetch(request)
         .then((response) => {
@@ -60,6 +60,7 @@ self.addEventListener("fetch", (event) => {
     url.pathname.startsWith("/assets/") ||
     url.pathname.startsWith("/pyodide/") ||
     url.pathname.startsWith("/voice-packs/") ||
+    url.pathname.startsWith("/reels/audio/") ||
     url.pathname.startsWith("/models/") ||
     APP_SHELL.includes(url.pathname);
 

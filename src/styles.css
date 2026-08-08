@@ -3286,6 +3286,15 @@ html.lesson-focus-active body {
 .route {
   animation: routeIn 0.16s ease both;
 }
+.main.reels-main {
+  overflow: hidden;
+  min-width: 0;
+}
+.route.reels-route {
+  flex: 1;
+  min-height: 0;
+  height: 100%;
+}
 @keyframes routeIn {
   from {
     opacity: 0;
