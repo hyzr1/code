@@ -527,6 +527,7 @@ const VISUALS: [RegExp, VisualKind][] = [
   [/ml\.(?:pandas|data-cleaning|tabular-preprocessing|exploratory-analysis|plotting)/, "pipeline"],
   [/ml\.torch-(?:tensors|autograd|shapes|dataloaders|reproducibility)/, "ml"],
   [/ml\.(?:experiment-tracking|profiling-bottlenecks|gpu-workflow|notebooks-pipelines)/, "pipeline"],
+  [/ml\.(?:learning-paradigms|examples-features-labels|baselines-formulation|split-discipline|generalization-fit|bias-variance-diagnosis|cross-validation-search)/, "ml"],
   [/^(dict-iteration|collections)$/, "hash"],
   [/hashing|dicts|sets/, "hash"],
   [/prefix-sums/, "prefix"],
