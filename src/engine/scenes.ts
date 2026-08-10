@@ -523,6 +523,7 @@ const VISUALS: [RegExp, VisualKind][] = [
   [/^(expected-value|bayes-rule|combinatorics|monte-carlo)$/, "probability"],
   [/ml\.(?:estimators|descriptive|large-numbers|tests|bootstrap|entropy|cross-entropy|mutual-information)/, "probability"],
   [/ml\.multiple-testing/, "decision"],
+  [/ml\.numpy-(?:arrays|vectorization|linear-algebra|stability|random-generators)/, "ml"],
   [/^(dict-iteration|collections)$/, "hash"],
   [/hashing|dicts|sets/, "hash"],
   [/prefix-sums/, "prefix"],
