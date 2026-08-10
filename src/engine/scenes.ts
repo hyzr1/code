@@ -485,6 +485,7 @@ const VISUALS: [RegExp, VisualKind][] = [
   [/algo\.(?:graph-representations|grid-graphs|graph-bfs|graph-dfs|graph-components|graph-cycles|graph-bipartite)/, "graph"],
   [/algo\.(?:topological-order-guided|dsu-foundations|dsu-applications|strong-components|bridges-articulation)/, "graph"],
   [/algo\.(?:dijkstra-guided|zero-one-bfs|bellman-ford-guided|floyd-warshall-guided|a-star-guided|mst-comparison)/, "graph"],
+  [/algo\.(?:max-flow-guided|bipartite-matching-guided|euler-hamilton|two-sat-guided)/, "graph"],
   [/ml\.(?:matrices|matrix-multiplication|transpose-identity-inverse|span-basis-rank|eigenvectors|determinant-trace|svd|matrix-decompositions|orthogonality-least-squares)/, "ml"],
   [/ml\.exponents-logs-sums/, "complexity"],
   [/ml\.(?:derivatives-rules|taylor-approximations)/, "function"],
