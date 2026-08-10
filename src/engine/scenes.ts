@@ -471,6 +471,8 @@ const VISUALS: [RegExp, VisualKind][] = [
   [/algo\.(?:fixed-window-guided|variable-window-guided|window-hash-map)/, "window"],
   [/algo\.(?:stack-guided|queue-deque-guided|monotonic-stack-guided|stack-queue-conversions)/, "stack"],
   [/algo\.monotonic-deque-guided/, "window"],
+  [/algo\.(?:linked-list-foundations|dummy-heads|linked-list-reversal|fast-slow-lists|merge-partition-lists)/, "pointers"],
+  [/algo\.lru-cache-guided/, "hash"],
   [/ml\.(?:matrices|matrix-multiplication|transpose-identity-inverse|span-basis-rank|eigenvectors|determinant-trace|svd|matrix-decompositions|orthogonality-least-squares)/, "ml"],
   [/ml\.exponents-logs-sums/, "complexity"],
   [/ml\.(?:derivatives-rules|taylor-approximations)/, "function"],
