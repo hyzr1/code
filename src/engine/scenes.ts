@@ -525,6 +525,7 @@ const VISUALS: [RegExp, VisualKind][] = [
   [/ml\.multiple-testing/, "decision"],
   [/ml\.numpy-(?:arrays|vectorization|linear-algebra|stability|random-generators)/, "ml"],
   [/ml\.(?:pandas|data-cleaning|tabular-preprocessing|exploratory-analysis|plotting)/, "pipeline"],
+  [/ml\.torch-(?:tensors|autograd|shapes|dataloaders|reproducibility)/, "ml"],
   [/^(dict-iteration|collections)$/, "hash"],
   [/hashing|dicts|sets/, "hash"],
   [/prefix-sums/, "prefix"],
