@@ -479,6 +479,7 @@ const VISUALS: [RegExp, VisualKind][] = [
   [/algo\.(?:binary-search-exact|binary-search-bounds|binary-search-answer)/, "decision"],
   [/algo\.binary-search-shaped/, "pointers"],
   [/algo\.(?:tree-anatomy|tree-dfs|tree-bfs|tree-divide-conquer|tree-path-depth|tree-serialization)/, "tree"],
+  [/algo\.(?:bst-invariant|bst-inorder|bst-balancing|bst-ranges)/, "tree"],
   [/ml\.(?:matrices|matrix-multiplication|transpose-identity-inverse|span-basis-rank|eigenvectors|determinant-trace|svd|matrix-decompositions|orthogonality-least-squares)/, "ml"],
   [/ml\.exponents-logs-sums/, "complexity"],
   [/ml\.(?:derivatives-rules|taylor-approximations)/, "function"],
