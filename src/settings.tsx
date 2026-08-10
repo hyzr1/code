@@ -10,6 +10,7 @@ import {
 import type {
   CareerStage,
   CareerTrack,
+  Course,
   CourseLanguage,
   ExperienceLevel,
 } from "./types";
@@ -55,6 +56,10 @@ export interface Settings {
   };
   learning: {
     language: CourseLanguage;
+    /** The active product. Mastery catalogs remain coming soon. */
+    course: Course;
+    /** Company whose interview bar shapes the adaptive SWE path. */
+    targetCompany: string;
     coldByDefault: boolean;
     askCalibration: boolean;
     showReferenceSolution: boolean;
@@ -126,6 +131,10 @@ export const DEFAULTS: Settings = {
   },
   learning: {
     language: "python",
+    course: "swe",
+    // Preserved for the saved company-map experiment. The live curriculum is
+    // fixed at the maximum preparation level regardless of this legacy value.
+    targetCompany: "openai",
     coldByDefault: false,
     askCalibration: true,
     showReferenceSolution: true,
@@ -169,6 +178,12 @@ function hydrate(raw: string | null): Settings {
     for (const group of Object.keys(merged) as (keyof Settings)[]) {
       Object.assign(merged[group], saved[group] ?? {});
     }
+    // The old app could leave a learner inside one of the now-unreleased
+    // mastery catalogs. Keep every existing learner on the released path.
+    if (merged.learning.course !== "swe") merged.learning.course = "swe";
+    // Keep the archived company-map preference deterministic while the live
+    // experience uses the single fixed frontier path.
+    merged.learning.targetCompany = "openai";
     return merged;
   } catch {
     return structuredClone(DEFAULTS);

@@ -8,23 +8,26 @@ import {
   type KeyboardEvent,
 } from "react";
 import { createPortal } from "react-dom";
-import { LANGUAGES } from "../content/language";
+import { COURSES } from "../content/courses";
 import { useSettings } from "../settings";
-import type { CourseLanguage } from "../types";
+import type { Course } from "../types";
 import Icon from "./Icon";
 
+/**
+ * Product selector. Only the adaptive SWE path is released; mastery catalogs
+ * remain visible but disabled so roadmap size is never mistaken for content.
+ */
 export default function LanguagePicker({
   compact = false,
   onChange,
 }: {
   compact?: boolean;
-  onChange?: (language: CourseLanguage) => void;
+  onChange?: (course: Course) => void;
 }) {
   const { settings, update } = useSettings();
-  const selected = LANGUAGES.find(
-    (item) => item.id === settings.learning.language,
-  )!;
-  const selectedIndex = LANGUAGES.findIndex((item) => item.id === selected.id);
+  const selected =
+    COURSES.find((item) => item.id === settings.learning.course) ?? COURSES[0];
+  const selectedIndex = COURSES.findIndex((item) => item.id === selected.id);
   const [open, setOpen] = useState(false);
   const [menuStyle, setMenuStyle] = useState<CSSProperties>({});
   const rootRef = useRef<HTMLDivElement>(null);
@@ -77,16 +80,22 @@ export default function LanguagePicker({
     return () => document.removeEventListener("pointerdown", outside);
   }, [open]);
 
-  const choose = (language: CourseLanguage) => {
-    update("learning", { language });
-    onChange?.(language);
+  const choose = (course: Course) => {
+    if (COURSES.find((item) => item.id === course)?.comingSoon) return;
+    update("learning", { course });
+    onChange?.(course);
     setOpen(false);
     triggerRef.current?.focus();
   };
 
   const focusOption = (index: number) => {
-    const next = (index + LANGUAGES.length) % LANGUAGES.length;
-    optionRefs.current[next]?.focus();
+    for (let offset = 0; offset < COURSES.length; offset += 1) {
+      const next = (index + offset + COURSES.length) % COURSES.length;
+      if (!COURSES[next].comingSoon) {
+        optionRefs.current[next]?.focus();
+        return;
+      }
+    }
   };
 
   const onTriggerKey = (event: KeyboardEvent<HTMLButtonElement>) => {
@@ -116,7 +125,7 @@ export default function LanguagePicker({
       focusOption(0);
     } else if (event.key === "End") {
       event.preventDefault();
-      focusOption(LANGUAGES.length - 1);
+      focusOption(COURSES.length - 1);
     } else if (event.key === "Escape") {
       event.preventDefault();
       setOpen(false);
@@ -129,16 +138,16 @@ export default function LanguagePicker({
       ref={rootRef}
       className={`language-picker ${compact ? "compact" : ""}`}
     >
-      {!compact ? <span className="language-label">Learning language</span> : null}
+      {!compact ? <span className="language-label">Course</span> : null}
       <button
         ref={triggerRef}
         type="button"
         className={`language-trigger ${open ? "open" : ""}`}
-        aria-label={`Learning language: ${selected.label}`}
+        aria-label={`Course: ${selected.label}`}
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-controls={open ? menuId : undefined}
-        title={compact ? `Learning language: ${selected.label}` : selected.detail}
+        title={compact ? `Course: ${selected.label}` : selected.detail}
         onClick={() => setOpen((value) => !value)}
         onKeyDown={onTriggerKey}
       >
@@ -159,37 +168,39 @@ export default function LanguagePicker({
               ref={menuRef}
               className="language-menu"
               role="listbox"
-              aria-label="Choose learning language"
+              aria-label="Choose course"
               style={menuStyle}
             >
-              <div className="language-menu-head">Switch language</div>
-              {LANGUAGES.map((language, index) => {
-                const active = language.id === selected.id;
+              <div className="language-menu-head">Courses</div>
+              {COURSES.map((course, index) => {
+                const active = course.id === selected.id;
                 return (
                   <button
-                    key={language.id}
+                    key={course.id}
                     ref={(node) => { optionRefs.current[index] = node; }}
                     className={`language-option ${active ? "active" : ""}`}
                     role="option"
                     aria-selected={active}
-                    onClick={() => choose(language.id)}
+                    disabled={course.comingSoon}
+                    onClick={() => choose(course.id)}
                     onKeyDown={(event) => onOptionKey(event, index)}
                   >
                     <span
                       className="language-monogram"
-                      style={{ "--language-color": language.accent } as CSSProperties}
+                      style={{ "--language-color": course.accent } as CSSProperties}
                     >
-                      {language.shortLabel}
+                      {course.shortLabel}
                     </span>
                     <span className="language-option-copy">
-                      <strong>{language.label}</strong>
-                      <small>{language.detail}</small>
+                      <strong>{course.label}</strong>
+                      <small>{course.detail}</small>
                     </span>
+                    {course.comingSoon ? <span className="language-coming">Coming soon</span> : null}
                     {active ? <Icon name="check" size={16} /> : null}
                   </button>
                 );
               })}
-              <p>Progress is saved separately for each language.</p>
+              <p>The adaptive SWE path is available now. Mastery catalogs open only when their lectures are complete.</p>
             </div>,
             document.body,
           )

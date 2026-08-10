@@ -7,7 +7,8 @@ import { streakDays, todayKey } from "../engine/storage";
 import { useSettings } from "../settings";
 import { Heatmap, Sparkline } from "./Brand";
 import { MasteryBar, ReviewForecast } from "./Forecast";
-import { TRACKS, weeksUntil } from "../content/tracks";
+import { weeksUntil } from "../content/tracks";
+import { ACTIVE_SWE_PREPARATION_LEVEL, COURSE_BY_ID, trackForCourse } from "../content/courses";
 
 /**
  * One sentence on what to do next, and why.
@@ -99,10 +100,13 @@ export default function Dashboard({
 }) {
   const { settings } = useSettings();
   const language = settings.learning.language;
+  const course = settings.learning.course;
+  const preparationLevel = course === "swe" ? ACTIVE_SWE_PREPARATION_LEVEL : undefined;
   const preparation = {
-    track: settings.profile.track,
+    track: trackForCourse(course, preparationLevel),
     experience: settings.profile.experience,
     deadlineWeeks: weeksUntil(settings.profile.interviewDate),
+    preparationLevel,
   };
   const conceptIds = conceptIdsFor(language);
   const now = Date.now();
@@ -149,7 +153,7 @@ export default function Dashboard({
   const lectureScore = recentLectureScores.length
     ? Math.round(recentLectureScores.reduce((sum, score) => sum + score, 0) / recentLectureScores.length)
     : null;
-  const activeTrack = TRACKS[settings.profile.track];
+  const activeTrack = COURSE_BY_ID.get(course) ?? COURSE_BY_ID.get("python")!;
   const advice = recommend({
     started,
     dueCount,

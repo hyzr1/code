@@ -3,14 +3,15 @@ import type { Progress } from "../types";
 import {
   CONCEPT_BY_ID,
   PROBLEMS,
-  lessonsFor,
-  currentLesson,
+  lessonsForCourse,
+  currentLessonForCourse,
   lessonProgress,
 } from "../content";
 import { useSettings } from "../settings";
 import { contentLanguage } from "../content/language";
 import type { Route } from "./Sidebar";
 import Icon, { type IconName } from "./Icon";
+import { ACTIVE_SWE_PREPARATION_LEVEL } from "../content/courses";
 
 interface Command {
   id: string;
@@ -48,7 +49,10 @@ export default function CommandPalette({
   const listRef = useRef<HTMLDivElement>(null);
 
   const commands = useMemo<Command[]>(() => {
-    const next = currentLesson(progress, settings.learning.language, settings.profile.track);
+    const preparationLevel = settings.learning.course === "swe"
+      ? ACTIVE_SWE_PREPARATION_LEVEL
+      : undefined;
+    const next = currentLessonForCourse(progress, settings.learning.course, preparationLevel);
     const out: Command[] = [];
 
     if (next) {
@@ -126,7 +130,7 @@ export default function CommandPalette({
     const names = (ids: string[]) =>
       ids.map((id) => `${id} ${CONCEPT_BY_ID.get(id)?.title ?? ""}`).join(" ");
 
-    for (const lesson of lessonsFor(settings.learning.language, settings.profile.track)) {
+    for (const lesson of lessonsForCourse(settings.learning.course, preparationLevel)) {
       const state = lessonProgress(lesson, progress);
       out.push({
         id: `lesson:${lesson.id}`,

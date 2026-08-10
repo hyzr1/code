@@ -11,7 +11,7 @@ import * as neural from "../engine/neural";
 import { ACCENTS, useSettings, type AccentName } from "../settings";
 import { useToast } from "./Toast";
 import Icon, { type IconName } from "./Icon";
-import { TRACKS } from "../content/tracks";
+import { COURSES } from "../content/courses";
 
 type SectionId =
   | "appearance"
@@ -676,15 +676,27 @@ export default function Settings({
             <>
               <div className="card">
                 <h2 className="section">Your target</h2>
-                <Field title="Preparing for" help={TRACKS[profile.track].description}>
-                  <Segmented
-                    value={profile.track}
-                    options={Object.values(TRACKS).map((track) => ({
-                      id: track.id,
-                      label: track.shortLabel,
-                    }))}
-                    onChange={(track) => update("profile", { track })}
-                  />
+                <Field
+                  title="Course"
+                  help={COURSES.find((course) => course.id === learning.course)?.detail}
+                >
+                  <div className="settings-course-list">
+                    {COURSES.map((course) => (
+                      <button
+                        type="button"
+                        key={course.id}
+                        className={learning.course === course.id ? "on" : ""}
+                        disabled={course.comingSoon}
+                        onClick={() => !course.comingSoon && update("learning", { course: course.id })}
+                      >
+                        <span>{course.label}</span>
+                        <small>{course.comingSoon ? "Coming soon" : "Available"}</small>
+                      </button>
+                    ))}
+                  </div>
+                </Field>
+                <Field title="Preparation standard" help="The live course always uses the complete maximum-depth curriculum.">
+                  <div className="settings-readonly-target">Frontier + FAANG</div>
                 </Field>
                 <Field title="Career stage">
                   <Segmented
@@ -744,23 +756,6 @@ export default function Settings({
                     type="date"
                     value={profile.interviewDate}
                     onChange={(event) => update("profile", { interviewDate: event.target.value })}
-                  />
-                </Field>
-              </div>
-
-              <div className="card">
-                <h2 className="section">Course language</h2>
-                <Field
-                  title="Active path"
-                  help="Progress is stored separately by stable language-prefixed ids, so switching never erases either course."
-                >
-                  <Segmented
-                    value={learning.language}
-                    options={[
-                      { id: "python", label: "Python" },
-                      { id: "javascript", label: "JavaScript" },
-                    ]}
-                    onChange={(language) => update("learning", { language })}
                   />
                 </Field>
               </div>

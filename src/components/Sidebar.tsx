@@ -3,20 +3,20 @@ import type { Progress } from "../types";
 import {
   LESSON_BY_ID,
   PROBLEM_BY_ID,
-  currentLesson,
-  lessonsFor,
+  currentLessonForCourse,
+  lessonsForCourse,
   lessonProgress,
 } from "../content";
 import { isDue } from "../engine/mastery";
 import { conceptIdsFor } from "../engine/scheduler";
 import { todayKey } from "../engine/storage";
 import { useSettings } from "../settings";
+import { ACTIVE_SWE_PREPARATION_LEVEL } from "../content/courses";
 import { DayRing, Heatmap, Mark, StreakLabel } from "./Brand";
 import Icon, { type IconName } from "./Icon";
 
 export type Route =
   | { name: "course" }
-  | { name: "reels" }
   | { name: "lesson"; id: string }
   | { name: "problems" }
   | { name: "problem"; id: string }
@@ -57,7 +57,9 @@ export default function Sidebar({
   const collapsed = !mobile && settings.appearance.sidebarCollapsed;
   const mode = settings.appearance.mode;
   const language = settings.learning.language;
-  const lessons = lessonsFor(language, settings.profile.track);
+  const course = settings.learning.course;
+  const preparationLevel = course === "swe" ? ACTIVE_SWE_PREPARATION_LEVEL : undefined;
+  const lessons = lessonsForCourse(course, preparationLevel);
   const conceptIds = conceptIdsFor(language);
 
   const switchRef = useRef<HTMLDivElement>(null);
@@ -137,7 +139,7 @@ export default function Sidebar({
     if (owner && !recentIds.includes(owner)) recentIds.push(owner);
   }
 
-  const upNext = currentLesson(progress, language, settings.profile.track);
+  const upNext = currentLessonForCourse(progress, course, preparationLevel);
   const completedLessons = lessons.filter((lesson) => lessonProgress(lesson, progress).complete).length;
   const coursePercent = lessons.length ? Math.round((completedLessons / lessons.length) * 100) : 0;
   const today = progress.sessions.find((session) => session.date === todayKey());
@@ -233,9 +235,6 @@ export default function Sidebar({
       </div>
 
       <div className="sidebar-scroll">
-        {!collapsed ? <div className="nav-label">Discover</div> : null}
-        {item(route.name === "reels", "play", "Python Reels", () => go({ name: "reels" }))}
-
         {mode === "learn" ? (
           <>
             {!collapsed ? <div className="nav-label">Learn</div> : null}
@@ -379,7 +378,7 @@ export default function Sidebar({
           {!collapsed ? (
             <>
               <span className="user-name">
-                Your preparation <span>· local</span>
+                Your preparation <span>· Frontier path</span>
               </span>
               <Icon name="settings" size={15} style={{ color: "var(--text-faint)" }} />
             </>

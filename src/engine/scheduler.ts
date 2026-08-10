@@ -13,6 +13,7 @@ import type {
 import { ATOMS, ATOM_BY_CONCEPT, DRILLS, PROBLEMS } from "../content";
 import { contentLanguage } from "../content/language";
 import { trackFit } from "../content/tracks";
+import { problemFitsPreparation, type PreparationLevel } from "../content/companies";
 import { DAY, hasSeen, isDue, scheduleIn, strengthOf } from "./mastery";
 
 export type SessionStep =
@@ -173,11 +174,12 @@ export function pickProblem(
   track: CareerTrack = "faang",
   experience: ExperienceLevel = "restarting",
   deadlineWeeks: number | null = null,
+  preparationLevel: PreparationLevel = 3,
 ): Problem | null {
   // Reps belong to lessons, not to the daily cold solve — they're 45-second
   // units and serving one as "today's problem" wastes the slot.
   const candidates = PROBLEMS.filter(
-    (p) => p.tier !== "rep" && contentLanguage(p) === language,
+    (p) => p.tier !== "rep" && contentLanguage(p) === language && problemFitsPreparation(p, preparationLevel),
   );
   const unlocked = candidates.filter((p) => isUnlocked(progress, p));
   const pool = unlocked.length ? unlocked : candidates;
@@ -208,6 +210,8 @@ export function pickProblem(
         score += cleared ? 0.25 : 0;
         if (problem.tier === "challenge" && experience !== "advanced") score -= 0.4;
       }
+      if (preparationLevel === 5 && problem.tier === "challenge") score += 0.55;
+      if (preparationLevel >= 4 && difficulty >= 4) score += 0.2;
       if (cleared === "L4" && !anyDue) score -= 0.9; // done and still solid
       if (yesterday.has(problem.id)) score -= 0.6;
       if (!isUnlocked(progress, problem)) score -= 0.5;
@@ -261,6 +265,7 @@ export function buildSession(
     track: CareerTrack;
     experience: ExperienceLevel;
     deadlineWeeks: number | null;
+    preparationLevel?: PreparationLevel;
   } = { track: "faang", experience: "restarting", deadlineWeeks: null },
 ): Session {
   const languageProblems = PROBLEMS.filter((problem) => contentLanguage(problem) === language);
@@ -275,6 +280,7 @@ export function buildSession(
     preparation.track,
     preparation.experience,
     preparation.deadlineWeeks,
+    preparation.preparationLevel ?? 3,
   );
   const fresh = Object.keys(progress.concepts).length === 0;
 

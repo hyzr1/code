@@ -40,7 +40,7 @@ test("the narrated lesson stays synchronized and within the mobile viewport", as
   await sceneButtons.nth(9).click();
   const focused = page.locator(".stage-line[aria-current='true']");
   await expect(focused).toHaveCount(0);
-  await expect(page.locator(".stage-line").first()).toHaveCSS("opacity", "0");
+  await expect(page.locator(".stage-line").first()).toHaveCSS("opacity", "0.24");
 
   expect(errors).toEqual([]);
 });
@@ -156,8 +156,67 @@ test("loads the course without runtime errors", async ({ page, isMobile }) => {
   expect(horizontalOverflow).toBe(false);
 });
 
+test("the live course is the complete fixed Frontier and FAANG path", async ({ page }) => {
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+
+  await page.goto("/");
+  await expect(page.getByRole("heading", { name: "Frontier + FAANG SWE" })).toBeVisible();
+  await expect(page.locator(".frontier-path-pillars > div")).toHaveCount(3);
+  await expect(page.locator(".prep-roadmap")).toContainText("Finish every lesson, exercise, and scheduled review");
+  await expect(page.locator(".lesson-row")).toHaveCount(73);
+  await expect(page.locator(".company-map, .company-graph-node")).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Python Reels" })).toHaveCount(0);
+  await expect(page.getByText("Mastery tier · optional")).toHaveCount(0);
+  await expect(page.locator(".mastery-coming-row b")).toHaveCount(3);
+
+  const horizontalOverflow = await page.evaluate(() =>
+    document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+  );
+  expect(horizontalOverflow).toBe(false);
+  expect(errors).toEqual([]);
+});
+
+test("portfolio projects stay archived and absent from the live course", async ({ page }) => {
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+
+  await page.goto("/");
+  await expect(page.locator(".project-gallery, .project-card")).toHaveCount(0);
+  await expect(page.locator(".portfolio-checkpoint, .portfolio-dialog")).toHaveCount(0);
+  await expect(page.getByRole("button", { name: /View projects/ })).toHaveCount(0);
+  const horizontalOverflow = await page.evaluate(() =>
+    document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+  );
+  expect(horizontalOverflow).toBe(false);
+  expect(errors).toEqual([]);
+});
+
+test("the fixed preparation course fills every responsive layout without overflow", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "desktop", "One browser is enough for the responsive width matrix.");
+
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+
+  await page.goto("/");
+
+  for (const width of [320, 390, 479, 480, 540, 700, 760, 900, 1064, 1280, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    await expect(page.getByRole("heading", { name: "Frontier + FAANG SWE" })).toBeVisible();
+    await expect(page.locator(".frontier-path-pillars > div")).toHaveCount(3);
+    await expect(page.locator(".lesson-row")).toHaveCount(73);
+
+    const horizontalOverflow = await page.evaluate(() =>
+      document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+    );
+    expect(horizontalOverflow, `${width}px layout should not overflow horizontally`).toBe(false);
+  }
+
+  expect(errors).toEqual([]);
+});
+
 test("ships required offline runtime assets", async ({ request }) => {
-  for (const path of ["/manifest.webmanifest", "/sw.js", "/favicon.svg", "/pyodide/pyodide.mjs"]) {
+  for (const path of ["/manifest.webmanifest", "/sw.js", "/favicon.svg", "/company-logos/google.ico", "/pyodide/pyodide.mjs"]) {
     const response = await request.get(path);
     expect(response.ok(), `${path} should be available`).toBe(true);
   }

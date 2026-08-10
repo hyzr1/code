@@ -14,6 +14,7 @@ import ProblemView, { type ProblemOutcome } from "./ProblemView";
 import type { LectureOutcome } from "./LectureCheck";
 import { useSettings } from "../settings";
 import { weeksUntil } from "../content/tracks";
+import { ACTIVE_SWE_PREPARATION_LEVEL, trackForCourse } from "../content/courses";
 
 export default function SessionView({
   progress,
@@ -28,9 +29,15 @@ export default function SessionView({
   const now = Date.now();
   const initial = useMemo(
     () => buildSession(progress, now, todayKey(now), settings.learning.language, {
-      track: settings.profile.track,
+      track: trackForCourse(
+        settings.learning.course,
+        settings.learning.course === "swe" ? ACTIVE_SWE_PREPARATION_LEVEL : undefined,
+      ),
       experience: settings.profile.experience,
       deadlineWeeks: weeksUntil(settings.profile.interviewDate),
+      preparationLevel: settings.learning.course === "swe"
+        ? ACTIVE_SWE_PREPARATION_LEVEL
+        : undefined,
     }),
     // Built once per session on purpose — a queue that reshuffles under you
     // mid-session is disorienting and breaks the interleaving guarantee.

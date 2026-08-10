@@ -18,9 +18,9 @@ const STEPS: TourStep[] = [
     body: "You will learn one idea, retrieve it without rereading, then produce working code. The app adapts the sequence from what you can actually recall—not what you merely watched.",
   },
   {
-    eyebrow: "Your language",
-    title: "Choose the language you will interview in",
-    body: "Python and JavaScript keep separate paths and progress. Switch from Course, Algo Problems, or Settings → Learning at any time without losing work.",
+    eyebrow: "One complete path",
+    title: "Train for the highest technical bar",
+    body: "The live course uses the full Frontier + FAANG curriculum: practical Python, difficult interviews, systems reasoning, and retrieval practice in one ordered path.",
   },
   {
     eyebrow: "Two kinds of work",
@@ -35,9 +35,9 @@ const STEPS: TourStep[] = [
     selector: '[data-tour="daily"]',
   },
   {
-    eyebrow: "Tailored preparation",
-    title: "Tell Hyzr Code what job you are preparing for",
-    body: "Settings can tailor the curriculum for FAANG-style SWE, practical software engineering, ML engineering, or quant work—plus your level, deadline, and weekly capacity.",
+    eyebrow: "Maximum-depth preparation",
+    title: "Nothing important is hidden behind another track",
+    body: "Every learner gets the complete curriculum. Your experience, deadline, and weekly capacity change pacing and scaffolding—not what you are ultimately expected to master.",
     selector: '[data-tour="settings"]',
   },
   {

@@ -1,5 +1,7 @@
 export type ConceptId = string;
 export type CourseLanguage = "javascript" | "python";
+/** The released SWE path plus three visible coming-soon mastery catalogs. */
+export type Course = "swe" | "python" | "algo" | "ml";
 export type CareerTrack = "faang" | "swe" | "ml" | "quant";
 export type ExperienceLevel = "restarting" | "beginner" | "intermediate" | "advanced";
 export type CareerStage = "internship" | "new-grad" | "experienced";
@@ -214,6 +216,10 @@ export interface CourseModule {
   lessonIds: string[];
   language?: CourseLanguage;
   tracks?: CareerTrack[];
+  /** Which top-level course this module belongs to (Python / Algo / ML). */
+  course?: Course;
+  /** Part of the optional end-of-course mastery/grandmaster tier. */
+  mastery?: boolean;
 }
 
 /**

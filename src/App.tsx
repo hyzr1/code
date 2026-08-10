@@ -4,8 +4,9 @@ import {
   CONCEPT_BY_ID,
   LESSON_BY_ID,
   PROBLEM_BY_ID,
-  lessonsFor,
+  lessonsForCourse,
 } from "./content";
+import { ACTIVE_SWE_PREPARATION_LEVEL } from "./content/courses";
 import {
   loadProgress,
   logAttempt,
@@ -32,11 +33,9 @@ import TypeHome from "./components/typing/TypeHome";
 import TypeCourse from "./components/typing/TypeCourse";
 import TypeLesson from "./components/typing/TypeLesson";
 import SpeedTest from "./components/typing/SpeedTest";
-import ReelsView from "./components/ReelsView";
 
 const TITLES: Record<Route["name"], string> = {
   course: "Course",
-  reels: "Python Reels",
   lesson: "Course",
   problems: "Problems",
   problem: "Problems",
@@ -185,8 +184,8 @@ export default function App() {
         <button className="scrim" onClick={() => setDrawerOpen(false)} aria-label="Close navigation" />
       ) : null}
 
-      <main className={`main ${route.name === "reels" ? "reels-main" : ""}`}>
-        {(isMobile && route.name !== "reels") || crumb ? (
+      <main className="main">
+        {isMobile || crumb ? (
           <header className="topbar">
             {isMobile ? (
               <button
@@ -233,14 +232,8 @@ export default function App() {
           </header>
         ) : null}
 
-        <div className={`route ${route.name === "reels" ? "reels-route" : ""}`} key={`${route.name}-${"id" in route ? route.id : ""}`}>
-        {route.name === "reels" ? (
-          <ReelsView
-            mobile={isMobile}
-            onMenu={() => setDrawerOpen(true)}
-            onOpenLesson={(id) => setRoute({ name: "lesson", id })}
-          />
-        ) : route.name === "course" ? (
+        <div className="route" key={`${route.name}-${"id" in route ? route.id : ""}`}>
+        {route.name === "course" ? (
           <div className="page">
             <CourseView
               progress={progress}
@@ -367,7 +360,10 @@ function LessonRoute({
   const lesson = LESSON_BY_ID.get(id);
   if (!lesson) return <div className="empty">No such lesson.</div>;
 
-  const lessons = lessonsFor(lesson.language ?? settings.learning.language, settings.profile.track);
+  const preparationLevel = settings.learning.course === "swe"
+    ? ACTIVE_SWE_PREPARATION_LEVEL
+    : undefined;
+  const lessons = lessonsForCourse(settings.learning.course, preparationLevel);
   const position = lessons.findIndex((l) => l.id === id);
   const next = lessons[position + 1];
 

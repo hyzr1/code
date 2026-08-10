@@ -10,11 +10,18 @@ import {
   COURSE_LESSONS,
   COURSE_MODULES,
   PROBLEMS,
+  PROJECT_CHECKPOINTS,
+  PROJECT_SHIPPING_REQUIREMENTS,
   buildScenes,
 } from "../.check/content.mjs";
 
 const pythonAtoms = ATOMS.filter((atom) => atom.language === "python");
-const pythonLessons = COURSE_LESSONS.filter((lesson) => lesson.language === "python");
+const atomById = new Map(pythonAtoms.map((atom) => [atom.id, atom]));
+// Roadmap entries are promises, not lectures. Quality metrics must never let
+// hundreds of intentionally disabled placeholders dilute or inflate the score.
+const pythonLessons = COURSE_LESSONS.filter(
+  (lesson) => lesson.language === "python" && lesson.atomId && atomById.has(lesson.atomId),
+);
 const pythonProblems = PROBLEMS.filter((problem) => problem.language === "python");
 const interviewProblems = pythonProblems.filter(
   (problem) => problem.tier === "problem" || problem.tier === "challenge",
@@ -62,6 +69,32 @@ const synchronizedCode = ratio(
     Boolean(scene.focusLabel) &&
     (!scene.focusLines?.length || Boolean(scene.focusSteps?.length)),
 );
+
+const projectIds = PROJECT_CHECKPOINTS.flatMap((checkpoint) =>
+  checkpoint.projects.map((project) => project.id),
+);
+const projectSpecsComplete =
+  PROJECT_CHECKPOINTS.length === 5 &&
+  new Set(PROJECT_CHECKPOINTS.map((checkpoint) => checkpoint.afterModuleId)).size === 5 &&
+  new Set(projectIds).size === 15 &&
+  PROJECT_SHIPPING_REQUIREMENTS.length >= 8 &&
+  PROJECT_CHECKPOINTS.every((checkpoint) =>
+    checkpoint.projects.length === 3 && checkpoint.projects.every((project) =>
+      project.stack.length >= 6 &&
+      project.architecture.length >= 4 &&
+      project.milestones.length >= 4 &&
+      project.milestones.every((milestone) => milestone.tasks.length >= 3) &&
+      project.acceptanceTests.length >= 4 &&
+      project.stretchGoals.length >= 2 &&
+      project.resumeBullet.length >= 80
+    )
+  );
+
+if (!projectSpecsComplete) {
+  console.error("portfolio project gate failed: expected five checkpoints with three complete specifications each");
+  process.exit(1);
+}
+console.log("portfolio projects clean - 5 checkpoints, 15 complete specifications, shared shipping rubric");
 const visibleState = ratio(patternAtoms, (atom) =>
   buildScenes(atom).some((scene) => scene.traceItems?.length || scene.keyTerms?.length),
 );
@@ -105,7 +138,6 @@ const personalization =
 // A polished lecture is still a bad beginner course when it silently assumes
 // future knowledge. Score ordering directly so the old 99/100 cannot return
 // while lesson two is already discussing mutation.
-const atomById = new Map(pythonAtoms.map((atom) => [atom.id, atom]));
 const lessonIndexByConcept = new Map(
   pythonLessons.flatMap((lesson, index) =>
     (atomById.get(lesson.atomId)?.teaches ?? []).map((concept) => [concept, index]),
@@ -119,7 +151,7 @@ const dependencySafe = ratio(pythonLessons, (lesson, index) =>
 const expectedFoundation = [
   "programs", "values", "calls", "variables", "first-function", "numbers", "strings",
   "fstrings", "booleans", "branching", "lists", "text-split", "slicing", "loops", "iteration-tools",
-  "aggregation-tools", "names", "functions", "tuples", "dicts", "dict-iteration", "format-specs", "sets", "unpacking",
+  "aggregation-tools", "loop-control", "names", "functions", "tuples", "dicts", "dict-iteration", "format-specs", "sets", "unpacking",
   "comprehensions", "sorting", "complexity",
 ].map((id) => `py.lesson.${id}`);
 const foundationOrdered = expectedFoundation.every(

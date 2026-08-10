@@ -1,4 +1,4 @@
-const CACHE_VERSION = "hyzr-code-v3";
+const CACHE_VERSION = "hyzr-code-v7";
 const APP_SHELL = ["/", "/manifest.webmanifest", "/favicon.svg"];
 
 self.addEventListener("install", (event) => {
@@ -62,6 +62,7 @@ self.addEventListener("fetch", (event) => {
     url.pathname.startsWith("/voice-packs/") ||
     url.pathname.startsWith("/reels/audio/") ||
     url.pathname.startsWith("/models/") ||
+    url.pathname.startsWith("/company-logos/") ||
     APP_SHELL.includes(url.pathname);
 
   if (!cacheable) return;

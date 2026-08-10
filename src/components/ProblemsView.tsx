@@ -5,8 +5,10 @@ import { contentLanguage } from "../content/language";
 import { useSettings } from "../settings";
 import EmptyState from "./EmptyState";
 import Icon from "./Icon";
-import { TRACKS, trackFit } from "../content/tracks";
+import { trackFit } from "../content/tracks";
+import { ACTIVE_SWE_PREPARATION_LEVEL, COURSE_BY_ID, trackForCourse } from "../content/courses";
 import LanguagePicker from "./LanguagePicker";
+import { problemFitsPreparation } from "../content/companies";
 
 /** Internal ids are for the scheduler, not the reader. */
 function conceptLabels(ids: string[]): string {
@@ -50,17 +52,22 @@ export default function ProblemsView({
   const [query, setQuery] = useState("");
   const { settings } = useSettings();
   const language = settings.learning.language;
+  const course = settings.learning.course;
+  const preparationLevel = course === "swe" ? ACTIVE_SWE_PREPARATION_LEVEL : undefined;
+  const track = trackForCourse(course, preparationLevel);
+  const courseMeta = COURSE_BY_ID.get(course) ?? COURSE_BY_ID.get("python")!;
 
   const all = useMemo(
     () => PROBLEMS
       .filter((p) => p.tier !== "rep" && contentLanguage(p) === language)
-      .sort((a, b) => trackFit(b, settings.profile.track) - trackFit(a, settings.profile.track)),
-    [language, settings.profile.track],
+      .sort((a, b) => trackFit(b, track) - trackFit(a, track)),
+    [language, track],
   );
 
   const shown = all.filter((problem) => {
     const cleared = progress.cleared[problem.id];
-    if (filter === "recommended" && trackFit(problem, settings.profile.track) < 2) return false;
+    if (filter === "recommended" && trackFit(problem, track) < 2) return false;
+    if (filter === "recommended" && preparationLevel && !problemFitsPreparation(problem, preparationLevel)) return false;
     if (filter === "todo" && cleared) return false;
     if (filter === "done" && !cleared) return false;
     if (filter === "cold" && cleared !== "L4") return false;
@@ -93,7 +100,7 @@ export default function ProblemsView({
           daily session interleaves on purpose, because choosing by topic hands
           you the category for free.
         </p>
-        <div className="prep-inline"><span className="badge">Tailored for {TRACKS[settings.profile.track].label}</span><span>{TRACKS[settings.profile.track].description}</span></div>
+        <div className="prep-inline"><span className="badge">{courseMeta.label} course</span><span>{courseMeta.detail}</span></div>
       </div>
 
       <div className="card" style={{ padding: "14px 16px" }}>
@@ -195,7 +202,7 @@ export default function ProblemsView({
                   {problem.pattern ? (
                     <span className="badge">{problem.pattern}</span>
                   ) : null}
-                  {trackFit(problem, settings.profile.track) >= 3 ? <span className="badge role-fit">Role fit</span> : null}
+                  {trackFit(problem, track) >= 3 ? <span className="badge role-fit">Course fit</span> : null}
                   <span
                     className="row tiny"
                     style={{ gap: 6, minWidth: 68, color: "var(--text-muted)" }}

@@ -2,11 +2,9 @@ import { highlightLine } from "./highlight";
 import type { CourseLanguage } from "../types";
 
 /**
- * Code for the player: lines arrive one at a time rather than all at once.
- *
- * A full block landing in one frame is a wall to skim past. Lines appearing in
- * reading order keep the eye moving with the narration, which is most of what
- * makes a screencast easier to follow than a page.
+ * Code for the player. The complete example is present as a quiet preview so
+ * the stage never looks broken; narration progressively promotes each line to
+ * full contrast and moves the active-line cue in reading order.
  */
 export default function CodeStage({
   code,
@@ -35,11 +33,11 @@ export default function CodeStage({
           return (
             <div
               key={i}
-              className={`stage-line ${focused ? "focused" : focusLines.length ? "context" : ""}`}
+              className={`stage-line ${focused ? "focused" : focusLines.length ? "context" : ""} ${i < shown ? "revealed" : "preview"}`}
               aria-current={focused ? "true" : undefined}
               style={{
-                opacity: i < shown ? 1 : 0,
-                transform: i < shown ? "none" : "translateY(4px)",
+                opacity: i < shown ? 1 : 0.24,
+                transform: "none",
               }}
             >
               <span className="stage-line-number">{i + 1}</span>

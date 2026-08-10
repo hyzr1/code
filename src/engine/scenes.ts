@@ -459,6 +459,8 @@ function stageSupports(text: string, code: string, section: string): boolean {
 }
 
 const VISUALS: [RegExp, VisualKind][] = [
+  [/algo\.(?:scale|operation-count|asymptotics|growth-classes|dominant-growth|space-cost|amortized-cost|analysis-cases)/, "complexity"],
+  [/ml\.(?:vector-operations|dot-product-geometry|norm-families)/, "ml"],
   // Foundational lessons first, matched on their exact unit ids so they never
   // collide with a pattern lesson. These keep the early modules from being a
   // wall of text with nothing to look at.
@@ -468,7 +470,7 @@ const VISUALS: [RegExp, VisualKind][] = [
   [/^names$/, "reference"],
   [/^lists$/, "list"],
   [/^(strings|fstrings|text-split|format-specs)$/, "string"],
-  [/^(loops|iteration-tools|aggregation-tools)$/, "loop"],
+  [/^(loops|loop-control|iteration-tools|aggregation-tools)$/, "loop"],
   [/^(comprehensions|itertools|sorting|iterators)$/, "pipeline"],
   [/^booleans$/, "boolean"],
   [/^branching$/, "decision"],

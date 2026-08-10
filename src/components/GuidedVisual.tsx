@@ -76,6 +76,18 @@ type FlowPair = { model: [string, string, string]; trap: [string, string, string
 /** Topic-specific stories keep a shared diagram grammar without teaching every
  * lesson with the same three generic boxes. */
 const TOPIC_FLOWS: Record<string, FlowPair> = {
+  "algo.scale": { model: ["10 inputs", "45 comparisons", "fine"], trap: ["1M inputs", "500B comparisons", "not viable"] },
+  "algo.operation-count": { model: ["mark operation", "count repeats", "derive total"], trap: ["count lines", "miss hidden scan", "wrong cost"] },
+  "algo.asymptotics": { model: ["exact count", "dominant term", "growth class"], trap: ["loose bound", "no case", "weak claim"] },
+  "algo.growth-classes": { model: ["code structure", "state progress", "growth class"], trap: ["spot one loop", "guess a label", "wrong bound"] },
+  "algo.dominant-growth": { model: ["growth first", "benchmark constants", "real choice"], trap: ["same Big O", "ignore constants", "slower system"] },
+  "algo.space-cost": { model: ["input + output", "temporary peak", "state both"], trap: ["hidden copy", "stack + buffers", "memory spike"] },
+  "algo.amortized-cost": { model: ["many cheap ops", "rare rebuild", "bounded sequence"], trap: ["one resize", "worst latency", "call it always O(1)"] },
+  "algo.analysis-cases": { model: ["name assumptions", "choose case", "defensible bound"], trap: ["say average", "no distribution", "empty claim"] },
+  "ml.vector-operations": { model: ["ordered features", "shape + meaning", "valid vector"], trap: ["same length", "swapped meaning", "silent bug"] },
+  "ml.dot-product-geometry": { model: ["feature × weight", "sum evidence", "one score"], trap: ["raw magnitudes", "large dot", "false similarity"] },
+  "ml.norm-families": { model: ["vector difference", "chosen norm", "distance"], trap: ["mixed units", "one axis dominates", "bad geometry"] },
+  "loop-control": { model: ["condition", "body + progress", "next check"], trap: ["continue early", "skip progress", "same state forever"] },
   calls: { model: ["arguments", "function call", "return value"], trap: ["function name", "no call", "no result"] },
   "first-function": { model: ["input", "double", "output"], trap: ["hard-coded value", "one case", "not reusable"] },
   functions: { model: ["parameters", "function body", "return"], trap: ["hidden side effect", "surprise change", "fragile caller"] },

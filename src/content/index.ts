@@ -1,4 +1,6 @@
-import type { Atom, CareerTrack, Concept, CourseLanguage, Drill, Lesson, Problem, Progress } from "../types";
+import type { Atom, CareerTrack, Concept, Course, CourseLanguage, Drill, Lesson, Problem, Progress } from "../types";
+import { moduleCourse } from "./courses";
+import { minimumPreparationLevel, type PreparationLevel } from "./companies";
 import { ATOMS as CORE_ATOMS } from "./atoms";
 import { DRILLS as CORE_DRILLS } from "./drills";
 import { FLUENCY_PROBLEMS } from "./problems-fluency";
@@ -21,22 +23,44 @@ import {
 } from "./python";
 import { forLanguage } from "./language";
 import { PYTHON_ADVANCED_PROBLEMS } from "./python/advancedProblems";
+import { PYTHON_LEETCODE_PROBLEMS } from "./python/leetcode";
+import { PYTHON_ML_PROBLEMS } from "./python/mlProblems";
+import { PYTHON_ML_CONCEPTS, PYTHON_ML_DRILLS } from "./python/ml";
+import { ROADMAP_ATOMS, ROADMAP_CONCEPTS, ROADMAP_LESSON_CONTENT } from "./python/roadmapLectures";
+import {
+  ALGO_ROADMAP_LESSONS,
+  ALGO_ROADMAP_MODULES,
+  ML_ROADMAP_LESSONS,
+  ML_ROADMAP_MODULES,
+  PYTHON_ROADMAP_LESSONS,
+  PYTHON_ROADMAP_MODULES,
+} from "./python/roadmap";
 
 export { STAGE_NAMES };
-export const CONCEPTS: Concept[] = [...JS_CONCEPTS, ...PYTHON_CONCEPTS];
+export const CONCEPTS: Concept[] = [...JS_CONCEPTS, ...PYTHON_CONCEPTS, ...PYTHON_ML_CONCEPTS, ...ROADMAP_CONCEPTS];
 export const CONCEPT_BY_ID = new Map(CONCEPTS.map((concept) => [concept.id, concept]));
-export const COURSE_MODULES = [...JS_COURSE_MODULES, ...PYTHON_MODULES];
-export const COURSE_LESSONS = [...JS_COURSE_LESSONS, ...PYTHON_LESSONS];
+export const COURSE_MODULES = [...JS_COURSE_MODULES, ...PYTHON_MODULES, ...PYTHON_ROADMAP_MODULES, ...ALGO_ROADMAP_MODULES, ...ML_ROADMAP_MODULES];
+const authoredRoadmapLessons = (lessons: Lesson[]) => lessons.map((lesson) => ({
+  ...lesson,
+  ...(ROADMAP_LESSON_CONTENT[lesson.id] ?? {}),
+}));
+export const COURSE_LESSONS = [
+  ...JS_COURSE_LESSONS,
+  ...PYTHON_LESSONS,
+  ...authoredRoadmapLessons(PYTHON_ROADMAP_LESSONS),
+  ...authoredRoadmapLessons(ALGO_ROADMAP_LESSONS),
+  ...authoredRoadmapLessons(ML_ROADMAP_LESSONS),
+];
 
 export const modulesFor = (language: CourseLanguage, track?: CareerTrack) =>
   forLanguage(COURSE_MODULES, language).filter((item) => !track || !item.tracks?.length || item.tracks.includes(track));
 export const lessonsFor = (language: CourseLanguage, track?: CareerTrack) =>
   forLanguage(COURSE_LESSONS, language).filter((item) => !track || !item.tracks?.length || item.tracks.includes(track));
 
-export const DRILLS: Drill[] = [...CORE_DRILLS, ...JS_COURSE_DRILLS, ...PYTHON_DRILLS];
+export const DRILLS: Drill[] = [...CORE_DRILLS, ...JS_COURSE_DRILLS, ...PYTHON_DRILLS, ...PYTHON_ML_DRILLS];
 export const DRILL_BY_ID = new Map(DRILLS.map((d) => [d.id, d]));
 
-export const ATOMS: Atom[] = [...CORE_ATOMS, ...JS_COURSE_ATOMS, ...PYTHON_ATOMS];
+export const ATOMS: Atom[] = [...CORE_ATOMS, ...JS_COURSE_ATOMS, ...PYTHON_ATOMS, ...ROADMAP_ATOMS];
 export const ATOM_BY_ID = new Map(ATOMS.map((a) => [a.id, a]));
 export const ATOM_BY_CONCEPT = new Map(
   ATOMS.flatMap((atom) => atom.teaches.map((id) => [id, atom] as const)),
@@ -48,11 +72,48 @@ export const PROBLEMS: Problem[] = [
   ...PATTERN_PROBLEMS,
   ...PYTHON_PROBLEMS,
   ...PYTHON_ADVANCED_PROBLEMS,
+  ...PYTHON_LEETCODE_PROBLEMS,
+  ...PYTHON_ML_PROBLEMS,
 ];
 export const PROBLEM_BY_ID = new Map(PROBLEMS.map((p) => [p.id, p]));
 
 export const LESSON_BY_ID = new Map(COURSE_LESSONS.map((l) => [l.id, l]));
 export const MODULE_BY_ID = new Map(COURSE_MODULES.map((m) => [m.id, m]));
+
+/** Modules belonging to a course, in roadmap order (part, then source order). */
+export const modulesForCourse = (course: Course, level?: PreparationLevel) =>
+  COURSE_MODULES.filter((module) => {
+    if (moduleCourse(module) !== course) return false;
+    if (course !== "swe" || level === undefined) return true;
+    return module.lessonIds.some((id) => {
+      const lesson = LESSON_BY_ID.get(id);
+      return lesson && minimumPreparationLevel(lesson) <= level;
+    });
+  }).sort((a, b) => a.part - b.part);
+
+/** Lessons of a course, grouped by their module in roadmap order. */
+export const lessonsForCourse = (course: Course, level?: PreparationLevel): Lesson[] =>
+  modulesForCourse(course, level).flatMap(
+    (module) =>
+      module.lessonIds
+        .map((id) => LESSON_BY_ID.get(id))
+        .filter((lesson): lesson is Lesson => Boolean(
+          lesson && (course !== "swe" || level === undefined || minimumPreparationLevel(lesson) <= level),
+        )),
+  );
+
+/** The next unfinished lesson in a course — where "Continue" goes. */
+export function currentLessonForCourse(
+  progress: Progress,
+  course: Course,
+  level?: PreparationLevel,
+): Lesson | null {
+  for (const lesson of lessonsForCourse(course, level)) {
+    if (!lessonIsReady(lesson)) continue;
+    if (!lessonProgress(lesson, progress).complete) return lesson;
+  }
+  return null;
+}
 
 /** Every graded unit in a lesson, in the order you meet them. */
 export function lessonUnitIds(lesson: Lesson): string[] {
@@ -61,6 +122,12 @@ export function lessonUnitIds(lesson: Lesson): string[] {
     ...lesson.repIds,
     ...lesson.problemIds,
   ];
+}
+
+/** A roadmap entry is not a playable lesson until real teaching content exists. */
+export function lessonIsReady(lesson: Lesson): boolean {
+  const hasLecture = Boolean(lesson.atomId && ATOM_BY_ID.has(lesson.atomId));
+  return hasLecture || lessonUnitIds(lesson).length > 0;
 }
 
 export interface LessonProgress {
