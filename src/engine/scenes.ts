@@ -479,6 +479,10 @@ const VISUALS: [RegExp, VisualKind][] = [
   [/ml\.(?:partials-gradient|convexity|constrained-optimization)/, "decision"],
   [/ml\.chain-rule/, "pipeline"],
   [/ml\.(?:jacobians-hessians|matrix-calculus)/, "ml"],
+  [/ml\.(?:sample-spaces-events|mle-map)/, "decision"],
+  [/ml\.(?:conditional-independence|bayes-guided|key-distributions|joint-marginal-conditional|monte-carlo-guided)/, "probability"],
+  [/ml\.random-variables-guided/, "function"],
+  [/ml\.(?:expectation-variance-covariance|gaussian-guided|multivariate-gaussian)/, "ml"],
   // Foundational lessons first, matched on their exact unit ids so they never
   // collide with a pattern lesson. These keep the early modules from being a
   // wall of text with nothing to look at.
