@@ -481,6 +481,7 @@ const VISUALS: [RegExp, VisualKind][] = [
   [/algo\.(?:tree-anatomy|tree-dfs|tree-bfs|tree-divide-conquer|tree-path-depth|tree-serialization)/, "tree"],
   [/algo\.(?:bst-invariant|bst-inorder|bst-balancing|bst-ranges)/, "tree"],
   [/algo\.(?:binary-heap|heap-operations|heap-sort-guided|heap-top-k|two-heaps|k-way-merge)/, "heap"],
+  [/algo\.(?:trie-foundations|trie-applications)/, "tree"],
   [/ml\.(?:matrices|matrix-multiplication|transpose-identity-inverse|span-basis-rank|eigenvectors|determinant-trace|svd|matrix-decompositions|orthogonality-least-squares)/, "ml"],
   [/ml\.exponents-logs-sums/, "complexity"],
   [/ml\.(?:derivatives-rules|taylor-approximations)/, "function"],
