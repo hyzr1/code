@@ -464,6 +464,8 @@ const VISUALS: [RegExp, VisualKind][] = [
   [/algo\.(?:call-stack|recurrences|recursion-trees|recursion-vs-iteration|tail-recursion)/, "recursion"],
   [/algo\.constraints/, "complexity"],
   [/algo\.(?:examples-first|optimize-method|invariants|edge-cases|dry-running|communication)/, "decision"],
+  [/algo\.(?:dynamic-arrays|in-place-arrays|cyclic-placement|immutable-strings)/, "list"],
+  [/algo\.(?:prefix-sums-guided|difference-arrays|prefix-sums-2d)/, "prefix"],
   [/ml\.(?:matrices|matrix-multiplication|transpose-identity-inverse|span-basis-rank|eigenvectors|determinant-trace|svd|matrix-decompositions|orthogonality-least-squares)/, "ml"],
   // Foundational lessons first, matched on their exact unit ids so they never
   // collide with a pattern lesson. These keep the early modules from being a
