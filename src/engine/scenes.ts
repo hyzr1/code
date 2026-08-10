@@ -467,6 +467,11 @@ const VISUALS: [RegExp, VisualKind][] = [
   [/algo\.(?:dynamic-arrays|in-place-arrays|cyclic-placement|immutable-strings)/, "list"],
   [/algo\.(?:prefix-sums-guided|difference-arrays|prefix-sums-2d)/, "prefix"],
   [/ml\.(?:matrices|matrix-multiplication|transpose-identity-inverse|span-basis-rank|eigenvectors|determinant-trace|svd|matrix-decompositions|orthogonality-least-squares)/, "ml"],
+  [/ml\.exponents-logs-sums/, "complexity"],
+  [/ml\.(?:derivatives-rules|taylor-approximations)/, "function"],
+  [/ml\.(?:partials-gradient|convexity|constrained-optimization)/, "decision"],
+  [/ml\.chain-rule/, "pipeline"],
+  [/ml\.(?:jacobians-hessians|matrix-calculus)/, "ml"],
   // Foundational lessons first, matched on their exact unit ids so they never
   // collide with a pattern lesson. These keep the early modules from being a
   // wall of text with nothing to look at.

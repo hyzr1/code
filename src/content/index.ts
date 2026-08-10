@@ -43,6 +43,11 @@ import {
   ML_LINEAR_ALGEBRA_LESSON_CONTENT,
 } from "./python/mlLinearAlgebraLectures";
 import {
+  ML_CALCULUS_ATOMS,
+  ML_CALCULUS_CONCEPTS,
+  ML_CALCULUS_LESSON_CONTENT,
+} from "./python/mlCalculusLectures";
+import {
   ALGO_ROADMAP_LESSONS,
   ALGO_ROADMAP_MODULES,
   ML_ROADMAP_LESSONS,
@@ -52,7 +57,7 @@ import {
 } from "./python/roadmap";
 
 export { STAGE_NAMES };
-export const CONCEPTS: Concept[] = [...JS_CONCEPTS, ...PYTHON_CONCEPTS, ...PYTHON_ML_CONCEPTS, ...ROADMAP_CONCEPTS, ...ALGO_FOUNDATION_CONCEPTS, ...ALGO_LINEAR_STRUCTURE_CONCEPTS, ...ML_LINEAR_ALGEBRA_CONCEPTS];
+export const CONCEPTS: Concept[] = [...JS_CONCEPTS, ...PYTHON_CONCEPTS, ...PYTHON_ML_CONCEPTS, ...ROADMAP_CONCEPTS, ...ALGO_FOUNDATION_CONCEPTS, ...ALGO_LINEAR_STRUCTURE_CONCEPTS, ...ML_LINEAR_ALGEBRA_CONCEPTS, ...ML_CALCULUS_CONCEPTS];
 export const CONCEPT_BY_ID = new Map(CONCEPTS.map((concept) => [concept.id, concept]));
 export const COURSE_MODULES = [...JS_COURSE_MODULES, ...PYTHON_MODULES, ...PYTHON_ROADMAP_MODULES, ...ALGO_ROADMAP_MODULES, ...ML_ROADMAP_MODULES];
 const authoredRoadmapLessons = (lessons: Lesson[]) => lessons.map((lesson) => ({
@@ -61,6 +66,7 @@ const authoredRoadmapLessons = (lessons: Lesson[]) => lessons.map((lesson) => ({
   ...(ALGO_FOUNDATION_LESSON_CONTENT[lesson.id] ?? {}),
   ...(ALGO_LINEAR_STRUCTURE_LESSON_CONTENT[lesson.id] ?? {}),
   ...(ML_LINEAR_ALGEBRA_LESSON_CONTENT[lesson.id] ?? {}),
+  ...(ML_CALCULUS_LESSON_CONTENT[lesson.id] ?? {}),
 }));
 export const COURSE_LESSONS = [
   ...JS_COURSE_LESSONS,
@@ -78,7 +84,7 @@ export const lessonsFor = (language: CourseLanguage, track?: CareerTrack) =>
 export const DRILLS: Drill[] = [...CORE_DRILLS, ...JS_COURSE_DRILLS, ...PYTHON_DRILLS, ...PYTHON_ML_DRILLS];
 export const DRILL_BY_ID = new Map(DRILLS.map((d) => [d.id, d]));
 
-export const ATOMS: Atom[] = [...CORE_ATOMS, ...JS_COURSE_ATOMS, ...PYTHON_ATOMS, ...ROADMAP_ATOMS, ...ALGO_FOUNDATION_ATOMS, ...ALGO_LINEAR_STRUCTURE_ATOMS, ...ML_LINEAR_ALGEBRA_ATOMS];
+export const ATOMS: Atom[] = [...CORE_ATOMS, ...JS_COURSE_ATOMS, ...PYTHON_ATOMS, ...ROADMAP_ATOMS, ...ALGO_FOUNDATION_ATOMS, ...ALGO_LINEAR_STRUCTURE_ATOMS, ...ML_LINEAR_ALGEBRA_ATOMS, ...ML_CALCULUS_ATOMS];
 export const ATOM_BY_ID = new Map(ATOMS.map((a) => [a.id, a]));
 export const ATOM_BY_CONCEPT = new Map(
   ATOMS.flatMap((atom) => atom.teaches.map((id) => [id, atom] as const)),
