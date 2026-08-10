@@ -22,6 +22,12 @@ const atomById = new Map(pythonAtoms.map((atom) => [atom.id, atom]));
 const pythonLessons = COURSE_LESSONS.filter(
   (lesson) => lesson.language === "python" && lesson.atomId && atomById.has(lesson.atomId),
 );
+const auditedAtomIds = new Set(
+  pythonLessons
+    .filter((lesson) => /^py\.m(?:[0-9]|1[0-2])$/.test(lesson.moduleId))
+    .map((lesson) => lesson.atomId),
+);
+const auditedAtoms = pythonAtoms.filter((atom) => auditedAtomIds.has(atom.id));
 const pythonProblems = PROBLEMS.filter((problem) => problem.language === "python");
 const interviewProblems = pythonProblems.filter(
   (problem) => problem.tier === "problem" || problem.tier === "challenge",
@@ -169,15 +175,25 @@ const sectionText = (body, heading) => {
   return next < 0 ? rest : rest.slice(0, next);
 };
 const wordCount = (text) => (text.match(/\b[\w’'-]+\b/g) ?? []).length;
-const detailedEnough = ratio(pythonAtoms, (atom) =>
-  (atom.body.match(/^## /gm) ?? []).length >= 6 &&
-  atom.body.includes("## Words you will use") &&
+const isDetailedEnough = (atom) =>
+  (atom.body.match(/^## /gm) ?? []).length >= 7 &&
+  atom.body.includes("## Words you now know") &&
   (atom.body.match(/^- \*\*.+\*\* — .+/gm) ?? []).length >= 3 &&
-  wordCount(sectionText(atom.body, "The idea, step by step")) >= 30 &&
-  wordCount(sectionText(atom.body, "Walk through an example")) >= 25 &&
-  wordCount(sectionText(atom.body, "A mistake to avoid")) >= 12 &&
-  wordCount(sectionText(atom.body, "What to remember")) >= 8,
-);
+  wordCount(atom.body) >= 350 &&
+  wordCount(sectionText(atom.body, "The idea, step by step")) >= 70 &&
+  wordCount(sectionText(atom.body, "Walk through an example")) >= 55 &&
+  wordCount(sectionText(atom.body, "A mistake to avoid")) >= 20 &&
+  wordCount(sectionText(atom.body, "What to remember")) >= 15;
+const underDetailed = auditedAtoms.filter((atom) => !isDetailedEnough(atom));
+if (underDetailed.length) {
+  console.error(
+    `teaching-depth gate failed (${underDetailed.length}): ` +
+    underDetailed.map((atom) => atom.id).join(", "),
+  );
+  process.exit(1);
+}
+console.log(`teaching depth clean - ${auditedAtoms.length} active lessons meet the expanded standard`);
+const detailedEnough = ratio(auditedAtoms, isDetailedEnough);
 const progression =
   points(dependencySafe, 6) +
   (foundationOrdered ? 6 : 0) +

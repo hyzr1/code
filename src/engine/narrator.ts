@@ -124,6 +124,14 @@ const SPOKEN: [RegExp, string][] = [
   // The empty string is a value with a name. Read as punctuation it is silent,
   // so `join("")` comes out as `join` and the whole point disappears.
   [/""/g, " empty string "],
+  [/\[\s*\]/g, " empty list "],
+  [/f(["'])\{\s*([A-Za-z_]\w*):\.(\d+)f\s*\}\1/g,
+    "an f-string formatting $2 to $3 decimal places"],
+  // A bare format placeholder is common in the narration around an f-string.
+  // Name its meaning before the generic brace rule starts reciting syntax.
+  [/\{\s*([A-Za-z_]\w*):\.(\d+)f\s*\}/g,
+    "$1 formatted to $2 decimal places"],
+  [/\$(\d+)\.(\d{2})/g, "$1 dollars and $2 cents"],
   // F-string placeholders and empty mappings should be described without
   // asking the voice to improvise names for brace punctuation.
   [/\{\s*\}/g, " braces "],
@@ -156,6 +164,10 @@ const SPOKEN: [RegExp, string][] = [
 
   [/\bNaN\b/g, "nan"],
   [/\bJS\b/g, "JavaScript"],
+  [/\bFIFO\b/g, "first in, first out"],
+  [/\bLRU\b/g, "L R U"],
+  [/\bAPI\b/g, "A P I"],
+  [/\bDP\b/g, "dynamic programming"],
   [/\bO\(n²\)/g, "O of n squared"],
   [/\bO\(n\^2\)/g, "O of n squared"],
   [/\bO\(n\)/g, "O of n"],

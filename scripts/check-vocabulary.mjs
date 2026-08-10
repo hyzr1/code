@@ -125,7 +125,7 @@ const PYTHON_UNLOCKS = [
   { re: /\b(?:try|except|raise|finally)\b/, name: "exceptions", lesson: "py.lesson.exceptions" },
   { re: /^\s*@\w+/m, name: "decorators", lesson: "py.lesson.decorators" },
   { re: /\bclass\s+\w+/, name: "classes", lesson: "py.lesson.classes" },
-  { re: /\b(?:yield|next)\s*\(?/, name: "iterators and generators", lesson: "py.lesson.iterators" },
+  { re: /\b(?:yield|next)\b\s*\(?/, name: "iterators and generators", lesson: "py.lesson.iterators" },
   { re: /\bwith\s+.+:/, name: "context managers", lesson: "py.lesson.contexts" },
   { re: /(?:->\s*[\w[\], |]+|\bdef\s+\w+\([^)]*\w+\s*:\s*[\w[])/, name: "type annotations", lesson: "py.lesson.typing" },
   { re: /\b(?:async\s+def|await|async\s+with)\b/, name: "async syntax", lesson: "py.lesson.asyncio" },
@@ -143,6 +143,16 @@ const fencedCode = (text) =>
   [...String(text).matchAll(/```(?:python)?\s*\n([\s\S]*?)```/g)]
     .map((match) => match[1].replace(/#.*$/gm, ""))
     .join("\n");
+
+// Syntax-looking characters inside a Python string are data, not syntax. Without
+// masking strings, an f-string such as `f"{total:.2f}"` looks like a dictionary,
+// `" | "` looks like set union, and the literal `"next"` looks like next().
+// Keep newlines so line-oriented expressions still behave as expected.
+const pythonSyntaxOnly = (text) =>
+  String(text).replace(
+    /(?:[rubf]{0,2})(?:'''[\s\S]*?'''|"""[\s\S]*?"""|'(?:\\.|[^'\\\n])*'|"(?:\\.|[^"\\\n])*")/gi,
+    (literal) => literal.replace(/[^\n]/g, " "),
+  );
 
 for (const lesson of pythonLessons) {
   const here = pythonOrder.get(lesson.id);
@@ -170,7 +180,7 @@ for (const lesson of pythonLessons) {
     const unlockedAt = pythonOrder.get(feature.lesson);
     if (unlockedAt === undefined || unlockedAt <= here) continue;
     for (const [where, text] of surfaces) {
-      if (feature.re.test(text)) {
+      if (feature.re.test(pythonSyntaxOnly(text))) {
         violations.push(
           `${lesson.id} · ${where}\n    uses ${feature.name}, not taught until ${feature.lesson}`,
         );
