@@ -51,8 +51,14 @@ const conciseScenes = ratio(
 const clarity = points(structured, 9) + points(conciseScenes, 6);
 
 const hasRecall = ratio(pythonAtoms, (atom) => atom.recall?.trim().length > 20);
+// Hands-on practice is a release requirement for the active SWE course. The
+// mastery catalogs are intentionally hidden while their lectures are authored;
+// do not let an unreleased lecture-only catalog dilute or inflate this score.
+const activePythonLessons = pythonLessons.filter((lesson) =>
+  /^py\.m(?:[0-9]|1[0-2])$/.test(lesson.moduleId),
+);
 const hasPracticeAfterFoundations = ratio(
-  pythonLessons.slice(4),
+  activePythonLessons.slice(4),
   (lesson) =>
     lesson.repIds.length > 0 ||
     lesson.problemIds.length > 0 ||
