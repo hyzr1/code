@@ -467,6 +467,8 @@ const VISUALS: [RegExp, VisualKind][] = [
   [/algo\.(?:dynamic-arrays|in-place-arrays|cyclic-placement|immutable-strings)/, "list"],
   [/algo\.(?:prefix-sums-guided|difference-arrays|prefix-sums-2d)/, "prefix"],
   [/algo\.(?:hash-maps-sets-guided|frequency-counting|grouping-by-key|default-writeback|composite-keys|set-operations-guided)/, "hash"],
+  [/algo\.(?:opposing-pointers-guided|read-write-pointers)/, "pointers"],
+  [/algo\.(?:fixed-window-guided|variable-window-guided|window-hash-map)/, "window"],
   [/ml\.(?:matrices|matrix-multiplication|transpose-identity-inverse|span-basis-rank|eigenvectors|determinant-trace|svd|matrix-decompositions|orthogonality-least-squares)/, "ml"],
   [/ml\.exponents-logs-sums/, "complexity"],
   [/ml\.(?:derivatives-rules|taylor-approximations)/, "function"],
