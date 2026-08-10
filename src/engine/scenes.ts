@@ -521,6 +521,8 @@ const VISUALS: [RegExp, VisualKind][] = [
   [/^(api-contracts|idempotency|cache-reasoning|capacity-estimation|caching)$/, "system"],
   [/^(ml-shapes|data-leakage|classification-metrics|gradient-descent)$/, "ml"],
   [/^(expected-value|bayes-rule|combinatorics|monte-carlo)$/, "probability"],
+  [/ml\.(?:estimators|descriptive|large-numbers|tests|bootstrap|entropy|cross-entropy|mutual-information)/, "probability"],
+  [/ml\.multiple-testing/, "decision"],
   [/^(dict-iteration|collections)$/, "hash"],
   [/hashing|dicts|sets/, "hash"],
   [/prefix-sums/, "prefix"],
