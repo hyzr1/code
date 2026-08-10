@@ -476,6 +476,8 @@ const VISUALS: [RegExp, VisualKind][] = [
   [/algo\.(?:comparison-sorts|merge-sort-guided|quick-sort-guided|noncomparison-sorts)/, "pipeline"],
   [/algo\.quickselect-guided/, "pointers"],
   [/algo\.(?:sort-keys-comparators|sort-stability-guided)/, "decision"],
+  [/algo\.(?:binary-search-exact|binary-search-bounds|binary-search-answer)/, "decision"],
+  [/algo\.binary-search-shaped/, "pointers"],
   [/ml\.(?:matrices|matrix-multiplication|transpose-identity-inverse|span-basis-rank|eigenvectors|determinant-trace|svd|matrix-decompositions|orthogonality-least-squares)/, "ml"],
   [/ml\.exponents-logs-sums/, "complexity"],
   [/ml\.(?:derivatives-rules|taylor-approximations)/, "function"],
