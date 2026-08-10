@@ -483,6 +483,7 @@ const VISUALS: [RegExp, VisualKind][] = [
   [/algo\.(?:binary-heap|heap-operations|heap-sort-guided|heap-top-k|two-heaps|k-way-merge)/, "heap"],
   [/algo\.(?:trie-foundations|trie-applications)/, "tree"],
   [/algo\.(?:graph-representations|grid-graphs|graph-bfs|graph-dfs|graph-components|graph-cycles|graph-bipartite)/, "graph"],
+  [/algo\.(?:topological-order-guided|dsu-foundations|dsu-applications|strong-components|bridges-articulation)/, "graph"],
   [/ml\.(?:matrices|matrix-multiplication|transpose-identity-inverse|span-basis-rank|eigenvectors|determinant-trace|svd|matrix-decompositions|orthogonality-least-squares)/, "ml"],
   [/ml\.exponents-logs-sums/, "complexity"],
   [/ml\.(?:derivatives-rules|taylor-approximations)/, "function"],
