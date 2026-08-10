@@ -1,4 +1,4 @@
-/** Compile every Python block displayed in the active 73-lesson course. */
+/** Compile every displayed Python block in released and authored mastery lectures. */
 import { spawnSync } from "node:child_process";
 import { ATOMS, COURSE_LESSONS } from "../.check/content.mjs";
 
@@ -9,6 +9,9 @@ const activeAtomIds = new Set(
     )
     .map((lesson) => lesson.atomId),
 );
+for (const atom of ATOMS) {
+  if (/^py\.atom\.(?:algo|ml)\./.test(atom.id)) activeAtomIds.add(atom.id);
+}
 const moduleByAtomId = new Map(
   COURSE_LESSONS.map((lesson) => [lesson.atomId, lesson.moduleId]),
 );
@@ -31,6 +34,27 @@ for (const atom of ATOMS.filter((candidate) => activeAtomIds.has(candidate.id)))
     );
     if (result.status !== 0) {
       failures.push(`${atom.id} block ${index + 1}: ${result.stderr.trim()}`);
+    }
+  }
+
+  // Guided mastery examples are deliberately written as one cumulative mini
+  // notebook. Execute the complete sequence so later examples may reuse a
+  // helper taught moments earlier, but no hidden state from another lesson.
+  if (
+    /^py\.atom\.(?:algo|ml)\./.test(atom.id) &&
+    atom.body.includes("## What you will be able to explain")
+  ) {
+    executedCount += 1;
+    const program = blocks.map((match) => match[1]).join("\n\n");
+    const result = spawnSync("python", ["-c", program], {
+      encoding: "utf8",
+      timeout: 5_000,
+    });
+    if (result.status !== 0 || result.error) {
+      failures.push(
+        `${atom.id} guided examples do not run in order: ` +
+        (result.error?.message ?? result.stderr.trim()),
+      );
     }
   }
 
