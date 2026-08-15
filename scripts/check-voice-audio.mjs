@@ -33,10 +33,12 @@ const numberMatches = (text, pattern) => [...text.matchAll(pattern)]
   .map((match) => Number(match[1]))
   .filter(Number.isFinite);
 
-for (const [lecture, asset] of Object.entries(manifest.lectures)) {
+const auditLecture = async (lecture, asset) => {
+  const lectureFailures = [];
+  let lectureCueCount = 0;
   const file = path.join(ROOT, "public", "voice-packs", VOICE, asset.file);
   const info = await stat(file);
-  if (info.size < 1024) failures.push(`${lecture}: encoded file is only ${info.size} bytes`);
+  if (info.size < 1024) lectureFailures.push(`${lecture}: encoded file is only ${info.size} bytes`);
 
   const meta = JSON.parse(await readFile(
     path.join(ROOT, ".voice-pack-cache", VOICE, `${lecture}.json`),
@@ -44,12 +46,12 @@ for (const [lecture, asset] of Object.entries(manifest.lectures)) {
   ));
   let previousEnd = 0;
   for (const [index, cue] of meta.cues.entries()) {
-    cueCount += 1;
+    lectureCueCount += 1;
     if (!(cue.duration > 0) || cue.start < previousEnd - 0.002) {
-      failures.push(`${lecture}: invalid or overlapping cue ${index + 1}`);
+      lectureFailures.push(`${lecture}: invalid or overlapping cue ${index + 1}`);
     }
     if (cue.start + cue.duration > meta.duration + 0.002) {
-      failures.push(`${lecture}: cue ${index + 1} exceeds its lecture duration`);
+      lectureFailures.push(`${lecture}: cue ${index + 1} exceeds its lecture duration`);
     }
     previousEnd = cue.start + cue.duration;
   }
@@ -58,8 +60,8 @@ for (const [lecture, asset] of Object.entries(manifest.lectures)) {
   try {
     analysis = await inspect(file);
   } catch (error) {
-    failures.push(`${lecture}: cannot decode (${error.message})`);
-    continue;
+    lectureFailures.push(`${lecture}: cannot decode (${error.message})`);
+    return { failures: lectureFailures, cueCount: lectureCueCount };
   }
 
   const durationMatch = /Duration:\s*(\d+):(\d+):([\d.]+)/.exec(analysis);
@@ -67,7 +69,7 @@ for (const [lecture, asset] of Object.entries(manifest.lectures)) {
     ? Number(durationMatch[1]) * 3600 + Number(durationMatch[2]) * 60 + Number(durationMatch[3])
     : NaN;
   if (!Number.isFinite(duration) || Math.abs(duration - meta.duration) > 0.35) {
-    failures.push(`${lecture}: encoded duration ${duration} disagrees with cues ${meta.duration}`);
+    lectureFailures.push(`${lecture}: encoded duration ${duration} disagrees with cues ${meta.duration}`);
   }
 
   const peaks = numberMatches(analysis, /Peak level dB:\s*([-\d.]+)/g);
@@ -79,15 +81,35 @@ for (const [lecture, asset] of Object.entries(manifest.lectures)) {
   // when the source PCM never clipped. Treat only > +0.5 dB as implausible;
   // the released pack's maximum is +0.15 dB and contains no hard plateau.
   if (!Number.isFinite(peak) || peak < -35 || peak > 0.5) {
-    failures.push(`${lecture}: implausible peak level ${peak} dB`);
+    lectureFailures.push(`${lecture}: implausible peak level ${peak} dB`);
   }
   if (!Number.isFinite(average) || average < -45 || average > -3) {
-    failures.push(`${lecture}: implausible RMS level ${average} dB`);
+    lectureFailures.push(`${lecture}: implausible RMS level ${average} dB`);
   }
   if (longestSilence > 3) {
-    failures.push(`${lecture}: contains ${longestSilence.toFixed(2)} seconds of continuous silence`);
+    lectureFailures.push(`${lecture}: contains ${longestSilence.toFixed(2)} seconds of continuous silence`);
   }
-}
+
+  return { failures: lectureFailures, cueCount: lectureCueCount };
+};
+
+// Decoding is CPU-bound and every lecture is independent. A small worker pool
+// keeps the full-pack release gate practical without launching hundreds of
+// ffmpeg processes at once or changing any acoustic checks.
+const entries = Object.entries(manifest.lectures);
+const workerCount = Math.min(4, entries.length);
+let nextEntry = 0;
+await Promise.all(Array.from({ length: workerCount }, async () => {
+  while (true) {
+    const index = nextEntry;
+    nextEntry += 1;
+    if (index >= entries.length) return;
+    const [lecture, asset] = entries[index];
+    const result = await auditLecture(lecture, asset);
+    cueCount += result.cueCount;
+    failures.push(...result.failures);
+  }
+}));
 
 if (failures.length) {
   console.error(`voice audio failures (${failures.length})`);

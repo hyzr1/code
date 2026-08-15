@@ -48,7 +48,10 @@ for (const atom of ATOMS.filter((candidate) => activeAtomIds.has(candidate.id)))
     const program = blocks.map((match) => match[1]).join("\n\n");
     const result = spawnSync("python", ["-c", program], {
       encoding: "utf8",
-      timeout: 5_000,
+      // Heavy libraries such as PyTorch can spend several seconds importing on
+      // a cold Windows process. The gate is checking correctness, so allow the
+      // interpreter to start without turning machine load into a false defect.
+      timeout: 15_000,
     });
     if (result.status !== 0 || result.error) {
       failures.push(

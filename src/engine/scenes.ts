@@ -529,6 +529,8 @@ const VISUALS: [RegExp, VisualKind][] = [
   [/ml\.(?:experiment-tracking|profiling-bottlenecks|gpu-workflow|notebooks-pipelines)/, "pipeline"],
   [/ml\.(?:learning-paradigms|examples-features-labels|baselines-formulation|split-discipline|generalization-fit|bias-variance-diagnosis|cross-validation-search)/, "ml"],
   [/ml\.(?:linear-regression|regression-losses|logistic-regression|softmax-regression|linear-regularization|feature-pipelines)/, "function"],
+  [/ml\.(?:knn-guided|naive-bayes-guided|curse-dimensionality)/, "ml"],
+  [/ml\.decision-trees-guided/, "tree"],
   [/^(dict-iteration|collections)$/, "hash"],
   [/hashing|dicts|sets/, "hash"],
   [/prefix-sums/, "prefix"],
