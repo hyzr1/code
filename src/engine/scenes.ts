@@ -532,6 +532,7 @@ const VISUALS: [RegExp, VisualKind][] = [
   [/ml\.(?:knn-guided|naive-bayes-guided|curse-dimensionality)/, "ml"],
   [/ml\.decision-trees-guided/, "tree"],
   [/ml\.(?:bagging-random-forests|boosting-guided|gradient-boosted-trees|stacking-blending)/, "tree"],
+  [/ml\.(?:support-vector-machines|kernel-trick)/, "ml"],
   [/^(dict-iteration|collections)$/, "hash"],
   [/hashing|dicts|sets/, "hash"],
   [/prefix-sums/, "prefix"],
