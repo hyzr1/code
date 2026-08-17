@@ -92,6 +92,221 @@ export const MASTERY_EXTRA_CHECKS: Record<string, LectureQuestion> = {
     ],
   ),
   // ---------------------------------------------------------------
+  // ML · Module 1.2 — Calculus & optimization math
+  // ---------------------------------------------------------------
+  "py.atom.ml.exponents-logs-sums": q(
+    "Why are likelihoods almost always computed in log space?",
+    ["Products of many small probabilities underflow, and logs turn them into sums", "Logs make the model more accurate", "Probabilities cannot be multiplied directly"],
+    0,
+    "Logs undo powers and turn products into sums.",
+    ["Correct. A thousand probabilities multiplied together round to zero in floating point.", "The optimum is unchanged; only the arithmetic is safer.", "They can be multiplied — the problem is what floating point does with the result."],
+  ),
+  "py.atom.ml.derivatives-rules": q(
+    "A function has a large value but a derivative of zero at a point. What does that tell you?",
+    ["It is locally flat there, whatever its height", "It is at zero height", "The function is constant everywhere"],
+    0,
+    "A derivative is local slope, not height.",
+    ["Correct. Height and slope are independent pieces of information.", "Value and derivative are unrelated quantities.", "Flat at one point says nothing about the rest."],
+  ),
+  "py.atom.ml.partials-gradient": q(
+    "Why does gradient descent step in the direction of the negative gradient?",
+    ["The gradient points toward steepest ascent, so its negative descends fastest", "The negative gradient is always smaller", "Gradients are always negative"],
+    0,
+    "The gradient collects all partials and points uphill.",
+    ["Correct. Minimizing means moving directly against the steepest climb.", "Negating changes direction, not magnitude.", "A gradient can point in any direction."],
+  ),
+  "py.atom.ml.chain-rule": q(
+    "In `f(x) = outer(inner(x))`, where is the outer derivative evaluated?",
+    ["At `inner(x)`, the value flowing into it", "At `x`, the original input", "At zero"],
+    0,
+    "Find each local derivative, then multiply backward along the path.",
+    ["Correct. Each stage differentiates at whatever value it actually received.", "Evaluating at x ignores the transformation the inner function performed.", "There is no reason the composition would be centred at zero."],
+  ),
+  "py.atom.ml.jacobians-hessians": q(
+    "A function maps 3 inputs to 2 outputs. What is its Jacobian's shape?",
+    ["2 by 3 — one row per output, one column per input", "3 by 2", "3 by 3"],
+    0,
+    "A Jacobian organizes first derivatives from many inputs to many outputs.",
+    ["Correct. Each row is the gradient of one output.", "That is the transpose of the Jacobian.", "Square shapes only arise when the counts happen to match."],
+  ),
+  "py.atom.ml.matrix-calculus": q(
+    "The gradient of `||Ax - b||^2` is `2A^T(Ax - b)`. What does a zero gradient mean?",
+    ["The residual is orthogonal to every column of A — the least-squares solution", "The matrix A is zero", "The data contains no noise"],
+    0,
+    "Expand the compact expression and differentiate coordinate by coordinate.",
+    ["Correct. No column can explain any remaining error, so the fit cannot improve.", "A can be anything; it is the product that vanishes.", "Residuals usually remain; they are simply unexplainable by this model."],
+  ),
+  "py.atom.ml.taylor-approximations": q(
+    "Why do second-order optimization methods build a quadratic model of the loss?",
+    ["A quadratic captures curvature, so the step size can be chosen sensibly", "Quadratics are always exact", "First derivatives are unavailable"],
+    0,
+    "Taylor replaces a hard local function with a matching polynomial.",
+    ["Correct. Curvature says how far you can move before the slope changes.", "The approximation is only accurate near the expansion point.", "Second-order methods use first derivatives too — plus curvature."],
+  ),
+  "py.atom.ml.convexity": q(
+    "Your loss is convex. What does that guarantee about a local minimum you find?",
+    ["It is also the global minimum", "It is unique", "Gradient descent will reach it in one step"],
+    0,
+    "Convexity turns every local minimum into a global minimum.",
+    ["Correct. That is precisely the guarantee convexity buys.", "A flat-bottomed convex function can have many minimizers at the same value.", "Convexity says nothing about how many steps convergence takes."],
+  ),
+  "py.atom.ml.constrained-optimization": q(
+    "What must a constrained optimum satisfy that an unconstrained one need not?",
+    ["It must be feasible, and unbeatable only among allowed moves", "Its gradient must be exactly zero", "It must lie at a corner of the feasible region"],
+    0,
+    "A constrained solution must be feasible and locally unbeatable by allowed moves.",
+    ["Correct. The gradient may be non-zero if every improving direction leaves the feasible set.", "That is the unconstrained condition; constraints relax it.", "Corners matter for linear programs, not in general."],
+  ),
+
+  // ---------------------------------------------------------------
+  // ML · Module 1.3 — Probability
+  // ---------------------------------------------------------------
+  "py.atom.ml.sample-spaces-events": q(
+    "What has to be defined before any probability can be assigned?",
+    ["The set of possible outcomes and the event of interest", "The number of experiments you will run", "The mean of the distribution"],
+    0,
+    "Define outcomes and the event first, then assign weights.",
+    ["Correct. Without a sample space there is nothing for probability to be about.", "Repetition is about estimation, not definition.", "A mean presupposes a distribution already defined."],
+  ),
+  "py.atom.ml.conditional-independence": q(
+    "What does independence of A and B actually assert?",
+    ["Knowing B occurred leaves the probability of A unchanged", "A and B cannot both occur", "A and B have equal probability"],
+    0,
+    "Independence means conditioning does not change the probability.",
+    ["Correct. The restriction to B's world leaves A's proportion untouched.", "That is mutual exclusivity, which is a different idea entirely.", "Equal probability has nothing to do with independence."],
+  ),
+  "py.atom.ml.bayes-guided": q(
+    "Which quantity most often surprises people in a Bayes calculation?",
+    ["The base rate, which can make a positive result mostly false alarms", "The likelihood, which is usually ignored", "The posterior, which always equals the likelihood"],
+    0,
+    "Normalize by every possible path to the evidence.",
+    ["Correct. A rare condition means healthy false positives outnumber true ones.", "The likelihood is exactly what people over-weight.", "They coincide only when the prior is uniform and the evidence balanced."],
+  ),
+  "py.atom.ml.random-variables-guided": q(
+    "What distinguishes a discrete random variable from a continuous one?",
+    ["Discrete assigns mass to individual values; continuous assigns density over ranges", "Discrete variables are always integers", "Continuous variables cannot be summarized"],
+    0,
+    "A random variable maps outcomes to numbers; discrete models assign mass to values.",
+    ["Correct. A single point has zero probability under a density.", "The values could be any distinct labels mapped to numbers.", "They have means and variances just like discrete ones."],
+  ),
+  "py.atom.ml.expectation-variance-covariance": q(
+    "Two variables have covariance zero. What can you conclude?",
+    ["They have no linear relationship, but may still be dependent", "They are independent", "One of them is constant"],
+    0,
+    "Covariance measures joint linear movement, not dependence in general.",
+    ["Correct. A symmetric non-linear relationship can have exactly zero covariance.", "Independence implies zero covariance, but not the reverse.", "A constant gives zero covariance, but it is not the only cause."],
+  ),
+  "py.atom.ml.key-distributions": q(
+    "You count how many of 100 emails are spam. Which distribution matches?",
+    ["Binomial — a fixed number of independent binary trials", "Bernoulli — a single binary result", "Gaussian — an unbounded continuous value"],
+    0,
+    "Match support and generation to the distribution.",
+    ["Correct. Each email is a trial and you are counting successes.", "Bernoulli describes one email, not the count across 100.", "The count is discrete and bounded between 0 and 100."],
+  ),
+  "py.atom.ml.gaussian-guided": q(
+    "Two features are measured in different units. Why do z-scores help?",
+    ["They re-express both in standard deviations, making them comparable", "They remove all outliers", "They make both features Gaussian"],
+    0,
+    "A z-score expresses distance from the mean in units of spread.",
+    ["Correct. Scale differences disappear once everything is measured in its own spread.", "Outliers remain; they simply get large z-scores.", "Standardizing shifts and scales but does not change the distribution's shape."],
+  ),
+  "py.atom.ml.joint-marginal-conditional": q(
+    "What is lost when you marginalize a joint distribution?",
+    ["The relationship between the variables", "The total probability mass", "The shape of the remaining variable"],
+    0,
+    "Joint is the full relationship; marginal sums a variable away.",
+    ["Correct. Two very different joints can share identical marginals.", "Mass is preserved — the marginal still sums to one.", "The remaining variable's own distribution is exactly what survives."],
+  ),
+  "py.atom.ml.multivariate-gaussian": q(
+    "What does an off-diagonal entry in a covariance matrix control?",
+    ["The tilt of the cloud — how the two variables co-vary", "The center of the cloud", "The number of samples"],
+    0,
+    "A mean vector locates the cloud; the covariance sets spread and tilt.",
+    ["Correct. Zero off-diagonals give an axis-aligned cloud.", "Location is entirely the mean vector's job.", "Sample count is not part of the distribution at all."],
+  ),
+  "py.atom.ml.monte-carlo-guided": q(
+    "You quadruple your Monte Carlo samples. What happens to the standard error?",
+    ["It halves, because error falls with the square root of n", "It quarters", "It is unchanged"],
+    0,
+    "Report standard error, and remember Monte Carlo converges slowly.",
+    ["Correct. Dividing by sqrt(4) means a factor of two, which is why precision is expensive.", "That would be true if error fell linearly, which it does not.", "More samples genuinely do reduce the error."],
+  ),
+  "py.atom.ml.mle-map": q(
+    "You observe three heads in three flips. What does MLE estimate, and why is MAP often preferred?",
+    ["MLE says p = 1; MAP's prior pulls it off that extreme", "MLE says p = 0.5; MAP agrees", "Both refuse to give an estimate"],
+    0,
+    "MLE chooses the parameter best explaining the data; MAP adds prior preference.",
+    ["Correct. MLE overfits tiny samples, and a prior regularizes that away.", "MLE follows the data exactly, which here means one.", "Both produce estimates; they simply differ."],
+  ),
+
+  // ---------------------------------------------------------------
+  // ML · Module 1.4 — Statistics & information theory
+  // ---------------------------------------------------------------
+  "py.atom.ml.estimators-guided": q(
+    "Why does dividing squared deviations by n underestimate the population variance?",
+    ["Deviations are measured from the sample's own mean, which sits closest to the data", "Because n is always too large", "Because outliers are excluded"],
+    0,
+    "The estimand is the target, the estimator is the rule; bias is a property of the rule.",
+    ["Correct. The sample mean minimizes those squared deviations, so they are too small.", "The issue is which centre was used, not the size of n.", "No values are excluded from the calculation."],
+  ),
+  "py.atom.ml.descriptive-correlation": q(
+    "Income data is heavily skewed by a few very high earners. Which summary should you report?",
+    ["The median, which outliers cannot drag", "The mean, which uses every value", "The maximum, which shows the range"],
+    0,
+    "Use summaries that match the data's shape.",
+    ["Correct. A handful of extreme values barely move the middle observation.", "The mean is exactly what those earners distort.", "One extreme value is not a summary of the distribution."],
+  ),
+  "py.atom.ml.large-numbers-clt": q(
+    "What does the central limit theorem describe, that the law of large numbers does not?",
+    ["The shape of the sampling distribution of the mean", "That averages converge at all", "That data is normally distributed"],
+    0,
+    "Large numbers explains convergence; the central limit theorem explains the shape.",
+    ["Correct. It says the mean's own distribution approaches a Gaussian.", "Convergence is precisely the law of large numbers.", "The underlying data need not be Gaussian at all."],
+  ),
+  "py.atom.ml.tests-intervals": q(
+    "What does a 95% confidence interval actually claim?",
+    ["The procedure captures the true value in 95% of repeated experiments", "There is a 95% chance the true value is in this interval", "95% of the data falls inside it"],
+    0,
+    "Confidence is long-run procedure coverage.",
+    ["Correct. The guarantee is about the method, not about this one interval.", "That is the common misreading; the true value is fixed, not random.", "It describes the parameter, not the spread of the data."],
+  ),
+  "py.atom.ml.bootstrap-sampling": q(
+    "Why must a bootstrap resample be drawn *with* replacement?",
+    ["Without it every resample would be the original sample reordered", "It makes the computation faster", "It removes outliers automatically"],
+    0,
+    "Resample observational units with replacement, then recompute the whole statistic.",
+    ["Correct. Repetition and omission are what create variation between resamples.", "Speed is unaffected by the sampling scheme.", "Outliers can appear multiple times in a resample."],
+  ),
+  "py.atom.ml.entropy-guided": q(
+    "Which distribution over four outcomes has the highest entropy?",
+    ["All four equally likely", "One outcome with probability 0.97", "Two outcomes at 0.5 and two at 0"],
+    0,
+    "Entropy is probability-weighted average surprise.",
+    ["Correct. Maximum uncertainty means every outcome is equally unpredictable.", "Near-certainty carries almost no surprise.", "That collapses to a fair coin, which is one bit rather than two."],
+  ),
+  "py.atom.ml.cross-entropy-kl": q(
+    "Why is minimizing cross-entropy equivalent to minimizing KL divergence during training?",
+    ["They differ only by the data's own entropy, which the model cannot change", "They are numerically identical", "KL is undefined for real data"],
+    0,
+    "Cross-entropy evaluates model probabilities with reality's frequencies.",
+    ["Correct. That fixed offset shifts the loss but never moves the optimum.", "They differ by a constant unless the data has zero entropy.", "KL is well defined wherever the model assigns non-zero probability."],
+  ),
+  "py.atom.ml.mutual-information": q(
+    "Two features are related by a perfect U-shape. What do correlation and mutual information report?",
+    ["Correlation near zero, mutual information clearly positive", "Both near zero", "Both large and positive"],
+    0,
+    "Mutual information measures general dependence, not just linear.",
+    ["Correct. This is exactly the dependence a correlation coefficient misses.", "The variables are strongly dependent, which MI detects.", "Correlation only captures the linear part, which cancels here."],
+  ),
+  "py.atom.ml.multiple-testing-power": q(
+    "You test 20 hypotheses at alpha 0.05 with nothing real present. What should you expect?",
+    ["About one significant result purely by chance", "No significant results", "All twenty significant"],
+    0,
+    "Define the family, then correct the decision rule.",
+    ["Correct. That is precisely why a family-wide correction is needed.", "Each test still has a 5% chance of a false alarm.", "False positives arrive at the alpha rate, not universally."],
+  ),
+
+  // ---------------------------------------------------------------
   // ML · Module 1.1 — Linear algebra
   // ---------------------------------------------------------------
   "py.atom.ml.vector-operations": q(
