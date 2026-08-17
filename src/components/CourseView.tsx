@@ -9,7 +9,7 @@ import {
   modulesForCourse,
 } from "../content";
 import { useSettings } from "../settings";
-import { ACTIVE_SWE_PREPARATION_LEVEL, COURSE_BY_ID } from "../content/courses";
+import { ACTIVE_SWE_PREPARATION_LEVEL, COURSE_BY_ID, COMING_SOON_COURSES } from "../content/courses";
 
 export default function CourseView({
   progress,
@@ -76,12 +76,12 @@ export default function CourseView({
             Assumes you already know Python — start with the Python course if you don't.
           </p>
         ) : null}
-        {course === "swe" ? (
+        {course === "swe" && COMING_SOON_COURSES.length ? (
           <div className="mastery-coming-row" aria-label="Coming soon courses">
             <span>Coming soon</span>
-            <b>Python Mastery</b>
-            <b>Algo Mastery</b>
-            <b>ML Mastery</b>
+            {COMING_SOON_COURSES.map((item) => (
+              <b key={item.id}>{item.label}</b>
+            ))}
           </div>
         ) : null}
       </div>

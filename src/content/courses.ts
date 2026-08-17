@@ -69,6 +69,9 @@ export const COURSE_BY_ID = new Map(COURSES.map((course) => [course.id, course])
 /** Courses offered in the picker. */
 export const VISIBLE_COURSES = COURSES.filter((course) => !course.hidden);
 
+/** Visible catalogs that are announced but not yet playable. */
+export const COMING_SOON_COURSES = VISIBLE_COURSES.filter((course) => course.comingSoon);
+
 /**
  * Which product owns a module. Explicit roadmap modules stay in their future
  * mastery catalogs; the fully authored original sequence forms the SWE path.
