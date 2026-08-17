@@ -92,6 +92,143 @@ export const MASTERY_EXTRA_CHECKS: Record<string, LectureQuestion> = {
     ],
   ),
   // ---------------------------------------------------------------
+  // ML · Part 2 — Scientific Python & the ML toolkit
+  // ---------------------------------------------------------------
+  "py.atom.ml.numpy-arrays": q(
+    "Shapes (3, 1) and (4,) are broadcast together. What is the result?",
+    ["(3, 4), because the length-one axis stretches", "An error, because 1 and 4 differ", "(3, 1), because the left operand wins"],
+    0,
+    "Broadcasting compares axes right to left; a 1 stretches, a missing axis counts as 1.",
+    ["Correct. The missing leading axis becomes 1 and the length-one axis expands to 4.", "A length-one axis is exactly the case that is allowed to stretch.", "Neither operand wins; the result takes the larger of each pair."],
+  ),
+  "py.atom.ml.numpy-vectorization": q(
+    "Why replace a Python loop with a vectorized expression?",
+    ["The loop runs in the interpreter while the vectorized form runs in compiled code", "Vectorized code is more accurate", "Loops cannot express elementwise work"],
+    0,
+    "Vectorize regular numerical work with ufuncs, masks, and broadcasting.",
+    ["Correct. The per-element interpreter overhead is what disappears.", "Both compute the same values; only speed changes.", "Loops can express it — they are just slow at scale."],
+  ),
+  "py.atom.ml.numpy-linear-algebra": q(
+    "You need to solve `A x = b`. Why prefer a solver over computing `inv(A) @ b`?",
+    ["Solving is faster and numerically better conditioned", "The inverse does not exist for square matrices", "The two give different answers mathematically"],
+    0,
+    "Use solve for linear systems rather than forming an inverse.",
+    ["Correct. Explicit inversion costs more and amplifies rounding error.", "Square matrices often have inverses; that is not the issue.", "They agree in exact arithmetic — the difference is numerical."],
+  ),
+  "py.atom.ml.numpy-stability": q(
+    "Subtracting the max before a softmax changes the result how?",
+    ["Not at all mathematically, but it prevents overflow", "It makes the outputs sum to less than one", "It reverses the ordering of the outputs"],
+    0,
+    "Equivalent algebra can behave differently in finite precision.",
+    ["Correct. The shift cancels in the ratio, so only the arithmetic safety changes.", "The outputs still sum to exactly one.", "Ordering is preserved because every logit shifts equally."],
+  ),
+  "py.atom.ml.numpy-random-generators": q(
+    "Why pass a generator object explicitly rather than calling a global random function?",
+    ["Global state makes runs depend on unrelated call order", "Global functions are slower", "Generator objects produce better randomness"],
+    0,
+    "Use default_rng, record seeds, and pass generator objects explicitly.",
+    ["Correct. Any other code drawing from the same global stream silently changes your results.", "Speed is not the concern.", "Both use the same underlying algorithms; the difference is control."],
+  ),
+  "py.atom.ml.pandas-foundations": q(
+    "What should you settle before writing any dataframe code?",
+    ["What one row represents", "Which plotting library you will use", "How many rows there are"],
+    0,
+    "Define one-row meaning, then index and aggregate deliberately.",
+    ["Correct. Joins, grouping, and deduplication are all meaningless without it.", "Plotting comes much later and does not shape the data model.", "Row count is a fact about the data, not its meaning."],
+  ),
+  "py.atom.ml.data-cleaning": q(
+    "Before dropping duplicates, what must you decide?",
+    ["Which fields define whether two rows are the same record", "How many rows you are willing to lose", "Whether to sort the data first"],
+    0,
+    "Define duplicate identity explicitly.",
+    ["Correct. The same table yields different results under different identities.", "The loss follows from the identity, not the other way round.", "Order does not affect which rows are duplicates."],
+  ),
+  "py.atom.ml.tabular-preprocessing": q(
+    "You standardize features using statistics computed over the full dataset, then split. What have you done?",
+    ["Leaked test information into training, inflating your score", "Nothing wrong, since scaling is not learning", "Made the model slower to train"],
+    0,
+    "Split first, fit every learned transformation on training data, reuse it unchanged.",
+    ["Correct. The mean and standard deviation are learned parameters carrying test information.", "Scaling is fitted from data, so it absolutely is learning.", "Speed is unaffected; the estimate is what breaks."],
+  ),
+  "py.atom.ml.exploratory-analysis": q(
+    "During exploration a column turns out to be 95% missing. What does that mean for modelling?",
+    ["The column carries little usable signal and may not be worth imputing", "The column should be filled with zeros", "The rows with missing values must be deleted"],
+    0,
+    "Explore distributions, missingness, groups, and suspicious patterns first.",
+    ["Correct. Imputing 95% of a column mostly invents data.", "Zero is a value with meaning and would distort the distribution.", "Deleting those rows would discard almost the entire dataset."],
+  ),
+  "py.atom.ml.plotting-guided": q(
+    "What should determine the choice of chart?",
+    ["The question being asked of the data", "Which chart looks most impressive", "The number of columns available"],
+    0,
+    "Name the question, then choose the matching mark.",
+    ["Correct. Distribution, comparison, and trend each call for a different mark.", "Decoration is not a reason to mislead a reader.", "Column count constrains options but does not choose among them."],
+  ),
+  "py.atom.ml.torch-tensors-devices": q(
+    "A forward pass raises an error about expected device. What is the likely cause?",
+    ["The model and the batch live on different devices", "The learning rate is too high", "The dtype is float32 instead of float64"],
+    0,
+    "Treat shape, dtype, and device as one tensor contract.",
+    ["Correct. Model and data must be moved to the same device deliberately.", "Learning rate cannot produce a device error.", "A dtype mismatch raises a dtype error, not a device one."],
+  ),
+  "py.atom.ml.torch-autograd": q(
+    "When does autograd actually compute gradients?",
+    ["During the backward pass, replaying the recorded graph in reverse", "During the forward pass, alongside each operation", "When the optimizer steps"],
+    0,
+    "Forward records a graph; backward applies the chain rule in reverse.",
+    ["Correct. Forward only records what was done and the values needed.", "Forward computes values and records structure, not gradients.", "The optimizer consumes gradients that already exist."],
+  ),
+  "py.atom.ml.torch-shapes": q(
+    "Why insert a length-one axis before an operation?",
+    ["To control how broadcasting aligns the tensors", "To reduce memory usage", "To convert the dtype"],
+    0,
+    "Insert length-one axes deliberately rather than letting broadcasting guess.",
+    ["Correct. It makes the intended alignment explicit instead of accidental.", "A length-one axis adds no elements either way.", "Axes and dtypes are independent."],
+  ),
+  "py.atom.ml.torch-dataloaders": q(
+    "What is the Dataset responsible for, as opposed to the DataLoader?",
+    ["Defining one example; the DataLoader defines delivery", "Defining the batch size", "Shuffling the data"],
+    0,
+    "Dataset defines one example, DataLoader defines delivery, collate defines batch assembly.",
+    ["Correct. That separation lets you change batching without touching the data logic.", "Batch size is a delivery decision.", "Shuffling is also delivery."],
+  ),
+  "py.atom.ml.torch-reproducibility": q(
+    "You seed the model initialization but results still vary between runs. What is the most likely omission?",
+    ["The data order is driven by a separate unseeded generator", "The learning rate changes each run", "The loss function is non-deterministic"],
+    0,
+    "Seed every source and isolate generator streams.",
+    ["Correct. Shuffling is its own randomness source and needs its own seed.", "Hyperparameters do not change unless you change them.", "Standard losses are deterministic given the same inputs."],
+  ),
+  "py.atom.ml.experiment-tracking": q(
+    "Why must a run record the code version and data version, not just hyperparameters?",
+    ["Otherwise two runs with identical settings cannot be explained when they differ", "To make the run directory larger", "Because hyperparameters are unimportant"],
+    0,
+    "Record configuration, code, data, and environment against a unique identity.",
+    ["Correct. Without them a changed result has no attributable cause.", "Size is irrelevant to the purpose.", "Hyperparameters matter — they are simply not sufficient."],
+  ),
+  "py.atom.ml.profiling-bottlenecks": q(
+    "A stage takes 3% of total runtime. You make it twice as fast. What is the overall gain?",
+    ["About 1.5%, which is why you should profile first", "About 50%", "None, because optimization never helps"],
+    0,
+    "Measure stage time before optimizing anything.",
+    ["Correct. The ceiling on any speedup is the share of time that stage occupies.", "Halving 3% cannot halve the whole runtime.", "Optimizing the dominant stage genuinely does help."],
+  ),
+  "py.atom.ml.gpu-workflow": q(
+    "Training with Adam runs out of memory although the parameters fit easily. Why?",
+    ["Gradients and optimizer state multiply the per-parameter cost several times over", "The GPU reserves half its memory for the driver", "Parameters are stored twice by default"],
+    0,
+    "Estimate the whole memory budget, not just the weights.",
+    ["Correct. Adam adds two moment buffers on top of parameters and gradients.", "Driver overhead is small and not the explanation here.", "The duplication is gradients and optimizer state, which is more than one extra copy."],
+  ),
+  "py.atom.ml.notebooks-pipelines": q(
+    "When should notebook logic be promoted into a tested function?",
+    ["Once it is stable and something else depends on it", "Never — notebooks should hold the whole project", "Immediately, before you know whether it works"],
+    0,
+    "Explore interactively, promote stable logic into tested functions, then orchestrate.",
+    ["Correct. Promotion is what makes a result repeatable by anyone else.", "Notebooks hide execution order and resist testing.", "Promoting too early adds ceremony to code you may discard."],
+  ),
+
+  // ---------------------------------------------------------------
   // ML · Module 1.2 — Calculus & optimization math
   // ---------------------------------------------------------------
   "py.atom.ml.exponents-logs-sums": q(
