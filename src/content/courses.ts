@@ -59,7 +59,6 @@ export const COURSES: CourseOption[] = [
     detail: "Bridge from Python into building ML — the math and the models. Assumes Python.",
     accent: "#2f9668",
     assumesPython: true,
-    comingSoon: true,
   },
 ];
 
