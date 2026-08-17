@@ -92,6 +92,137 @@ export const MASTERY_EXTRA_CHECKS: Record<string, LectureQuestion> = {
     ],
   ),
   // ---------------------------------------------------------------
+  // Algo · Module 2.5 — Linked lists
+  // ---------------------------------------------------------------
+  "py.atom.algo.linked-list-foundations": q(
+    "What does a linked list give up in exchange for cheap local rewiring?",
+    ["Direct indexing and compact storage", "The ability to hold duplicate values", "The ability to grow at all"],
+    0,
+    "Linked lists trade indexing and locality for O(1) splicing when you already hold the node.",
+    ["Correct. Reaching index i costs i link-follows, and each node carries pointer overhead.", "Duplicates are fine in either structure.", "Growth is exactly what linked lists do well."],
+  ),
+  "py.atom.algo.dummy-heads": q(
+    "What special case does a dummy head remove?",
+    ["Deleting or inserting at the head, which otherwise has no predecessor", "Lists that contain duplicate values", "Lists whose length is unknown"],
+    0,
+    "A dummy head gives every real node a predecessor so one uniform rewiring works.",
+    ["Correct. Without it, head operations need their own branch.", "Duplicates never needed a special case.", "Length is discovered by traversal either way."],
+  ),
+  "py.atom.algo.linked-list-reversal": q(
+    "Why must reversal save the next node before flipping the current link?",
+    ["Flipping the link destroys the only reference to the rest of the list", "The next node must be reversed first", "Python forbids reassigning a pointer twice"],
+    0,
+    "Save the suffix, reverse one link, then advance.",
+    ["Correct. Overwrite it first and the remaining nodes are unreachable.", "Reversal proceeds forward one link at a time, not depth-first.", "There is no such restriction; the issue is losing the reference."],
+  ),
+  "py.atom.algo.fast-slow-lists": q(
+    "You need the node k positions from the end in one pass. Which technique fits?",
+    ["Two pointers held a fixed gap apart", "Two pointers at different speeds", "A pointer that restarts from the head each step"],
+    0,
+    "Relative speed finds middles and cycles; a fixed gap measures from the end.",
+    ["Correct. Advance the lead k first, then move both until it reaches the end.", "Differing speeds locate the middle, not an offset from the end.", "Restarting each step makes it quadratic."],
+  ),
+  "py.atom.algo.merge-partition-lists": q(
+    "During a merge, why advance only the list that supplied the chosen node?",
+    ["The other list's front is still the smallest value it has to offer", "Both lists must stay the same length", "Advancing both would reverse the output"],
+    0,
+    "Attach exactly one chosen node behind the tail, then advance only its source.",
+    ["Correct. That value has not been placed yet, so it must stay a candidate.", "Lengths are unrelated to correctness here.", "It would skip values, not reverse them."],
+  ),
+  "py.atom.algo.lru-cache-guided": q(
+    "Why does an LRU cache pair a hash map with a doubly linked list?",
+    ["The map finds a node in O(1) and the list reorders it in O(1)", "The list sorts the keys alphabetically", "The map guarantees the eviction order"],
+    0,
+    "Map key to node, order nodes by recency, move every accessed node to the recent end.",
+    ["Correct. Neither structure alone gives both lookup and cheap reordering.", "The list is ordered by recency, never alphabetically.", "The list holds the order; the map only locates nodes."],
+  ),
+
+  // ---------------------------------------------------------------
+  // Algo · Module 3.1 — Sorting
+  // ---------------------------------------------------------------
+  "py.atom.algo.comparison-sorts": q(
+    "Insertion sort is O(n^2) in general. When is it genuinely a good choice?",
+    ["On nearly sorted input, where it approaches linear time", "On very large random input", "When the values have a small integer range"],
+    0,
+    "Name the invariant and the data movement: insertion grows a sorted prefix.",
+    ["Correct. Few shifts are needed when most values are already in place.", "Large random input is exactly where the quadratic term dominates.", "A small integer range points to counting sort instead."],
+  ),
+  "py.atom.algo.merge-sort-guided": q(
+    "Merge sort's per-level work is linear and there are about log n levels. What does that make its space cost?",
+    ["O(n) auxiliary, because merging needs somewhere to write", "O(1), because merging happens in place", "O(n log n), one buffer per level"],
+    0,
+    "Merge sort's classic tradeoff is guaranteed n log n time paid for with linear extra space.",
+    ["Correct. The merge buffer is what quicksort avoids and merge sort accepts.", "The standard merge is not in place.", "Buffers are reused across levels, so it is linear, not n log n."],
+  ),
+  "py.atom.algo.quick-sort-guided": q(
+    "What causes quicksort's O(n^2) worst case?",
+    ["Repeated one-sided partitions, so the depth becomes linear", "Too many duplicate values in the input", "Recursion instead of iteration"],
+    0,
+    "Balanced split depth gives expected n log n; repeated one-sided splits do not.",
+    ["Correct. A pivot that is always the extreme value removes one element per level.", "Duplicates are handled well by a three-way partition.", "The shape of the recursion matters, not that it recurses."],
+  ),
+  "py.atom.algo.noncomparison-sorts": q(
+    "Counting sort is O(n + k) for key range k. When does it stop being a win?",
+    ["When the range k is large relative to n", "When the input contains duplicates", "When the input is already sorted"],
+    0,
+    "Extra key structure can beat comparisons, but range and memory are part of the cost.",
+    ["Correct. Sorting ten values with keys up to a million allocates a million buckets.", "Duplicates are ideal for counting sort.", "Prior order does not affect its cost."],
+  ),
+  "py.atom.algo.quickselect-guided": q(
+    "Quickselect and quicksort both partition. Why is quickselect expected linear?",
+    ["It recurses into only one side, so the work halves each time", "It never needs to partition more than once", "It uses a different pivot rule"],
+    0,
+    "Compare the pivot index with the target rank, then discard one whole side.",
+    ["Correct. n + n/2 + n/4 … sums to about 2n rather than n log n.", "It usually partitions several times, just on shrinking ranges.", "The pivot rule can be identical; the saving is discarding a side."],
+  ),
+  "py.atom.algo.sort-keys-comparators": q(
+    "You must sort by score descending, then by name ascending. What is the cleanest key?",
+    ["A tuple of the negated score and the name", "Two separate sorted() calls in either order", "A key of score alone, then manual fixing"],
+    0,
+    "Translate the contract into one complete key, using tuple fields for tie-breaks.",
+    ["Correct. Tuples compare field by field, which is exactly the contract.", "Two passes work only if done in the right order, and it is easy to get backwards.", "Manual fixing after sorting reintroduces the bug the key prevents."],
+  ),
+  "py.atom.algo.sort-stability-guided": q(
+    "Why does a stable sort enable multi-stage sorting?",
+    ["An earlier sort's order survives inside ties of a later sort", "It makes each sort faster", "It removes duplicate keys automatically"],
+    0,
+    "Stability preserves tie order, which is what lets sorts compose.",
+    ["Correct. Sort by the secondary key first, then the primary, and both rules hold.", "Stability is a correctness property, not a speed one.", "Sorting never removes duplicates."],
+  ),
+
+  // ---------------------------------------------------------------
+  // Algo · Module 3.2 — Binary search
+  // ---------------------------------------------------------------
+  "py.atom.algo.binary-search-exact": q(
+    "A binary search loops forever. Which mistake most likely caused it?",
+    ["An update that leaves the interval the same size", "Using integer division for the midpoint", "Starting low at 0"],
+    0,
+    "Every update must genuinely shrink the interval.",
+    ["Correct. Setting low = mid when mid is already low makes no progress.", "Integer division is the correct way to pick a midpoint.", "Starting at 0 is standard and harmless."],
+  ),
+  "py.atom.algo.binary-search-bounds": q(
+    "How do lower bound and upper bound differ on a list containing the target?",
+    ["Lower bound gives the first equal position, upper bound the position just past the last", "They return the same index", "Upper bound returns the last equal position"],
+    0,
+    "Lower bound finds the first value at least target; upper bound the first strictly greater.",
+    ["Correct. Their difference is exactly how many copies of the target exist.", "They coincide only when the target is absent.", "It returns one past the last copy, not the last copy itself."],
+  ),
+  "py.atom.algo.binary-search-answer": q(
+    "What must be true before you can binary-search an answer space?",
+    ["The yes-or-no test must be monotone across that space", "The answers must be stored in a sorted array", "The answer space must be small"],
+    0,
+    "Define a monotone test, bound the answer, then search for the boundary.",
+    ["Correct. Once true, always true — that is what makes halving valid.", "Nothing is stored; the space is conceptual.", "A huge space is fine, since log of it is small."],
+  ),
+  "py.atom.algo.binary-search-shaped": q(
+    "In a mountain array, comparing `values[mid]` with `values[mid + 1]` tells you what?",
+    ["Which side of the probe the peak must lie on", "Whether the array is sorted", "The exact index of the peak"],
+    0,
+    "Use the array's shape as evidence and follow the slope.",
+    ["Correct. Rising means the peak is later; falling means mid could be it.", "A mountain array is deliberately not sorted.", "One comparison narrows the range but rarely lands on the peak."],
+  ),
+
+  // ---------------------------------------------------------------
   // Algo · Module 2.2 — Hashing
   // ---------------------------------------------------------------
   "py.atom.algo.hash-maps-sets-guided": q(
