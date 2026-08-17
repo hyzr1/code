@@ -92,6 +92,130 @@ export const MASTERY_EXTRA_CHECKS: Record<string, LectureQuestion> = {
     ],
   ),
   // ---------------------------------------------------------------
+  // Algo · Module 2.2 — Hashing
+  // ---------------------------------------------------------------
+  "py.atom.algo.hash-maps-sets-guided": q(
+    "You must report how many times each user logged in. Set or map?",
+    ["A map, because each key carries a value", "A set, because user IDs are unique", "Neither — a sorted list is required"],
+    0,
+    "A set answers membership; a map is for when the key must carry information.",
+    ["Correct. The count is the value attached to each user key.", "A set would tell you who logged in, but never how often.", "Sorting is unrelated to attaching counts to keys."],
+  ),
+  "py.atom.algo.frequency-counting": q(
+    "What information does a frequency counter deliberately throw away?",
+    ["Where each occurrence appeared", "How many times each value occurred", "Which values are present"],
+    0,
+    "A counter compresses a sequence into value-to-count facts.",
+    ["Correct. Position is lost, which is exactly why counting is cheap.", "That is the one thing it keeps.", "Presence is recoverable from the keys."],
+  ),
+  "py.atom.algo.grouping-by-key": q(
+    "Grouping words so anagrams land together — which signature is correct?",
+    ["The word's sorted letters", "The word's first letter", "The word's length"],
+    0,
+    "The signature must match the exact meaning of belonging to the group.",
+    ["Correct. Anagrams differ only in order, so sorting makes them identical.", "Anagrams need not share a first letter.", "Same length does not make two words anagrams."],
+  ),
+  "py.atom.algo.default-writeback": q(
+    "You are collecting a list of items per key. What default belongs in the read step?",
+    ["An empty list, matching the state being built", "Zero, because it is the usual default", "None, so a missing key is visible"],
+    0,
+    "The default must exactly match the state you promise to store.",
+    ["Correct. You append to it, so it must already be a list.", "Zero cannot be appended to; the state here is a list, not a sum.", "None would crash on append — the default must be usable immediately."],
+  ),
+  "py.atom.algo.composite-keys": q(
+    "Two board positions are the same only when the row, the column, and whose turn it is all match. What is the correct key?",
+    ["A tuple of all three components in a fixed order", "The row and column only", "The sum of the row and column"],
+    0,
+    "A composite key must include every component that can change the answer.",
+    ["Correct. Leaving out the turn would merge genuinely different states.", "Omitting the turn makes two different states collide.", "Summing loses information — (1,2) and (2,1) would collapse together."],
+  ),
+  "py.atom.algo.set-operations-guided": q(
+    "Which operation lists the values in exactly one of two sets, but not both?",
+    ["Symmetric difference", "Union", "Intersection"],
+    0,
+    "Union is either, intersection is both, symmetric difference is exactly one.",
+    ["Correct. It keeps what one side has and the other lacks.", "Union keeps everything, including shared values.", "Intersection keeps only the shared values — the opposite."],
+  ),
+
+  // ---------------------------------------------------------------
+  // Algo · Module 2.3 — Two pointers & sliding window
+  // ---------------------------------------------------------------
+  "py.atom.algo.opposing-pointers-guided": q(
+    "Why do opposing pointers require sorted input for a two-sum search?",
+    ["Order makes one comparison eliminate a whole boundary group", "Sorting removes duplicate values", "Unsorted lists cannot be indexed from both ends"],
+    0,
+    "Opposing pointers work when order turns one comparison into a proof.",
+    ["Correct. A sum that is too small proves the smallest value cannot pair with anything remaining.", "Sorting keeps duplicates; that is not the reason.", "Any list can be indexed from both ends — the issue is what the comparison proves."],
+  ),
+  "py.atom.algo.read-write-pointers": q(
+    "During a read/write filter pass, what is guaranteed about everything before the write index?",
+    ["It is exactly the correct answer for the part already read", "It is the untouched original input", "It is sorted"],
+    0,
+    "The prefix before write is always the correct output so far.",
+    ["Correct. That invariant is why the final write index is the answer's length.", "It has been overwritten with the kept values.", "Filtering preserves order but does not sort."],
+  ),
+  "py.atom.algo.fixed-window-guided": q(
+    "A fixed window slides one step right. What is the minimum work required?",
+    ["Subtract the outgoing value and add the incoming one", "Re-add every value inside the new window", "Sort the new window"],
+    0,
+    "A fixed window pays once for the first span, then updates by two operations.",
+    ["Correct. Two arithmetic operations per step keep the whole pass linear.", "Recomputing makes the pass O(n·k), which is what sliding avoids.", "Sorting is unnecessary for a sum."],
+  ),
+  "py.atom.algo.variable-window-guided": q(
+    "In a variable window, why may the left edge only ever move forward?",
+    ["It gives each element at most one entry and one exit, keeping the pass linear", "It keeps the window a constant size", "It guarantees the sum stays positive"],
+    0,
+    "Each boundary moving only forward is what proves the linear bound.",
+    ["Correct. Both pointers traverse the list once, so the total work is O(n).", "The size varies by design — that is what makes it a variable window.", "Sign depends on the data, not on pointer direction."],
+  ),
+  "py.atom.algo.window-hash-map": q(
+    "A character's count in the window map reaches zero. Why delete the key?",
+    ["Because the map's size is being used as the distinct-character count", "Because zero values waste memory", "Because the character can never reappear"],
+    0,
+    "The map summarizes window identity, so stale keys corrupt what it reports.",
+    ["Correct. Leaving it behind inflates the distinct count and breaks the shrink condition.", "Memory is not the concern at this scale.", "It can certainly reappear later and be re-added."],
+  ),
+
+  // ---------------------------------------------------------------
+  // Algo · Module 2.4 — Stacks, queues & deques
+  // ---------------------------------------------------------------
+  "py.atom.algo.stack-guided": q(
+    "Which situation calls for a stack rather than a queue?",
+    ["The most recently opened item must close first", "The longest-waiting item must be served first", "Items must be processed in sorted order"],
+    0,
+    "A stack is right when the newest unfinished item is resolved first.",
+    ["Correct. That is nesting, which is inherently last-in-first-out.", "Oldest-first is exactly what a queue provides.", "Neither structure sorts; that needs a heap or a sort."],
+  ),
+  "py.atom.algo.queue-deque-guided": q(
+    "What does a deque provide that a plain queue does not?",
+    ["Efficient insertion and removal at both ends", "Automatic sorting of its contents", "Constant-time lookup by value"],
+    0,
+    "A deque makes both boundaries efficient.",
+    ["Correct. That is what lets it expire from the front and dominate from the back.", "A deque preserves insertion order and never sorts.", "Searching a deque by value is still linear."],
+  ),
+  "py.atom.algo.monotonic-stack-guided": q(
+    "Why is a monotonic stack pass O(n) even though it contains an inner loop?",
+    ["Each index is pushed once and popped at most once", "The inner loop runs at most twice per element", "The stack never exceeds a constant size"],
+    0,
+    "Total pops are bounded by total pushes, so the amortized cost is constant.",
+    ["Correct. Across the whole pass there are at most n pushes and n pops.", "A single step can pop many entries; the bound is on the total, not per step.", "The stack can hold up to n indices in the worst case."],
+  ),
+  "py.atom.algo.monotonic-deque-guided": q(
+    "The deque stores indices rather than values. Why does that matter?",
+    ["Only an index reveals when a candidate has slid out of the window", "Indices compare faster than values", "Values cannot be stored in a deque"],
+    0,
+    "Expiry is a question about position, which a bare value cannot answer.",
+    ["Correct. You must know where a candidate came from to expire it.", "Comparison speed is irrelevant here.", "A deque holds anything; the choice is about what information you need."],
+  ),
+  "py.atom.algo.stack-queue-conversions": q(
+    "Why transfer between the two stacks only when the outbox is empty?",
+    ["Pouring early would interleave new values ahead of older ones", "Transferring is impossible while the outbox has items", "It keeps both stacks the same size"],
+    0,
+    "Lazy transfer is what keeps each value crossing a constant number of times.",
+    ["Correct. The outbox already holds older values in order; pouring on top would jump the queue.", "It is possible, just wrong — order would break.", "The sizes are unrelated to correctness."],
+  ),
+
+  // ---------------------------------------------------------------
   // Algo · Module 1.2 — Reasoning about recursion
   // ---------------------------------------------------------------
   "py.atom.algo.call-stack": q(
