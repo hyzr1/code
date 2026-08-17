@@ -51,7 +51,6 @@ export const COURSES: CourseOption[] = [
     detail: "Data structures, algorithms, and interview mastery. Assumes Python.",
     accent: "#c96442",
     assumesPython: true,
-    comingSoon: true,
   },
   {
     id: "ml",

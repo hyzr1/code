@@ -319,7 +319,12 @@ export function lessonUnitIds(lesson: Lesson): string[] {
 /** A roadmap entry is not a playable lesson until real teaching content exists. */
 export function lessonIsReady(lesson: Lesson): boolean {
   const hasLecture = Boolean(lesson.atomId && ATOM_BY_ID.has(lesson.atomId));
-  return hasLecture || lessonUnitIds(lesson).length > 0;
+  const hasPractice = lessonUnitIds(lesson).length > 0;
+  // Mastery-roadmap lessons ship only once they teach *and* test. A lecture
+  // with no exercise is still being produced, so it stays "planned" rather
+  // than being released as a playable lesson.
+  if (/^py\.(ac|mc|pc)\./.test(lesson.id)) return hasLecture && hasPractice;
+  return hasLecture || hasPractice;
 }
 
 export interface LessonProgress {

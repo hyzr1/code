@@ -7,6 +7,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { COURSE_BY_ID } from "./content/courses";
 import type {
   CareerStage,
   CareerTrack,
@@ -178,9 +179,13 @@ function hydrate(raw: string | null): Settings {
     for (const group of Object.keys(merged) as (keyof Settings)[]) {
       Object.assign(merged[group], saved[group] ?? {});
     }
-    // The old app could leave a learner inside one of the now-unreleased
-    // mastery catalogs. Keep every existing learner on the released path.
-    if (merged.learning.course !== "swe") merged.learning.course = "swe";
+    // A stored course may point at a catalog that is hidden or not yet
+    // released. Only those learners are moved back to the released path, so a
+    // catalog that has since shipped keeps working.
+    const stored = COURSE_BY_ID.get(merged.learning.course);
+    if (!stored || stored.hidden || stored.comingSoon) {
+      merged.learning.course = "swe";
+    }
     // Keep the archived company-map preference deterministic while the live
     // experience uses the single fixed frontier path.
     merged.learning.targetCompany = "openai";
