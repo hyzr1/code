@@ -92,6 +92,136 @@ export const MASTERY_EXTRA_CHECKS: Record<string, LectureQuestion> = {
     ],
   ),
   // ---------------------------------------------------------------
+  // Algo · Part 4 — Trees, BSTs, heaps, tries
+  // ---------------------------------------------------------------
+  "py.atom.algo.tree-anatomy": q(
+    "A single node with no children. What are its depth and its height?",
+    ["Depth 0 and height 0", "Depth 1 and height 1", "Depth 0 and height 1"],
+    0,
+    "Depth looks upward to the root; height looks downward to a farthest leaf.",
+    ["Correct. It is the root, so nothing above; it is a leaf, so nothing below.", "Both counts start at zero for a lone node when measured in edges.", "Height counts edges below it, and a leaf has none."],
+  ),
+  "py.atom.algo.tree-dfs": q(
+    "Which traversal must you use to combine results from both children before handling the node?",
+    ["Postorder", "Preorder", "Inorder"],
+    0,
+    "Preorder sends work downward, inorder visits between children, postorder combines finished children.",
+    ["Correct. Postorder visits a node only after both subtrees are complete.", "Preorder handles the node before either child has been explored.", "Inorder finishes only the left child before visiting the node."],
+  ),
+  "py.atom.algo.tree-bfs": q(
+    "Why capture the queue's length before reading a BFS level?",
+    ["Children enqueued during the round would otherwise join the level being read", "The queue shrinks unpredictably", "It makes the traversal run faster"],
+    0,
+    "Freezing the size is what preserves level boundaries.",
+    ["Correct. Without the frozen count, levels bleed into one another.", "The queue changes predictably; the issue is where the boundary falls.", "It is about correctness of grouping, not speed."],
+  ),
+  "py.atom.algo.tree-divide-conquer": q(
+    "What is the first thing to decide when writing a divide-and-conquer tree function?",
+    ["What a single call returns, and what the empty tree returns", "Whether to use recursion or a stack", "How deep the tree will be"],
+    0,
+    "Write one return-contract sentence, choose the empty answer, then trust both smaller calls.",
+    ["Correct. The contract and its base case make the combine step obvious.", "That is an implementation detail chosen after the contract.", "Depth affects cost, not the shape of the recursion."],
+  ),
+  "py.atom.algo.tree-path-depth": q(
+    "Why can a diameter computation not simply return the best path it found?",
+    ["A parent can only extend a downward path, not a path that already turned", "The diameter is always through the root", "Returning it would be too slow"],
+    0,
+    "Return the one fact a parent may extend; track any complete candidate separately.",
+    ["Correct. A path bending through a node is finished and cannot be extended upward.", "The longest path often avoids the root entirely.", "Speed is unaffected; correctness is the issue."],
+  ),
+  "py.atom.algo.tree-serialization": q(
+    "Why is a plain preorder list of values not enough to rebuild a tree?",
+    ["It records values but not shape, so different trees can share it", "Preorder loses the root", "Values may repeat"],
+    0,
+    "Preserve shape as well as values — null markers or a second traversal.",
+    ["Correct. A left-only and a right-only child produce the same value sequence.", "Preorder starts at the root, so it is never lost.", "Repeats are not the problem; missing structure is."],
+  ),
+  "py.atom.algo.bst-invariant": q(
+    "What actually determines the cost of a BST search?",
+    ["The tree's height, which a degenerate tree makes linear", "The number of nodes, always", "The order the values were searched for"],
+    0,
+    "BST work follows one comparison path, so running time tracks height.",
+    ["Correct. Inserting sorted data produces a chain and O(n) searches.", "A balanced tree searches n nodes in log n steps.", "Query order does not change the structure being traversed."],
+  ),
+  "py.atom.algo.bst-inorder": q(
+    "Checking each node against only its immediate children accepts invalid trees. Why?",
+    ["A node must respect every ancestor's bound, not just its parent's", "Children may be null", "Duplicate values are allowed"],
+    0,
+    "Ancestor bounds validate the whole invariant.",
+    ["Correct. A value can sit correctly under its parent yet violate a grandparent's range.", "Null children are handled trivially by the base case.", "Duplicates are a separate policy decision."],
+  ),
+  "py.atom.algo.bst-balancing": q(
+    "What does a rotation change, and what must it leave untouched?",
+    ["It changes height but preserves the inorder order", "It changes the values but preserves the height", "It changes both the order and the height"],
+    0,
+    "Rotations preserve inorder order while changing height.",
+    ["Correct. That is exactly why rotations can rebalance without breaking the BST property.", "Rotations never alter stored values.", "Altering the order would destroy the search invariant."],
+  ),
+  "py.atom.algo.bst-ranges": q(
+    "During a range query, when is it safe to skip a node's entire left subtree?",
+    ["When the node's value is already at or below the range's low bound", "When the node is a leaf", "When the range is empty"],
+    0,
+    "Prune by the values a subtree can possibly hold.",
+    ["Correct. Everything to the left is smaller still, so none of it can qualify.", "Leaves have no subtrees to skip in the first place.", "An empty range is a trivial case, not the pruning rule."],
+  ),
+  "py.atom.algo.binary-heap": q(
+    "Why does a binary heap need no child pointers?",
+    ["Completeness means index arithmetic locates the children", "Heaps store only small numbers", "Heaps are always fully balanced binary search trees"],
+    0,
+    "Completeness gives logarithmic height and lets index formulas replace pointers.",
+    ["Correct. The children of i are at 2i+1 and 2i+2 with no gaps to account for.", "Element type is irrelevant to the layout.", "A heap is not a search tree; only the parent-child relation is ordered."],
+  ),
+  "py.atom.algo.heap-operations": q(
+    "Building a heap from n values by sifting down from the last parent is O(n), not O(n log n). Why?",
+    ["Most nodes are near the bottom and can sift only a short distance", "Sifting down is a constant-time operation", "It only visits half the array"],
+    0,
+    "Peek is constant, push and pop are logarithmic, heapify is linear.",
+    ["Correct. The many shallow nodes dominate the count, and the sum converges to O(n).", "A single sift can travel the full height.", "Visiting half the nodes would still be linear in count, not the reason for the bound."],
+  ),
+  "py.atom.algo.heap-sort-guided": q(
+    "In heap sort, where does the root go after each extraction?",
+    ["Into the last slot of the active region, which then shrinks", "Into a separate output array", "Back to the front after a re-heapify"],
+    0,
+    "Move the root to the final open slot, shrink the boundary, and repair.",
+    ["Correct. That is what makes heap sort in place with O(1) extra space.", "Using a second array would forfeit the in-place property.", "The root is removed from the active region, not reinserted."],
+  ),
+  "py.atom.algo.heap-top-k": q(
+    "For the k largest values, why is a min-heap the right choice?",
+    ["Its root is the weakest kept value, so eviction is a constant-time comparison", "It sorts the k values as they arrive", "It uses less memory than a max-heap"],
+    0,
+    "Keep only k candidates with the weakest kept candidate at the root.",
+    ["Correct. Any new value only has to beat the smallest of the survivors.", "The heap is not sorted; only its root is ordered.", "Both heaps of size k use the same memory."],
+  ),
+  "py.atom.algo.two-heaps": q(
+    "What two conditions must a running-median pair of heaps maintain?",
+    ["Every lower value at most every upper value, and sizes within one", "Both heaps sorted, and equal sizes", "All values distinct, and the lower heap larger"],
+    0,
+    "Keep lower values no greater than upper values, and keep sizes within one.",
+    ["Correct. Those two invariants put the median at the roots.", "Heaps are not fully sorted, and sizes differ by one for odd counts.", "Duplicates are fine, and neither heap must always be larger."],
+  ),
+  "py.atom.algo.k-way-merge": q(
+    "Merging k sorted lists with a heap — how many entries does the heap hold at once?",
+    ["At most one per source, so k", "All values from every source", "Exactly two, the current smallest pair"],
+    0,
+    "Keep one candidate per sorted source, plus the state that reveals its replacement.",
+    ["Correct. That is what makes the cost O(total log k) rather than O(total log total).", "Loading everything discards the benefit of the sources already being sorted.", "Two candidates cannot decide a minimum across k sources."],
+  ),
+  "py.atom.algo.trie-foundations": q(
+    "A trie stores 'car'. Why does querying 'ca' need a terminal marker to answer correctly?",
+    ["The path exists, so without a marker a prefix looks like a stored word", "The characters are stored out of order", "Prefixes are stored in a separate structure"],
+    0,
+    "Terminal markers record complete keys, separately from the paths that reach them.",
+    ["Correct. Reaching a node proves a prefix exists, not that a word ends there.", "Trie edges follow the word's character order exactly.", "Prefixes and words share the very same nodes."],
+  ),
+  "py.atom.algo.trie-applications": q(
+    "Why is trie autocomplete faster than filtering a word list?",
+    ["Only the requested prefix's subtree is ever visited", "Tries store words in sorted order automatically", "String comparison is faster inside a trie"],
+    0,
+    "Use stored prefixes to prune search and traverse only the requested subtree.",
+    ["Correct. Non-matching branches are never entered, unlike a scan of every word.", "Sorted output still requires collecting and ordering the matches.", "The saving is in what you skip, not in per-comparison cost."],
+  ),
+
+  // ---------------------------------------------------------------
   // Algo · Module 2.5 — Linked lists
   // ---------------------------------------------------------------
   "py.atom.algo.linked-list-foundations": q(
