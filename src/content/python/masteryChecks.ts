@@ -91,6 +91,226 @@ export const MASTERY_EXTRA_CHECKS: Record<string, LectureQuestion> = {
       "The sequence total is precisely what is bounded — it stays linear in n.",
     ],
   ),
+  // ---------------------------------------------------------------
+  // Algo · Module 1.2 — Reasoning about recursion
+  // ---------------------------------------------------------------
+  "py.atom.algo.call-stack": q(
+    "A recursive function returns a value. What happens to the frame that produced it?",
+    ["It is popped, and the caller resumes at the line that was waiting", "It stays alive until the whole recursion finishes", "It is merged into the caller's frame to save memory"],
+    0,
+    "A return pops exactly one frame and hands control back to the waiting caller.",
+    [
+      "Correct. Each return unwinds one level and the caller continues mid-expression.",
+      "Frames are released as they return; only the calls still in progress remain.",
+      "Frames are not merged — each call keeps its own parameters and locals.",
+    ],
+  ),
+  "py.atom.algo.recurrences": q(
+    "In `T(n) = 2 * T(n // 2) + n`, what does the `+ n` term represent?",
+    ["The work this frame does itself, outside the child calls", "The number of recursive calls made", "The depth the recursion will reach"],
+    0,
+    "A recurrence is child-call cost plus this frame's own local work.",
+    [
+      "Correct. Here it is the merge step performed after the children return.",
+      "The call count is the coefficient 2, not the additive term.",
+      "Depth comes from how the argument shrinks, which is the `// 2`.",
+    ],
+  ),
+  "py.atom.algo.recursion-trees": q(
+    "In the merge-sort tree, each level totals about `n` work and there are about `log n` levels. Why total by level rather than by call?",
+    ["Every level sums to the same amount, so the total is levels times that amount", "Calls on the same level always have identical arguments", "Only the root level performs real work"],
+    0,
+    "Totalling one level at a time turns many different call sizes into one repeated quantity.",
+    [
+      "Correct. The per-level total is the pattern; multiplying by the level count finishes it.",
+      "Sizes differ across a level; it is their sum that is stable.",
+      "Every level does work — that is exactly why the levels are added.",
+    ],
+  ),
+  "py.atom.algo.recursion-vs-iteration": q(
+    "You rewrite a recursive routine as a loop. What have you actually changed?",
+    ["State moves from stack frames into variables you manage yourself", "The algorithm's asymptotic complexity always improves", "The result becomes more accurate"],
+    0,
+    "Recursion and iteration differ in where state lives, not in what the algorithm computes.",
+    [
+      "Correct. You now carry explicitly what the call stack was carrying implicitly.",
+      "The growth class usually stays the same; only memoization or a better algorithm changes it.",
+      "Both forms compute the same values; correctness is unaffected by the shape.",
+    ],
+  ),
+  "py.atom.algo.tail-recursion": q(
+    "Your tail-recursive function raises `RecursionError` at depth 1000. What is the correct fix in Python?",
+    ["Rewrite it as a loop, because Python does not optimize tail calls", "Add the tail call at the very end so the optimizer can see it", "Nothing — tail recursion cannot overflow the stack"],
+    0,
+    "Python allocates a frame per call regardless of whether the call is in tail position.",
+    [
+      "Correct. Only an explicit loop removes the per-call frame.",
+      "The call is already in tail position; Python still does not eliminate the frame.",
+      "It absolutely can overflow — tail position gives no protection here.",
+    ],
+  ),
+
+  // ---------------------------------------------------------------
+  // Algo · Module 1.3 — The problem-solving method
+  // ---------------------------------------------------------------
+  "py.atom.algo.constraints": q(
+    "A problem states `n` can reach 100,000 and the limit is about 100 million operations. What does that rule out?",
+    ["A quadratic approach, which would need about 10 billion operations", "A linear approach, which is too simple for large input", "Any approach that uses extra memory"],
+    0,
+    "Estimating the implied work turns a constraint into a decision.",
+    [
+      "Correct. n squared at 100,000 is 10^10 — two orders of magnitude over budget.",
+      "Linear is roughly 10^5 operations, comfortably inside the limit.",
+      "The stated limit is on operations; memory is a separate constraint.",
+    ],
+  ),
+  "py.atom.algo.examples-first": q(
+    "Why work a small example by hand before writing any code?",
+    ["It exposes the changing state and the update rule", "It proves the algorithm is optimal", "It replaces the need for edge-case tests"],
+    0,
+    "Hand-tracing reveals what actually changes each step — the thing your loop must maintain.",
+    [
+      "Correct. You discover the state and rule you would otherwise guess at.",
+      "One example cannot establish optimality; that needs an argument about all inputs.",
+      "Examples guide the design; boundary tests are still required afterwards.",
+    ],
+  ),
+  "py.atom.algo.optimize-method": q(
+    "You have a correct brute force. What is the next step in the method?",
+    ["Name the expensive operation it repeats", "Rewrite it in a faster language", "Guess a data structure and try it"],
+    0,
+    "Optimization is targeted: find the repeated work, then remove that specific waste.",
+    [
+      "Correct. The bottleneck names itself once you look for repeated work.",
+      "That changes constants, not the growth that makes brute force fail.",
+      "Choosing a structure before naming the bottleneck is guessing, not deriving.",
+    ],
+  ),
+  "py.atom.algo.invariants": q(
+    "What makes a loop invariant useful rather than decorative?",
+    ["It holds before the loop, is preserved each pass, and gives the answer at the end", "It describes what the loop looks like", "It counts how many iterations will run"],
+    0,
+    "An invariant is a proof obligation: establish it, preserve it, then use it.",
+    [
+      "Correct. Those three checks are what turn it into an argument for correctness.",
+      "A description of the code's shape proves nothing about its state.",
+      "Iteration count is about termination, which is a separate concern.",
+    ],
+  ),
+  "py.atom.algo.edge-cases": q(
+    "Where does a reliable edge-case checklist come from?",
+    ["The contract — its boundaries, absences, duplicates, and extremes", "Whatever inputs happened to break the code before", "The largest input the problem allows"],
+    0,
+    "Edge cases are derived from what the function promises, not discovered by accident.",
+    [
+      "Correct. Each clause of the contract suggests a family of inputs to probe.",
+      "Past bugs are useful, but they do not systematically cover the contract.",
+      "Size is one dimension; empty, duplicate, and absent cases matter just as much.",
+    ],
+  ),
+  "py.atom.algo.dry-running": q(
+    "Why record traced state at the same point in every iteration?",
+    ["So the values are comparable across iterations", "So the trace runs faster", "So the loop is guaranteed to terminate"],
+    0,
+    "A trace is only evidence if each row means the same thing.",
+    [
+      "Correct. Sampling at different moments makes rows incomparable and hides bugs.",
+      "Tracing is a reasoning aid; it does not speed up execution.",
+      "Termination depends on the loop's progress, not on how you observe it.",
+    ],
+  ),
+  "py.atom.algo.communication": q(
+    "You explain your plan before coding. Which ordering matches the lecture?",
+    ["Contract, baseline, chosen idea, invariant, complexity, edge cases", "Code first, then explain whatever you wrote", "Complexity first, then the contract"],
+    0,
+    "Stating the contract first gives every later claim something to be measured against.",
+    [
+      "Correct. Each step builds on the one before, ending with what could break it.",
+      "Explaining after coding makes the reasoning unverifiable and hides wrong assumptions.",
+      "A complexity claim is meaningless until the problem and approach are stated.",
+    ],
+  ),
+
+  // ---------------------------------------------------------------
+  // Algo · Module 2.1 — Arrays & strings
+  // ---------------------------------------------------------------
+  "py.atom.algo.dynamic-arrays": q(
+    "Reading `values[500]` is instant, but inserting at index 0 is not. Why?",
+    ["Indexing computes one address; inserting must shift every later element", "Indexing is cached but insertion is not", "Insertion has to re-hash the list"],
+    0,
+    "Contiguous numbered slots make address arithmetic instant and make shifting unavoidable.",
+    [
+      "Correct. The address is base plus offset; making room moves everything after it.",
+      "No cache is involved — the address is computed arithmetically each time.",
+      "Lists are not hashed; that is how dictionaries and sets work.",
+    ],
+  ),
+  "py.atom.algo.in-place-arrays": q(
+    "What does an in-place algorithm have to protect?",
+    ["Information it has not processed yet, before overwriting a slot", "The original length of the list", "The order in which the list was created"],
+    0,
+    "In-place work survives by never destroying data it still needs.",
+    [
+      "Correct. Overwriting a slot whose value is still needed is the classic in-place bug.",
+      "Many in-place routines are free to change the length.",
+      "Creation order is not a property the algorithm can even observe.",
+    ],
+  ),
+  "py.atom.algo.cyclic-placement": q(
+    "When is cyclic placement the right tool?",
+    ["When every valid value owns one predictable index", "Whenever the list needs sorting", "Whenever values may repeat freely"],
+    0,
+    "Cyclic placement depends on a direct value-to-index mapping.",
+    [
+      "Correct. Values 1..n map to indices 0..n-1, so each value has a home.",
+      "General sorting has no such mapping and needs comparisons.",
+      "Unrestricted duplicates break the one-value-one-slot assumption.",
+    ],
+  ),
+  "py.atom.algo.immutable-strings": q(
+    "Why is `text += piece` inside a loop a problem?",
+    ["Strings are immutable, so each concatenation builds a whole new string", "It changes the characters of the original string", "It silently converts the text to bytes"],
+    0,
+    "Immutability turns repeated concatenation into repeated copying.",
+    [
+      "Correct. Repeating that across n pieces does quadratic copying work.",
+      "The original is never modified — that is precisely the point of immutability.",
+      "No encoding conversion happens; text and bytes stay distinct types.",
+    ],
+  ),
+  "py.atom.algo.prefix-sums-guided": q(
+    "Prefix values are defined at boundaries rather than at elements. What does that buy?",
+    ["Every inclusive range becomes one subtraction with no special first case", "It halves the memory the prefix array needs", "It removes the need to scan the input at all"],
+    0,
+    "Boundary indexing makes the range formula uniform, including a range that starts at 0.",
+    [
+      "Correct. prefix[end+1] - prefix[start] works even when start is 0.",
+      "The boundary array is one entry longer, not shorter.",
+      "You still scan once to build it; the saving is on the queries afterwards.",
+    ],
+  ),
+  "py.atom.algo.difference-arrays": q(
+    "A difference array adds an amount at `start` and subtracts it at `end + 1`. Why the subtraction?",
+    ["To stop the change from leaking past the end of its range", "To undo a mistake made at the start index", "To keep the array's total sum at zero"],
+    0,
+    "The prefix accumulation carries the change forward until something cancels it.",
+    [
+      "Correct. Without the cancel, every later index would keep the increment.",
+      "The addition at start is correct; the subtraction bounds it, not fixes it.",
+      "The totals are not constrained to zero — ranges may legitimately overlap.",
+    ],
+  ),
+  "py.atom.algo.prefix-sums-2d": q(
+    "The 2-D formula subtracts two strips and then adds one rectangle back. Why?",
+    ["The overlap of the two strips was subtracted twice", "The matrix may contain negative numbers", "Padding adds an extra row and column"],
+    0,
+    "Inclusion-exclusion: what is removed twice must be restored once.",
+    [
+      "Correct. The corner region belongs to both strips, so one copy must return.",
+      "The formula is identical whatever the signs of the values are.",
+      "Padding makes indexing uniform; it is not the reason for the final addition.",
+    ],
+  ),
   "py.atom.algo.analysis-cases": q(
     "Someone says quicksort is 'O(n log n)'. What must be stated for that claim to be precise?",
     ["Which case it describes — expected, not worst", "The programming language it is written in", "The exact number of elements being sorted"],

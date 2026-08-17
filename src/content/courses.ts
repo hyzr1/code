@@ -18,6 +18,8 @@ export interface CourseOption {
   /** Shown as a one-line "assumes you already know Python" note. */
   assumesPython: boolean;
   comingSoon?: boolean;
+  /** Kept in the content graph but not offered in the picker. */
+  hidden?: boolean;
 }
 
 export const COURSES: CourseOption[] = [
@@ -29,6 +31,9 @@ export const COURSES: CourseOption[] = [
     accent: "#8d6ae8",
     assumesPython: false,
   },
+  // Python Mastery is authored but not on the release path, so it is hidden
+  // from the picker entirely rather than advertised as coming soon. Its
+  // modules stay in the content graph; nothing references them until it ships.
   {
     id: "python",
     label: "Python Mastery",
@@ -37,6 +42,7 @@ export const COURSES: CourseOption[] = [
     accent: "#3776ab",
     assumesPython: false,
     comingSoon: true,
+    hidden: true,
   },
   {
     id: "algo",
@@ -59,6 +65,9 @@ export const COURSES: CourseOption[] = [
 ];
 
 export const COURSE_BY_ID = new Map(COURSES.map((course) => [course.id, course]));
+
+/** Courses offered in the picker. */
+export const VISIBLE_COURSES = COURSES.filter((course) => !course.hidden);
 
 /**
  * Which product owns a module. Explicit roadmap modules stay in their future

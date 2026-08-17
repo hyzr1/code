@@ -8,7 +8,7 @@ import {
   type KeyboardEvent,
 } from "react";
 import { createPortal } from "react-dom";
-import { COURSES } from "../content/courses";
+import { VISIBLE_COURSES as COURSES } from "../content/courses";
 import { useSettings } from "../settings";
 import type { Course } from "../types";
 import Icon from "./Icon";
