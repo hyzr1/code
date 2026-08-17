@@ -29,6 +29,24 @@ for (const course of ["algo", "ml"]) {
     }
     if (authored.length === 0) reachedEmptyModule = true;
 
+    // A released lesson teaches and tests. Its atom must also carry the three
+    // retrieval questions; a typo in the masteryChecks key is otherwise silent
+    // -- the extra question simply never merges and nothing complains.
+    for (const lesson of lessons) {
+      const units =
+        (lesson.repIds?.length ?? 0) +
+        (lesson.problemIds?.length ?? 0) +
+        (lesson.drillIds?.length ?? 0);
+      if (units === 0) continue;
+      const atom = lesson.atomId ? atomById.get(lesson.atomId) : null;
+      if (!atom) continue;
+      if ((atom.checks?.length ?? 0) < 3) {
+        failures.push(
+          `${course}: ${lesson.id} is released but its lecture ${atom.id} has only ${atom.checks?.length ?? 0} retrieval questions`,
+        );
+      }
+    }
+
     for (const lesson of authored) {
       const atom = atomById.get(lesson.atomId);
       const words = atom.body.trim().split(/\s+/).filter(Boolean).length;

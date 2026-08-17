@@ -92,6 +92,94 @@ export const MASTERY_EXTRA_CHECKS: Record<string, LectureQuestion> = {
     ],
   ),
   // ---------------------------------------------------------------
+  // ML · Module 1.1 — Linear algebra
+  // ---------------------------------------------------------------
+  "py.atom.ml.vector-operations": q(
+    "A gradient-descent step computes `weights - rate * gradient`. Which vector operations are those?",
+    ["Scaling a vector, then subtracting it coordinate by coordinate", "A dot product followed by a norm", "A matrix multiplication"],
+    0,
+    "Every basic vector operation acts on matching coordinates independently.",
+    ["Correct. The entire update is scale-then-add, done per coordinate.", "Both of those collapse a vector to a single number, which an update cannot do.", "No matrix appears; both operands are vectors."],
+  ),
+  "py.atom.ml.dot-product-geometry": q(
+    "Two non-zero vectors have a dot product of zero. What does that say geometrically?",
+    ["They are perpendicular", "They point the same way", "One of them has zero length"],
+    0,
+    "Algebra calls the dot product a weighted sum; geometry calls it aligned length.",
+    ["Correct. Zero alignment means a right angle between them.", "Same direction gives the largest possible positive value.", "Both were stated to be non-zero."],
+  ),
+  "py.atom.ml.norm-families": q(
+    "Why does L1 regularization drive weights exactly to zero while L2 usually does not?",
+    ["L1's penalty keeps a constant pull toward zero, L2's shrinks as the weight shrinks", "L1 is computed faster", "L2 cannot be differentiated"],
+    0,
+    "A norm defines what vector size means, and each norm penalizes differently.",
+    ["Correct. The constant pull can reach zero exactly; a vanishing pull only approaches it.", "Speed has nothing to do with the shape of the solution.", "L2 is the smoother of the two and is differentiable everywhere."],
+  ),
+  "py.atom.ml.matrices": q(
+    "A matrix has shape (10, 3). What does each dimension mean for a matrix-vector product?",
+    ["It maps a 3-feature input to a 10-number output", "It maps a 10-feature input to a 3-number output", "It requires the input to have 10 features"],
+    0,
+    "Columns match input features; rows produce outputs.",
+    ["Correct. Columns pair with the input, and each of the 10 rows gives one output.", "That is the transpose's behaviour.", "Ten is the output count, not the input requirement."],
+  ),
+  "py.atom.ml.matrix-multiplication": q(
+    "You multiply shapes (4, 5) and (5, 2). What is the result's shape?",
+    ["(4, 2)", "(5, 5)", "(4, 5)"],
+    0,
+    "For (m, n) and (n, p), the inner n values pair up and the result is (m, p).",
+    ["Correct. The shared 5 is consumed, leaving the outer dimensions.", "The inner dimension disappears; it never becomes the shape.", "That is the left operand unchanged."],
+  ),
+  "py.atom.ml.transpose-identity-inverse": q(
+    "When does a square matrix fail to have an inverse?",
+    ["When it collapses space, shown by a zero determinant", "Whenever it is not symmetric", "Whenever it contains a zero entry"],
+    0,
+    "An inverse exists only when nothing is destroyed by the mapping.",
+    ["Correct. Collapsed dimensions cannot be recovered, so no inverse exists.", "Plenty of non-symmetric matrices are invertible.", "The identity contains zeros and inverts perfectly."],
+  ),
+  "py.atom.ml.span-basis-rank": q(
+    "A feature matrix has 5 columns but rank 3. What does that tell you?",
+    ["Two columns are redundant combinations of the others", "Two rows contain missing values", "The matrix cannot be used for training"],
+    0,
+    "Independence removes redundant directions; rank counts what survives.",
+    ["Correct. Only three directions are genuinely independent — the rest add no information.", "Rank is about linear dependence, not missing data.", "It trains fine; the redundancy mainly makes the solution non-unique."],
+  ),
+  "py.atom.ml.eigenvectors": q(
+    "What makes a vector an eigenvector of a matrix?",
+    ["The matrix leaves its direction line unchanged and only rescales it", "The matrix maps it to the zero vector", "It has unit length"],
+    0,
+    "An eigenvector keeps its direction line; the eigenvalue records the scaling.",
+    ["Correct. Any rotation off that line disqualifies it.", "That is the null space, which is the eigenvalue-zero case only.", "Eigenvectors can be scaled to any length and stay eigenvectors."],
+  ),
+  "py.atom.ml.determinant-trace": q(
+    "A 2x2 matrix has determinant 0. What has it done to the plane?",
+    ["Collapsed it onto a line or a point", "Rotated it without distortion", "Doubled every area"],
+    0,
+    "The determinant measures signed volume scaling and detects collapse.",
+    ["Correct. Zero area scaling means a whole dimension was flattened away.", "A pure rotation has determinant 1.", "Doubling areas would give determinant 2."],
+  ),
+  "py.atom.ml.svd": q(
+    "Why does discarding the smallest singular values usually lose little information?",
+    ["They correspond to the weakest directions, often noise rather than signal", "They are always exactly zero", "They correspond to the first rows of the data"],
+    0,
+    "SVD orders directions by stretch strength, so truncation drops the weakest.",
+    ["Correct. That is exactly the logic behind PCA and low-rank compression.", "They are usually small but non-zero.", "Singular values describe directions, not particular rows."],
+  ),
+  "py.atom.ml.matrix-decompositions": q(
+    "What is the practical point of factoring a matrix into triangular pieces?",
+    ["Triangular systems solve directly by substitution", "It reduces the matrix's memory footprint", "It guarantees the matrix is invertible"],
+    0,
+    "Decompose to expose structure: LU for solves, QR for least squares.",
+    ["Correct. The hard general solve becomes a sequence of one-unknown steps.", "The factors together take at least as much space.", "A zero on the diagonal still signals no unique solution."],
+  ),
+  "py.atom.ml.orthogonality-least-squares": q(
+    "In least squares, what is true of the residual at the best fit?",
+    ["It is orthogonal to the model space, so no adjustment can reduce it", "It is exactly zero", "It points in the same direction as the prediction"],
+    0,
+    "Projection finds the closest reachable vector; the leftover is orthogonal.",
+    ["Correct. Any remaining alignment would mean a better fit was still available.", "Zero residual only happens when the target already lies in the model space.", "Alignment with the prediction is precisely what has been removed."],
+  ),
+
+  // ---------------------------------------------------------------
   // Algo · Part 5 — Graphs
   // ---------------------------------------------------------------
   "py.atom.algo.graph-representations": q(
