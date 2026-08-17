@@ -92,6 +92,45 @@ export const MASTERY_EXTRA_CHECKS: Record<string, LectureQuestion> = {
     ],
   ),
   // ---------------------------------------------------------------
+  // Algo · Module 6.1 — Recursion & backtracking
+  // ---------------------------------------------------------------
+  "py.atom.algo.subset-generation": q(
+    "Adding one element to a set changes the number of subsets how?",
+    ["It doubles, because the new element is independently in or out", "It adds one", "It squares"],
+    0,
+    "Each element contributes an independent binary choice.",
+    ["Correct. Every existing subset appears twice: once with the new element and once without.", "That would make the count linear rather than exponential.", "Squaring grows far faster than the true doubling."],
+  ),
+  "py.atom.algo.permutations-combinations": q(
+    "You need every way to choose 3 items from 10 where order is irrelevant. Which shape?",
+    ["A start index that only moves forward", "A used array over all ten items", "A start index plus a used array"],
+    0,
+    "Order-free selection needs one canonical arrangement per choice.",
+    ["Correct. Increasing indices generate each selection exactly once.", "That is the permutation shape and would emit every ordering.", "The used array adds nothing once indices only move forward."],
+  ),
+  "py.atom.algo.backtracking-template": q(
+    "Which piece of the template is easiest to forget, and what does forgetting it cost?",
+    ["The undo, which silently corrupts every sibling branch", "The goal test, which causes an error", "The candidate loop, which returns nothing"],
+    0,
+    "Every mutation on the way down needs a matching restore on the way up.",
+    ["Correct. Nothing raises; the search just quietly misses answers.", "A missing goal test usually fails loudly or recurses forever.", "Omitting the loop is obvious the first time you run it."],
+  ),
+  "py.atom.algo.constraint-search": q(
+    "Modelling a puzzle so one class of conflict becomes impossible buys you what?",
+    ["A smaller search space and one fewer check per node", "A guarantee that a solution exists", "A lower recursion depth"],
+    0,
+    "A good model removes work rather than deferring it to a check.",
+    ["Correct. One queen per row means row conflicts never need testing at all.", "Modelling cannot create solutions that do not exist.", "Depth still equals the number of placements to make."],
+  ),
+  "py.atom.algo.search-pruning": q(
+    "Sorting the candidates before a subset-sum search enables which prune?",
+    ["Stopping the loop once a candidate exceeds what remains", "Skipping every second candidate", "Returning as soon as one subset is found"],
+    0,
+    "Sorted order means every later candidate is at least as large.",
+    ["Correct. Nothing further along can fit, so the whole tail is dead.", "Skipping candidates would discard valid solutions.", "Stopping early would undercount unless you only need one answer."],
+  ),
+
+  // ---------------------------------------------------------------
   // ML · Module 3.6 — Unsupervised learning
   // ---------------------------------------------------------------
   "py.atom.ml.kmeans-guided": q(

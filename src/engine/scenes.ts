@@ -486,6 +486,10 @@ const VISUALS: [RegExp, VisualKind][] = [
   [/algo\.(?:topological-order-guided|dsu-foundations|dsu-applications|strong-components|bridges-articulation)/, "graph"],
   [/algo\.(?:dijkstra-guided|zero-one-bfs|bellman-ford-guided|floyd-warshall-guided|a-star-guided|mst-comparison)/, "graph"],
   [/algo\.(?:max-flow-guided|bipartite-matching-guided|euler-hamilton|two-sat-guided)/, "graph"],
+  // Backtracking is a decision tree: subsets and arrangements are recursion,
+  // while the template, constraint checks, and pruning are choices.
+  [/algo\.(?:subset-generation|permutations-combinations)/, "recursion"],
+  [/algo\.(?:backtracking-template|constraint-search|search-pruning)/, "decision"],
   [/ml\.(?:matrices|matrix-multiplication|transpose-identity-inverse|span-basis-rank|eigenvectors|determinant-trace|svd|matrix-decompositions|orthogonality-least-squares)/, "ml"],
   [/ml\.exponents-logs-sums/, "complexity"],
   [/ml\.(?:derivatives-rules|taylor-approximations)/, "function"],

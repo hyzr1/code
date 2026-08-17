@@ -5243,6 +5243,146 @@ export const MASTERY_EXERCISES: Problem[] = [
     solution: "def flag_anomalies(scores, contamination):\n    n = len(scores)\n    count = int(round(contamination * n))\n    count = max(0, min(count, n))\n    order = sorted(range(n), key=lambda i: (scores[i], i))\n    flagged = set(order[:count])\n    return [i in flagged for i in range(n)]",
     language: "python",
   },
+  {
+    id: "py.ex.ac.m6_1.l1",
+    kind: "problem",
+    tier: "rep",
+    lesson: "py.ac.m6_1.l1",
+    title: "Every subset, exactly once",
+    teaches: ["py.algo.subset-generation"],
+    requires: [],
+    difficulty: { concept: 4, implementation: 3, recall: 4 },
+    estimatedMinutes: 13,
+    prompt: "Each element is either **in** or **out**, which is why a set of `n` elements has `2^n` subsets.\n\nReturn every subset of `values` (distinct elements) as a list of lists. Use a **start index** so a branch never reaches back to an earlier element — that is what stops `[2, 1]` appearing alongside `[1, 2]`.\n\nOrder the output so each subset is recorded when its path is entered: `[]` first, then subsets beginning with the first element, and so on.",
+    exportName: "subsets",
+    scaffolds: { L1: "def subsets(values):\n    pass", L2: "def subsets(values):\n    pass", L3: "def subsets(values):\n    pass", L4: "" },
+    tests: [
+      { name: "power set of three", code: "assert fn([1,2,3]) == [[],[1],[1,2],[1,2,3],[1,3],[2],[2,3],[3]]", hidden: false },
+      { name: "empty input", code: "assert fn([]) == [[]]", hidden: false },
+      { name: "count is two to the n", code: "assert len(fn([1,2,3,4])) == 16", hidden: false },
+      { name: "no reordered duplicates", code: "assert [2,1] not in fn([1,2])", hidden: false },
+      { name: "each subset appears once", code: "out = fn([1,2,3])\nassert len({tuple(s) for s in out}) == len(out)", hidden: true }
+    ],
+    hints: [
+      { rung: 0, text: "Record the current path before extending it, so the empty subset comes out first." },
+      { rung: 1, text: "Loop from `start` so earlier elements are never revisited." },
+      { rung: 2, text: "Append a copy of the path — the same list keeps being mutated as the search continues." }
+    ],
+    solution: "def subsets(values):\n    result = []\n    path = []\n    def build(start):\n        result.append(list(path))\n        for index in range(start, len(values)):\n            path.append(values[index])\n            build(index + 1)\n            path.pop()\n    build(0)\n    return result",
+    language: "python",
+  },
+  {
+    id: "py.ex.ac.m6_1.l2",
+    kind: "problem",
+    tier: "rep",
+    lesson: "py.ac.m6_1.l2",
+    title: "Order decides the state you carry",
+    teaches: ["py.algo.permutations-combinations"],
+    requires: [],
+    difficulty: { concept: 4, implementation: 4, recall: 4 },
+    estimatedMinutes: 13,
+    prompt: "Combinations move forward from a start index; permutations must track which elements are already **used**, because any unplaced element may fill the next position.\n\nReturn every combination of exactly `k` elements from `values`, in increasing-index order.\n\n`([1,2,3], 2)` gives `[[1,2],[1,3],[2,3]]` — and there are `C(n, k)` of them, not `n!`.",
+    exportName: "combinations",
+    scaffolds: { L1: "def combinations(values, k):\n    pass", L2: "def combinations(values, k):\n    pass", L3: "def combinations(values, k):\n    pass", L4: "" },
+    tests: [
+      { name: "pairs from three", code: "assert fn([1,2,3], 2) == [[1,2],[1,3],[2,3]]", hidden: false },
+      { name: "k of zero gives the empty selection", code: "assert fn([1,2], 0) == [[]]", hidden: false },
+      { name: "k larger than the input", code: "assert fn([1,2], 5) == []", hidden: false },
+      { name: "binomial count", code: "assert len(fn([1,2,3,4,5], 3)) == 10", hidden: false },
+      { name: "selections are not reordered", code: "assert [2,1] not in fn([1,2], 2)", hidden: true }
+    ],
+    hints: [
+      { rung: 0, text: "Record only when the path has reached length k." },
+      { rung: 1, text: "Starting each loop at `start` fixes one canonical order per selection." },
+      { rung: 2, text: "Guard the impossible k values before searching at all." }
+    ],
+    solution: "def combinations(values, k):\n    result = []\n    path = []\n    def build(start):\n        if len(path) == k:\n            result.append(list(path))\n            return\n        for index in range(start, len(values)):\n            path.append(values[index])\n            build(index + 1)\n            path.pop()\n    if 0 <= k <= len(values):\n        build(0)\n    return result",
+    language: "python",
+  },
+  {
+    id: "py.ex.ac.m6_1.l3",
+    kind: "problem",
+    tier: "rep",
+    lesson: "py.ac.m6_1.l3",
+    title: "Choose, explore, un-choose",
+    teaches: ["py.algo.backtracking-template"],
+    requires: [],
+    difficulty: { concept: 4, implementation: 4, recall: 4 },
+    estimatedMinutes: 14,
+    prompt: "The template has four problem-specific blanks: the goal test, the candidates, the validity rule, and what a choice records. Everything else is choose, explore, **un-choose**.\n\nReturn every arrangement of `values` (distinct) in which no two **adjacent** elements differ by exactly one. Arrangements come out in the order the search finds them, trying candidates in input order.\n\n`[1, 2, 4]` gives `[[1, 4, 2], [2, 4, 1]]`. `[1, 2, 3]` gives `[]` — with three consecutive values every arrangement puts some neighbouring pair side by side.",
+    exportName: "spaced_arrangements",
+    scaffolds: { L1: "def spaced_arrangements(values):\n    pass", L2: "def spaced_arrangements(values):\n    pass", L3: "def spaced_arrangements(values):\n    pass", L4: "" },
+    tests: [
+      { name: "one gap makes it solvable", code: "assert fn([1,2,4]) == [[1,4,2],[2,4,1]]", hidden: false },
+      { name: "three consecutive values fail", code: "assert fn([1,2,3]) == []", hidden: false },
+      { name: "single element", code: "assert fn([5]) == [[5]]", hidden: false },
+      { name: "empty input", code: "assert fn([]) == [[]]", hidden: false },
+      { name: "far apart values keep every order", code: "assert len(fn([10,20,30])) == 6", hidden: true }
+    ],
+    hints: [
+      { rung: 0, text: "A used array is required because any unplaced element may come next." },
+      { rung: 1, text: "The validity rule compares the candidate against the last element already placed." },
+      { rung: 2, text: "Undo both mutations after recursing — the path and the used marker." }
+    ],
+    solution: "def spaced_arrangements(values):\n    result = []\n    path = []\n    used = [False] * len(values)\n    def backtrack():\n        if len(path) == len(values):\n            result.append(list(path))\n            return\n        for index in range(len(values)):\n            if used[index]:\n                continue\n            if path and abs(values[index] - path[-1]) == 1:\n                continue\n            used[index] = True\n            path.append(values[index])\n            backtrack()\n            path.pop()\n            used[index] = False\n    backtrack()\n    return result",
+    language: "python",
+  },
+  {
+    id: "py.ex.ac.m6_1.l4",
+    kind: "problem",
+    tier: "rep",
+    lesson: "py.ac.m6_1.l4",
+    title: "Check only the newest placement",
+    teaches: ["py.algo.constraint-search"],
+    requires: [],
+    difficulty: { concept: 5, implementation: 4, recall: 5 },
+    estimatedMinutes: 15,
+    prompt: "Model n-queens as **one queen per row**, which makes row conflicts impossible by construction. Two queens then conflict when they share a column, or when their column gap equals their row gap.\n\n`columns[r]` is the column of the queen in row `r`. Return the number of ways to place `n` queens on an `n` by `n` board.\n\n`n = 4` has 2 solutions, `n = 8` has 92, and `n = 0` has 1 (the empty placement).",
+    exportName: "count_queens",
+    scaffolds: { L1: "def count_queens(n):\n    pass", L2: "def count_queens(n):\n    pass", L3: "def count_queens(n):\n    pass", L4: "" },
+    tests: [
+      { name: "four queens", code: "assert fn(4) == 2", hidden: false },
+      { name: "one queen", code: "assert fn(1) == 1", hidden: false },
+      { name: "no solution below four", code: "assert fn(2) == 0 and fn(3) == 0", hidden: false },
+      { name: "empty board", code: "assert fn(0) == 1", hidden: false },
+      { name: "eight queens", code: "assert fn(8) == 92", hidden: true }
+    ],
+    hints: [
+      { rung: 0, text: "The row of the next queen is however many are already placed." },
+      { rung: 1, text: "Compare the candidate column against every queen already on the board." },
+      { rung: 2, text: "A diagonal conflict is an equal gap in rows and in columns." }
+    ],
+    solution: "def count_queens(n):\n    columns = []\n    def conflicts(column):\n        row = len(columns)\n        for earlier_row, earlier_column in enumerate(columns):\n            if earlier_column == column:\n                return True\n            if abs(earlier_column - column) == row - earlier_row:\n                return True\n        return False\n    total = 0\n    def place():\n        nonlocal total\n        if len(columns) == n:\n            total += 1\n            return\n        for column in range(n):\n            if conflicts(column):\n                continue\n            columns.append(column)\n            place()\n            columns.pop()\n    place()\n    return total",
+    language: "python",
+  },
+  {
+    id: "py.ex.ac.m6_1.l5",
+    kind: "problem",
+    tier: "rep",
+    lesson: "py.ac.m6_1.l5",
+    title: "Cut the branch that cannot reach the target",
+    teaches: ["py.algo.search-pruning"],
+    requires: [],
+    difficulty: { concept: 5, implementation: 4, recall: 4 },
+    estimatedMinutes: 14,
+    prompt: "A prune must be **provably safe**: it may only discard paths that cannot possibly complete. Sort the candidates and one comparison retires a whole branch — once the smallest remaining value already exceeds what is left, nothing larger can help.\n\n`values` are positive integers. Return the number of subsets summing exactly to `target`, and prune as described.\n\nA correct prune changes only the work done, never the count.",
+    exportName: "count_target_subsets",
+    scaffolds: { L1: "def count_target_subsets(values, target):\n    pass", L2: "def count_target_subsets(values, target):\n    pass", L3: "def count_target_subsets(values, target):\n    pass", L4: "" },
+    tests: [
+      { name: "two ways to make six", code: "assert fn([2,4,6,8,10], 6) == 2", hidden: false },
+      { name: "target of zero", code: "assert fn([1,2], 0) == 1", hidden: false },
+      { name: "unreachable target", code: "assert fn([2,4], 5) == 0", hidden: false },
+      { name: "duplicates count separately", code: "assert fn([1,1,2], 2) == 2", hidden: false },
+      { name: "larger input still finishes", code: "assert fn(list(range(1, 16)), 15) == 27", hidden: true }
+    ],
+    hints: [
+      { rung: 0, text: "Sorting is what makes the prune valid — every later value is at least as large." },
+      { rung: 1, text: "Once a candidate exceeds the remaining target you can stop the loop entirely, not just skip it." },
+      { rung: 2, text: "Reaching a remaining target of exactly zero is one successful subset." }
+    ],
+    solution: "def count_target_subsets(values, target):\n    ordered = sorted(values)\n    def search(start, remaining):\n        if remaining == 0:\n            return 1\n        found = 0\n        for index in range(start, len(ordered)):\n            value = ordered[index]\n            if value > remaining:\n                break\n            found += search(index + 1, remaining - value)\n        return found\n    return search(0, target)",
+    language: "python",
+  },
 ];
 
 export const MASTERY_EXERCISE_LESSON_CONTENT: Record<string, Pick<Lesson, "repIds">> = {
@@ -5433,4 +5573,9 @@ export const MASTERY_EXERCISE_LESSON_CONTENT: Record<string, Pick<Lesson, "repId
   "py.mc.m3_6.l4": { repIds: ["py.ex.mc.m3_6.l4"] },
   "py.mc.m3_6.l5": { repIds: ["py.ex.mc.m3_6.l5"] },
   "py.mc.m3_6.l6": { repIds: ["py.ex.mc.m3_6.l6"] },
+  "py.ac.m6_1.l1": { repIds: ["py.ex.ac.m6_1.l1"] },
+  "py.ac.m6_1.l2": { repIds: ["py.ex.ac.m6_1.l2"] },
+  "py.ac.m6_1.l3": { repIds: ["py.ex.ac.m6_1.l3"] },
+  "py.ac.m6_1.l4": { repIds: ["py.ex.ac.m6_1.l4"] },
+  "py.ac.m6_1.l5": { repIds: ["py.ex.ac.m6_1.l5"] },
 };
