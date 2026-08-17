@@ -25,6 +25,11 @@ import { forLanguage } from "./language";
 import { PYTHON_ADVANCED_PROBLEMS } from "./python/advancedProblems";
 import { PYTHON_LEETCODE_PROBLEMS } from "./python/leetcode";
 import { PYTHON_ML_PROBLEMS } from "./python/mlProblems";
+import {
+  MASTERY_EXERCISES,
+  MASTERY_EXERCISE_LESSON_CONTENT,
+} from "./python/masteryExercises";
+import { MASTERY_EXTRA_CHECKS } from "./python/masteryChecks";
 import { PYTHON_ML_CONCEPTS, PYTHON_ML_DRILLS } from "./python/ml";
 import { ROADMAP_ATOMS, ROADMAP_CONCEPTS, ROADMAP_LESSON_CONTENT } from "./python/roadmapLectures";
 import {
@@ -217,6 +222,9 @@ const authoredRoadmapLessons = (lessons: Lesson[]) => lessons.map((lesson) => ({
   ...(ML_CLASSICAL_MODEL_LESSON_CONTENT[lesson.id] ?? {}),
   ...(ML_ENSEMBLE_LESSON_CONTENT[lesson.id] ?? {}),
   ...(ML_KERNEL_MARGIN_LESSON_CONTENT[lesson.id] ?? {}),
+  // Practice is attached last so it fills the empty repIds the lecture
+  // content declares, turning each lesson into watch-then-do.
+  ...(MASTERY_EXERCISE_LESSON_CONTENT[lesson.id] ?? {}),
 }));
 export const COURSE_LESSONS = [
   ...JS_COURSE_LESSONS,
@@ -234,7 +242,16 @@ export const lessonsFor = (language: CourseLanguage, track?: CareerTrack) =>
 export const DRILLS: Drill[] = [...CORE_DRILLS, ...JS_COURSE_DRILLS, ...PYTHON_DRILLS, ...PYTHON_ML_DRILLS];
 export const DRILL_BY_ID = new Map(DRILLS.map((d) => [d.id, d]));
 
-export const ATOMS: Atom[] = [...CORE_ATOMS, ...JS_COURSE_ATOMS, ...PYTHON_ATOMS, ...ROADMAP_ATOMS, ...ALGO_FOUNDATION_ATOMS, ...ALGO_LINEAR_STRUCTURE_ATOMS, ...ALGO_HASHING_ATOMS, ...ALGO_POINTER_WINDOW_ATOMS, ...ALGO_STACK_QUEUE_ATOMS, ...ALGO_LINKED_LIST_ATOMS, ...ALGO_SORTING_ATOMS, ...ALGO_BINARY_SEARCH_ATOMS, ...ALGO_BINARY_TREE_ATOMS, ...ALGO_BST_ATOMS, ...ALGO_HEAP_ATOMS, ...ALGO_TRIE_ATOMS, ...ALGO_GRAPH_FOUNDATION_ATOMS, ...ALGO_GRAPH_CONNECTIVITY_ATOMS, ...ALGO_WEIGHTED_GRAPH_ATOMS, ...ALGO_ADVANCED_GRAPH_ATOMS, ...ML_LINEAR_ALGEBRA_ATOMS, ...ML_CALCULUS_ATOMS, ...ML_PROBABILITY_ATOMS, ...ML_STATISTICS_ATOMS, ...ML_NUMERICAL_PYTHON_ATOMS, ...ML_DATA_HANDLING_ATOMS, ...ML_TORCH_FOUNDATION_ATOMS, ...ML_WORKFLOW_ATOMS, ...ML_FRAMING_ATOMS, ...ML_LINEAR_MODELS_ATOMS, ...ML_CLASSICAL_MODEL_ATOMS, ...ML_ENSEMBLE_ATOMS, ...ML_KERNEL_MARGIN_ATOMS];
+const AUTHORED_ATOMS: Atom[] = [...CORE_ATOMS, ...JS_COURSE_ATOMS, ...PYTHON_ATOMS, ...ROADMAP_ATOMS, ...ALGO_FOUNDATION_ATOMS, ...ALGO_LINEAR_STRUCTURE_ATOMS, ...ALGO_HASHING_ATOMS, ...ALGO_POINTER_WINDOW_ATOMS, ...ALGO_STACK_QUEUE_ATOMS, ...ALGO_LINKED_LIST_ATOMS, ...ALGO_SORTING_ATOMS, ...ALGO_BINARY_SEARCH_ATOMS, ...ALGO_BINARY_TREE_ATOMS, ...ALGO_BST_ATOMS, ...ALGO_HEAP_ATOMS, ...ALGO_TRIE_ATOMS, ...ALGO_GRAPH_FOUNDATION_ATOMS, ...ALGO_GRAPH_CONNECTIVITY_ATOMS, ...ALGO_WEIGHTED_GRAPH_ATOMS, ...ALGO_ADVANCED_GRAPH_ATOMS, ...ML_LINEAR_ALGEBRA_ATOMS, ...ML_CALCULUS_ATOMS, ...ML_PROBABILITY_ATOMS, ...ML_STATISTICS_ATOMS, ...ML_NUMERICAL_PYTHON_ATOMS, ...ML_DATA_HANDLING_ATOMS, ...ML_TORCH_FOUNDATION_ATOMS, ...ML_WORKFLOW_ATOMS, ...ML_FRAMING_ATOMS, ...ML_LINEAR_MODELS_ATOMS, ...ML_CLASSICAL_MODEL_ATOMS, ...ML_ENSEMBLE_ATOMS, ...ML_KERNEL_MARGIN_ATOMS];
+
+/** Release target is three retrieval questions per mastery lecture; the
+ *  authored files ship two, so the third is appended here. */
+export const ATOMS: Atom[] = AUTHORED_ATOMS.map((atom) => {
+  const extra = MASTERY_EXTRA_CHECKS[atom.id];
+  if (!extra) return atom;
+  return { ...atom, checks: [...(atom.checks ?? []), extra] };
+});
+
 export const ATOM_BY_ID = new Map(ATOMS.map((a) => [a.id, a]));
 export const ATOM_BY_CONCEPT = new Map(
   ATOMS.flatMap((atom) => atom.teaches.map((id) => [id, atom] as const)),
@@ -248,6 +265,7 @@ export const PROBLEMS: Problem[] = [
   ...PYTHON_ADVANCED_PROBLEMS,
   ...PYTHON_LEETCODE_PROBLEMS,
   ...PYTHON_ML_PROBLEMS,
+  ...MASTERY_EXERCISES,
 ];
 export const PROBLEM_BY_ID = new Map(PROBLEMS.map((p) => [p.id, p]));
 

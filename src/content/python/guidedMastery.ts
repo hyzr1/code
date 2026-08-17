@@ -23,7 +23,8 @@ export interface GuidedMasterySpec {
   checkpoint: string;
   checkpointAnswer: string;
   remember: string;
-  checks: [LectureQuestion, LectureQuestion];
+  /** Retrieval questions shown after the lecture. Three is the release target. */
+  checks: LectureQuestion[];
 }
 
 const words = (value: string) => value.trim().split(/\s+/).filter(Boolean).length;

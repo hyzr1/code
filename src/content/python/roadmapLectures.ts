@@ -113,6 +113,13 @@ Do not optimize from vibes. Short code is not automatically fast, and a clever-l
         explanation: "The set stores prior values so each new value needs one average-case lookup.",
         why: ["Correct. Remembered state replaces repeated pair scans.", "Both algorithms compute the same Boolean result.", "Hashing has a cost; the benefit is avoiding quadratic repeated work."],
       },
+      {
+        question: "A script processes at most eight records and runs once a week. What follows from the lecture?",
+        choices: ["The pair scan is a reasonable choice here", "The pair scan is always wrong and must be replaced", "Complexity analysis no longer applies to this code"],
+        answer: 0,
+        explanation: "An algorithm is fast for a workload, an input size, and a resource limit — not in isolation.",
+        why: ["Correct. At n = 8 the pair scan does 28 comparisons; clarity can matter more than growth.", "Growth only becomes decisive as the input grows; a bounded tiny input does not force the change.", "The analysis still applies — it simply tells you the difference is negligible at this size."],
+      },
     ],
   },
   {
