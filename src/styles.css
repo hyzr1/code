@@ -1903,8 +1903,15 @@ kbd {
   background: color-mix(in srgb, var(--surface-2) 82%, transparent);
   font: 650 11px var(--mono);
 }
+/* Lessons whose lecture exists but whose practice is still being produced.
+   They stay visible so the roadmap reads as a real course, but they are
+   clearly inert: desaturated, dimmed, and not clickable. */
 .lesson-row.planned {
-  opacity: 0.68;
+  opacity: 0.45;
+  filter: grayscale(1);
+}
+.lesson-row.planned .lesson-title {
+  font-weight: 500;
 }
 .lesson-row.planned:has(.lesson-open:hover) {
   background: transparent;

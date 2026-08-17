@@ -165,7 +165,7 @@ export default function CourseView({
                 <div className="row spread" style={{ marginBottom: 4 }}>
                   <div style={{ fontSize: 16, fontWeight: 650 }}>{mod.title}</div>
                   <span className="tiny dim">
-                    {available ? `${complete}/${available} available` : "Planned"}
+                    {available ? `${complete}/${available} available` : "Coming soon"}
                   </span>
                 </div>
                 <p className="small muted" style={{ margin: "0 0 14px" }}>
@@ -197,7 +197,7 @@ export default function CourseView({
                           <span className="lesson-goal">{lesson.goal}</span>
                         </button>
                         <span className="tiny dim lesson-count">
-                          {ready ? `${state.done}/${state.total}` : "Planned"}
+                          {ready ? `${state.done}/${state.total}` : "Coming soon"}
                         </span>
                       </div>
                   );
