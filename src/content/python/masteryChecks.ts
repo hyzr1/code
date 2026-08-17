@@ -92,6 +92,52 @@ export const MASTERY_EXTRA_CHECKS: Record<string, LectureQuestion> = {
     ],
   ),
   // ---------------------------------------------------------------
+  // ML · Module 3.6 — Unsupervised learning
+  // ---------------------------------------------------------------
+  "py.atom.ml.kmeans-guided": q(
+    "You must cluster data whose groups are long, curved ribbons. Why is k-means the wrong tool?",
+    ["Nearest-centroid assignment can only carve out roughly round regions", "It cannot handle more than three clusters", "It requires labelled data"],
+    0,
+    "k-means expresses each cluster as one mean, which forces spherical shapes.",
+    ["Correct. One mean per cluster cannot describe a curve, so the boundary cuts across it.", "Any k is allowed; the shape is the limitation.", "k-means is unsupervised and uses no labels."],
+  ),
+  "py.atom.ml.hierarchical-dbscan": q(
+    "Which property do hierarchical clustering and DBSCAN share that k-means lacks?",
+    ["Neither forces you to commit to a cluster count up front", "Both produce probabilistic memberships", "Both require spherical clusters"],
+    0,
+    "Hierarchical defers the cut; DBSCAN derives clusters from density.",
+    ["Correct. One builds every grouping for later cutting, the other finds however many dense regions exist.", "Both assign hard memberships; mixtures give probabilities.", "Escaping the spherical assumption is exactly their advantage."],
+  ),
+  "py.atom.ml.gmm-em": q(
+    "Why does each round of expectation-maximization never lower the likelihood?",
+    ["Both steps optimize the same objective, holding the other quantity fixed", "The data is resampled each round", "The component count grows over time"],
+    0,
+    "EM alternates two steps that can each only improve the objective.",
+    ["Correct. That monotone improvement is what guarantees convergence.", "The data never changes during fitting.", "The number of components is fixed before fitting begins."],
+  ),
+  "py.atom.ml.pca-guided": q(
+    "A feature with tiny variance is dropped by PCA. When is that a mistake?",
+    ["When that low-variance direction is what actually predicts the target", "Never — low variance always means no information", "Only when the data was standardized"],
+    0,
+    "PCA is unsupervised and ranks directions by spread, not by usefulness.",
+    ["Correct. PCA never sees the labels, so it cannot know which direction matters.", "Variance measures spread, which is not the same as relevance.", "The risk exists whether or not you standardized."],
+  ),
+  "py.atom.ml.manifold-visualization": q(
+    "How should you verify a claim suggested by a t-SNE plot?",
+    ["Check it in the original feature space", "Re-run t-SNE with the same seed", "Increase the perplexity until it looks clearer"],
+    0,
+    "The embedding is a diagnostic, not evidence.",
+    ["Correct. Only the original space carries meaningful distances.", "Repeating the same run reproduces the same artefacts.", "Tuning until the picture agrees with you is not verification."],
+  ),
+  "py.atom.ml.anomaly-detection": q(
+    "You double the contamination setting on an anomaly detector. What changes?",
+    ["More points are flagged, raising recall and usually lowering precision", "The model retrains on different data", "The anomaly scores themselves change"],
+    0,
+    "Contamination converts continuous scores into a decision.",
+    ["Correct. It only moves the threshold, which trades precision for recall.", "The training data is unaffected by the threshold.", "The scores are unchanged; only the cut-off moves."],
+  ),
+
+  // ---------------------------------------------------------------
   // ML · Part 3 — Classical machine learning
   // ---------------------------------------------------------------
   "py.atom.ml.learning-paradigms": q(

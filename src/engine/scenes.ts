@@ -496,6 +496,12 @@ const VISUALS: [RegExp, VisualKind][] = [
   [/ml\.(?:conditional-independence|bayes-guided|key-distributions|joint-marginal-conditional|monte-carlo-guided)/, "probability"],
   [/ml\.random-variables-guided/, "function"],
   [/ml\.(?:expectation-variance-covariance|gaussian-guided|multivariate-gaussian)/, "ml"],
+  // Unsupervised learning. Clustering is a grouping decision, the mixture and
+  // anomaly lessons reason about density, and the projection lessons are
+  // geometric transformations of the feature space.
+  [/ml\.(?:kmeans-guided|hierarchical-dbscan)/, "decision"],
+  [/ml\.(?:gmm-em|anomaly-detection)/, "probability"],
+  [/ml\.(?:pca-guided|manifold-visualization)/, "ml"],
   // Foundational lessons first, matched on their exact unit ids so they never
   // collide with a pattern lesson. These keep the early modules from being a
   // wall of text with nothing to look at.
