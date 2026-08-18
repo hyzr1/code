@@ -565,6 +565,11 @@ const VISUALS: [RegExp, VisualKind][] = [
   [/ml\.(?:scaled-dot-product|multi-head-attention)/, "ml"],
   // Number theory is arithmetic reasoning rather than a data structure.
   [/algo\.(?:gcd-euclid|sieve|modular-arithmetic|combinatorics|expected-value)/, "complexity"],
+  // Bit work is arithmetic on a fixed row of positions.
+  [/algo\.(?:bitwise-operators|bit-tricks|subset-enumeration|xor-properties)/, "binary"],
+  // Text representation: tokenization is a pipeline, the vectors are ML.
+  [/ml\.tokenization/, "pipeline"],
+  [/ml\.(?:embeddings|contextual-embeddings)/, "ml"],
   // Foundational lessons first, matched on their exact unit ids so they never
   // collide with a pattern lesson. These keep the early modules from being a
   // wall of text with nothing to look at.

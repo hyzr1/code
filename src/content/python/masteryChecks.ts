@@ -202,6 +202,63 @@ export const MASTERY_EXTRA_CHECKS: Record<string, LectureQuestion> = {
   ),
 
   // ---------------------------------------------------------------
+  // Algo - Module 8.2 - Bit manipulation
+  // ---------------------------------------------------------------
+  "py.atom.algo.bitwise-operators": q(
+    "Which pair of operators sets and clears a single bit?",
+    ["Or with the mask, and and with its complement", "And with the mask, or with its complement", "Exclusive-or for both"],
+    0,
+    "Or can only add bits; and-not can only remove them.",
+    ["Correct. Those two are the standard idioms.", "That reverses the roles of the two operators.", "Exclusive-or flips rather than forcing a value."],
+  ),
+  "py.atom.algo.bit-tricks": q(
+    "A power-of-two test uses `value & (value - 1) == 0` alone. What slips through?",
+    ["Zero, which has no bits to clear", "Every odd number", "Negative values only"],
+    0,
+    "Zero passes the arithmetic without being a power of two.",
+    ["Correct. The explicit positive check is required.", "Odd numbers above one fail correctly.", "Negatives are a separate concern."],
+  ),
+  "py.atom.algo.subset-enumeration": q(
+    "A submask loop is written as `while sub: ...; sub = (sub - 1) & mask`. What is missed?",
+    ["The empty submask", "The mask itself", "Every odd submask"],
+    0,
+    "The condition is tested before zero is processed.",
+    ["Correct. Append first, then break on zero.", "The mask is the first value visited.", "Parity plays no part."],
+  ),
+  "py.atom.algo.xor-properties": q(
+    "Values appear twice except one that appears three times. Does the XOR trick still work?",
+    ["No, an odd count survives exactly as a genuine single would", "Yes, three is still odd", "Yes, if the list is sorted"],
+    0,
+    "Cancellation depends on even counts.",
+    ["Correct. Counting or a bitwise state machine is needed instead.", "Surviving is the problem, not the solution.", "Order never affects the result."],
+  ),
+
+  // ---------------------------------------------------------------
+  // ML - Module 6.1 - Text representation
+  // ---------------------------------------------------------------
+  "py.atom.ml.tokenization": q(
+    "Two models report training losses of 2.1 and 2.4 with different tokenizers. What can you conclude?",
+    ["Nothing; loss is per token and the token counts differ", "The first model is better", "The second has a larger vocabulary"],
+    0,
+    "Identical behaviour reports different numbers.",
+    ["Correct. Normalize per character or per word to compare.", "The comparison is not valid as stated.", "Vocabulary size does not follow from the loss."],
+  ),
+  "py.atom.ml.embeddings": q(
+    "Why compare embeddings by cosine rather than straight-line distance?",
+    ["Vector length mostly tracks frequency rather than meaning", "Cosine is faster to compute", "Distance is undefined in high dimensions"],
+    0,
+    "Angle ignores the length entirely.",
+    ["Correct. A scaled copy of a vector means the same thing.", "The cost is comparable.", "Distance is perfectly well defined."],
+  ),
+  "py.atom.ml.contextual-embeddings": q(
+    "A static table holds one row for a word with two unrelated senses. What has it learned?",
+    ["A vector between the senses that represents neither well", "The more frequent sense only", "Two vectors, selected at run time"],
+    0,
+    "One row must serve every occurrence.",
+    ["Correct. More data refines the average rather than splitting it.", "Both senses pull on the same row.", "A static table has no run-time choice."],
+  ),
+
+  // ---------------------------------------------------------------
   // Algo - Module 8.1 - Number theory
   // ---------------------------------------------------------------
   "py.atom.algo.gcd-euclid": q(
