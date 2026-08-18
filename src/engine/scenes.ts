@@ -570,6 +570,13 @@ const VISUALS: [RegExp, VisualKind][] = [
   // Text representation: tokenization is a pipeline, the vectors are ML.
   [/ml\.tokenization/, "pipeline"],
   [/ml\.(?:embeddings|contextual-embeddings)/, "ml"],
+  // Geometry: sweeps and hulls walk ordered points; randomization is a decision.
+  [/algo\.randomized-algorithms/, "decision"],
+  [/algo\.(?:cross-product|line-sweep|convex-hull)/, "pointers"],
+  // Transformers: stack choice is a decision, shapes are complexity arithmetic.
+  [/ml\.transformer-stacks/, "decision"],
+  [/ml\.transformer-shapes/, "complexity"],
+  [/ml\.(?:positional-representations|transformer-block|transformer-implementation)/, "ml"],
   // Foundational lessons first, matched on their exact unit ids so they never
   // collide with a pattern lesson. These keep the early modules from being a
   // wall of text with nothing to look at.

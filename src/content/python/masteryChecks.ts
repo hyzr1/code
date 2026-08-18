@@ -202,6 +202,77 @@ export const MASTERY_EXTRA_CHECKS: Record<string, LectureQuestion> = {
   ),
 
   // ---------------------------------------------------------------
+  // Algo - Module 8.3 - Geometry and randomization
+  // ---------------------------------------------------------------
+  "py.atom.algo.cross-product": q(
+    "Why does the cross product handle vertical segments without a special case?",
+    ["It never divides, so nothing can divide by zero", "It rounds to the nearest integer", "It sorts the points first"],
+    0,
+    "Slope comparisons are what introduce the division.",
+    ["Correct. Integer inputs also stay exact.", "No rounding takes place.", "No sorting is involved."],
+  ),
+  "py.atom.algo.line-sweep": q(
+    "A sweep sorts events by coordinate only. When does the bug appear?",
+    ["When two events share a coordinate, and the order becomes arbitrary", "On empty input", "When intervals are nested"],
+    0,
+    "The tie-break is part of the specification.",
+    ["Correct. The answer then depends on the input order.", "Empty input is trivially handled.", "Nesting is handled correctly either way."],
+  ),
+  "py.atom.algo.convex-hull": q(
+    "A hull is built from input containing duplicate points. What happens without deduplication?",
+    ["Duplicates are collinear with everything and survive every test", "The chains have unequal lengths", "The orientation reverses"],
+    0,
+    "A repeated point gives a cross product of zero.",
+    ["Correct. Sorting into a set first is the fix.", "Chain lengths are not the issue.", "Orientation is unaffected."],
+  ),
+  "py.atom.algo.randomized-algorithms": q(
+    "Quickselect uses a random pivot on an already-sorted input. What does that buy?",
+    ["The quadratic worst case becomes unlikely rather than guaranteed", "A guaranteed linear bound", "Less memory"],
+    0,
+    "A fixed pivot rule splits sorted input as badly as possible.",
+    ["Correct. Expected linear, not guaranteed.", "The worst case remains possible.", "Memory is unchanged."],
+  ),
+
+  // ---------------------------------------------------------------
+  // ML - Module 6.2 - The Transformer
+  // ---------------------------------------------------------------
+  "py.atom.ml.positional-representations": q(
+    "A model with a learned absolute position table is given a longer sequence than it trained on.",
+    ["Those positions have no learned row at all", "The encoding wraps around", "Attention silently truncates"],
+    0,
+    "The table has exactly one row per trained index.",
+    ["Correct. Relative and rotary schemes avoid this entirely.", "Nothing wraps automatically.", "The tokens are attended; only position breaks."],
+  ),
+  "py.atom.ml.transformer-block": q(
+    "The residual stream is normalized between every pair of blocks. What does that undo?",
+    ["The unscaled route from input to output that residuals provide", "The attention mask", "The feed-forward expansion"],
+    0,
+    "Rescaling the stream reintroduces per-block attenuation.",
+    ["Correct. Normalize the sublayer's input instead.", "Masking is internal to attention.", "The expansion is unaffected."],
+  ),
+  "py.atom.ml.transformer-stacks": q(
+    "Why can a bidirectional encoder not be trained to predict the next token?",
+    ["It can already see that token, so the objective is trivial", "It has no output projection", "Its blocks lack a feed-forward"],
+    0,
+    "The mask decides which objectives are honest.",
+    ["Correct. Generation requires a causal mask.", "An output projection is easily added.", "The block is identical in both families."],
+  ),
+  "py.atom.ml.transformer-shapes": q(
+    "In a 768-wide, 12-layer model with a 50k vocabulary, what share is the embedding table?",
+    ["Roughly a third", "Under a twentieth", "More than half"],
+    0,
+    "The table is vocabulary times width, counted once.",
+    ["Correct. Tying the output projection is a real saving here.", "That would need a much larger stack.", "The blocks are still the larger share."],
+  ),
+  "py.atom.ml.transformer-implementation": q(
+    "A 3-token input runs through a model with a 2-token vocabulary. What shape are the logits?",
+    ["3 by 2, one row per position", "1 by 2, one row for the sequence", "3 by 3, one row per position pair"],
+    0,
+    "Every position produces its own prediction.",
+    ["Correct. That is what lets one pass train on every token.", "That would discard most of the training signal.", "Position pairs appear inside attention, not the output."],
+  ),
+
+  // ---------------------------------------------------------------
   // Algo - Module 8.2 - Bit manipulation
   // ---------------------------------------------------------------
   "py.atom.algo.bitwise-operators": q(
