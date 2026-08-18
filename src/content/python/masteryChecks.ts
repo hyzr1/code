@@ -202,6 +202,105 @@ export const MASTERY_EXTRA_CHECKS: Record<string, LectureQuestion> = {
   ),
 
   // ---------------------------------------------------------------
+  // Algo - Module 10.2 - Execution under pressure
+  // ---------------------------------------------------------------
+  "py.atom.algo.time-budgeting": q(
+    "You are two thirds through the time with no working main loop. What is the right move?",
+    ["Cut scope aloud and finish something complete", "Keep going and hope to finish", "Switch to a different approach"],
+    0,
+    "A complete reduced solution beats a broken full one.",
+    ["Correct. Announcing the cut shows judgement rather than defeat.", "Hoping is not a plan at that point.", "Switching costs the time you no longer have."],
+  ),
+  "py.atom.algo.clean-first-pass": q(
+    "Why are short variable names a false economy under time pressure?",
+    ["You lose track of the indices and the interviewer interrupts to ask", "They violate style guides", "They are slower to type"],
+    0,
+    "The interviewer is reading as you write.",
+    ["Correct. Both costs land at the worst possible moment.", "No style guide is being enforced.", "They are marginally faster to type."],
+  ),
+  "py.atom.algo.live-testing": q(
+    "Where should adversarial test cases come from?",
+    ["The assumptions your specific algorithm makes", "A memorized checklist", "Random generation"],
+    0,
+    "Naming the assumption gives you the case.",
+    ["Correct. A sliding window assumes it can shrink; break that.", "A checklist misses what is specific to your approach.", "Random inputs rarely hit the interesting case."],
+  ),
+  "py.atom.algo.recovering-when-stuck": q(
+    "You have been silent and stuck for a minute. What helps most?",
+    ["Say you are stuck and name the hint you are about to try", "Keep thinking quietly until you have something", "Start over with a new approach"],
+    0,
+    "Reasoning nobody hears cannot be credited.",
+    ["Correct. It also invites a nudge they cannot otherwise offer.", "A minute of silence already reads as lost.", "Restarting discards what you have."],
+  ),
+
+  // ---------------------------------------------------------------
+  // ML - Module 7.1 - Reinforcement learning
+  // ---------------------------------------------------------------
+  "py.atom.ml.markov-decision-process": q(
+    "An agent's best action depends on how it reached the current position. What does that mean?",
+    ["The state is incomplete and the Markov property fails", "The discount is too low", "The reward is too sparse"],
+    0,
+    "Every method in the module assumes otherwise.",
+    ["Correct. Add the missing information or treat it as partially observable.", "A discount cannot create history dependence.", "Sparsity is a separate difficulty."],
+  ),
+  "py.atom.ml.bellman-equations": q(
+    "You have computed the optimal value function. How do you get the optimal policy?",
+    ["Act greedily with respect to it", "Run policy iteration again", "Sample actions in proportion to value"],
+    0,
+    "The policy comes free from the values.",
+    ["Correct. That is why so many methods compute values instead.", "The values already encode the answer.", "Optimal play is deterministic here."],
+  ),
+  "py.atom.ml.value-iteration": q(
+    "How are value iteration and policy iteration related?",
+    ["They are the ends of one spectrum, differing in how long evaluation runs", "They solve different equations", "One is model-free"],
+    0,
+    "Truncating evaluation to one sweep gives value iteration.",
+    ["Correct. Anything in between is also a valid method.", "Both solve the same Bellman equation.", "Both need a known model."],
+  ),
+  "py.atom.ml.model-free-control": q(
+    "Why can Q-learning reuse experience from an old policy when SARSA cannot?",
+    ["Its target maximizes over next actions rather than using the one taken", "It explores more aggressively", "It uses a larger learning rate"],
+    0,
+    "The target is independent of the behaviour that produced the data.",
+    ["Correct. That is exactly what off-policy means.", "Exploration is the same in both.", "The rate is a separate setting."],
+  ),
+  "py.atom.ml.deep-q-networks": q(
+    "A value network diverges. Which two things do you check first?",
+    ["Whether the batches are correlated and whether the target moves with the network", "The reward scale and the discount", "The exploration rate and the episode length"],
+    0,
+    "Those are the two instabilities approximation introduces.",
+    ["Correct. Replay and a frozen target address them respectively.", "Both matter less than the two structural fixes.", "Neither causes divergence on its own."],
+  ),
+  "py.atom.ml.policy-gradients": q(
+    "Why does subtracting a baseline leave the policy gradient unbiased?",
+    ["The score function has expectation zero, so a constant contributes nothing on average", "The baseline is always small", "The gradient is normalized afterwards"],
+    0,
+    "The mean is unchanged while the variance falls.",
+    ["Correct. That is why the trick costs nothing.", "Any baseline works, small or large.", "No normalization is applied."],
+  ),
+  "py.atom.ml.actor-critic": q(
+    "A return of 3 is reinforced in one episode and discouraged in another. Why?",
+    ["The advantage compares it against what each state is normally worth", "The discount differed", "One episode was longer"],
+    0,
+    "The absolute return carries no information alone.",
+    ["Correct. Three is good in a hopeless state and poor in a promising one.", "The discount is fixed across episodes.", "Length is not what the critic measures."],
+  ),
+  "py.atom.ml.proximal-policy-optimization": q(
+    "Why does the clipped objective treat positive and negative advantages differently?",
+    ["Taking the minimum caps the gain on good actions and leaves the penalty on bad ones open", "Negative advantages are rarer", "It makes the gradient simpler"],
+    0,
+    "There is no reason to limit moving away from harm.",
+    ["Correct. The asymmetry is deliberate.", "Both signs occur constantly.", "Gradient simplicity is not the motivation."],
+  ),
+  "py.atom.ml.model-based-offline-rl": q(
+    "An offline policy scores extremely well on its own predicted value. Why is that suspicious?",
+    ["Selecting for a high predicted value partly selects for the largest overestimate", "It means the policy is too conservative", "Predicted values are never meaningful"],
+    0,
+    "Estimates are least reliable where the data is thinnest.",
+    ["Correct. That is why offline methods constrain toward the logged distribution.", "Conservatism would show a low predicted value.", "They are reliable where the data is dense."],
+  ),
+
+  // ---------------------------------------------------------------
   // Algo - Module 10.1 - Pattern recognition
   // ---------------------------------------------------------------
   "py.atom.algo.problem-patterns": q(
