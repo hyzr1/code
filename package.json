@@ -58,5 +58,9 @@
     "sharp": "0.35.3",
     "typescript": "^5.9.2",
     "vite": "^8.1.5"
+  },
+  "overrides": {
+    "nanoid": "^3.3.18",
+    "sharp": "0.35.3"
   }
 }

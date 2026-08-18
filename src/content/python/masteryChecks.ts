@@ -202,6 +202,198 @@ export const MASTERY_EXTRA_CHECKS: Record<string, LectureQuestion> = {
   ),
 
   // ---------------------------------------------------------------
+  // ML - Module 12.3 - Extreme-scale training
+  // ---------------------------------------------------------------
+  "py.atom.ml.three-dimensional-parallelism": q(
+    "Two decompositions both use exactly 1024 devices. Are they interchangeable?",
+    ["No; they differ in per-device memory and in which links carry the traffic", "Yes; the device count is what matters", "Yes, if the model fits in both"],
+    0,
+    "The product being right is necessary, not sufficient.",
+    ["Correct. The arithmetic prefers neither, and they behave very differently.", "The count says nothing about the split.", "Fitting is only one of the two differences."],
+  ),
+  "py.atom.ml.communication-overlap": q(
+    "Overlap is raised from ninety to a hundred percent on a step with 100ms compute and 40ms of traffic. What is gained?",
+    ["Four milliseconds; the last tenth of the traffic was all that remained exposed", "Forty milliseconds", "Nothing"],
+    0,
+    "Ninety percent overlap already hid thirty-six of the forty.",
+    ["Correct. The remaining exposure was small.", "That would be zero overlap to full.", "The step does fall from 104 to 100."],
+  ),
+  "py.atom.ml.fault-tolerant-training": q(
+    "A checkpoint is written while one worker is already failing. What is the risk?",
+    ["An inconsistent checkpoint, which is worse than having none", "It takes longer to write", "It uses more disk"],
+    0,
+    "Resuming needs a state every worker agrees on.",
+    ["Correct. A partial checkpoint can corrupt the resume.", "Duration is not the concern.", "Size is unchanged."],
+  ),
+  "py.atom.ml.frontier-utilization": q(
+    "One team counts gradient-checkpointing recomputation as useful work and another does not. What follows?",
+    ["Their utilization figures are not comparable, and the first is inflated", "Both are correct", "The difference is negligible"],
+    0,
+    "Recomputation repeats forward work that was already done.",
+    ["Correct, by a fifth or more, which is why the accounting must be stated.", "Only one counts work the model needed once.", "It is a substantial fraction."],
+  ),
+
+  // ---------------------------------------------------------------
+  // ML - Module 12.4 - Inference at the limit
+  // ---------------------------------------------------------------
+  "py.atom.ml.quantization-sparsity": q(
+    "A model is quantized to four bits and pruned to half its weights. What is the memory saving over half precision?",
+    ["Eight times, because the two savings multiply", "Four times", "Two times"],
+    0,
+    "Bit width and non-zero fraction are independent factors.",
+    ["Correct. A hundred and forty gigabytes becomes seventeen and a half.", "That is the bit-width saving alone.", "That is the sparsity saving alone."],
+  ),
+  "py.atom.ml.paged-attention": q(
+    "Why not use a block size of one token, which wastes no memory at all?",
+    ["Every block needs a table entry, so the bookkeeping becomes the cost", "Fragmentation would rise", "The cache would be slower to read"],
+    0,
+    "A block of one needs an entry per token.",
+    ["Correct. Sixteen gives two percent waste for a fraction of the entries.", "A block of one has no fragmentation.", "Read speed is not the limiting factor."],
+  ),
+  "py.atom.ml.multi-token-decoding": q(
+    "A draft model is replaced with one twice as accurate and three times as expensive. What should you check?",
+    ["Whether tokens gained divided by cost actually improved", "Whether acceptance improved", "Whether the draft is smaller"],
+    0,
+    "Both halves of the ratio moved.",
+    ["Correct. Better acceptance can still be a net loss.", "Acceptance alone ignores what it cost.", "Size is a proxy for cost, not the measure."],
+  ),
+  "py.atom.ml.edge-deployment": q(
+    "A model fits the memory budget and uses only supported operators, but peaks at thirty watts against an eight-watt envelope. Deployable?",
+    ["No; it sustains about a quarter of its benchmark throughput", "Yes; memory and operators are the real constraints", "Yes, if the benchmark is fast enough"],
+    0,
+    "Thermal throttling caps the sustained rate.",
+    ["Correct. All three gates have to pass.", "Power is the third gate, not an afterthought.", "The benchmark is measured before throttling."],
+  ),
+
+  // ---------------------------------------------------------------
+  // ML - Module 13.1 - Agents and tool use
+  // ---------------------------------------------------------------
+  "py.atom.ml.tools-environments": q(
+    "A tool call is missing a required field and also passes a field of the wrong type. What should the validator return?",
+    ["Both problems, so one retry can fix everything", "The first problem it finds", "A generic invalid-call message"],
+    0,
+    "Each retry costs a full model turn.",
+    ["Correct. Reporting them together saves a round trip.", "That forces a second retry for the second problem.", "A generic message is not actionable."],
+  ),
+  "py.atom.ml.planning-memory": q(
+    "An agent's transcript is largely deliberation that changed no action. What has it cost?",
+    ["Tokens and latency, with no effect on the trajectory", "Nothing, since it did no harm", "Correctness"],
+    0,
+    "Harmless is not the same as free.",
+    ["Correct. It is overhead dressed as planning.", "It consumed real budget.", "The actions were unaffected."],
+  ),
+  "py.atom.ml.multi-agent-orchestration": q(
+    "A pipeline's accuracy rises from forty-three to ninety-nine percent when a verifier is added. What improved?",
+    ["Nothing about the agents; the verifier repairs errors before they compound", "The agents became more accurate", "The decomposition became shorter"],
+    0,
+    "The per-agent accuracy was unchanged throughout.",
+    ["Correct. The verifier is doing the work.", "Their individual rates never moved.", "The subtask count was the same."],
+  ),
+  "py.atom.ml.agent-evaluation": q(
+    "Two agents have the same success rate, but one leaves four unintended writes per run. How do they compare?",
+    ["They are not equivalent; side effects are part of the result", "They are equivalent on the metric that matters", "The one with writes is more capable"],
+    0,
+    "The path is a result, not just the destination.",
+    ["Correct, which is why side effects are reported alongside success.", "Success rate is one of four axes.", "Writing more is not evidence of capability."],
+  ),
+
+  // ---------------------------------------------------------------
+  // ML - Module 13.2 - Advanced RL
+  // ---------------------------------------------------------------
+  "py.atom.ml.offline-rl": q(
+    "Raising the conservative penalty changes the selected action from the rare one to the common one. What does that show?",
+    ["The penalty is trading estimated value against how well the data supports it", "The rare action was miscalculated", "The common action improved"],
+    0,
+    "Only the penalty changed between the two runs.",
+    ["Correct, and the right penalty is a judgement about the data.", "Its estimate was unchanged.", "Its value was unchanged too."],
+  ),
+  "py.atom.ml.self-play": q(
+    "A pool of four opponents contains only two distinct strategies. What does that cost?",
+    ["Half the coverage; one strategy is tested twice and another direction not at all", "Nothing, if the pool is large", "Only compute"],
+    0,
+    "Diversity, not size, is what tests a strategy.",
+    ["Correct. Exploitability against a narrow pool means little.", "Size without diversity does not help.", "The compute is the least of it."],
+  ),
+  "py.atom.ml.world-models": q(
+    "The per-step dynamics error is halved. Roughly how much longer can you plan?",
+    ["About forty percent longer", "Twice as long", "Four times as long"],
+    0,
+    "Accumulated error grows with the square of the horizon.",
+    ["Correct, which is why longer horizons are expensive to buy.", "That would need linear accumulation.", "Quadratic accumulation works against you."],
+  ),
+  "py.atom.ml.exploration-reward": q(
+    "An exploration bonus is added to an agent whose reward is misspecified. What happens?",
+    ["It finds the loopholes faster", "It corrects the reward", "Nothing changes"],
+    0,
+    "Exploration searches harder, not more wisely.",
+    ["Correct. Fix the reward before adding exploration.", "No bonus repairs a specification.", "It actively accelerates the failure."],
+  ),
+
+  // ---------------------------------------------------------------
+  // ML - Module 13.3 - Reasoning, learning and memory
+  // ---------------------------------------------------------------
+  "py.atom.ml.inference-time-compute": q(
+    "A paper reports accuracy at sixty-four samples selected by an oracle. What has it measured?",
+    ["Whether the correct answer was generated, not whether the method works", "End-to-end method accuracy", "The verifier's quality"],
+    0,
+    "An oracle removes the selection problem entirely.",
+    ["Correct, and it is a much weaker claim than it appears.", "That needs a real verifier in the loop.", "The oracle replaced the verifier."],
+  ),
+  "py.atom.ml.continual-learning": q(
+    "Replay scores lower than naive fine-tuning on the new task. Is it the worse strategy?",
+    ["No; it retains far more of the old task and has the better balance", "Yes; the new-task score decides", "Yes, unless the old task is more important"],
+    0,
+    "Both numbers have to be read together.",
+    ["Correct. Naive fine-tuning lost fifty-seven points elsewhere.", "That is exactly the misleading comparison.", "The balance already favours replay."],
+  ),
+  "py.atom.ml.long-term-memory": q(
+    "A stored fact becomes false today. What should happen to it?",
+    ["It should be expired now, not left to decay", "Its relevance should be lowered", "Its half-life should be shortened"],
+    0,
+    "Decay handles age, not contradiction.",
+    ["Correct. Fading it means serving a confident falsehood meanwhile.", "Lowering relevance still surfaces it.", "A shorter half-life still takes time."],
+  ),
+  "py.atom.ml.scaling-science": q(
+    "Power is computed after an experiment returns a positive result. What does that tell you?",
+    ["Nothing about the design, since post-hoc power is a function of the result", "That the design was adequate", "That the effect is real"],
+    0,
+    "The calculation has to precede the experiment.",
+    ["Correct. It cannot retroactively justify an underpowered design.", "Adequacy is decided beforehand.", "An underpowered design produces a number either way."],
+  ),
+
+  // ---------------------------------------------------------------
+  // ML - Module 13.4 - Open problems and the road ahead
+  // ---------------------------------------------------------------
+  "py.atom.ml.faithfulness": q(
+    "A team ships one mitigation for everything it calls hallucination. What is the problem?",
+    ["The label covers three failures needing three different kinds of evidence", "Mitigations are always partial", "Hallucination cannot be measured"],
+    0,
+    "Support and faithfulness are independent questions.",
+    ["Correct. A retrieval fix does nothing about unfaithful reasoning.", "The issue is the classification, not the coverage.", "Each of the three is measurable."],
+  ),
+  "py.atom.ml.distribution-shift": q(
+    "A model's accuracy falls as adoption grows, with no change to the model or the world. What is happening?",
+    ["Strategic shift; people are responding to the deployment", "Natural drift", "An adversarial attack"],
+    0,
+    "This shift is caused by the deployment itself.",
+    ["Correct, and no held-out set could have predicted it.", "Drift would have happened without the model.", "Attack is deliberate rather than responsive."],
+  ),
+  "py.atom.ml.superalignment": q(
+    "A lab pursues two oversight proposals that both assume human judgement scales. What has it hedged?",
+    ["Nothing; both fail under the same condition", "The main risk, twice over", "The implementation risk only"],
+    0,
+    "Hedging needs independent failure modes.",
+    ["Correct. Pairing either with a differently-founded proposal would hedge.", "Duplicating a bet is not diversifying it.", "The shared assumption is the risk."],
+  ),
+  "py.atom.ml.road-ahead": q(
+    "A problem is critically important and has no way to measure progress. Should you work on it?",
+    ["Not directly; build the measurement first, or the work cannot be evaluated", "Yes; importance is what matters", "No; it is unsolvable"],
+    0,
+    "Importance and tractability are different axes.",
+    ["Correct, and the measurement is itself a contribution.", "Unmeasurable work cannot be built on.", "Nothing says it is unsolvable."],
+  ),
+
+  // ---------------------------------------------------------------
   // ML - Module 11.4 - Gaussian processes and kernels
   // ---------------------------------------------------------------
   "py.atom.ml.gaussian-processes": q(
