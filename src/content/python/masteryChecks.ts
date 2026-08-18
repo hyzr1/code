@@ -202,6 +202,70 @@ export const MASTERY_EXTRA_CHECKS: Record<string, LectureQuestion> = {
   ),
 
   // ---------------------------------------------------------------
+  // Algo - Module 10.1 - Pattern recognition
+  // ---------------------------------------------------------------
+  "py.atom.algo.problem-patterns": q(
+    "A statement asks for the longest increasing subsequence. What does 'subsequence' rule out?",
+    ["Sliding windows, since the elements need not be adjacent", "Dynamic programming", "Binary search"],
+    0,
+    "A window cannot represent an arbitrary selection.",
+    ["Correct. This is almost always dynamic programming.", "That is what it rules in.", "Binary search appears in the fast version."],
+  ),
+  "py.atom.algo.choosing-approaches": q(
+    "Two approaches both fit the constraints. Which do you choose?",
+    ["The one you can write correctly and defend in the time available", "The asymptotically faster one", "The one using less memory"],
+    0,
+    "Cost stops being a tiebreaker once both fit.",
+    ["Correct. A complete adequate solution beats a broken optimal one.", "That difference no longer matters.", "Only if memory is the binding constraint."],
+  ),
+  "py.atom.algo.cost-estimation": q(
+    "The bound is 200,000 and your approach is quadratic. What is the right response?",
+    ["Rule it out; the estimate is hundreds of times over any budget", "Try it and optimize later", "Check the language"],
+    0,
+    "Four times ten to the tenth is not a borderline case.",
+    ["Correct. Find a different approach before writing anything.", "Two orders of magnitude cannot be optimized away.", "No language closes that gap."],
+  ),
+
+  // ---------------------------------------------------------------
+  // ML - Module 6.5 - Using LLMs
+  // ---------------------------------------------------------------
+  "py.atom.ml.prompting": q(
+    "A prompt produces correct content that your pipeline cannot parse. What is missing?",
+    ["The output contract", "The evidence", "The task description"],
+    0,
+    "Correct content means the other three parts are working.",
+    ["Correct. State the exact format the answer must take.", "Evidence decides content, which is already right.", "The task is clearly understood."],
+  ),
+  "py.atom.ml.decoding-strategies": q(
+    "A structured extraction pipeline occasionally invents field values. What do you change first?",
+    ["Decode greedily rather than sampling", "Rewrite the prompt", "Add more examples"],
+    0,
+    "Sampling from the tail will eventually invent something plausible.",
+    ["Correct. It is a decoding problem wearing a hallucination costume.", "The prompt may be entirely fine.", "Examples do not remove tail sampling."],
+  ),
+  "py.atom.ml.demonstrations": q(
+    "Adding examples improved your outputs. What did you most likely fix?",
+    ["The output format, which is what demonstrations teach most reliably", "The model's understanding of the task", "The tokenization"],
+    0,
+    "Test whether a format instruction alone captures the same gain.",
+    ["Correct. If it does, the examples cost tokens for nothing.", "That effect is far less certain.", "Tokenization is unchanged."],
+  ),
+  "py.atom.ml.vector-search": q(
+    "Retrieval keeps returning long documents whatever the query. What is wrong?",
+    ["The vectors are not normalized, so magnitude dominates the score", "The index is too small", "The embeddings are stale"],
+    0,
+    "An unnormalized dot product rewards length.",
+    ["Correct. Normalize at index time so the score is a cosine.", "Size does not create a length bias.", "Staleness would not favour long documents."],
+  ),
+  "py.atom.ml.retrieval-augmented-generation": q(
+    "A grounded system answers wrongly. What do you check before touching the prompt?",
+    ["Whether the correct evidence was retrieved at all", "The temperature", "The chunk size"],
+    0,
+    "The two failure modes need different fixes.",
+    ["Correct. No prompt change rescues evidence that was never fetched.", "That matters only after retrieval is ruled out.", "Chunk size is one possible cause, not the first check."],
+  ),
+
+  // ---------------------------------------------------------------
   // Algo - Module 9.2 - Games and specialized DP
   // ---------------------------------------------------------------
   "py.atom.algo.game-theory": q(

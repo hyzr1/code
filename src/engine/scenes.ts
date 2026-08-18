@@ -589,6 +589,11 @@ const VISUALS: [RegExp, VisualKind][] = [
   // Pretraining: objectives are ML machinery, adaptation is a decision.
   [/ml\.pretrain-finetune/, "decision"],
   [/ml\.(?:masked-language-modeling|autoregressive-pretraining|text-to-text)/, "ml"],
+  // Interview judgement and LLM usage are decisions; estimation is complexity.
+  [/algo\.cost-estimation/, "complexity"],
+  [/algo\.(?:problem-patterns|choosing-approaches)/, "decision"],
+  [/ml\.(?:prompting|decoding-strategies|demonstrations|retrieval-augmented-generation)/, "decision"],
+  [/ml\.vector-search/, "pipeline"],
   // Foundational lessons first, matched on their exact unit ids so they never
   // collide with a pattern lesson. These keep the early modules from being a
   // wall of text with nothing to look at.
