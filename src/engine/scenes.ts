@@ -560,6 +560,11 @@ const VISUALS: [RegExp, VisualKind][] = [
   // Sequence models are network machinery; attention is a retrieval decision.
   [/ml\.encoder-decoder-attention/, "decision"],
   [/ml\.(?:recurrent-networks|gated-units|seq2seq)/, "ml"],
+  // Attention: retrieval and masking are decisions, the rest is machinery.
+  [/ml\.(?:query-key-value|attention-masks|attention-scaling)/, "decision"],
+  [/ml\.(?:scaled-dot-product|multi-head-attention)/, "ml"],
+  // Number theory is arithmetic reasoning rather than a data structure.
+  [/algo\.(?:gcd-euclid|sieve|modular-arithmetic|combinatorics|expected-value)/, "complexity"],
   // Foundational lessons first, matched on their exact unit ids so they never
   // collide with a pattern lesson. These keep the early modules from being a
   // wall of text with nothing to look at.

@@ -202,6 +202,84 @@ export const MASTERY_EXTRA_CHECKS: Record<string, LectureQuestion> = {
   ),
 
   // ---------------------------------------------------------------
+  // Algo - Module 8.1 - Number theory
+  // ---------------------------------------------------------------
+  "py.atom.algo.gcd-euclid": q(
+    "The extended algorithm returns a divisor of one for a number and a modulus. What follows?",
+    ["That number has a modular inverse, and the coefficient gives it", "The two numbers are equal", "Both numbers are prime"],
+    0,
+    "Coprimality is exactly the condition for an inverse.",
+    ["Correct. Reduce the coefficient by the modulus.", "Equal numbers give a divisor equal to themselves.", "Nine and ten are coprime and neither is prime."],
+  ),
+  "py.atom.algo.sieve": q(
+    "Why does the sieve store the smallest prime factor rather than a boolean?",
+    ["It answers primality and gives fast factorization from the same table", "It uses less memory", "Booleans cannot be indexed"],
+    0,
+    "A number whose factor is itself is prime.",
+    ["Correct. Factorizing becomes a short chain of divisions.", "It uses more memory per entry, not less.", "Booleans index fine; they just answer less."],
+  ),
+  "py.atom.algo.modular-arithmetic": q(
+    "A solution divides by a count and then reduces by the modulus. What goes wrong?",
+    ["Integer division discards a remainder the modulus would have carried", "The result overflows", "The modulus stops being prime"],
+    0,
+    "Division has no meaning under a modulus.",
+    ["Correct. Multiply by the modular inverse instead.", "Overflow is a separate concern.", "The modulus is unchanged."],
+  ),
+  "py.atom.algo.combinatorics": q(
+    "Ten distinct books, three shelf slots, order matters. Which count applies?",
+    ["A permutation, giving 720", "A combination, giving 120", "Stars and bars, giving 220"],
+    0,
+    "Order on a shelf is what distinguishes them.",
+    ["Correct. Ten times nine times eight.", "That answers which three were chosen.", "That formula is for identical items."],
+  ),
+  "py.atom.algo.expected-value": q(
+    "n letters go into n envelopes at random. What is the expected number delivered correctly?",
+    ["One, whatever n is", "n over two", "It depends on n"],
+    0,
+    "Each letter is correct with probability one over n.",
+    ["Correct. Linearity holds despite heavy dependence.", "That would need a probability of one half each.", "The n cancels exactly."],
+  ),
+
+  // ---------------------------------------------------------------
+  // ML - Module 5.4 - Attention foundations
+  // ---------------------------------------------------------------
+  "py.atom.ml.query-key-value": q(
+    "Keys and values are produced by the same projection. What is lost?",
+    ["A position's findability is forced to equal what it contributes", "The ability to compute scores", "The softmax normalization"],
+    0,
+    "The two roles answer different questions.",
+    ["Correct. Separate projections keep that degree of freedom.", "Scores still compute fine.", "Normalization is unaffected."],
+  ),
+  "py.atom.ml.scaled-dot-product": q(
+    "The scaling factor is omitted from a wide attention layer. What is the symptom?",
+    ["Weights become nearly one-hot and gradients vanish", "The weights stop summing to one", "The output width changes"],
+    0,
+    "Dot products grow with the key width.",
+    ["Correct. Training slows with no visible error.", "Normalization still holds.", "Shapes are unaffected."],
+  ),
+  "py.atom.ml.multi-head-attention": q(
+    "A 512-wide model goes from 8 heads to 32. What changes?",
+    ["Each head narrows from 64 to 16, and the parameter count is unchanged", "The parameters quadruple", "The model width quadruples"],
+    0,
+    "Heads partition an existing width.",
+    ["Correct. There is a practical floor on how narrow a head can be.", "No new projections are added.", "The width is fixed by the model."],
+  ),
+  "py.atom.ml.attention-masks": q(
+    "Masking is applied by zeroing weights after the softmax. What breaks?",
+    ["The remaining weights no longer sum to one", "Masked positions still contribute", "The causal order reverses"],
+    0,
+    "Normalization has already happened.",
+    ["Correct. The output is scaled down unevenly per position.", "They are zeroed, just too late.", "Ordering is unaffected."],
+  ),
+  "py.atom.ml.attention-scaling": q(
+    "Attention uses more operations than recurrence at realistic lengths. Why did it win?",
+    ["Its work is parallel and every position is one step from every other", "It uses fewer parameters", "It uses less memory"],
+    0,
+    "Hardware could exploit exactly those two properties.",
+    ["Correct. Recurrence forces one sequential step per position.", "Parameter counts are comparable.", "Attention uses more memory, not less."],
+  ),
+
+  // ---------------------------------------------------------------
   // ML - Module 5.3 - Sequence models
   // ---------------------------------------------------------------
   "py.atom.ml.recurrent-networks": q(
