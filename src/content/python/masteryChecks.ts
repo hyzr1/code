@@ -202,6 +202,687 @@ export const MASTERY_EXTRA_CHECKS: Record<string, LectureQuestion> = {
   ),
 
   // ---------------------------------------------------------------
+  // ML - Module 9.3 - Efficient architectures and attention
+  // ---------------------------------------------------------------
+  "py.atom.ml.flash-attention": q(
+    "Does tiled attention change the model's outputs?",
+    ["No; it is exact, and only the memory schedule differs", "Yes, slightly", "Yes, it improves them"],
+    0,
+    "Nothing is approximated.",
+    ["Correct. There is no accuracy trade-off to weigh.", "The arithmetic is unchanged.", "The mathematics is identical."],
+  ),
+  "py.atom.ml.long-context": q(
+    "A model uses a five-hundred-twelve-token sliding window. What can it not do?",
+    ["Score a pair of positions further apart than the window", "Process long sequences", "Run quickly"],
+    0,
+    "Some pairs are simply never scored.",
+    ["Correct, and that must be tested for explicitly.", "Long sequences are exactly what it enables.", "Speed is its advantage."],
+  ),
+  "py.atom.ml.position-schemes": q(
+    "A rotary model's context is extended eightfold by configuration alone. What happens?",
+    ["Distant positions land in angular regimes the model never saw", "Nothing; rotation is unbounded", "Memory falls"],
+    0,
+    "The frequencies were trained at one length.",
+    ["Correct. The frequencies must be rescaled.", "That describes the linear-penalty scheme.", "Memory rises with the longer context."],
+  ),
+  "py.atom.ml.mixture-of-experts": q(
+    "An expert layer trains without a load-balancing term. What is the outcome?",
+    ["The router collapses onto a few experts and most capacity goes unused", "Training diverges", "The experts become identical"],
+    0,
+    "Nothing otherwise encourages spreading the load.",
+    ["Correct. Cost of many parameters, capacity of few.", "Training continues, just badly.", "They stay distinct but idle."],
+  ),
+  "py.atom.ml.parameter-efficient-tuning": q(
+    "A rank-four adapter on a four-thousand-dimension model trains what share of the parameters?",
+    ["Under a fifth of a percent", "About five percent", "About half"],
+    0,
+    "The count grows with the rank, not the dimension squared.",
+    ["Correct, which is what makes single-device fine-tuning possible.", "That would be roughly rank one hundred.", "That is close to a full update."],
+  ),
+
+  // ---------------------------------------------------------------
+  // ML - Module 9.4 - Alignment and post-training
+  // ---------------------------------------------------------------
+  "py.atom.ml.instruction-tuning": q(
+    "Why is the fine-tuning loss masked to response tokens?",
+    ["Training on prompt positions teaches the model to generate prompts", "It runs faster", "Prompts are noisier"],
+    0,
+    "The task is producing responses.",
+    ["Correct, and it dilutes the signal that matters.", "The saving is negligible.", "Noise is not the issue."],
+  ),
+  "py.atom.ml.rlhf": q(
+    "The reward score is climbing while human ratings fall. What is happening?",
+    ["Reward hacking; the policy found where the proxy disagrees with preference", "The reward model is undertrained", "The learning rate is too low"],
+    0,
+    "The training loop cannot see true quality.",
+    ["Correct. The divergence penalty exists to prevent it.", "The proxy is fitting its data fine.", "Optimisation is working too well, not too little."],
+  ),
+  "py.atom.ml.direct-preference-optimization": q(
+    "What plays the role of the reward model in direct preference optimization?",
+    ["The policy itself, through its log-probability gap from a reference", "A separately trained scorer", "The human labels"],
+    0,
+    "That is what removes the second model.",
+    ["Correct, and it removes the online loop with it.", "That is the reinforcement approach.", "Labels are pairwise, not scalar."],
+  ),
+  "py.atom.ml.constitutional-methods": q(
+    "A principle requires knowledge the model does not have. What effect does it have?",
+    ["None; the critique step never fires on it", "It is enforced anyway", "It causes the loop to fail"],
+    0,
+    "The loop fixes only what it identifies.",
+    ["Correct. Such a rule is decorative.", "Nothing enforces an undetected violation.", "The loop runs normally."],
+  ),
+  "py.atom.ml.red-teaming": q(
+    "A safety fix reduces failures from forty to thirty-eight. What does that indicate?",
+    ["The fix addressed the specific examples, not the underlying behaviour", "The attacks were weak", "The model is now safe"],
+    0,
+    "A real mitigation removes most of the class.",
+    ["Correct. Five percent is a patch.", "The attacks clearly worked.", "Thirty-eight failures remain."],
+  ),
+
+  // ---------------------------------------------------------------
+  // ML - Module 9.1 - Scaling
+  // ---------------------------------------------------------------
+  "py.atom.ml.scaling-laws": q(
+    "A fixed compute budget is spent on a ten-times-larger model with a tenth the data. What happens?",
+    ["Loss rises, because the data term is starved", "Loss falls, because the model is larger", "Loss is unchanged"],
+    0,
+    "Both terms in the law must be reduced.",
+    ["Correct. The compute-optimal split is interior.", "Model size alone does not reach the floor.", "The split genuinely matters."],
+  ),
+  "py.atom.ml.emergent-behavior": q(
+    "A benchmark jumps sharply at one model size. What is the first thing to check?",
+    ["Whether the metric gives partial credit", "Whether the model was trained longer", "Whether the data changed"],
+    0,
+    "A thresholded metric hides smooth progress.",
+    ["Correct. Exact-match scoring manufactures apparent jumps.", "Training length is a separate variable.", "The same runs can be rescored."],
+  ),
+  "py.atom.ml.data-curation": q(
+    "Benchmark questions are found inside the training corpus. What can be salvaged?",
+    ["Nothing after the fact; only a clean held-out set restores meaning", "Subtract the contaminated fraction", "Reweight the score"],
+    0,
+    "The score blends two different quantities.",
+    ["Correct. There is no post-hoc correction.", "The two effects cannot be separated.", "Reweighting assumes a separation that does not exist."],
+  ),
+
+  // ---------------------------------------------------------------
+  // ML - Module 9.2 - Training at scale
+  // ---------------------------------------------------------------
+  "py.atom.ml.mixed-precision": q(
+    "Half-precision training stops improving and raises no error. What is happening?",
+    ["Gradients underflow to zero, so the update is zero", "The loss has diverged", "The weights are corrupted"],
+    0,
+    "The failure is silent by construction.",
+    ["Correct. Loss scaling shifts them into the window.", "A diverged loss would be visible.", "Weights are usually kept in full precision."],
+  ),
+  "py.atom.ml.gradient-checkpointing": q(
+    "A hundred-layer network is checkpointed. Roughly how many segments minimise stored activations?",
+    ["About ten", "One", "A hundred"],
+    0,
+    "Two terms balance at the square root.",
+    ["Correct, and the curve is flat nearby.", "That stores a whole segment's activations.", "That maximises boundaries for no saving."],
+  ),
+  "py.atom.ml.data-parallelism": q(
+    "The device count doubles with the per-device batch unchanged. What else must change?",
+    ["The learning rate, since the effective batch doubled", "Nothing", "The model architecture"],
+    0,
+    "Effective batch governs the dynamics.",
+    ["Correct, and a large scaled rate needs warmup.", "The run is now taking different steps.", "Architecture is unaffected."],
+  ),
+  "py.atom.ml.model-parallelism": q(
+    "An eight-stage pipeline processes one microbatch per step. How much is idle?",
+    ["About eighty-seven percent", "About twelve percent", "None"],
+    0,
+    "Seven of eight stages wait at any moment.",
+    ["Correct. Sixty-four microbatches brings it under ten percent.", "That inverts the fraction.", "The bubble is inherent to the schedule."],
+  ),
+  "py.atom.ml.sharded-training": q(
+    "Which component dominates per-parameter training memory?",
+    ["Optimizer state, at about twelve bytes", "The weight, at two bytes", "The gradient, at two bytes"],
+    0,
+    "Moments plus a full-precision master copy.",
+    ["Correct, which is why sharding it first is the big win.", "That is the smallest of the three.", "Gradients match the weights in size."],
+  ),
+  "py.atom.ml.collective-communication": q(
+    "Why does a ring all-reduce stay affordable at five hundred devices?",
+    ["Each device sends a bounded fraction of the payload, so the cost saturates", "It skips most devices", "It moves less total data"],
+    0,
+    "Compare it with routing everything through one link.",
+    ["Correct. Gathering to one costs hundreds of times more.", "Every device participates.", "It moves about twice the payload per device."],
+  ),
+
+  // ---------------------------------------------------------------
+  // Algo - Module 12.4 - DP optimizations
+  // ---------------------------------------------------------------
+  "py.atom.algo.convex-hull-trick": q(
+    "The transition slopes arrive in arbitrary order. Can the stack version be used?",
+    ["No; it assumes monotone slopes and a balanced structure is needed", "Yes; order is irrelevant", "Yes, if the queries are sorted"],
+    0,
+    "Insertion at the back only works for monotone slopes.",
+    ["Correct. Otherwise a line must be inserted mid-envelope.", "The stack breaks silently on unordered slopes.", "Sorted queries help the search, not the insertion."],
+  ),
+  "py.atom.algo.divide-conquer-dp": q(
+    "The cost function does not have monotone optima but the bound is applied. What happens?",
+    ["Some inputs give wrong answers, silently", "It runs at the original speed", "It raises an error"],
+    0,
+    "The true optimum may sit outside the bounded range.",
+    ["Correct. Monotonicity must be verified, not assumed.", "The bound is still applied.", "Nothing detects the violation."],
+  ),
+  "py.atom.algo.knuth-optimization": q(
+    "Which two table entries bound the optimal split for the interval i to j?",
+    ["The splits for i to j minus one, and i plus one to j", "The splits for i minus one to j, and i to j plus one", "Only the diagonal entries"],
+    0,
+    "Both are already computed when the interval is reached.",
+    ["Correct. That collapses the inner loop.", "Those are not yet computed.", "Diagonals are the base case."],
+  ),
+  "py.atom.algo.lagrangian-relaxation": q(
+    "A required item count never appears at any penalty. What follows?",
+    ["The relaxation cannot produce it and another method is needed", "Search the penalty more finely", "Use a negative penalty"],
+    0,
+    "The count is a step function of the penalty, with gaps.",
+    ["Correct. Concavity is what guarantees reachability.", "A finer search does not fill a genuine gap.", "That encourages more items, not a skipped count."],
+  ),
+  "py.atom.algo.sos-dp": q(
+    "The mask loop is placed outside the bit loop. What goes wrong?",
+    ["The transform double-counts and the sums are wrong", "It becomes slower", "Nothing"],
+    0,
+    "Each bit must complete across every mask before the next begins.",
+    ["Correct. The loop order is not interchangeable.", "The cost is the same; the answer is not.", "The results differ."],
+  ),
+
+  // ---------------------------------------------------------------
+  // Algo - Module 12.5 - Computational geometry
+  // ---------------------------------------------------------------
+  "py.atom.algo.hull-algorithms": q(
+    "The cross-product test compares against exact zero on floating-point coordinates. What is the risk?",
+    ["Rounding makes collinearity decisions unreliable", "It is slower", "The hull becomes concave"],
+    0,
+    "Exact zero rarely occurs with floats.",
+    ["Correct. A tolerance scaled to the coordinates is needed.", "Speed is unaffected.", "The failure is in degenerate cases, not convexity."],
+  ),
+  "py.atom.algo.rotating-calipers": q(
+    "The calipers walk is run on the raw point set instead of the hull. What happens?",
+    ["The pointer wanders and the answer is wrong", "It is merely slower", "It still works"],
+    0,
+    "The forward-only argument relies on convex order.",
+    ["Correct. The hull in order is a precondition.", "Correctness fails, not just speed.", "Monotonicity no longer holds."],
+  ),
+  "py.atom.algo.half-plane-intersection": q(
+    "The starting box is smaller than the true feasible region. What is the result?",
+    ["Silently truncated, because every constraint is applied against the box", "An error", "The box grows automatically"],
+    0,
+    "The box bounds everything that follows.",
+    ["Correct. It must be chosen larger than anything of interest.", "Nothing detects the truncation.", "The box is fixed at the start."],
+  ),
+  "py.atom.algo.segment-sweeps": q(
+    "Nearly every pair of segments crosses. How does the sweep perform?",
+    ["It degenerates to quadratic, because the output itself is quadratic", "It stays near linear", "It fails"],
+    0,
+    "The cost includes the number of intersections reported.",
+    ["Correct. No algorithm beats the size of its own output.", "It cannot report quadratic output in linear time.", "It remains correct."],
+  ),
+  "py.atom.algo.delaunay-voronoi": q(
+    "There are eighty sites and one nearest-neighbour query per second. Build the structures?",
+    ["No; a direct distance scan is faster and far simpler", "Yes; they are always faster", "Yes, if the sites are in general position"],
+    0,
+    "Both carry substantial construction constants.",
+    ["Correct. They pay off in the hundreds and above.", "Construction dominates at small sizes.", "General position affects correctness, not the trade-off."],
+  ),
+
+  // ---------------------------------------------------------------
+  // Algo - Module 12.2 - Advanced flow and matching
+  // ---------------------------------------------------------------
+  "py.atom.algo.dinic": q(
+    "The level graph is rebuilt after every single augmenting path. What is lost?",
+    ["The entire speedup; the phase structure is what makes it fast", "Nothing; the answer is the same", "Correctness"],
+    0,
+    "The gain comes from reusing one layering.",
+    ["Correct. That reduces it to the simple augmenting method.", "The answer is right but the cost is not.", "It stays correct, just slow."],
+  ),
+  "py.atom.algo.min-cost-flow": q(
+    "Why can an ordinary shortest-path search fail on the residual graph?",
+    ["Cancelling flow creates negative-cost edges", "The graph is too large", "Capacities are integers"],
+    0,
+    "Reverse edges carry the negated cost.",
+    ["Correct. Potentials restore non-negativity.", "Size is not the issue.", "Integrality is unrelated."],
+  ),
+  "py.atom.algo.general-matching": q(
+    "Which structure makes general matching harder than the bipartite case?",
+    ["The odd cycle", "The long path", "The isolated vertex"],
+    0,
+    "It is exactly what a two-colouring cannot survive.",
+    ["Correct. Blossom contraction exists to handle it.", "Paths are handled easily.", "Isolated vertices are trivial."],
+  ),
+  "py.atom.algo.hopcroft-karp": q(
+    "What does one phase augment along?",
+    ["Every shortest augmenting path at the current length", "A single path", "Any path found first"],
+    0,
+    "Mixing lengths breaks the square-root bound.",
+    ["Correct. That is the whole improvement.", "That is the simple method.", "Longer paths belong to later phases."],
+  ),
+  "py.atom.algo.flow-modeling": q(
+    "A vertex may carry at most three units. How is that expressed?",
+    ["Split it into an entry and an exit joined by an edge of capacity three", "Cap every incident edge at three", "Delete the vertex"],
+    0,
+    "Flow bounds edges, never vertices.",
+    ["Correct. All flow through the vertex crosses that one edge.", "That bounds each edge separately, which is weaker.", "Removal changes the problem."],
+  ),
+
+  // ---------------------------------------------------------------
+  // Algo - Module 12.3 - Advanced strings
+  // ---------------------------------------------------------------
+  "py.atom.algo.suffix-array-construction": q(
+    "Suffixes are sorted with a plain string comparison sort. What is the cost?",
+    ["Quadratic, because each comparison is linear", "Linear-times-logarithmic", "Linear"],
+    0,
+    "Comparing two suffixes reads characters.",
+    ["Correct. Prefix doubling replaces that with rank pairs.", "That is what doubling achieves.", "No construction is linear without more machinery."],
+  ),
+  "py.atom.algo.suffix-automata": q(
+    "How many states does a suffix automaton need for a text of length n?",
+    ["Fewer than twice n", "About n squared", "Exactly n"],
+    0,
+    "That bound is why it stays small.",
+    ["Correct. Even when distinct substrings are quadratic.", "That is the substring count, not the state count.", "Clones push it above n."],
+  ),
+  "py.atom.algo.palindromic-trees": q(
+    "How many distinct palindromic substrings can a text of length n contain?",
+    ["At most n", "At most n squared", "At most two to the n"],
+    0,
+    "Each character adds at most one new one.",
+    ["Correct. Total occurrences can still be quadratic.", "That bounds occurrences, not distinct ones.", "Substrings are contiguous."],
+  ),
+  "py.atom.algo.aho-corasick-automata": q(
+    "Patterns include both hers and he. What happens without output propagation?",
+    ["He is missed wherever it ends inside hers", "Hers is missed", "Both are found anyway"],
+    0,
+    "Only the pattern ending at the current state is reported.",
+    ["Correct. Outputs must travel along failure links.", "Hers ends at its own state.", "The suffix pattern is silently dropped."],
+  ),
+
+  // ---------------------------------------------------------------
+  // ML - Module 8.2 - Serving and production
+  // ---------------------------------------------------------------
+  "py.atom.ml.packaging-serving": q(
+    "The scaler is fitted in training and reimplemented in the serving code. What follows?",
+    ["Two implementations that will drift apart", "Faster serving", "Nothing; the maths is the same"],
+    0,
+    "One transformation should have one implementation.",
+    ["Correct. Preprocessing belongs inside the artifact.", "The saving is negligible.", "A single typed digit already breaks it."],
+  ),
+  "py.atom.ml.latency-autoscaling": q(
+    "Utilisation rises from ninety to ninety-nine percent. What happens to response time?",
+    ["It rises roughly tenfold", "It rises by about ten percent", "It is unchanged"],
+    0,
+    "The queueing term divides by one minus utilisation.",
+    ["Correct. That is the cliff.", "Growth is far steeper than linear.", "Queueing dominates near capacity."],
+  ),
+  "py.atom.ml.batching-caching": q(
+    "Throughput keeps rising with batch size. Why not use the largest batch?",
+    ["The latency budget caps the usable size", "Throughput eventually falls", "Accuracy degrades"],
+    0,
+    "Unusable throughput is not throughput.",
+    ["Correct. Fill time and compute both grow with the batch.", "It rises with diminishing returns, not falls.", "Predictions are unchanged."],
+  ),
+  "py.atom.ml.online-batch-inference": q(
+    "Predictions are precomputed nightly and the inputs change every six hours. Is that safe?",
+    ["No; the served prediction is already stale", "Yes; nightly is frequent enough", "Yes, if the model is accurate"],
+    0,
+    "Compare the schedule against how fast the inputs move.",
+    ["Correct. The schedule must be the faster of the two.", "The inputs move four times faster.", "Accuracy on stale inputs is irrelevant."],
+  ),
+  "py.atom.ml.safe-rollout": q(
+    "What does shadow traffic test that an offline evaluation cannot?",
+    ["The real request distribution and the serving path itself", "Model accuracy", "Training convergence"],
+    0,
+    "The inputs are real; the outputs go nowhere.",
+    ["Correct. Malformed inputs and real load are only visible there.", "Offline evaluation measures that.", "Training is already finished."],
+  ),
+
+  // ---------------------------------------------------------------
+  // ML - Module 8.3 - Reliability and lifecycle
+  // ---------------------------------------------------------------
+  "py.atom.ml.monitoring-drift": q(
+    "A model went live eight days ago and labels take thirty. What is known about accuracy?",
+    ["Nothing yet; only proxy signals are observable", "It is within tolerance", "It has degraded"],
+    0,
+    "Accuracy needs ground truth.",
+    ["Correct. Input and prediction distributions cover the gap.", "No labelled predictions exist yet.", "Neither claim is supported."],
+  ),
+  "py.atom.ml.online-experiments": q(
+    "Detecting a one percent lift instead of twenty percent costs how much more traffic?",
+    ["Roughly four hundred times", "Roughly twenty times", "Roughly twice"],
+    0,
+    "Sample size scales with the inverse square of the effect.",
+    ["Correct. Small effects are very expensive to prove.", "That would be a linear relationship.", "The relationship is quadratic."],
+  ),
+  "py.atom.ml.versioning-lineage": q(
+    "Code, data and configuration are pinned but the environment is a latest tag. Rebuildable?",
+    ["No; one mutable reference breaks the rebuild", "Yes; three of four is enough", "Only if the environment rarely changes"],
+    0,
+    "Lineage is a conjunction.",
+    ["Correct. Partial lineage reproduces nothing.", "There is no partial credit here.", "Rarely is not never."],
+  ),
+  "py.atom.ml.retraining-pipelines": q(
+    "A candidate gains one and a half points overall and loses four on new users. Promote?",
+    ["No; the pooled metric is hiding a real regression", "Yes; overall accuracy improved", "Yes, if new users are a small share"],
+    0,
+    "Subgroup checks exist precisely for this.",
+    ["Correct. That is why gates compare every subgroup.", "The average is exactly what hides it.", "Share does not excuse the harm."],
+  ),
+  "py.atom.ml.model-security": q(
+    "A dataset drops names but keeps postcode, birth date and sex. Is it anonymous?",
+    ["No; those three together identify most of a population", "Yes; no direct identifier remains", "Yes, if the dataset is large"],
+    0,
+    "Measure the smallest quasi-identifier group.",
+    ["Correct. The smallest group is often one.", "Quasi-identifiers combine into identifiers.", "Size does not prevent unique combinations."],
+  ),
+
+  // ---------------------------------------------------------------
+  // Algo - Module 12.1 - Advanced mathematics
+  // ---------------------------------------------------------------
+  "py.atom.algo.fast-transforms": q(
+    "Two sequences of a million terms must be convolved. What does the transform save?",
+    ["A trillion operations become about twenty million", "Nothing; both are linear", "It halves the work"],
+    0,
+    "Direct convolution is quadratic.",
+    ["Correct. That is the difference between hours and milliseconds.", "Direct convolution is quadratic.", "The saving is far larger than a factor of two."],
+  ),
+  "py.atom.algo.chinese-remainder": q(
+    "Two congruences have moduli four and six, with remainders one and two. What is the result?",
+    ["No solution, since one is odd and two is even", "Nine modulo twelve", "One modulo twenty-four"],
+    0,
+    "Check the remainders against the shared factor of two.",
+    ["Correct. They disagree modulo the greatest common divisor.", "That is the answer for remainders one and three.", "The product is the wrong modulus here."],
+  ),
+  "py.atom.algo.mobius-inversion": q(
+    "Why does the Mobius function vanish at twelve?",
+    ["Twelve is four times three, so the prime two repeats", "Twelve has an even number of prime factors", "Twelve is composite"],
+    0,
+    "Only squarefree numbers get a non-zero value.",
+    ["Correct. A repeated prime collapses the alternating count.", "That would give one.", "Six is composite and gives one."],
+  ),
+  "py.atom.algo.gf2-linear-algebra": q(
+    "A thousand values reduce to a basis of ten. How many distinct exclusive-or results exist?",
+    ["One thousand and twenty-four", "A thousand", "Ten"],
+    0,
+    "Every subset of the basis gives a distinct value.",
+    ["Correct. Two to the rank, and the other values add nothing.", "The value count is not the answer.", "That is the rank itself."],
+  ),
+  "py.atom.algo.generating-functions": q(
+    "What does the coefficient at position k of a product of series count?",
+    ["The ways to reach total k by taking one contribution from each factor", "The largest contribution below k", "The number of factors"],
+    0,
+    "Look at how a convolution forms that coefficient.",
+    ["Correct. Multiplication enumerates every combination.", "No maximisation is involved.", "That is fixed regardless of k."],
+  ),
+  "py.atom.algo.inclusion-exclusion": q(
+    "A problem has forty overlapping conditions. Is subset enumeration viable?",
+    ["No; the cost doubles with each condition", "Yes; forty is small", "Yes, if the conditions are independent"],
+    0,
+    "Count how many subsets forty conditions have.",
+    ["Correct. Past about twenty you need a different decomposition.", "Two to the fortieth is about a trillion.", "Independence would remove the need entirely."],
+  ),
+
+  // ---------------------------------------------------------------
+  // ML - Module 8.1 - Data and training infrastructure
+  // ---------------------------------------------------------------
+  "py.atom.ml.data-pipelines": q(
+    "A feature is joined by taking each entity's most recent value. What is wrong?",
+    ["Training rows receive values recorded after their own labels", "The join is too slow", "Some entities will be missing"],
+    0,
+    "Ask when each value was recorded relative to its label.",
+    ["Correct. That is a point-in-time violation.", "Speed is not the issue.", "Missing values are a separate concern."],
+  ),
+  "py.atom.ml.training-clusters": q(
+    "One worker in sixty-four runs forty percent slower. What share of the step is wasted?",
+    ["About twenty-eight percent", "About one and a half percent", "None, if the others are fast"],
+    0,
+    "Every other worker waits at the barrier.",
+    ["Correct. The share approaches the straggler's relative slowdown.", "That would be the share if only one worker idled briefly.", "The barrier forces everyone to wait."],
+  ),
+  "py.atom.ml.accelerator-utilization": q(
+    "Utilization sits at forty percent with most idle time waiting for batches. What do you fix?",
+    ["The input pipeline", "The model architecture", "The optimizer"],
+    0,
+    "The profile names the segment.",
+    ["Correct. A faster forward pass buys nothing while the device starves.", "The model is not the bottleneck here.", "Optimizer choice does not affect input stalls."],
+  ),
+  "py.atom.ml.checkpointing": q(
+    "A resumed run replays data the model already saw. What was missing from the checkpoint?",
+    ["The data loader position", "The weights", "The learning rate"],
+    0,
+    "Weights alone do not resume a run.",
+    ["Correct. Random state is the other common omission.", "Weights are never forgotten.", "That is usually saved with the optimizer state."],
+  ),
+  "py.atom.ml.data-validation": q(
+    "A distribution check fires but only writes a warning to the log. What is the consequence?",
+    ["The run trains on bad data and the warning is discovered afterwards", "Nothing; warnings are sufficient", "The pipeline retries"],
+    0,
+    "Consider what people actually act on.",
+    ["Correct. Blocking the run is what converts it into a fixed problem.", "Warnings are routinely ignored.", "A warning triggers no retry."],
+  ),
+
+  // ---------------------------------------------------------------
+  // Algo - Module 11.3 - Persistence and advanced range structures
+  // ---------------------------------------------------------------
+  "py.atom.algo.persistent-segment-trees": q(
+    "How much extra memory does one persistent update need?",
+    ["A logarithmic number of nodes, one per level of the path", "A full copy of the tree", "A single node"],
+    0,
+    "Only the ancestors of the changed leaf hold stale sums.",
+    ["Correct. Every other node is shared with the version it came from.", "That would defeat the point of sharing.", "The ancestors carry sums that changed too."],
+  ),
+  "py.atom.algo.wavelet-trees": q(
+    "You need the kth smallest value in an arbitrary range. Which structure fits?",
+    ["A wavelet tree, which splits by value", "A Fenwick tree over positions", "A sorted copy of the whole array"],
+    0,
+    "Order statistics need the value axis, not the position axis.",
+    ["Correct. The descent costs one step per bit of the value range.", "That answers sums, not order statistics.", "One sorted copy cannot answer arbitrary ranges."],
+  ),
+  "py.atom.algo.merge-sort-trees": q(
+    "A merge-sort tree over a hundred thousand elements stores how many values?",
+    ["About one point seven million, one copy per level", "A hundred thousand", "Ten billion"],
+    0,
+    "Every element appears once at each of the seventeen levels.",
+    ["Correct. Memory is the price of the second dimension.", "That is a single copy.", "Levels are logarithmic, not linear."],
+  ),
+  "py.atom.algo.sqrt-trees": q(
+    "Why may a sparse table not answer range sums with two overlapping blocks?",
+    ["The overlapping elements would be added twice", "Sums are not associative", "The table would be too large"],
+    0,
+    "Ask whether counting an element twice changes the result.",
+    ["Correct. Sum is not idempotent, so overlap corrupts it.", "Addition is associative.", "The table size is the same either way."],
+  ),
+
+  // ---------------------------------------------------------------
+  // ML - Module 7.3 - Multimodal and structured
+  // ---------------------------------------------------------------
+  "py.atom.ml.vision-language": q(
+    "Batch size is cut from thirty-two thousand to sixty-four. What happens to the task?",
+    ["It becomes easier, because there are far fewer negatives per pair", "It becomes harder", "Nothing changes"],
+    0,
+    "Negatives come from within the batch.",
+    ["Correct. Chance loss falls from ten point four to four point two.", "Fewer negatives is a weaker signal, not a stronger one.", "The difficulty is set by the batch."],
+  ),
+  "py.atom.ml.image-video-generation": q(
+    "A latent compression factor is raised from eight to sixteen. What is the main risk?",
+    ["The decoder can no longer recover fine detail such as faces and text", "Training becomes unstable", "The token count rises"],
+    0,
+    "Something is discarded to buy the compute saving.",
+    ["Correct. The detail ceiling is set by the autoencoder.", "Stability is largely unaffected.", "The token count falls fourfold."],
+  ),
+  "py.atom.ml.speech-audio": q(
+    "A synthesis system rates highest with listeners but transcribes worst. What does that mean?",
+    ["Naturalness and intelligibility are separate axes", "One of the measurements is wrong", "The system is broken"],
+    0,
+    "The two metric families measure different things.",
+    ["Correct. Choosing on either alone picks a system that fails on the other.", "Both can be correct at once.", "It is a real trade-off, not a fault."],
+  ),
+  "py.atom.ml.graph-networks": q(
+    "A graph network performs worse when depth goes from three layers to twelve. Why?",
+    ["Repeated neighbour averaging has collapsed the node representations together", "It is overfitting", "The gradients vanished"],
+    0,
+    "Ask what averaging does to differences.",
+    ["Correct. That is oversmoothing, and it caps useful depth.", "It happens on the training set too.", "Vanishing gradients are a distinct failure."],
+  ),
+  "py.atom.ml.recommendation": q(
+    "An item with a tenth the clicks of another has three times its click rate. Which is better?",
+    ["Probably the second, since raw clicks reflect exposure", "The first, since it has more clicks", "There is no way to tell"],
+    0,
+    "Clicks scale with how often an item was shown.",
+    ["Correct. Correcting for exposure is what separates them.", "Raw clicks confound interest with exposure.", "The rate is exactly the correction needed."],
+  ),
+  "py.atom.ml.time-series": q(
+    "A rolling mean feature is computed over the whole series before splitting. What happens?",
+    ["Future information leaks into training and the metrics look better than reality", "Nothing; the feature is deterministic", "The model underfits"],
+    0,
+    "The rolling window spans the split point.",
+    ["Correct. The leak is invisible in the metrics, which is what makes it dangerous.", "Determinism does not prevent leakage.", "It overstates performance, not understates."],
+  ),
+
+  // ---------------------------------------------------------------
+  // Algo - Module 11.1 - Balanced and self-adjusting trees
+  // ---------------------------------------------------------------
+  "py.atom.algo.treaps": q(
+    "Keys are inserted into a treap in sorted order. What shape results?",
+    ["A balanced tree, since the priorities are independent of the keys", "A chain", "It depends on the key values"],
+    0,
+    "Sorted input controls only the search constraint.",
+    ["Correct. No input order can force a bad shape.", "That is what a plain search tree would build.", "Keys fix the in-order sequence, not the height."],
+  ),
+  "py.atom.algo.splay-trees": q(
+    "A service needs a per-request latency bound. Is a splay tree suitable?",
+    ["No; its guarantee is amortized, and one access can be linear", "Yes; its bound is logarithmic", "Yes, if the tree is small"],
+    0,
+    "An amortized bound constrains the total, not any one operation.",
+    ["Correct. A worst-case structure is needed instead.", "The bound applies to sequences.", "Size does not convert amortized into worst-case."],
+  ),
+  "py.atom.algo.balanced-bst-internals": q(
+    "Where do the two standard balance rules differ most?",
+    ["Rotations on deletion, which one bounds by a constant and the other cascades", "Lookup depth", "Memory per node"],
+    0,
+    "Their heights differ by well under a factor of two.",
+    ["Correct. That is why libraries favour the colour rule.", "Depth differs only slightly.", "Both store a small extra field."],
+  ),
+  "py.atom.algo.order-statistics-trees": q(
+    "A rotation is applied to an order-statistics tree. What must happen?",
+    ["Every node whose children changed has its size recomputed", "Nothing; sizes are unaffected", "The tree must be rebuilt"],
+    0,
+    "A stale size makes rank and select silently wrong.",
+    ["Correct. That is the classic augmentation bug.", "Rotations change which nodes sit beneath which.", "Only the affected nodes need repair."],
+  ),
+
+  // ---------------------------------------------------------------
+  // Algo - Module 11.2 - Trees over trees
+  // ---------------------------------------------------------------
+  "py.atom.algo.heavy-light-queries": q(
+    "Why is a heavy-light path query logarithmic squared?",
+    ["A logarithmic number of chains, each answered by a logarithmic range query", "The tree is traversed twice", "Each node is visited twice"],
+    0,
+    "The two logarithms come from independent sources.",
+    ["Correct. A constant-time range structure would remove the second.", "One upward walk suffices.", "Whole chains are taken at once."],
+  ),
+  "py.atom.algo.centroid-decomposition": q(
+    "At a given level of a centroid decomposition, which paths are counted?",
+    ["Only those crossing that level's centroid", "Every path in the component", "Only paths between leaves"],
+    0,
+    "The rest belong to deeper levels.",
+    ["Correct. Counting them at both levels double-counts.", "That counts many paths twice.", "Endpoints are unrestricted."],
+  ),
+  "py.atom.algo.euler-tour": q(
+    "An entry-time flattening is used for a path query. What goes wrong?",
+    ["A path is not contiguous in that array", "Subtrees stop being contiguous", "The entry times become wrong"],
+    0,
+    "The flattening that makes subtrees contiguous scatters paths.",
+    ["Correct. Heavy-light decomposition is what handles paths.", "Subtrees remain contiguous; that is its purpose.", "The times are computed correctly."],
+  ),
+  "py.atom.algo.link-cut-trees": q(
+    "A tree's edges change three times across a long run of queries. What should you use?",
+    ["A static structure, rebuilt after each change", "A dynamic forest", "A fresh computation per query"],
+    0,
+    "Three linear rebuilds beat the dynamic constant factors.",
+    ["Correct. The code is also a fraction of the length.", "Its complexity is unearned at that change rate.", "Per-query rebuilding is wasteful."],
+  ),
+
+  // ---------------------------------------------------------------
+  // Algo - Module 10.3 - Communication and the whole loop
+  // ---------------------------------------------------------------
+  "py.atom.algo.narrating-tradeoffs": q(
+    "You picked a hash map without saying why. What did the interviewer learn?",
+    ["Only that your code uses one", "That you weighed it against sorting", "That you understood the constraints"],
+    0,
+    "A silent choice is indistinguishable from a lucky one.",
+    ["Correct. One sentence naming the alternative would have shown all of it.", "They cannot tell whether you did.", "Nothing about the constraints was stated."],
+  ),
+  "py.atom.algo.follow-ups": q(
+    "A follow-up says the input now arrives as a stream. What kind of change is that?",
+    ["Structural; every approach assuming the whole input is invalidated", "Incremental; adjust the loop", "It depends on the input size"],
+    0,
+    "Sorting and most hashing stop applying entirely.",
+    ["Correct. It needs a fresh derivation, not a patch.", "No patch recovers from a broken assumption.", "Size is not what changed."],
+  ),
+  "py.atom.algo.coding-adjacent-design": q(
+    "What should an interface avoid mentioning?",
+    ["The structures used inside it", "The cost of each operation", "What callers may rely on"],
+    0,
+    "Internals are what stay free to change.",
+    ["Correct. Naming them fixes them in place.", "Costs are part of the promise.", "That is exactly what an interface states."],
+  ),
+  "py.atom.algo.company-families": q(
+    "One problem, unusual constraints, and an invitation to take your time. What is measured?",
+    ["Depth and precision", "Speed", "Breadth"],
+    0,
+    "The constraints exist to make the standard approach inapplicable.",
+    ["Correct. Rushing to code loses the signal they wanted.", "Speed formats list several problems.", "Breadth needs more than one problem."],
+  ),
+  "py.atom.algo.practice-loop": q(
+    "Your failures span seven topics and two stages. What should you practise?",
+    ["The two stages", "The seven topics", "Harder problems in each topic"],
+    0,
+    "A stage weakness recurs whatever the subject.",
+    ["Correct. The topic column is not a plan; the stage column is.", "That addresses the surface only.", "Difficulty does not fix the failing stage."],
+  ),
+
+  // ---------------------------------------------------------------
+  // ML - Module 7.2 - Generative models
+  // ---------------------------------------------------------------
+  "py.atom.ml.variational-autoencoders": q(
+    "Why can a plain autoencoder not be sampled from?",
+    ["Nothing constrains where its codes land, so the space between them decodes to nonsense", "Its decoder is too small", "It has no latent space"],
+    0,
+    "The divergence term is what fills those gaps.",
+    ["Correct. That term makes the latent space match a distribution you can draw from.", "Capacity is not the obstacle.", "It has one; it is just full of holes."],
+  ),
+  "py.atom.ml.generative-adversarial-networks": q(
+    "A generator scores perfectly on sample quality. What might that hide?",
+    ["Mode collapse, where every sample is one perfect example of one thing", "A weak discriminator", "A high learning rate"],
+    0,
+    "Quality alone cannot detect a variety failure.",
+    ["Correct. Coverage is what exposes it.", "A weak discriminator lowers quality instead.", "The rate would show up as instability."],
+  ),
+  "py.atom.ml.normalizing-flows": q(
+    "Why do flows use coupling layers rather than dense ones?",
+    ["A dense layer's determinant costs the cube of the width and its inverse is a matrix solve", "Coupling layers have more capacity", "Dense layers cannot be trained"],
+    0,
+    "A triangular Jacobian makes the determinant a diagonal product.",
+    ["Correct. The inverse also becomes a rearrangement.", "They have less capacity per layer.", "They train fine; they are just unaffordable here."],
+  ),
+  "py.atom.ml.diffusion-models": q(
+    "Why is the network trained to predict the noise rather than the clean sample?",
+    ["The noise target keeps the same scale at every step", "The clean sample is unavailable", "It is cheaper to compute"],
+    0,
+    "The two targets are algebraically equivalent.",
+    ["Correct. A stable target scale trains far better.", "It is available throughout training.", "Both cost the same."],
+  ),
+  "py.atom.ml.guidance": q(
+    "You tune the guidance scale until one prompt looks best. What is the risk?",
+    ["Adherence saturates while variety collapses across every other prompt", "The prompt stops being followed", "Inference gets slower"],
+    0,
+    "One example cannot reveal a variety collapse.",
+    ["Correct. Judge the scale across a set of prompts.", "Adherence rises with the scale.", "The cost per step is unchanged."],
+  ),
+
+  // ---------------------------------------------------------------
   // Algo - Module 10.2 - Execution under pressure
   // ---------------------------------------------------------------
   "py.atom.algo.time-budgeting": q(
