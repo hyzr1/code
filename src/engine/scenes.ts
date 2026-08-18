@@ -495,6 +495,11 @@ const VISUALS: [RegExp, VisualKind][] = [
   [/algo\.(?:greedy-choice|greedy-exchange|greedy-pitfalls)/, "decision"],
   [/algo\.interval-scheduling/, "intervals"],
   [/algo\.huffman-coding/, "tree"],
+  // Divide and conquer: the shape and the halving are recursion, the
+  // recurrence analysis is complexity, and the merge is a pipeline.
+  [/algo\.(?:divide-conquer-shape|fast-exponentiation)/, "recursion"],
+  [/algo\.master-theorem/, "complexity"],
+  [/algo\.cross-boundary-merge/, "pipeline"],
   [/ml\.(?:matrices|matrix-multiplication|transpose-identity-inverse|span-basis-rank|eigenvectors|determinant-trace|svd|matrix-decompositions|orthogonality-least-squares)/, "ml"],
   [/ml\.exponents-logs-sums/, "complexity"],
   [/ml\.(?:derivatives-rules|taylor-approximations)/, "function"],
@@ -517,6 +522,44 @@ const VISUALS: [RegExp, VisualKind][] = [
   [/ml\.(?:roc-pr-auc|probability-calibration)/, "probability"],
   [/ml\.regression-metrics/, "ml"],
   [/ml\.grouped-time-validation/, "pipeline"],
+  // Neural basics: separability and approximation are decisions about what a
+  // model can express, while layers and activations are the network itself.
+  [/ml\.(?:perceptron-xor|universal-approximation)/, "decision"],
+  [/ml\.(?:multi-layer-perceptrons|activation-functions)/, "ml"],
+  // Dynamic programming: the shape lessons are about deciding what to store,
+  // while the concrete recurrences fill a table of states.
+  [/algo\.(?:dp-overlap|dp-state-design)/, "dp"],
+  [/algo\.(?:dp-memo-table|dp-one-dimension|kadane)/, "dp"],
+  // Training: autodiff is a graph walk, the rest is the network itself.
+  [/ml\.reverse-mode-autodiff/, "graph"],
+  [/ml\.(?:forward-pass|deep-loss-functions|backpropagation|training-loop)/, "ml"],
+  // The classic recurrences are all table fills over one or two sequences.
+  [/algo\.(?:knapsack|coin-change|longest-increasing-subsequence|edit-distance|subset-sum)/, "dp"],
+  // Optimizers are decisions about step size; the rest is training machinery.
+  [/ml\.(?:gradient-descent-variants|learning-rate-schedules|second-order-methods)/, "decision"],
+  [/ml\.(?:momentum|adaptive-optimizers)/, "ml"],
+  // Grid and string tables are still table fills, two dimensions wide.
+  [/algo\.(?:grid-paths|grid-obstacles|matrix-region-dp|string-dp)/, "dp"],
+  // Stability lessons are diagnostic decisions; the rest is network machinery.
+  [/ml\.(?:gradient-stability|debugging-training)/, "decision"],
+  [/ml\.(?:weight-initialization|normalization-layers|neural-regularization)/, "ml"],
+  // Advanced DP: tree states are tree-shaped, the rest are table fills.
+  [/algo\.tree-dp/, "tree"],
+  [/algo\.(?:interval-dp|bitmask-dp|digit-dp|dp-optimizations)/, "dp"],
+  // Convolutional lessons are network machinery; transfer is a decision.
+  [/ml\.transfer-learning/, "decision"],
+  [/ml\.(?:convolutions|pooling-hierarchies|classic-cnns)/, "ml"],
+  // Pattern matching walks a text with a pointer and a precomputed table.
+  [/algo\.(?:rabin-karp|kmp|z-algorithm|string-hashing)/, "pointers"],
+  // Vision tasks: the pipeline lesson is a pipeline, the rest are decisions.
+  [/ml\.image-classification/, "pipeline"],
+  [/ml\.(?:object-detection|segmentation|vision-augmentation)/, "decision"],
+  // String structures: tries and automata are trees, the rest walk with pointers.
+  [/algo\.(?:suffix-trees|aho-corasick)/, "tree"],
+  [/algo\.(?:suffix-array|manacher)/, "pointers"],
+  // Sequence models are network machinery; attention is a retrieval decision.
+  [/ml\.encoder-decoder-attention/, "decision"],
+  [/ml\.(?:recurrent-networks|gated-units|seq2seq)/, "ml"],
   // Foundational lessons first, matched on their exact unit ids so they never
   // collide with a pattern lesson. These keep the early modules from being a
   // wall of text with nothing to look at.
