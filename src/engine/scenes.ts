@@ -632,6 +632,22 @@ const VISUALS: [RegExp, VisualKind][] = [
   [/ml\.(?:mixture-of-experts|parameter-efficient-tuning)/, "ml"],
   [/ml\.(?:instruction-tuning|rlhf|direct-preference-optimization)/, "ml"],
   [/ml\.(?:constitutional-methods|red-teaming)/, "ml"],
+  [/ml\.(?:kv-caching|quantization|distillation)/, "system"],
+  [/ml\.(?:speculative-decoding|llm-serving|production-rag)/, "system"],
+  [/ml\.(?:benchmarks-contamination|model-judges)/, "testing"],
+  [/ml\.(?:hallucination-robustness|evaluation-statistics)/, "testing"],
+  [/ml\.(?:reading-reproduction|ablations-controls|statistical-rigor)/, "testing"],
+  [/ml\.(?:research-communication|compute-aware-iteration)/, "testing"],
+  [/ml\.(?:attribution-saliency|probing-representations)/, "ml"],
+  [/ml\.(?:mechanistic-interpretability|activation-steering)/, "ml"],
+  [/ml\.(?:alignment-problem|assurance-cases|scalable-oversight)/, "decision"],
+  [/ml\.(?:interpretability-for-safety|governance-impact)/, "decision"],
+  [/ml\.(?:bayesian-conjugacy|bayesian-regression|model-evidence)/, "ml"],
+  [/ml\.(?:bayesian-neural-networks)/, "ml"],
+  [/ml\.(?:directed-graphical-models|undirected-graphical-models)/, "graph"],
+  [/ml\.(?:exact-inference|hidden-markov-models)/, "graph"],
+  [/ml\.(?:variational-inference|reparameterization)/, "ml"],
+  [/ml\.(?:mcmc|hamiltonian-monte-carlo)/, "ml"],
   // Foundational lessons first, matched on their exact unit ids so they never
   // collide with a pattern lesson. These keep the early modules from being a
   // wall of text with nothing to look at.

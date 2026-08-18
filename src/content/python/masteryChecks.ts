@@ -202,6 +202,290 @@ export const MASTERY_EXTRA_CHECKS: Record<string, LectureQuestion> = {
   ),
 
   // ---------------------------------------------------------------
+  // ML - Module 11.1 - Bayesian machine learning
+  // ---------------------------------------------------------------
+  "py.atom.ml.bayesian-conjugacy": q(
+    "Eight heads in ten tosses updates a prior of a hundred and a hundred. Where does the mean land?",
+    ["Just past a half, near point five one four", "Near point seven five", "Exactly point eight"],
+    0,
+    "The prior is worth two hundred observations.",
+    ["Correct. Ten observations barely move it.", "That is what a weak prior gives.", "That would ignore the prior entirely."],
+  ),
+  "py.atom.ml.bayesian-regression": q(
+    "A predictive interval is wide far from the training data. Which source dominates?",
+    ["Parameter uncertainty, which is scaled by the input", "Observation noise", "Numerical error"],
+    0,
+    "One term is multiplied by the squared input.",
+    ["Correct, and that component shrinks with more data.", "The noise term is constant in the input.", "Numerical issues are unrelated."],
+  ),
+  "py.atom.ml.model-evidence": q(
+    "A degree-twenty model fits best and scores worst on evidence. Why?",
+    ["Its twenty-one parameters cost more than the improved fit is worth", "Its fit was measured wrongly", "Evidence ignores fit"],
+    0,
+    "Belief spread over many explanations is thin everywhere.",
+    ["Correct. The penalty falls out of the integration.", "The fit is genuinely best.", "Fit is the first term of the score."],
+  ),
+  "py.atom.ml.bayesian-neural-networks": q(
+    "An ensemble agrees closely but every member reports high variance. What kind of uncertainty is that?",
+    ["Aleatoric; the data is noisy and more of it will not help", "Epistemic", "Neither"],
+    0,
+    "Agreement rules out model uncertainty.",
+    ["Correct. The task has a ceiling.", "Disagreement is what signals epistemic uncertainty.", "The high variance is real."],
+  ),
+
+  // ---------------------------------------------------------------
+  // ML - Module 11.2 - Probabilistic graphical models
+  // ---------------------------------------------------------------
+  "py.atom.ml.directed-graphical-models": q(
+    "Two variables have no edge between them. Are they independent?",
+    ["Only conditionally, given the parents", "Yes, unconditionally", "No, never"],
+    0,
+    "The graph makes a conditional claim.",
+    ["Correct. Unconditionally they can be strongly correlated.", "Marginal independence is a different claim.", "The missing edge does assert something."],
+  ),
+  "py.atom.ml.undirected-graphical-models": q(
+    "Why is the partition function the expensive part of an undirected model?",
+    ["It sums over every joint configuration, so it grows exponentially", "It requires a matrix inverse", "It needs the data"],
+    0,
+    "Normalisation is global, not per clique.",
+    ["Correct. That is the central computational cost.", "No inversion is involved.", "It does not involve data at all."],
+  ),
+  "py.atom.ml.exact-inference": q(
+    "A graphical model is densely connected. What does a good elimination order buy?",
+    ["Very little; intermediate factors stay large whatever the order", "An exponential saving", "Approximate answers"],
+    0,
+    "Cost is exponential in the largest intermediate factor.",
+    ["Correct. Density, not order, is the obstacle.", "That only holds on sparse graphs.", "Elimination is exact when it finishes."],
+  ),
+  "py.atom.ml.hidden-markov-models": q(
+    "Is the forward pass an approximation to the sum over all state paths?",
+    ["No; it equals it exactly, because paths merge at each state", "Yes, it is a lower bound", "Yes, for long sequences"],
+    0,
+    "It is exact dynamic programming.",
+    ["Correct. Only the numerics need care on long sequences.", "No bounding is involved.", "Length affects underflow, not exactness."],
+  ),
+
+  // ---------------------------------------------------------------
+  // ML - Module 11.3 - Approximate inference
+  // ---------------------------------------------------------------
+  "py.atom.ml.variational-inference": q(
+    "The bound rises during training. What does that establish?",
+    ["Either the fit improved or the approximation gap shrank; the bound cannot say which", "The posterior was recovered exactly", "Nothing at all"],
+    0,
+    "The bound is the evidence minus the gap.",
+    ["Correct, and the gap is never observed directly.", "A bound never establishes exactness.", "It is informative, just ambiguous."],
+  ),
+  "py.atom.ml.reparameterization": q(
+    "Two gradient estimators are both unbiased. Why prefer one?",
+    ["Variance; it decides how many samples convergence takes", "Only one is correct", "One is cheaper per sample"],
+    0,
+    "Nine times the variance means nine times the samples.",
+    ["Correct. An unbiased estimator with huge variance is useless.", "Both are correct on average.", "Per-sample costs are comparable."],
+  ),
+  "py.atom.ml.mcmc": q(
+    "A Metropolis chain accepts ninety-eight percent of its proposals. Is that healthy?",
+    ["No; the steps are so small the chain is barely exploring", "Yes; high acceptance is the goal", "Yes, if the target is smooth"],
+    0,
+    "Tiny steps are almost always accepted.",
+    ["Correct. Both extremes signal poor tuning.", "A moderate rate is what good mixing looks like.", "Smoothness does not change the diagnosis."],
+  ),
+  "py.atom.ml.hamiltonian-monte-carlo": q(
+    "Acceptance falls from near one to zero after a small step-size increase. What happened?",
+    ["The integrator crossed its stability threshold", "The target changed", "The chain converged"],
+    0,
+    "Energy drift grows without bound past that point.",
+    ["Correct, and the failure is abrupt rather than gradual.", "The target is unchanged.", "Zero acceptance is not convergence."],
+  ),
+
+  // ---------------------------------------------------------------
+  // ML - Module 10.1 - Doing research
+  // ---------------------------------------------------------------
+  "py.atom.ml.reading-reproduction": q(
+    "Your reproduction is four percent under the reported score and the paper claims a two percent gain. What now?",
+    ["The reproduction does not support the conclusion; the gap swamps the effect", "Close enough", "Report the gap as a new finding"],
+    0,
+    "Compare the gap against the effect, not the score.",
+    ["Correct. The comparison is meaningless at that gap.", "Four percent dwarfs a two percent claim.", "The gap is a reproduction failure, not a result."],
+  ),
+  "py.atom.ml.ablations-controls": q(
+    "Two components add three and one points alone but three and a half together. What does that mean?",
+    ["They overlap; the second adds half a point once the first is present", "The measurement is wrong", "Both are essential"],
+    0,
+    "The joint gain is below the sum of the singles.",
+    ["Correct. The standalone number overstates the second.", "Negative interaction is common and real.", "The second is nearly redundant."],
+  ),
+  "py.atom.ml.statistical-rigor": q(
+    "A paper reports a mean over five seeds for its method and a single run for the baseline. What is that?",
+    ["Cherry-picking; both sides need the same treatment", "Acceptable, since the method is what is being tested", "A power analysis"],
+    0,
+    "The two sides are not measured the same way.",
+    ["Correct, and it systematically favours the method.", "The comparison is what is being tested.", "No power calculation is involved."],
+  ),
+  "py.atom.ml.research-communication": q(
+    "A results table reports means with no spreads or sample sizes. What can a reader conclude?",
+    ["Very little; there is no way to compare the gap to the noise", "That the method works", "That the runs were identical"],
+    0,
+    "Interpretation needs the spread.",
+    ["Correct. The table is not independently checkable.", "The gap may be within the noise.", "Absence of a spread is not evidence of none."],
+  ),
+  "py.atom.ml.compute-aware-iteration": q(
+    "A sweep has six hyperparameters at five values each and a budget of forty runs. Is a grid appropriate?",
+    ["No; forty runs reach a quarter of a percent of that grid", "Yes, if the values are well chosen", "Yes; forty runs is plenty"],
+    0,
+    "The grid has fifteen thousand configurations.",
+    ["Correct. The result reflects which corner was sampled.", "No choice of values fixes the coverage.", "Coverage, not count, is the issue."],
+  ),
+
+  // ---------------------------------------------------------------
+  // ML - Module 10.2 - Interpretability
+  // ---------------------------------------------------------------
+  "py.atom.ml.attribution-saliency": q(
+    "A saliency method produces the same map before and after randomising the model's weights. What follows?",
+    ["The map explains the input, not the model, and should not be used", "The model is robust", "The method is stable"],
+    0,
+    "An explanation should depend on what it explains.",
+    ["Correct, and several popular methods fail this check.", "Robustness is not what is being tested.", "Stability here means it carries no information."],
+  ),
+  "py.atom.ml.probing-representations": q(
+    "A probe reads sentiment from layer eight at ninety percent accuracy. Does the model use sentiment?",
+    ["Unknown; decodability does not imply use", "Yes, clearly", "No, probes prove nothing"],
+    0,
+    "Only an intervention establishes use.",
+    ["Correct. Ablation is what settles it.", "Presence and use come apart routinely.", "Probes do establish presence."],
+  ),
+  "py.atom.ml.mechanistic-interpretability": q(
+    "Why do individual neurons rarely correspond to single concepts?",
+    ["The model represents more features than it has dimensions, so they share directions", "Neurons are noisy", "Training is stochastic"],
+    0,
+    "It is a counting argument.",
+    ["Correct. That is superposition.", "Noise is not the mechanism.", "The effect survives any training run."],
+  ),
+  "py.atom.ml.activation-steering": q(
+    "A steering vector moves the target behaviour thirty points and an unrelated one twenty-five. Usable?",
+    ["No; a specificity near a half means it barely aimed at anything", "Yes; the target moved most", "Yes, if the effect persists"],
+    0,
+    "Compare the target effect to the total effect.",
+    ["Correct. Under superposition side effects are expected.", "Moving most is not the same as landing on target.", "Persistence does not fix specificity."],
+  ),
+
+  // ---------------------------------------------------------------
+  // ML - Module 10.3 - Safety and alignment
+  // ---------------------------------------------------------------
+  "py.atom.ml.alignment-problem": q(
+    "Patching an objective after the proxy diverges from intent achieves what?",
+    ["It moves the divergence point rather than removing it", "It solves the problem", "Nothing at all"],
+    0,
+    "The replacement objective is also a proxy.",
+    ["Correct, which is why monitoring is the durable answer.", "Any writable objective is a proxy.", "Patches help temporarily."],
+  ),
+  "py.atom.ml.assurance-cases": q(
+    "An assurance case reports zero residual risk. What should you suspect?",
+    ["The hazard list is incomplete", "The system is safe", "The mitigations are unusually strong"],
+    0,
+    "Real deployed systems retain risk.",
+    ["Correct. The enumeration stopped at what was covered.", "No system reaches zero.", "Strength does not eliminate hazards."],
+  ),
+  "py.atom.ml.scalable-oversight": q(
+    "Assistance lifts a non-expert from sixty-one to eighty-four percent against an expert at ninety-three. Is oversight established?",
+    ["No; the assisted judge is still nine points short of the expert", "Yes; a twenty-three point lift is large", "Yes, if more rounds are added"],
+    0,
+    "The expert is the standard, not the unaided baseline.",
+    ["Correct. The lift alone cannot show this.", "Lift is measured against the wrong reference.", "More rounds would need measuring, not assuming."],
+  ),
+  "py.atom.ml.interpretability-for-safety": q(
+    "A detector has a one-in-a-thousand false-positive rate at ten million requests a day. Is it usable?",
+    ["No; that is ten thousand alerts a day", "Yes; one in a thousand is excellent", "Yes, with a larger team"],
+    0,
+    "Multiply the rate by the volume.",
+    ["Correct. The budget is in alerts, not rates.", "The rate is excellent and still unusable.", "No team investigates ten thousand of anything."],
+  ),
+  "py.atom.ml.governance-impact": q(
+    "A refusal threshold has no named owner. What follows?",
+    ["It is still set, by whoever chose the default, and nobody can be asked to justify it", "It is deferred", "It is escalated automatically"],
+    0,
+    "Defaults are decisions.",
+    ["Correct. Unowned does not mean unmade.", "Deferral is itself a choice with effects.", "Escalation requires an owner to escalate to."],
+  ),
+
+  // ---------------------------------------------------------------
+  // ML - Module 9.5 - Inference and deployment of LLMs
+  // ---------------------------------------------------------------
+  "py.atom.ml.kv-caching": q(
+    "A deployment is sized from the model weights alone. What is likely to happen under load?",
+    ["It runs out of memory, because the cache dwarfs the weights at batch", "It runs out of compute", "Nothing"],
+    0,
+    "The cache is per request and grows with every token.",
+    ["Correct. Cache memory sets the serving limit.", "Caching removed the compute problem.", "A request that fits alone can fail in a batch."],
+  ),
+  "py.atom.ml.quantization": q(
+    "Why do four-bit methods isolate outlier weights instead of quantizing uniformly?",
+    ["A shared scale stretched by one value coarsens every other weight", "Outliers are usually errors", "Outliers cost more memory"],
+    0,
+    "The step size is the range divided by the level count.",
+    ["Correct. One distant value multiplied the error fourteen-fold.", "They are often the most important weights.", "They occupy the same space as any other."],
+  ),
+  "py.atom.ml.distillation": q(
+    "What does a teacher's soft target carry that a one-hot label does not?",
+    ["The relative ranking of the wrong answers", "A larger gradient", "More training examples"],
+    0,
+    "Two teachers with different second choices give identical hard labels.",
+    ["Correct. That is the extra information per example.", "Magnitude is not the point.", "The example count is unchanged."],
+  ),
+  "py.atom.ml.speculative-decoding": q(
+    "Does speculative decoding change the model's output distribution?",
+    ["No; verification is exact, so it is purely a latency method", "Yes, slightly", "Yes, it depends on the draft model"],
+    0,
+    "The target verifies every drafted token.",
+    ["Correct. Only the speed changes.", "Nothing is approximated.", "The draft affects speed alone."],
+  ),
+  "py.atom.ml.llm-serving": q(
+    "A serving benchmark uses requests of identical length. What does it hide?",
+    ["The entire advantage of continuous batching", "Memory pressure", "Model accuracy"],
+    0,
+    "That is the one case where both schemes agree.",
+    ["Correct. Real traffic varies by orders of magnitude.", "Memory is a separate concern.", "Accuracy is unaffected by batching."],
+  ),
+  "py.atom.ml.production-rag": q(
+    "Retrieval recall is seventy percent. Can prompt work reach ninety percent end to end?",
+    ["No; the stages multiply and retrieval caps everything after it", "Yes, with a better prompt", "Yes, with a larger model"],
+    0,
+    "Generation only sees what it was handed.",
+    ["Correct. Seventy percent is the ceiling.", "Prompting cannot recover a missing document.", "Model size does not affect retrieval."],
+  ),
+
+  // ---------------------------------------------------------------
+  // ML - Module 9.6 - Evaluating LLMs
+  // ---------------------------------------------------------------
+  "py.atom.ml.benchmarks-contamination": q(
+    "A benchmark item shares three eight-word sequences with the training corpus. What now?",
+    ["Remove the item; a contaminated score cannot be discounted", "Weight it lower", "Report it with a caveat"],
+    0,
+    "Long exact overlaps do not arise by chance.",
+    ["Correct. Only removal restores meaning.", "There is no principled weight.", "A caveat does not make the number usable."],
+  ),
+  "py.atom.ml.model-judges": q(
+    "A judge agrees with humans seventy-five percent of the time on a two-way choice. How strong is that?",
+    ["Moderate; chance alone gives fifty, so the corrected figure is about a half", "Strong", "Perfect"],
+    0,
+    "The floor is not zero.",
+    ["Correct. Half the apparent agreement was free.", "Raw agreement overstates it.", "A quarter of the ratings disagree."],
+  ),
+  "py.atom.ml.hallucination-robustness": q(
+    "An aggregate score rises while every per-slice rate is unchanged. What happened?",
+    ["The evaluation mix shifted", "The model improved", "The metric changed"],
+    0,
+    "The rates themselves did not move.",
+    ["Correct, and that is not an improvement.", "Unchanged slice rates mean unchanged behaviour.", "The metric is the same."],
+  ),
+  "py.atom.ml.evaluation-statistics": q(
+    "Two models score eighty-two and eighty-four and a half percent on a thousand items. Is one better?",
+    ["Not established; the intervals overlap at that sample size", "Yes, by two and a half points", "No, they are equal"],
+    0,
+    "Every score is a band, not a point.",
+    ["Correct. Ten thousand items would separate them.", "The gap is within the noise.", "Equality is not demonstrated either."],
+  ),
+
+  // ---------------------------------------------------------------
   // ML - Module 9.3 - Efficient architectures and attention
   // ---------------------------------------------------------------
   "py.atom.ml.flash-attention": q(
