@@ -202,6 +202,63 @@ export const MASTERY_EXTRA_CHECKS: Record<string, LectureQuestion> = {
   ),
 
   // ---------------------------------------------------------------
+  // Algo - Module 9.2 - Games and specialized DP
+  // ---------------------------------------------------------------
+  "py.atom.algo.game-theory": q(
+    "Three independent games have Grundy values 2, 5 and 7. Who wins?",
+    ["The player to move loses, since the values combine to zero", "The player to move wins", "It depends on the move sets"],
+    0,
+    "Two combined with five is seven, and seven with seven is zero.",
+    ["Correct. Zero is losing exactly as it is in Nim.", "A non-zero total would be winning.", "The Grundy values already capture the move sets."],
+  ),
+  "py.atom.algo.minimax-memoized": q(
+    "A partisan game is cached on the board position alone. What goes wrong?",
+    ["One player reads an answer computed for the other", "The cache never hits", "The recursion never terminates"],
+    0,
+    "The turn changes the value when the move sets differ.",
+    ["Correct. The turn must join the key.", "It hits often, and wrongly.", "Termination is unaffected."],
+  ),
+  "py.atom.algo.matrix-exponentiation": q(
+    "A recurrence reading four terms back is raised to index one billion. What does that cost?",
+    ["About thirty multiplications of four-by-four matrices", "A billion additions", "A four-billion-entry table"],
+    0,
+    "Each squaring halves the exponent.",
+    ["Correct. The width sets the per-multiplication cost.", "That is the plain loop.", "Nothing of that size is stored."],
+  ),
+
+  // ---------------------------------------------------------------
+  // ML - Module 6.4 - Pretrained Transformers
+  // ---------------------------------------------------------------
+  "py.atom.ml.masked-language-modeling": q(
+    "Why not raise the mask rate to 50 per cent to get more training signal?",
+    ["Each prediction would have far less context, which is what the objective buys", "Training would slow down", "The marker would appear too often"],
+    0,
+    "More targets does not mean better ones.",
+    ["Correct. The representations get worse despite the extra signal.", "Speed is unaffected.", "Marker frequency is not the problem."],
+  ),
+  "py.atom.ml.autoregressive-pretraining": q(
+    "Why can a bidirectional encoder not generate text the way a causal model does?",
+    ["Its predictions need context on both sides, and the right side does not exist yet", "It has no output layer", "It is too small"],
+    0,
+    "Generation only has what came before.",
+    ["Correct. The objective produces a scorer rather than a continuer.", "An output layer is easily added.", "Size is unrelated."],
+  ),
+  "py.atom.ml.text-to-text": q(
+    "Two corrupted spans share one sentinel. What breaks?",
+    ["The target cannot say which text belonged to which gap", "The input gets longer", "The model cannot be trained at all"],
+    0,
+    "Each span needs its own marker.",
+    ["Correct. The model would be guessing the alignment.", "The input is shorter, not longer.", "It trains, and learns the wrong thing."],
+  ),
+  "py.atom.ml.pretrain-finetune": q(
+    "A team has 300 labelled examples and a 7-billion-parameter model. What should they try first?",
+    ["Prompting, before any training at all", "Full fine-tuning at a small learning rate", "Training a new model from scratch"],
+    0,
+    "That many examples cannot support updating billions of weights.",
+    ["Correct. It often matches fine-tuning on that quantity, at no cost.", "The updates would overwrite the pretrained capability.", "Scratch training needs vastly more data."],
+  ),
+
+  // ---------------------------------------------------------------
   // Algo - Module 9.1 - Query decomposition
   // ---------------------------------------------------------------
   "py.atom.algo.fenwick-tree": q(

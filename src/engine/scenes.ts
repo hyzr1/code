@@ -583,6 +583,12 @@ const VISUALS: [RegExp, VisualKind][] = [
   // Query decomposition: tree-shaped structures versus array-block ones.
   [/algo\.(?:segment-tree|lazy-propagation|lowest-common-ancestor|heavy-light|persistent-structures)/, "tree"],
   [/algo\.(?:fenwick-tree|sparse-table|sqrt-decomposition|mos-algorithm)/, "pointers"],
+  // Games are decisions over positions; matrix powers are table arithmetic.
+  [/algo\.(?:game-theory|minimax-memoized)/, "decision"],
+  [/algo\.matrix-exponentiation/, "dp"],
+  // Pretraining: objectives are ML machinery, adaptation is a decision.
+  [/ml\.pretrain-finetune/, "decision"],
+  [/ml\.(?:masked-language-modeling|autoregressive-pretraining|text-to-text)/, "ml"],
   // Foundational lessons first, matched on their exact unit ids so they never
   // collide with a pattern lesson. These keep the early modules from being a
   // wall of text with nothing to look at.
