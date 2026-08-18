@@ -5383,6 +5383,146 @@ export const MASTERY_EXERCISES: Problem[] = [
     solution: "def count_target_subsets(values, target):\n    ordered = sorted(values)\n    def search(start, remaining):\n        if remaining == 0:\n            return 1\n        found = 0\n        for index in range(start, len(ordered)):\n            value = ordered[index]\n            if value > remaining:\n                break\n            found += search(index + 1, remaining - value)\n        return found\n    return search(0, target)",
     language: "python",
   },
+  {
+    id: "py.ex.ac.m6_2.l1",
+    kind: "problem",
+    tier: "rep",
+    lesson: "py.ac.m6_2.l1",
+    title: "Find where greedy breaks",
+    teaches: ["py.algo.greedy-choice"],
+    requires: [],
+    difficulty: { concept: 5, implementation: 4, recall: 4 },
+    estimatedMinutes: 14,
+    prompt: "A greedy rule is safe only when the **greedy-choice property** holds, and that is a fact about the coin set rather than the code.\n\nTake the largest coin that fits, repeatedly. Return the smallest amount from `1` to `limit` where that rule uses **more** coins than the true minimum, or `None` if it never does.\n\nFor `[1, 3, 4]` the answer is `6`: greedy takes 4 + 1 + 1, but 3 + 3 is better.",
+    exportName: "first_greedy_failure",
+    scaffolds: { L1: "def first_greedy_failure(coins, limit):\n    pass", L2: "def first_greedy_failure(coins, limit):\n    pass", L3: "def first_greedy_failure(coins, limit):\n    pass", L4: "" },
+    tests: [
+      { name: "classic failing set", code: "assert fn([1, 3, 4], 20) == 6", hidden: false },
+      { name: "canonical set never fails", code: "assert fn([1, 5, 10, 25], 40) is None", hidden: false },
+      { name: "powers of two are safe", code: "assert fn([1, 2, 4, 8], 30) is None", hidden: false },
+      { name: "a small limit misses the failure", code: "assert fn([1, 3, 4], 5) is None", hidden: false },
+      { name: "another non-canonical set", code: "assert fn([1, 6, 10], 20) == 12", hidden: true }
+    ],
+    hints: [
+      { rung: 0, text: "You need two answers per amount: what greedy spends, and the true minimum." },
+      { rung: 1, text: "The true minimum is a small bottom-up table over every amount up to the limit." },
+      { rung: 2, text: "Scan upward and return the first amount where greedy spends more." }
+    ],
+    solution: "def first_greedy_failure(coins, limit):\n    ordered = sorted(coins, reverse=True)\n    def greedy(amount):\n        used = 0\n        for coin in ordered:\n            used += amount // coin\n            amount %= coin\n        return used if amount == 0 else None\n    best = [0] + [None] * limit\n    for value in range(1, limit + 1):\n        for coin in coins:\n            if coin <= value and best[value - coin] is not None:\n                candidate = best[value - coin] + 1\n                if best[value] is None or candidate < best[value]:\n                    best[value] = candidate\n    for value in range(1, limit + 1):\n        if best[value] is None:\n            continue\n        found = greedy(value)\n        if found is None or found > best[value]:\n            return value\n    return None",
+    language: "python",
+  },
+  {
+    id: "py.ex.ac.m6_2.l2",
+    kind: "problem",
+    tier: "rep",
+    lesson: "py.ac.m6_2.l2",
+    title: "Shortest job first, and the swap that proves it",
+    teaches: ["py.algo.greedy-exchange"],
+    requires: [],
+    difficulty: { concept: 4, implementation: 3, recall: 4 },
+    estimatedMinutes: 13,
+    prompt: "Total waiting time is what every job spends queued behind the others. A long job at the front is charged to everyone behind it, which is why **shortest job first** minimizes the total.\n\nReturn `(best_total, ordering)` where `ordering` is the durations sorted shortest first and `best_total` is the waiting time it produces. A job never waits for itself.\n\n`[1, 5, 10]` waits `0 + 1 + 6 = 7`.",
+    exportName: "schedule_jobs",
+    scaffolds: { L1: "def schedule_jobs(durations):\n    pass", L2: "def schedule_jobs(durations):\n    pass", L3: "def schedule_jobs(durations):\n    pass", L4: "" },
+    tests: [
+      { name: "classic example", code: "assert fn([10, 5, 1]) == (7, [1, 5, 10])", hidden: false },
+      { name: "already sorted", code: "assert fn([1, 5, 10]) == (7, [1, 5, 10])", hidden: false },
+      { name: "single job never waits", code: "assert fn([9]) == (0, [9])", hidden: false },
+      { name: "empty schedule", code: "assert fn([]) == (0, [])", hidden: false },
+      { name: "beats every other order", code: "import itertools\ndef wait(order):\n    e = w = 0\n    for d in order:\n        w += e\n        e += d\n    return w\njobs = [4, 2, 7, 1]\nassert fn(jobs)[0] == min(wait(p) for p in itertools.permutations(jobs))", hidden: true }
+    ],
+    hints: [
+      { rung: 0, text: "Track elapsed time and add it to the total before running each job." },
+      { rung: 1, text: "The first job waits zero, so add before advancing the clock." },
+      { rung: 2, text: "Sorting ascending is the whole greedy rule." }
+    ],
+    solution: "def schedule_jobs(durations):\n    ordering = sorted(durations)\n    elapsed = 0\n    waiting = 0\n    for duration in ordering:\n        waiting += elapsed\n        elapsed += duration\n    return (waiting, ordering)",
+    language: "python",
+  },
+  {
+    id: "py.ex.ac.m6_2.l3",
+    kind: "problem",
+    tier: "rep",
+    lesson: "py.ac.m6_2.l3",
+    title: "Earliest finish wins",
+    teaches: ["py.algo.interval-scheduling"],
+    requires: [],
+    difficulty: { concept: 4, implementation: 4, recall: 4 },
+    estimatedMinutes: 14,
+    prompt: "To fit the most non-overlapping tasks, sort by **end time** and take every task starting at or after the last one taken finished. Sorting by start or by duration both lose.\n\nReturn the maximum number of compatible intervals, given as `(start, end)` pairs. Touching intervals are compatible: one ending at 4 and the next starting at 4 both fit.",
+    exportName: "max_compatible",
+    scaffolds: { L1: "def max_compatible(intervals):\n    pass", L2: "def max_compatible(intervals):\n    pass", L3: "def max_compatible(intervals):\n    pass", L4: "" },
+    tests: [
+      { name: "the long task is rejected", code: "assert fn([(0, 6), (1, 2), (3, 4), (5, 7)]) == 3", hidden: false },
+      { name: "all overlapping", code: "assert fn([(0, 5), (1, 6), (2, 7)]) == 1", hidden: false },
+      { name: "touching intervals both fit", code: "assert fn([(0, 4), (4, 8)]) == 2", hidden: false },
+      { name: "no intervals", code: "assert fn([]) == 0", hidden: false },
+      { name: "sorting by start would lose", code: "assert fn([(0, 10), (1, 2), (3, 4), (5, 6)]) == 3", hidden: true }
+    ],
+    hints: [
+      { rung: 0, text: "Sort on the end time, not the start." },
+      { rung: 1, text: "Track only when the last accepted task finished." },
+      { rung: 2, text: "Accept whenever the next start is at or after that finish." }
+    ],
+    solution: "def max_compatible(intervals):\n    count = 0\n    finish = float('-inf')\n    for start, end in sorted(intervals, key=lambda pair: pair[1]):\n        if start >= finish:\n            count += 1\n            finish = end\n    return count",
+    language: "python",
+  },
+  {
+    id: "py.ex.ac.m6_2.l4",
+    kind: "problem",
+    tier: "rep",
+    lesson: "py.ac.m6_2.l4",
+    title: "Merge the two lightest",
+    teaches: ["py.algo.huffman-coding"],
+    requires: [],
+    difficulty: { concept: 5, implementation: 4, recall: 5 },
+    estimatedMinutes: 15,
+    prompt: "Huffman repeatedly merges the two lightest nodes. Every merge adds one bit to each symbol beneath it, so rare symbols merge early and end up deepest.\n\nReturn the total encoded length in bits: the sum over symbols of frequency times code length. `frequencies` maps each symbol to its count.\n\nA single distinct symbol still needs one bit per occurrence, and an empty input is `0`. The total equals the sum of every merged weight, which is the neat way to compute it.",
+    exportName: "huffman_bits",
+    scaffolds: { L1: "import heapq\n\ndef huffman_bits(frequencies):\n    pass", L2: "import heapq\n\ndef huffman_bits(frequencies):\n    pass", L3: "import heapq\n\ndef huffman_bits(frequencies):\n    pass", L4: "" },
+    tests: [
+      { name: "classic six symbols", code: "assert fn({'a':45,'b':13,'c':12,'d':16,'e':9,'f':5}) == 224", hidden: false },
+      { name: "two equal symbols", code: "assert fn({'a':1,'b':1}) == 2", hidden: false },
+      { name: "single symbol", code: "assert fn({'a':7}) == 7", hidden: false },
+      { name: "empty input", code: "assert fn({}) == 0", hidden: false },
+      { name: "beats fixed width", code: "import math\nfreq={'a':45,'b':13,'c':12,'d':16,'e':9,'f':5}\nfixed=sum(freq.values())*math.ceil(math.log2(len(freq)))\nassert fn(freq) < fixed", hidden: true }
+    ],
+    hints: [
+      { rung: 0, text: "Only the weights matter; symbol names never affect the total." },
+      { rung: 1, text: "Each merge contributes its combined weight to the answer exactly once." },
+      { rung: 2, text: "One distinct symbol never merges, so handle it before the loop." }
+    ],
+    solution: "import heapq\n\ndef huffman_bits(frequencies):\n    weights = list(frequencies.values())\n    if not weights:\n        return 0\n    if len(weights) == 1:\n        return weights[0]\n    heapq.heapify(weights)\n    total = 0\n    while len(weights) > 1:\n        merged = heapq.heappop(weights) + heapq.heappop(weights)\n        total += merged\n        heapq.heappush(weights, merged)\n    return total",
+    language: "python",
+  },
+  {
+    id: "py.ex.ac.m6_2.l5",
+    kind: "problem",
+    tier: "rep",
+    lesson: "py.ac.m6_2.l5",
+    title: "Where the ratio rule strands capacity",
+    teaches: ["py.algo.greedy-pitfalls"],
+    requires: [],
+    difficulty: { concept: 5, implementation: 4, recall: 5 },
+    estimatedMinutes: 15,
+    prompt: "Ranking by value per weight is optimal when items may be **split**, and can lose badly when they cannot. Committing to the best ratio may strand capacity that nothing remaining fits.\n\nReturn `(greedy_value, best_value)` for a knapsack of the given `capacity`. Greedy takes items in descending ratio, skipping any that no longer fit. The best value is the true optimum over whole items.\n\nFor `[(60,10),(100,20),(120,30)]` at capacity 50 the pair is `(160, 220)`.",
+    exportName: "knapsack_gap",
+    scaffolds: { L1: "def knapsack_gap(items, capacity):\n    pass", L2: "def knapsack_gap(items, capacity):\n    pass", L3: "def knapsack_gap(items, capacity):\n    pass", L4: "" },
+    tests: [
+      { name: "greedy strands capacity", code: "assert fn([(60,10),(100,20),(120,30)], 50) == (160, 220)", hidden: false },
+      { name: "greedy is optimal here", code: "assert fn([(10,1),(20,2)], 3) == (30, 30)", hidden: false },
+      { name: "nothing fits", code: "assert fn([(50,10)], 5) == (0, 0)", hidden: false },
+      { name: "no items", code: "assert fn([], 10) == (0, 0)", hidden: false },
+      { name: "greedy never beats the optimum", code: "g, b = fn([(7,3),(9,4),(5,2)], 6)\nassert g <= b", hidden: true }
+    ],
+    hints: [
+      { rung: 0, text: "Run the two strategies independently over the same items." },
+      { rung: 1, text: "Greedy sorts by value divided by weight and takes whatever still fits." },
+      { rung: 2, text: "The optimum is a capacity table filled backwards so each item is used at most once." }
+    ],
+    solution: "def knapsack_gap(items, capacity):\n    room = capacity\n    greedy = 0\n    for value, weight in sorted(items, key=lambda i: i[0] / i[1], reverse=True):\n        if weight <= room:\n            greedy += value\n            room -= weight\n    best = [0] * (capacity + 1)\n    for value, weight in items:\n        for slot in range(capacity, weight - 1, -1):\n            best[slot] = max(best[slot], best[slot - weight] + value)\n    return (greedy, best[capacity])",
+    language: "python",
+  },
 ];
 
 export const MASTERY_EXERCISE_LESSON_CONTENT: Record<string, Pick<Lesson, "repIds">> = {
@@ -5578,4 +5718,9 @@ export const MASTERY_EXERCISE_LESSON_CONTENT: Record<string, Pick<Lesson, "repId
   "py.ac.m6_1.l3": { repIds: ["py.ex.ac.m6_1.l3"] },
   "py.ac.m6_1.l4": { repIds: ["py.ex.ac.m6_1.l4"] },
   "py.ac.m6_1.l5": { repIds: ["py.ex.ac.m6_1.l5"] },
+  "py.ac.m6_2.l1": { repIds: ["py.ex.ac.m6_2.l1"] },
+  "py.ac.m6_2.l2": { repIds: ["py.ex.ac.m6_2.l2"] },
+  "py.ac.m6_2.l3": { repIds: ["py.ex.ac.m6_2.l3"] },
+  "py.ac.m6_2.l4": { repIds: ["py.ex.ac.m6_2.l4"] },
+  "py.ac.m6_2.l5": { repIds: ["py.ex.ac.m6_2.l5"] },
 };

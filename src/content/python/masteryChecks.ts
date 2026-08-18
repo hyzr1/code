@@ -92,6 +92,45 @@ export const MASTERY_EXTRA_CHECKS: Record<string, LectureQuestion> = {
     ],
   ),
   // ---------------------------------------------------------------
+  // Algo · Module 6.2 — Greedy
+  // ---------------------------------------------------------------
+  "py.atom.algo.greedy-choice": q(
+    "Greedy coin change is optimal for 1, 5, 10, 25 but not for 1, 3, 4. What does that tell you?",
+    ["Whether greedy is safe is a property of the instance", "The implementation must differ between them", "Coin change is unsolvable for the second set"],
+    0,
+    "The greedy-choice property belongs to the problem, not the code.",
+    ["Correct. The same rule is provably optimal on one set and provably wrong on the other.", "The code is identical; only the input structure changed.", "An optimal answer exists; greedy just fails to find it."],
+  ),
+  "py.atom.algo.greedy-exchange": q(
+    "You swap an adjacent inverted pair and the cost stays the same. What does the argument conclude?",
+    ["Greedy is still optimal, since never-worse is enough", "The proof fails and greedy is unproven", "The two schedules must be identical"],
+    0,
+    "The argument reshapes an optimal answer without losing optimality.",
+    ["Correct. Equal cost simply means more than one optimal ordering exists.", "Demanding strict improvement would break on every tie.", "Different orderings can share a cost."],
+  ),
+  "py.atom.algo.interval-scheduling": q(
+    "Why is shortest duration the wrong key for selecting the most compatible tasks?",
+    ["A short task can straddle two others and block both", "Short tasks are rare in practice", "Duration cannot be computed from the endpoints"],
+    0,
+    "What matters is how much of the timeline a choice consumes.",
+    ["Correct. Brevity does not measure how much remaining time a task leaves free.", "Frequency in practice is irrelevant to correctness.", "Duration is simply end minus start."],
+  ),
+  "py.atom.algo.huffman-coding": q(
+    "Every symbol in a text occurs exactly the same number of times. What does Huffman produce?",
+    ["Codes all of the same length, matching a fixed-width code", "One very short code and the rest long", "It cannot run on a uniform distribution"],
+    0,
+    "Huffman only wins when frequencies are skewed.",
+    ["Correct. With nothing to exploit it degenerates to the fixed-width answer.", "Skewed lengths require skewed frequencies.", "The algorithm runs fine; it just saves nothing."],
+  ),
+  "py.atom.algo.greedy-pitfalls": q(
+    "Which signal most reliably suggests greedy will fail?",
+    ["A hard capacity that makes choices compete for the same room", "A large number of items", "Items with equal values"],
+    0,
+    "Capacity constraints and whole-set dependencies are the classic failure shapes.",
+    ["Correct. Committing early can strand room that a later combination needed.", "Size affects runtime, not whether the rule is sound.", "Equal values often make greedy easier, not harder."],
+  ),
+
+  // ---------------------------------------------------------------
   // Algo · Module 6.1 — Recursion & backtracking
   // ---------------------------------------------------------------
   "py.atom.algo.subset-generation": q(

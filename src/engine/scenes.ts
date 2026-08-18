@@ -490,6 +490,11 @@ const VISUALS: [RegExp, VisualKind][] = [
   // while the template, constraint checks, and pruning are choices.
   [/algo\.(?:subset-generation|permutations-combinations)/, "recursion"],
   [/algo\.(?:backtracking-template|constraint-search|search-pruning)/, "decision"],
+  // Greedy is a sequence of committed choices; intervals and Huffman have
+  // their own natural pictures.
+  [/algo\.(?:greedy-choice|greedy-exchange|greedy-pitfalls)/, "decision"],
+  [/algo\.interval-scheduling/, "intervals"],
+  [/algo\.huffman-coding/, "tree"],
   [/ml\.(?:matrices|matrix-multiplication|transpose-identity-inverse|span-basis-rank|eigenvectors|determinant-trace|svd|matrix-decompositions|orthogonality-least-squares)/, "ml"],
   [/ml\.exponents-logs-sums/, "complexity"],
   [/ml\.(?:derivatives-rules|taylor-approximations)/, "function"],
