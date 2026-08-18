@@ -136,7 +136,7 @@ print("fuse mul then relu :", safe_to_fuse("mul", "relu"))`,
 for name, description in stages:
     print(f"{name:10} {description}")`,
     firstTrace:
-      "Five stages from source to kernels. The fusion stage is the one from the previous lesson, and it operates on the normalised graph rather than the original code.",
+      "Five stages from source to kernels. Fusion happens partway through, operating on the normalised graph rather than the original code.",
     secondTitle: "Recompilation eats the gain",
     secondIntro:
       "Compilation costs a fixed amount per distinct shape. Compare that total against the runtime it saves across the calls.",
@@ -253,7 +253,7 @@ for trials in (20, 50, 200):
     print("trials", trials, "comparison error", round(error, 3),
           "separates a gap of", gap, ":", error < gap)`,
     secondTrace:
-      "A gap of four tenths needs the comparison error below that. Twenty trials leaves it at point four seven, and only around fifty trials resolves the top two.",
+      "A gap of four tenths needs the comparison error under that. Twenty trials leaves it at point four seven, and only around fifty trials resolves the top two.",
     mistake:
       "Tuning on one representative shape and shipping the result. Configurations are shape-specific, so the winner at one sequence length is routinely mediocre at another.",
     checkpoint:

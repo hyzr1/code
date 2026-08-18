@@ -368,11 +368,11 @@ for label, flops, moved in [("memory bound", 1e9, 12e9),
     mistake:
       "Using peak numbers from a datasheet. Real bandwidth is typically seventy to eighty percent of the quoted figure, so the ridge sits lower and more kernels are memory bound than the calculation suggests.",
     checkpoint:
-      "A kernel sits well below the ridge point. What will speed it up?",
+      "A kernel sits well under the ridge point. What will speed it up?",
     checkpointAnswer:
       "Reducing memory traffic. Reducing arithmetic changes nothing, because it is waiting on the memory system.",
     remember:
-      "Classify first; below the ridge only traffic matters.",
+      "Classify first; under the ridge only traffic matters.",
     checks: [
       {
         prompt: "What is arithmetic intensity?",

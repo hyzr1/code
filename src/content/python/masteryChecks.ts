@@ -202,6 +202,120 @@ export const MASTERY_EXTRA_CHECKS: Record<string, LectureQuestion> = {
   ),
 
   // ---------------------------------------------------------------
+  // ML - Module 11.4 - Gaussian processes and kernels
+  // ---------------------------------------------------------------
+  "py.atom.ml.gaussian-processes": q(
+    "What does a Gaussian process predict a long way from every training point?",
+    ["The prior mean, with the full prior variance", "The nearest training value", "An extrapolated trend"],
+    0,
+    "Nothing out there is correlated with the data.",
+    ["Correct. A confident-looking zero means no information.", "Correlation has already decayed to nothing.", "It does not extrapolate trends."],
+  ),
+  "py.atom.ml.kernel-design": q(
+    "The fitted length scale becomes extremely short and the training fit is perfect. What happened?",
+    ["Every point decorrelated from every other, so the model memorises", "Real fine structure was found", "The noise was overestimated"],
+    0,
+    "Perfect fit, no generalisation.",
+    ["Correct. It reverts to the prior everywhere else.", "Fine structure and memorisation look identical on training data.", "Short length scales accompany underestimated noise."],
+  ),
+  "py.atom.ml.bayesian-optimization": q(
+    "Why can a candidate with a worse predicted value score higher?",
+    ["Its uncertainty gives it a real chance of beating the current best", "The score ignores the prediction", "It is cheaper to evaluate"],
+    0,
+    "The acquisition function ranks what you might learn.",
+    ["Correct. Certainty about a bad point makes it worthless to test.", "The prediction is half the score.", "Evaluation cost is usually uniform."],
+  ),
+
+  // ---------------------------------------------------------------
+  // ML - Module 11.5 - Causal inference
+  // ---------------------------------------------------------------
+  "py.atom.ml.causal-graphs": q(
+    "You set the ground wet yourself. What does that tell you about the weather?",
+    ["Nothing; the incoming edge was severed", "That it rained", "That it was dry"],
+    0,
+    "Setting a variable replaces whatever used to determine it.",
+    ["Correct. Observing wet ground would have been informative.", "That is the observational answer.", "Neither direction is informed."],
+  ),
+  "py.atom.ml.confounding": q(
+    "Adding one more measured variable to the adjustment set makes the estimate worse. Why?",
+    ["It is a collider, and conditioning on it opens a path that was not there", "Adjustment sets must be small", "The variable was measured badly"],
+    0,
+    "Adjust for common causes, never for common effects.",
+    ["Correct. A longer adjustment list can be worse.", "Size is not the criterion.", "Measurement quality does not change the arrows."],
+  ),
+  "py.atom.ml.potential-outcomes": q(
+    "Why must the estimand be named before estimating?",
+    ["Several valid averages exist, and picking after the fact turns measurement into argument", "It speeds up computation", "It is required by convention"],
+    0,
+    "The overall average and the average over the treated differ.",
+    ["Correct. They answer different questions.", "Computation is unaffected.", "It is a substantive point."],
+  ),
+  "py.atom.ml.instrumental-variables": q(
+    "An instrument moves the treatment by four percent. What follows about the estimate?",
+    ["It is unreliable; dividing by a near-zero first stage amplifies any bias", "It is noisier but unbiased", "It is biased toward zero"],
+    0,
+    "The estimator divides by the first stage.",
+    ["Correct, which is why the first stage must be reported.", "It does far more than add noise.", "It amplifies rather than shrinking."],
+  ),
+
+  // ---------------------------------------------------------------
+  // ML - Module 12.1 - GPU programming
+  // ---------------------------------------------------------------
+  "py.atom.ml.gpu-architecture": q(
+    "Is maximum occupancy always the goal?",
+    ["No; more registers per thread can be worth it if it avoids a memory round trip", "Yes, always", "Only for compute-bound kernels"],
+    0,
+    "Occupancy is a diagnostic, not the objective.",
+    ["Correct. It exists to hide latency, not for its own sake.", "It is a means rather than an end.", "The trade-off applies to both kinds."],
+  ),
+  "py.atom.ml.cuda-fundamentals": q(
+    "One thread in a warp takes a different branch. What does that cost?",
+    ["A full second pass, with the other threads idle", "Nothing; threads are independent", "A kernel restart"],
+    0,
+    "Lockstep execution cannot take two paths at once.",
+    ["Correct, even for a single disagreeing thread.", "Threads within a warp are not independent.", "Nothing restarts."],
+  ),
+  "py.atom.ml.custom-kernels": q(
+    "Why does fusing three elementwise operations speed them up?",
+    ["They are memory bound, and fusion removes two of the three round trips", "It reduces the arithmetic", "It raises occupancy"],
+    0,
+    "The arithmetic is unchanged.",
+    ["Correct. The traffic is the cost.", "The same operations still execute.", "Occupancy is a separate matter."],
+  ),
+  "py.atom.ml.roofline": q(
+    "A kernel sits well below the ridge point. What will speed it up?",
+    ["Reducing memory traffic", "Reducing arithmetic", "Launching more threads"],
+    0,
+    "It is waiting on the memory system.",
+    ["Correct. Fusion and better layouts are the levers.", "It is not waiting on arithmetic.", "More threads do not create bandwidth."],
+  ),
+
+  // ---------------------------------------------------------------
+  // ML - Module 12.2 - Compilers and graph optimization
+  // ---------------------------------------------------------------
+  "py.atom.ml.operator-fusion": q(
+    "What makes a fusion unsafe even when it is numerically equivalent?",
+    ["An in-place operation whose ordering guarantee the fused version loses", "A long chain", "A large tensor"],
+    0,
+    "The compiler must track which tensors alias.",
+    ["Correct. The result then depends on scheduling.", "Longer chains are more valuable to fuse.", "Size is irrelevant to correctness."],
+  ),
+  "py.atom.ml.compilers": q(
+    "A compiled model is slower than the uncompiled one in production. What is the likely cause?",
+    ["Recompilation from varying input shapes", "The kernels are poorly optimised", "The graph is too large"],
+    0,
+    "Compilation is amortised over calls.",
+    ["Correct. Unbounded shapes never let it pay back.", "The emitted kernels are genuinely faster.", "Graph size affects compile time, not reuse."],
+  ),
+  "py.atom.ml.kernel-autotuning": q(
+    "An autotuner picks a configuration after one timing run each. How much should you trust it?",
+    ["Very little; the ranking reflects noise as much as true cost", "Completely; it was measured", "Only for large kernels"],
+    0,
+    "One sample from a noisy distribution.",
+    ["Correct. It picked a poor configuration in the worked example.", "Measurement without repetition is not evidence.", "Kernel size does not remove the noise."],
+  ),
+
+  // ---------------------------------------------------------------
   // ML - Module 11.1 - Bayesian machine learning
   // ---------------------------------------------------------------
   "py.atom.ml.bayesian-conjugacy": q(

@@ -259,7 +259,7 @@ for name, mean, spread in [("exploit", 0.82, 0.01),
     print(f"{name:10} mean {mean} spread {spread} "
           f"score {expected_improvement(mean, spread, best)}")`,
     firstTrace:
-      "The uncertain candidate at point six scores highest, above the confident point eight two. A wide spread is worth more than a small predicted edge.",
+      "The uncertain candidate at point six scores highest, ahead of the confident point eight two. A wide spread is worth more than a small predicted edge.",
     secondTitle: "Certainty kills the score",
     secondIntro:
       "Hold the mean fixed and shrink the spread. The score collapses, because a point you already understand cannot surprise you.",
@@ -267,13 +267,13 @@ for name, mean, spread in [("exploit", 0.82, 0.01),
     print("spread", spread,
           "score", expected_improvement(0.60, spread, best))`,
     secondTrace:
-      "From point zero four five down to zero. A candidate predicted below the best and known precisely is worth nothing to evaluate.",
+      "From point zero four five down to zero. A candidate predicted under the best and known precisely is worth nothing to evaluate.",
     mistake:
       "Using the surrogate's mean as the acquisition function. That evaluates the current best repeatedly, learns nothing new, and converges to whichever point happened to look good first.",
     checkpoint:
       "Why does a candidate with a lower predicted value sometimes score higher?",
     checkpointAnswer:
-      "Because its uncertainty is larger, so the chance it lands above the current best outweighs its worse prediction.",
+      "Because its uncertainty is larger, so the chance it beats the current best outweighs its worse prediction.",
     remember:
       "Score by what you might learn, not by what you already predict.",
     checks: [
