@@ -202,6 +202,98 @@ export const MASTERY_EXTRA_CHECKS: Record<string, LectureQuestion> = {
   ),
 
   // ---------------------------------------------------------------
+  // Algo - Module 9.1 - Query decomposition
+  // ---------------------------------------------------------------
+  "py.atom.algo.fenwick-tree": q(
+    "Why can a Fenwick tree answer range sums but not range minimums?",
+    ["A range is one prefix minus another, and minimum has no inverse", "Its updates are too slow", "It stores only one value per node"],
+    0,
+    "Subtraction is what turns prefixes into ranges.",
+    ["Correct. A segment tree handles minimum instead.", "Both operations are logarithmic.", "Storage is not the limitation."],
+  ),
+  "py.atom.algo.segment-tree": q(
+    "What does a segment tree require that a Fenwick tree does not provide?",
+    ["Nothing extra; it requires strictly less, only associativity and an identity", "An inverse operation", "A power-of-two length"],
+    0,
+    "Dropping the inverse requirement is the whole gain.",
+    ["Correct. That is what admits minimum and greatest common divisor.", "The inverse is the Fenwick requirement.", "Any length works."],
+  ),
+  "py.atom.algo.lazy-propagation": q(
+    "A lazy segment tree rebuilds a parent without pushing its children first. What happens?",
+    ["The parent is built from stale totals and stays wrong", "The pending values are lost", "The tree becomes unbalanced"],
+    0,
+    "A child holding an unapplied value reports the old total.",
+    ["Correct. The error survives the eventual push.", "The pending values are still there, just unapplied.", "Structure is unaffected."],
+  ),
+  "py.atom.algo.sparse-table": q(
+    "Why does a sparse table answer minimum but not sum?",
+    ["Its two covering windows overlap, and overlap is harmless only for idempotent operations", "Sums need more memory", "Sums require updates"],
+    0,
+    "The shared middle would be counted twice.",
+    ["Correct. Minimum with itself is unchanged; a sum is not.", "Memory is the same either way.", "Neither operation is updated here."],
+  ),
+  "py.atom.algo.lowest-common-ancestor": q(
+    "In the joint climb, why refuse a jump that lands both nodes on the same node?",
+    ["That jump reached or passed the common ancestor", "It would exceed the table's levels", "The nodes would be at different depths"],
+    0,
+    "The search must stop one step beneath the answer.",
+    ["Correct. Refusing it keeps the position tight.", "The levels bound the loop already.", "Depths were aligned beforehand."],
+  ),
+  "py.atom.algo.sqrt-decomposition": q(
+    "Why is the square root of the length the balanced block size?",
+    ["The ragged ends cost the width and the middle costs length over width", "It minimizes memory", "Blocks must be square"],
+    0,
+    "Those two costs are equal exactly at the square root.",
+    ["Correct. A skewed workload justifies a different size.", "Memory is linear regardless.", "There is nothing square about a block."],
+  ),
+  "py.atom.algo.mos-algorithm": q(
+    "What makes Mo's algorithm unusable?",
+    ["Queries that must be answered as they arrive", "A large array", "Overlapping ranges"],
+    0,
+    "The entire saving comes from reordering them.",
+    ["Correct. It is an offline method only.", "Array size is handled by the block width.", "Overlap is what makes it efficient."],
+  ),
+  "py.atom.algo.heavy-light": q(
+    "Why does any tree path cross only a logarithmic number of chains?",
+    ["Leaving a chain moves into a subtree at most half the size", "The tree is balanced by construction", "Chains have equal length"],
+    0,
+    "A light child has at most half its parent's subtree.",
+    ["Correct. That bound holds on any tree at all.", "No balance is assumed.", "Chain lengths vary freely."],
+  ),
+  "py.atom.algo.persistent-structures": q(
+    "An update to a persistent balanced tree of a million nodes copies how much?",
+    ["About twenty nodes, the path from the root to the change", "All million nodes", "One node"],
+    0,
+    "Everything off that path is shared by reference.",
+    ["Correct. That is what makes keeping every version affordable.", "Full copying is what path copying avoids.", "The ancestors must be rebuilt too."],
+  ),
+
+  // ---------------------------------------------------------------
+  // ML - Module 6.3 - Language modeling
+  // ---------------------------------------------------------------
+  "py.atom.ml.language-modeling-objective": q(
+    "What supplies the training labels for next-token prediction?",
+    ["The text itself, since each token is the target of the position before it", "Human annotators", "A separate classifier"],
+    0,
+    "That is what makes the objective self-supervised.",
+    ["Correct. Any text at all becomes training data.", "No annotation is involved.", "Nothing external labels the data."],
+  ),
+  "py.atom.ml.ngram-models": q(
+    "A 5-gram model over a 50,000-word vocabulary is proposed. What is the obstacle?",
+    ["The possible contexts vastly outnumber anything a corpus can cover", "The counts overflow", "Five words is too little context"],
+    0,
+    "Contexts grow as a power of the vocabulary.",
+    ["Correct. Longer windows make the counts sparser, not richer.", "Counts are small integers.", "The context length is not the problem."],
+  ),
+  "py.atom.ml.perplexity": q(
+    "Two models report perplexities of 12 and 18 using different tokenizers. Which is better?",
+    ["Unknown; the scores are not comparable across tokenizers", "The first, clearly", "The second, since higher is better"],
+    0,
+    "Perplexity is measured per token.",
+    ["Correct. A finer tokenizer answers more, easier questions.", "The comparison is invalid as stated.", "Lower perplexity is better, but the comparison still fails."],
+  ),
+
+  // ---------------------------------------------------------------
   // Algo - Module 8.3 - Geometry and randomization
   // ---------------------------------------------------------------
   "py.atom.algo.cross-product": q(

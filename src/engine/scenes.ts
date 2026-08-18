@@ -577,6 +577,12 @@ const VISUALS: [RegExp, VisualKind][] = [
   [/ml\.transformer-stacks/, "decision"],
   [/ml\.transformer-shapes/, "complexity"],
   [/ml\.(?:positional-representations|transformer-block|transformer-implementation)/, "ml"],
+  // Language modelling: perplexity is a measurement decision.
+  [/ml\.perplexity/, "decision"],
+  [/ml\.(?:language-modeling-objective|ngram-models)/, "ml"],
+  // Query decomposition: tree-shaped structures versus array-block ones.
+  [/algo\.(?:segment-tree|lazy-propagation|lowest-common-ancestor|heavy-light|persistent-structures)/, "tree"],
+  [/algo\.(?:fenwick-tree|sparse-table|sqrt-decomposition|mos-algorithm)/, "pointers"],
   // Foundational lessons first, matched on their exact unit ids so they never
   // collide with a pattern lesson. These keep the early modules from being a
   // wall of text with nothing to look at.
