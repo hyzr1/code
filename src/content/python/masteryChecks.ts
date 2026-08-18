@@ -170,6 +170,59 @@ export const MASTERY_EXTRA_CHECKS: Record<string, LectureQuestion> = {
   ),
 
   // ---------------------------------------------------------------
+  // ML · Module 3.7 — Evaluation & calibration
+  // ---------------------------------------------------------------
+  "py.atom.ml.metrics-precision-recall": q(
+    "A spam filter is tuned so almost nothing legitimate is ever blocked. Which metric did that favour?",
+    ["Precision, because a false positive loses a real message", "Recall, because no spam may escape", "Accuracy, because most mail is legitimate"],
+    0,
+    "Which error is expensive decides which metric to favour.",
+    ["Correct. Blocking a real message costs far more than letting one advert through.", "Maximizing recall would block aggressively and lose real mail.", "Accuracy would be high even for a filter that does nothing."],
+  ),
+  "py.atom.ml.confusion-thresholds": q(
+    "Review capacity halves overnight. What is the cheapest response?",
+    ["Raise the threshold so only the strongest cases are flagged", "Retrain the model on more data", "Switch to a different algorithm"],
+    0,
+    "The threshold is a free lever that needs no retraining.",
+    ["Correct. Precision rises, recall falls, and the change is instant.", "Retraining is slow and does not target the capacity constraint.", "A new algorithm is a large change for a scheduling problem."],
+  ),
+  "py.atom.ml.roc-pr-auc": q(
+    "Prevalence drops from ten percent to one percent while the model is unchanged. What happens?",
+    ["ROC AUC stays similar while average precision falls", "Both metrics stay identical", "Both metrics fall together"],
+    0,
+    "The two metrics have different denominators and different baselines.",
+    ["Correct. Precision is diluted by the larger negative pile; the ROC rate is not.", "Average precision tracks prevalence closely.", "ROC AUC is largely insensitive to this change."],
+  ),
+  "py.atom.ml.regression-metrics": q(
+    "Delivery-time estimates should optimize which error metric?",
+    ["MAE, because typical error is what customers experience", "RMSE, because rare huge misses dominate", "R squared, because it is scale free"],
+    0,
+    "The metric should match the cost the product actually pays.",
+    ["Correct. Every minute late costs roughly the same, so linear error fits.", "RMSE suits cases where a single large failure is catastrophic.", "R squared compares against a baseline rather than measuring lateness."],
+  ),
+  "py.atom.ml.probability-calibration": q(
+    "You stretch every predicted probability toward zero and one. What changes?",
+    ["Calibration worsens while ranking metrics stay identical", "Both calibration and ranking worsen", "Nothing measurable changes"],
+    0,
+    "Order-preserving transforms are invisible to ranking metrics.",
+    ["Correct. The Brier score moves; ROC AUC does not.", "Ranking is untouched because the order is preserved.", "The probabilities themselves are now wrong, which is measurable."],
+  ),
+  "py.atom.ml.imbalanced-data": q(
+    "Which of these is safe to apply to the test split?",
+    ["None of them, the test split keeps true prevalence", "Upsampling the rare class", "Downsampling the majority class"],
+    0,
+    "Evaluation must describe the world the model will meet.",
+    ["Correct. Any rebalancing makes the reported score unreachable in production.", "Upsampling the test split inflates every rare-class metric.", "Downsampling changes prevalence just as badly."],
+  ),
+  "py.atom.ml.grouped-time-validation": q(
+    "Rows carry both a user id and a timestamp. What does a correct split need?",
+    ["Users kept on one side and training strictly before testing", "Only a grouped split", "Only a temporal split"],
+    0,
+    "The split must respect every dependency the deployment has.",
+    ["Correct. Either leak alone is enough to inflate the estimate.", "Grouping alone still allows training on the future.", "Time order alone still lets one user appear on both sides."],
+  ),
+
+  // ---------------------------------------------------------------
   // ML · Module 3.6 — Unsupervised learning
   // ---------------------------------------------------------------
   "py.atom.ml.kmeans-guided": q(

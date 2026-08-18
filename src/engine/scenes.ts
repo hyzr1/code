@@ -511,6 +511,12 @@ const VISUALS: [RegExp, VisualKind][] = [
   [/ml\.(?:kmeans-guided|hierarchical-dbscan)/, "decision"],
   [/ml\.(?:gmm-em|anomaly-detection)/, "probability"],
   [/ml\.(?:pca-guided|manifold-visualization)/, "ml"],
+  // Evaluation. Metric choice and thresholds are decisions, curves and
+  // calibration are probabilistic, and split design is a pipeline concern.
+  [/ml\.(?:metrics-precision-recall|confusion-thresholds|imbalanced-data)/, "decision"],
+  [/ml\.(?:roc-pr-auc|probability-calibration)/, "probability"],
+  [/ml\.regression-metrics/, "ml"],
+  [/ml\.grouped-time-validation/, "pipeline"],
   // Foundational lessons first, matched on their exact unit ids so they never
   // collide with a pattern lesson. These keep the early modules from being a
   // wall of text with nothing to look at.
