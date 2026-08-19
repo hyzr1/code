@@ -22,7 +22,7 @@ const ML_EFFICIENT_ATTENTION_SPECS: GuidedMasterySpec[] = [
     outcome:
       "You will compare the memory traffic of a materialised score matrix against a tiled one, and see why the saving grows with length.",
     why:
-      "This is an exact method - identical outputs at a fraction of the cost - so there is no accuracy trade-off to weigh.",
+      "This is an exact method — identical outputs at a fraction of the cost — so there is no accuracy trade-off to weigh.",
     mentalModel:
       "Picture the score matrix never existing all at once. Blocks are computed in fast memory, folded into a running result, and discarded.",
     firstTitle: "Where the bytes go",
@@ -41,7 +41,7 @@ for seq in (1024, 4096, 16384, 65536):
     print(seq, f"{big / 1e9:.3f} GB", f"{small / 1e9:.3f} GB",
           f"x{big / small:.1f}")`,
     firstTrace:
-      "Seventeen gigabytes against sixty-seven megabytes at sixty-five thousand tokens - two hundred fifty-seven times less traffic for exactly the same answer.",
+      "Seventeen gigabytes against sixty-seven megabytes at sixty-five thousand tokens — two hundred fifty-seven times less traffic for exactly the same answer.",
     secondTitle: "The saving grows with length",
     secondIntro:
       "The ratio is not a constant. It grows linearly with the sequence, because one term is quadratic and the other is not.",
@@ -63,41 +63,41 @@ for seq in (1024, 4096, 16384, 65536):
       "Never materialise the score matrix; tile it in fast memory.",
     checks: [
       {
-        prompt: "What actually limits standard attention at long sequence lengths?",
-        options: [
+        question: "What actually limits standard attention at long sequence lengths?",
+        choices: [
           "Memory traffic for the score matrix",
           "The number of multiplications",
           "Parameter count",
         ],
-        answerIndex: 0,
-        hint: "The arithmetic is not the bottleneck.",
-        explanations: [
+        answer: 0,
+        explanation: "The arithmetic is not the bottleneck.",
+        why: [
           "Correct. That is what tiling removes.",
           "Arithmetic throughput is plentiful.",
           "Attention has no parameters of its own here.",
         ],
       },
       {
-        prompt: "How do the outputs compare to a standard implementation?",
-        options: [
+        question: "How do the outputs compare to a standard implementation?",
+        choices: [
           "Identical; it is an exact method",
           "Slightly approximate",
           "Better, because of tiling",
         ],
-        answerIndex: 0,
-        hint: "Only the memory schedule changes.",
-        explanations: [
+        answer: 0,
+        explanation: "Only the memory schedule changes.",
+        why: [
           "Correct. There is no accuracy trade-off.",
           "Nothing is approximated.",
           "The mathematics is unchanged.",
         ],
       },
       {
-        prompt: "At which sequence length does the technique matter most?",
-        options: ["The longest", "The shortest", "It is constant"],
-        answerIndex: 0,
-        hint: "One term is quadratic.",
-        explanations: [
+        question: "At which sequence length does the technique matter most?",
+        choices: ["The longest", "The shortest", "It is constant"],
+        answer: 0,
+        explanation: "One term is quadratic.",
+        why: [
           "Correct. The saving grows with length.",
           "Short sequences barely benefit.",
           "The ratio grows linearly with the sequence.",
@@ -159,45 +159,45 @@ for seq in (2048, 131072):
       "Every long-context method gives up some pairs; know which.",
     checks: [
       {
-        prompt: "What does a sliding window make the cost?",
-        options: [
+        question: "What does a sliding window make the cost?",
+        choices: [
           "Linear in the sequence length",
           "Still quadratic",
           "Constant",
         ],
-        answerIndex: 0,
-        hint: "The width is fixed.",
-        explanations: [
+        answer: 0,
+        explanation: "The width is fixed.",
+        why: [
           "Correct. Sequence times window width.",
           "The quadratic term is gone.",
           "It still grows with the sequence.",
         ],
       },
       {
-        prompt: "What does a window give up?",
-        options: [
+        question: "What does a window give up?",
+        choices: [
           "Direct dependencies longer than its width",
           "Numerical precision",
           "Parameter efficiency",
         ],
-        answerIndex: 0,
-        hint: "Some pairs are never scored.",
-        explanations: [
+        answer: 0,
+        explanation: "Some pairs are never scored.",
+        why: [
           "Correct, and that must be tested for.",
           "Precision is unaffected.",
           "The parameter count is unchanged.",
         ],
       },
       {
-        prompt: "How does linear attention differ from a sliding window?",
-        options: [
+        question: "How does linear attention differ from a sliding window?",
+        choices: [
           "It replaces pairwise scores with a running summary",
           "It is exact",
           "It attends to more positions",
         ],
-        answerIndex: 0,
-        hint: "The grid is never formed.",
-        explanations: [
+        answer: 0,
+        explanation: "The grid is never formed.",
+        why: [
           "Correct, and the summary is the approximation.",
           "It is an approximation, unlike tiling.",
           "It summarises rather than enumerates.",
@@ -255,48 +255,48 @@ for position in (0, 100, 4096, 100000):
     checkpointAnswer:
       "The slow bands were trained over a limited angular range. Beyond it the model sees angles it has no experience of, so the frequencies must be stretched to fit.",
     remember:
-      "One scheme penalises distance, the other rotates - and rotation wraps.",
+      "One scheme penalises distance, the other rotates — and rotation wraps.",
     checks: [
       {
-        prompt: "What do both schemes encode?",
-        options: [
+        question: "What do both schemes encode?",
+        choices: [
           "Relative distance between positions",
           "Absolute position only",
           "Token identity",
         ],
-        answerIndex: 0,
-        hint: "That is why they generalise at all.",
-        explanations: [
+        answer: 0,
+        explanation: "That is why they generalise at all.",
+        why: [
           "Correct. Attention depends on the gap, not the index.",
           "Absolute schemes are the older approach.",
           "Identity comes from the embedding.",
         ],
       },
       {
-        prompt: "Which bands carry long-range information in a rotary scheme?",
-        options: [
+        question: "Which bands carry long-range information in a rotary scheme?",
+        choices: [
           "The slowest, which have not yet wrapped",
           "The fastest",
           "All bands equally",
         ],
-        answerIndex: 0,
-        hint: "Wrapped bands are ambiguous about distance.",
-        explanations: [
+        answer: 0,
+        explanation: "Wrapped bands are ambiguous about distance.",
+        why: [
           "Correct. The fast bands wrap within a few hundred positions.",
           "Those wrap almost immediately.",
           "The rates differ by orders of magnitude.",
         ],
       },
       {
-        prompt: "A rotary model's context is extended eightfold by configuration alone. What happens?",
-        options: [
+        question: "A rotary model's context is extended eightfold by configuration alone. What happens?",
+        choices: [
           "Distant positions land in angles the model never saw",
           "Nothing; the scheme is unbounded",
           "Memory use falls",
         ],
-        answerIndex: 0,
-        hint: "The frequencies were trained at one length.",
-        explanations: [
+        answer: 0,
+        explanation: "The frequencies were trained at one length.",
+        why: [
           "Correct. The frequencies must be rescaled.",
           "That describes the linear-penalty scheme instead.",
           "Memory rises with the longer context.",
@@ -359,45 +359,45 @@ print(balance([0, 1, 2, 3, 0, 1, 2, 3], 4))`,
       "Capacity from many experts, cost from the few that fire.",
     checks: [
       {
-        prompt: "What does a mixture of experts decouple?",
-        options: [
+        question: "What does a mixture of experts decouple?",
+        choices: [
           "Total parameters from compute per token",
           "Depth from width",
           "Training from inference",
         ],
-        answerIndex: 0,
-        hint: "Only a few experts fire per token.",
-        explanations: [
+        answer: 0,
+        explanation: "Only a few experts fire per token.",
+        why: [
           "Correct. That is conditional compute.",
           "Both remain architecture choices.",
           "Both use the same routing.",
         ],
       },
       {
-        prompt: "What happens without a load-balancing term?",
-        options: [
+        question: "What happens without a load-balancing term?",
+        choices: [
           "The router collapses onto a few experts",
           "Training diverges",
           "The experts become identical",
         ],
-        answerIndex: 0,
-        hint: "Nothing otherwise encourages spreading the load.",
-        explanations: [
+        answer: 0,
+        explanation: "Nothing otherwise encourages spreading the load.",
+        why: [
           "Correct. Most capacity then goes unused.",
           "Training continues, just badly.",
           "They stay distinct but underused.",
         ],
       },
       {
-        prompt: "What determines the step time of an expert layer?",
-        options: [
+        question: "What determines the step time of an expert layer?",
+        choices: [
           "The busiest expert",
           "The average load",
           "The expert count",
         ],
-        answerIndex: 0,
-        hint: "Everyone waits for the slowest.",
-        explanations: [
+        answer: 0,
+        explanation: "Everyone waits for the slowest.",
+        why: [
           "Correct, which is why balance matters.",
           "Averages hide the bottleneck.",
           "Idle experts cost nothing.",
@@ -436,7 +436,7 @@ for rank in (1, 4, 16, 64):
     full, low, percent = counts(4096, rank, 32)
     print(f"rank {rank:>3} trainable {low:>10} of {full} ({percent}%)")`,
     firstTrace:
-      "Rank four trains four million of two billion parameters - under a fifth of a percent. Rank sixty-four is still only three percent.",
+      "Rank four trains four million of two billion parameters — under a fifth of a percent. Rank sixty-four is still only three percent.",
     secondTitle: "What the rank buys",
     secondIntro:
       "The rank is the capacity of the update. Too low and the adaptation cannot express what the task needs; too high and the saving disappears.",
@@ -456,45 +456,45 @@ for rank in (1, 4, 16, 64):
       "Freeze the base, train two thin factors, and pick the rank deliberately.",
     checks: [
       {
-        prompt: "What does a low-rank update store?",
-        options: [
+        question: "What does a low-rank update store?",
+        choices: [
           "Two thin factor matrices",
           "The full weight change",
           "A copy of the base weights",
         ],
-        answerIndex: 0,
-        hint: "Their product is full-sized.",
-        explanations: [
+        answer: 0,
+        explanation: "Their product is full-sized.",
+        why: [
           "Correct. The count grows with the rank.",
           "That is exactly what it avoids.",
           "The base weights stay frozen.",
         ],
       },
       {
-        prompt: "What does raising the rank do?",
-        options: [
+        question: "What does raising the rank do?",
+        choices: [
           "Increases capacity and cost together",
           "Increases capacity for free",
           "Reduces the parameter count",
         ],
-        answerIndex: 0,
-        hint: "The rank is the inner dimension.",
-        explanations: [
+        answer: 0,
+        explanation: "The rank is the inner dimension.",
+        why: [
           "Correct, and the saving fades at high rank.",
           "Every extra rank costs parameters.",
           "It raises the count.",
         ],
       },
       {
-        prompt: "What must be rechecked after attaching an adapter?",
-        options: [
+        question: "What must be rechecked after attaching an adapter?",
+        choices: [
           "The base model's general evaluations",
           "The parameter count",
           "The tokenizer",
         ],
-        answerIndex: 0,
-        hint: "The adapter was trained on a narrow task.",
-        explanations: [
+        answer: 0,
+        explanation: "The adapter was trained on a narrow task.",
+        why: [
           "Correct. Unrelated behaviour can degrade.",
           "That is known by construction.",
           "The tokenizer is unchanged.",

@@ -66,41 +66,41 @@ print("sky still informed by ground:", bool(intervened["ground"]))`,
       "Setting a variable severs whatever used to determine it.",
     checks: [
       {
-        prompt: "What does intervening on a variable do to the graph?",
-        options: [
+        question: "What does intervening on a variable do to the graph?",
+        choices: [
           "Removes its incoming edges",
           "Removes its outgoing edges",
           "Nothing",
         ],
-        answerIndex: 0,
-        hint: "You replace whatever used to decide it.",
-        explanations: [
+        answer: 0,
+        explanation: "You replace whatever used to decide it.",
+        why: [
           "Correct. Its effects still propagate forward.",
           "The effects are exactly what you want to measure.",
           "That is what makes it different from observing.",
         ],
       },
       {
-        prompt: "A model is fitted on observational data and used to choose actions. What is wrong?",
-        options: [
+        question: "A model is fitted on observational data and used to choose actions. What is wrong?",
+        choices: [
           "It learned what accompanies an outcome, not what causes one",
           "It has too few parameters",
           "It needs more data",
         ],
-        answerIndex: 0,
-        hint: "Actions are interventions.",
-        explanations: [
+        answer: 0,
+        explanation: "Actions are interventions.",
+        why: [
           "Correct, and more data does not fix it.",
           "Capacity is not the issue.",
           "No amount of observational data answers the question.",
         ],
       },
       {
-        prompt: "After setting the ground wet, what does it tell you about the sky?",
-        options: ["Nothing", "That it rained", "That it was dry"],
-        answerIndex: 0,
-        hint: "The edge from sky to ground is gone.",
-        explanations: [
+        question: "After setting the ground wet, what does it tell you about the sky?",
+        choices: ["Nothing", "That it rained", "That it was dry"],
+        answer: 0,
+        explanation: "The edge from sky to ground is gone.",
+        why: [
           "Correct. You supplied the wetness yourself.",
           "That is the observational answer.",
           "Neither direction is informed.",
@@ -168,50 +168,50 @@ print("adjusted for c  ", adjusted(rows, "c"))`,
     checkpoint:
       "Why can adding a variable to the adjustment set make the estimate worse?",
     checkpointAnswer:
-      "If it is a collider - caused by both treatment and outcome - conditioning on it opens a path between them that did not exist.",
+      "If it is a collider — caused by both treatment and outcome — conditioning on it opens a path between them that did not exist.",
     remember:
       "Adjust for common causes, never for common effects.",
     checks: [
       {
-        prompt: "What is a confounder?",
-        options: [
+        question: "What is a confounder?",
+        choices: [
           "A variable causing both the treatment and the outcome",
           "A variable caused by both",
           "A variable with missing values",
         ],
-        answerIndex: 0,
-        hint: "It decides who gets treated and how they do.",
-        explanations: [
+        answer: 0,
+        explanation: "It decides who gets treated and how they do.",
+        why: [
           "Correct, and it must be adjusted for.",
           "That is a collider, which must not be.",
           "Missingness is a separate problem.",
         ],
       },
       {
-        prompt: "What does stratification do?",
-        options: [
+        question: "What does stratification do?",
+        choices: [
           "Computes the effect within each level and recombines",
           "Discards the confounded rows",
           "Reweights the outcome",
         ],
-        answerIndex: 0,
-        hint: "Within a level the confounder is constant.",
-        explanations: [
+        answer: 0,
+        explanation: "Within a level the confounder is constant.",
+        why: [
           "Correct, weighted by how common each level is.",
           "No rows are dropped.",
           "The outcomes are unchanged.",
         ],
       },
       {
-        prompt: "Should you adjust for a collider?",
-        options: [
+        question: "Should you adjust for a collider?",
+        choices: [
           "No; it creates a dependence that was not there",
           "Yes; more adjustment is safer",
           "Only if it is measured accurately",
         ],
-        answerIndex: 0,
-        hint: "It is caused by both, not a cause of either.",
-        explanations: [
+        answer: 0,
+        explanation: "It is caused by both, not a cause of either.",
+        why: [
           "Correct. A longer adjustment list can be worse.",
           "Adjusting for everything is a common and serious error.",
           "Accuracy does not change the direction of the arrows.",
@@ -273,45 +273,45 @@ print("range           ", round(max(effects) - min(effects), 2))`,
       "Name the estimand first; averages are summaries, not predictions.",
     checks: [
       {
-        prompt: "What is the fundamental problem of causal inference?",
-        options: [
+        question: "What is the fundamental problem of causal inference?",
+        choices: [
           "Only one potential outcome per unit is ever observed",
           "Data is always noisy",
           "Treatments are expensive",
         ],
-        answerIndex: 0,
-        hint: "The other column is never filled in.",
-        explanations: [
+        answer: 0,
+        explanation: "The other column is never filled in.",
+        why: [
           "Correct. Every method borrows the missing one.",
           "Noise is a separate and lesser difficulty.",
           "Cost is a practical, not a logical, obstacle.",
         ],
       },
       {
-        prompt: "How do the two averages differ?",
-        options: [
+        question: "How do the two averages differ?",
+        choices: [
           "One answers a policy for everyone, the other what the existing programme achieved",
           "One is more accurate",
           "They are the same quantity",
         ],
-        answerIndex: 0,
-        hint: "They average over different populations.",
-        explanations: [
+        answer: 0,
+        explanation: "They average over different populations.",
+        why: [
           "Correct, and they answer different questions.",
           "Both are exact on this data.",
           "They differ whenever treatment is not random.",
         ],
       },
       {
-        prompt: "Why must the estimand be named before estimating?",
-        options: [
+        question: "Why must the estimand be named before estimating?",
+        choices: [
           "Otherwise you can pick whichever number suits the conclusion",
           "It speeds up the computation",
           "It is required by convention",
         ],
-        answerIndex: 0,
-        hint: "Two valid answers already exist.",
-        explanations: [
+        answer: 0,
+        explanation: "Two valid answers already exist.",
+        why: [
           "Correct. That turns a measurement into an argument.",
           "Computation is unaffected.",
           "It is a substantive point, not a convention.",
@@ -335,7 +335,7 @@ print("range           ", round(max(effects) - min(effects), 2))`,
     outcome:
       "You will estimate an effect from an instrument and see a weak first stage produce a wildly wrong answer.",
     why:
-      "The estimator divides by the first stage, so a small denominator does not merely add noise - it multiplies whatever bias is present.",
+      "The estimator divides by the first stage, so a small denominator does not merely add noise — it multiplies whatever bias is present.",
     mentalModel:
       "Picture a lever that nudges the treatment. Divide the movement in the outcome by the movement in the treatment, and the nudge cancels out.",
     firstTitle: "Divide the two differences",
@@ -373,41 +373,41 @@ print("weak instrument  ", estimate(weak))`,
       "Report the first stage; a weak instrument gives a confident wrong answer.",
     checks: [
       {
-        prompt: "What must an instrument satisfy?",
-        options: [
+        question: "What must an instrument satisfy?",
+        choices: [
           "It moves the treatment and affects the outcome only through it",
           "It is randomly assigned by the researcher",
           "It is measured without error",
         ],
-        answerIndex: 0,
-        hint: "The second half is the untestable part.",
-        explanations: [
+        answer: 0,
+        explanation: "The second half is the untestable part.",
+        why: [
           "Correct, and the exclusion half cannot be tested from data.",
           "Natural experiments are not researcher-assigned.",
           "Measurement quality is a separate concern.",
         ],
       },
       {
-        prompt: "Why is a weak first stage dangerous?",
-        options: [
+        question: "Why is a weak first stage dangerous?",
+        choices: [
           "The estimator divides by it, so any bias is amplified",
           "It makes the estimate noisier only",
           "It biases toward zero",
         ],
-        answerIndex: 0,
-        hint: "A near-zero denominator.",
-        explanations: [
+        answer: 0,
+        explanation: "A near-zero denominator.",
+        why: [
           "Correct. The estimate can be many times the truth.",
           "It does far more than add noise.",
           "It amplifies rather than shrinking.",
         ],
       },
       {
-        prompt: "What should always be reported alongside the estimate?",
-        options: ["The first stage", "The sample mean", "The p-value alone"],
-        answerIndex: 0,
-        hint: "It is the one warning sign that is testable.",
-        explanations: [
+        question: "What should always be reported alongside the estimate?",
+        choices: ["The first stage", "The sample mean", "The p-value alone"],
+        answer: 0,
+        explanation: "It is the one warning sign that is testable.",
+        why: [
           "Correct. Without it the estimate cannot be judged.",
           "Means do not diagnose the instrument.",
           "A p-value says nothing about instrument strength.",

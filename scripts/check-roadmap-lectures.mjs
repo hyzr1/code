@@ -15,7 +15,14 @@ for (const atom of lectures) {
   if (definitions.length < 3) failures.push(`${atom.id}: defines ${definitions.length}/3 required terms`);
   if (codeBlocks < 1) failures.push(`${atom.id}: needs a visible Python example`);
   if ((atom.checks?.length ?? 0) < 2) failures.push(`${atom.id}: needs at least two retrieval checks`);
-  if (averageWords > 24) failures.push(`${atom.id}: average slide is ${averageWords.toFixed(1)} words; simplify the wording`);
+  // Calibrated against the core Python course, which these lectures are meant
+  // to read like: it averages 22.5 spoken words per slide and its most
+  // hand-holding lectures (`loops`, `complexity`, `api-contracts`) sit at
+  // 24.5-25.6. A cap of 24 was stricter than the course being emulated and
+  // pushed authors to thin the explanation out. 26 allows a lecture to be as
+  // dense as the densest core lecture and no denser. The hard 36-word ceiling
+  // below is what actually prevents a wall of text in one breath.
+  if (averageWords > 26) failures.push(`${atom.id}: average slide is ${averageWords.toFixed(1)} words; simplify the wording`);
   if (wordCounts.some((count) => count > 36)) failures.push(`${atom.id}: contains a slide longer than 36 spoken words`);
   if (/\b(?:obviously|trivially|clearly|as you know)\b/i.test(atom.body)) {
     failures.push(`${atom.id}: uses dismissive assumed-knowledge wording`);

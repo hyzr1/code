@@ -83,41 +83,41 @@ for n in (1_000, 100_000, 1_000_000):
       "Lines, not states: keep the lower envelope and search it.",
     checks: [
       {
-        prompt: "What does each earlier state become?",
-        options: ["A line in the query variable", "A point", "An interval"],
-        answerIndex: 0,
-        hint: "Slope times query plus intercept.",
-        explanations: [
+        question: "What does each earlier state become?",
+        choices: ["A line in the query variable", "A point", "An interval"],
+        answer: 0,
+        explanation: "Slope times query plus intercept.",
+        why: [
           "Correct. The answer is the lowest line at that query.",
           "Points would not compose into an envelope.",
           "Intervals belong to a different technique.",
         ],
       },
       {
-        prompt: "When may a line be discarded permanently?",
-        options: [
+        question: "When may a line be discarded permanently?",
+        choices: [
           "When it is never the minimum anywhere",
           "When its slope is largest",
           "When it was added earliest",
         ],
-        answerIndex: 0,
-        hint: "That is what the three-line test checks.",
-        explanations: [
+        answer: 0,
+        explanation: "That is what the three-line test checks.",
+        why: [
           "Correct. It can never become useful later.",
           "A large slope can still win at small queries.",
           "Age is irrelevant.",
         ],
       },
       {
-        prompt: "The slopes arrive in arbitrary order. What changes?",
-        options: [
+        question: "The slopes arrive in arbitrary order. What changes?",
+        choices: [
           "The simple stack no longer works; a balanced structure is needed",
           "Nothing",
           "The answers become approximate",
         ],
-        answerIndex: 0,
-        hint: "The stack assumes monotone insertion.",
-        explanations: [
+        answer: 0,
+        explanation: "The stack assumes monotone insertion.",
+        why: [
           "Correct. Insertion must find its place in the envelope.",
           "The stack version breaks silently.",
           "The technique stays exact when done correctly.",
@@ -168,7 +168,7 @@ for layer in range(1, k + 1):
 print(opt[3][1:])
 print(all(opt[3][j] <= opt[3][j + 1] for j in range(1, n)))`,
     firstTrace:
-      "The splits read zero, zero, two, two, three, four, four, five, six, six, seven, eight - non-decreasing throughout. The staircase is real for this cost function.",
+      "The splits read zero, zero, two, two, three, four, four, five, six, six, seven, eight — non-decreasing throughout. The staircase is real for this cost function.",
     secondTitle: "Bound the search",
     secondIntro:
       "A state's split lies between the split of the state before it and its own. Counting only those candidates shows how much the full scan was wasting.",
@@ -193,45 +193,45 @@ print("splits scanned with the bound:", bounded)`,
       "Check the staircase, then trap the search between neighbours.",
     checks: [
       {
-        prompt: "What does the optimisation exploit?",
-        options: [
+        question: "What does the optimisation exploit?",
+        choices: [
           "Optimal splits that never move left",
           "A convex cost function",
           "Sparse transitions",
         ],
-        answerIndex: 0,
-        hint: "It is a property of where the optimum sits.",
-        explanations: [
+        answer: 0,
+        explanation: "It is a property of where the optimum sits.",
+        why: [
           "Correct. That is what bounds the search.",
           "Convexity is one way to get it, not the property itself.",
           "Sparsity is unrelated.",
         ],
       },
       {
-        prompt: "What happens if monotonicity does not hold?",
-        options: [
+        question: "What happens if monotonicity does not hold?",
+        choices: [
           "The answers become wrong, not merely slow",
           "It runs at the original speed",
           "It fails loudly",
         ],
-        answerIndex: 0,
-        hint: "The true optimum may sit outside the bounded range.",
-        explanations: [
+        answer: 0,
+        explanation: "The true optimum may sit outside the bounded range.",
+        why: [
           "Correct. That is why the property must be checked.",
           "The bound is still applied.",
           "Nothing detects the violation automatically.",
         ],
       },
       {
-        prompt: "How is one state's search range determined?",
-        options: [
+        question: "How is one state's search range determined?",
+        choices: [
           "By the optimal splits of the states around it",
           "By its own index",
           "By the layer count",
         ],
-        answerIndex: 0,
-        hint: "The staircase traps it between neighbours.",
-        explanations: [
+        answer: 0,
+        explanation: "The staircase traps it between neighbours.",
+        why: [
           "Correct. Neighbouring optima are the bounds.",
           "The index alone gives the full range.",
           "Layers are handled independently.",
@@ -299,7 +299,7 @@ for dims in ([40, 20, 30, 10, 30], [5, 4, 6, 2, 7],
     bounded, _ = matrix_chain(dims)
     print(dims, bounded, full_search(dims), bounded == full_search(dims))`,
     secondTrace:
-      "Twenty-six thousand, one hundred fifty-eight and fifteen thousand one hundred twenty-five - identical from both. The bound skipped no optimum.",
+      "Twenty-six thousand, one hundred fifty-eight and fifteen thousand one hundred twenty-five — identical from both. The bound skipped no optimum.",
     mistake:
       "Assuming any interval cost qualifies. The quadrangle inequality has to be verified for the specific cost, and a plausible-looking cost that violates it produces answers that are wrong on some inputs and right on others.",
     checkpoint:
@@ -310,45 +310,45 @@ for dims in ([40, 20, 30, 10, 30], [5, 4, 6, 2, 7],
       "Trap each split between its two neighbours in the table.",
     checks: [
       {
-        prompt: "What does the optimisation reduce?",
-        options: [
+        question: "What does the optimisation reduce?",
+        choices: [
           "The inner loop over splits",
           "The number of intervals",
           "The memory used",
         ],
-        answerIndex: 0,
-        hint: "The table itself is unchanged.",
-        explanations: [
+        answer: 0,
+        explanation: "The table itself is unchanged.",
+        why: [
           "Correct. Cubic becomes quadratic.",
           "Every interval is still computed.",
           "Memory is identical.",
         ],
       },
       {
-        prompt: "What condition must the cost function satisfy?",
-        options: [
+        question: "What condition must the cost function satisfy?",
+        choices: [
           "The quadrangle inequality",
           "Convexity in one argument",
           "Non-negativity",
         ],
-        answerIndex: 0,
-        hint: "It is what forces the split bound to hold.",
-        explanations: [
+        answer: 0,
+        explanation: "It is what forces the split bound to hold.",
+        why: [
           "Correct, and it must be checked, not assumed.",
           "Convexity alone is not enough.",
           "Non-negative costs can still violate it.",
         ],
       },
       {
-        prompt: "The condition is violated but the bound is applied anyway. What happens?",
-        options: [
+        question: "The condition is violated but the bound is applied anyway. What happens?",
+        choices: [
           "Some inputs give wrong answers",
           "It runs slower",
           "It raises an error",
         ],
-        answerIndex: 0,
-        hint: "The optimum may lie outside the bound.",
-        explanations: [
+        answer: 0,
+        explanation: "The optimum may lie outside the bound.",
+        why: [
           "Correct, and the failure is silent.",
           "It still runs at the optimised speed.",
           "Nothing detects it automatically.",
@@ -422,45 +422,45 @@ print({count: reachable[count] for count in sorted(reachable)})`,
       "Charge per item, search the charge, check the count is reachable.",
     checks: [
       {
-        prompt: "What does the relaxation remove from the table?",
-        options: [
+        question: "What does the relaxation remove from the table?",
+        choices: [
           "The state dimension tracking the item count",
           "The value dimension",
           "The transition loop",
         ],
-        answerIndex: 0,
-        hint: "That is the dimension the constraint forced.",
-        explanations: [
+        answer: 0,
+        explanation: "That is the dimension the constraint forced.",
+        why: [
           "Correct. The table shrinks by a factor of k.",
           "Values are still computed.",
           "Transitions are unchanged.",
         ],
       },
       {
-        prompt: "How is the true value recovered after solving with a penalty?",
-        options: [
+        question: "How is the true value recovered after solving with a penalty?",
+        choices: [
           "Add the penalty back for each chosen item",
           "Divide by the penalty",
           "Nothing is needed",
         ],
-        answerIndex: 0,
-        hint: "The penalty was subtracted per item.",
-        explanations: [
+        answer: 0,
+        explanation: "The penalty was subtracted per item.",
+        why: [
           "Correct. That undoes the charge exactly.",
           "The charge was subtracted, not scaled.",
           "The reported value would be too low.",
         ],
       },
       {
-        prompt: "A required count never appears at any penalty. What follows?",
-        options: [
+        question: "A required count never appears at any penalty. What follows?",
+        choices: [
           "The relaxation cannot produce it and another method is needed",
           "Search more finely",
           "Use a negative penalty",
         ],
-        answerIndex: 0,
-        hint: "The count is a step function with gaps.",
-        explanations: [
+        answer: 0,
+        explanation: "The count is a step function with gaps.",
+        why: [
           "Correct. Concavity is what guarantees reachability.",
           "A finer search does not fill a genuine gap.",
           "A negative penalty encourages more items, not a skipped count.",
@@ -526,41 +526,41 @@ print(direct(values, 3))`,
       "Bit loop outside, mask loop inside, absorb from the mask without the bit.",
     checks: [
       {
-        prompt: "What is the cost of the transform?",
-        options: [
+        question: "What is the cost of the transform?",
+        choices: [
           "Bits times two to the bits",
           "Three to the bits",
           "Two to the bits",
         ],
-        answerIndex: 0,
-        hint: "One pass over all masks per bit.",
-        explanations: [
+        answer: 0,
+        explanation: "One pass over all masks per bit.",
+        why: [
           "Correct. That is the improvement over direct enumeration.",
           "That is the direct form.",
           "A single pass is not enough.",
         ],
       },
       {
-        prompt: "Which loop must be outermost?",
-        options: ["The bit loop", "The mask loop", "Either order works"],
-        answerIndex: 0,
-        hint: "Each bit must complete across all masks.",
-        explanations: [
+        question: "Which loop must be outermost?",
+        choices: ["The bit loop", "The mask loop", "Either order works"],
+        answer: 0,
+        explanation: "Each bit must complete across all masks.",
+        why: [
           "Correct. Swapping them double-counts.",
           "That breaks the transform.",
           "The order is not interchangeable.",
         ],
       },
       {
-        prompt: "What does a broken-profile state describe?",
-        options: [
+        question: "What does a broken-profile state describe?",
+        choices: [
           "A partially completed boundary rather than a whole row",
           "A corrupted state",
           "A state with missing transitions",
         ],
-        answerIndex: 0,
-        hint: "It advances one cell at a time.",
-        explanations: [
+        answer: 0,
+        explanation: "It advances one cell at a time.",
+        why: [
           "Correct. It keeps the state space far smaller.",
           "The name refers to the shape of the frontier.",
           "Transitions are complete.",

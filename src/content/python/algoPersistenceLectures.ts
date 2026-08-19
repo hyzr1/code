@@ -22,7 +22,7 @@ const ALGO_PERSISTENCE_SPECS: GuidedMasterySpec[] = [
     outcome:
       "You will build versions by path copying, and query an old snapshot as cheaply as the current one.",
     why:
-      "Range queries that ask about a prefix of the updates - the kth smallest among the first ten insertions, say - need history, not just the present.",
+      "Range queries that ask about a prefix of the updates — the kth smallest among the first ten insertions, say — need history, not just the present.",
     mentalModel:
       "Picture a stack of trees that overlap almost entirely. Each new version owns one fresh path and borrows every other node from the version before it.",
     firstTitle: "Path copying",
@@ -74,50 +74,50 @@ print(count(versions[3], 0, 7, 0, 7))`,
     checkpoint:
       "One update on a tree over a million positions creates how many new nodes?",
     checkpointAnswer:
-      "About twenty - the depth of the tree. Every other node is shared with the version it was built from.",
+      "About twenty — the depth of the tree. Every other node is shared with the version it was built from.",
     remember:
       "Copy the path, share the rest, and keep the old root.",
     checks: [
       {
-        prompt: "What does an update to a persistent segment tree copy?",
-        options: [
+        question: "What does an update to a persistent segment tree copy?",
+        choices: [
           "The nodes on the path from the root to the changed leaf",
           "The whole tree",
           "Only the changed leaf",
         ],
-        answerIndex: 0,
-        hint: "Ancestors of the leaf hold sums that changed.",
-        explanations: [
+        answer: 0,
+        explanation: "Ancestors of the leaf hold sums that changed.",
+        why: [
           "Correct. That is a logarithmic number of nodes.",
           "That would make persistence linear per update.",
           "Its ancestors carry stale sums then.",
         ],
       },
       {
-        prompt: "How is an old version identified?",
-        options: [
+        question: "How is an old version identified?",
+        choices: [
           "By its root node",
           "By a version number stored in each node",
           "By a timestamp on the leaves",
         ],
-        answerIndex: 0,
-        hint: "A traversal only ever needs a starting point.",
-        explanations: [
+        answer: 0,
+        explanation: "A traversal only ever needs a starting point.",
+        why: [
           "Correct. Keep an array of roots, one per version.",
           "Nodes are shared, so they cannot carry one version.",
           "Leaves are shared too.",
         ],
       },
       {
-        prompt: "Why must persistent nodes be immutable?",
-        options: [
+        question: "Why must persistent nodes be immutable?",
+        choices: [
           "Because a node is shared by many versions at once",
           "Because immutability is faster",
           "Because the tree is recursive",
         ],
-        answerIndex: 0,
-        hint: "Sharing is what makes the update cheap.",
-        explanations: [
+        answer: 0,
+        explanation: "Sharing is what makes the update cheap.",
+        why: [
           "Correct. Mutating one corrupts every version pointing at it.",
           "Immutability costs an allocation here.",
           "Recursion is unrelated.",
@@ -184,41 +184,41 @@ print(kth(data, 0, 9, 0, 7, 4))`,
       "Split by value, count on the way down, subtract when you go right.",
     checks: [
       {
-        prompt: "What does each level of a wavelet tree split?",
-        options: ["The value range", "The position range", "The query range"],
-        answerIndex: 0,
-        hint: "That is the whole difference from a segment tree.",
-        explanations: [
+        question: "What does each level of a wavelet tree split?",
+        choices: ["The value range", "The position range", "The query range"],
+        answer: 0,
+        explanation: "That is the whole difference from a segment tree.",
+        why: [
           "Correct. Positions are partitioned as a consequence.",
           "That is what a segment tree does.",
           "The query range is remapped, not split.",
         ],
       },
       {
-        prompt: "When the descent goes right, what happens to k?",
-        options: [
+        question: "When the descent goes right, what happens to k?",
+        choices: [
           "The count of low elements is subtracted from it",
           "It is left unchanged",
           "It is halved",
         ],
-        answerIndex: 0,
-        hint: "Those elements are all smaller and already skipped.",
-        explanations: [
+        answer: 0,
+        explanation: "Those elements are all smaller and already skipped.",
+        why: [
           "Correct. You are now indexing within the high half.",
           "That would count the low elements twice.",
           "The value range halves; k does not.",
         ],
       },
       {
-        prompt: "What is the cost of one kth-smallest query?",
-        options: [
+        question: "What is the cost of one kth-smallest query?",
+        choices: [
           "Logarithmic in the value range",
           "Logarithmic in the range length",
           "Linear in the range length",
         ],
-        answerIndex: 0,
-        hint: "One step per level of the value split.",
-        explanations: [
+        answer: 0,
+        explanation: "One step per level of the value split.",
+        why: [
           "Correct. The value range, not the sequence, sets the depth.",
           "The range length does not control the depth.",
           "That would be no better than scanning.",
@@ -277,45 +277,45 @@ for a, b, bound in [(0, 7, 4), (2, 5, 3), (1, 6, 8)]:
       "Positions pick the nodes; the sorted list answers the value bound.",
     checks: [
       {
-        prompt: "What does each node of a merge-sort tree store?",
-        options: [
+        question: "What does each node of a merge-sort tree store?",
+        choices: [
           "Its own segment, sorted",
           "A single aggregate value",
           "A pointer to the sorted whole array",
         ],
-        answerIndex: 0,
-        hint: "That is what makes the value bound searchable.",
-        explanations: [
+        answer: 0,
+        explanation: "That is what makes the value bound searchable.",
+        why: [
           "Correct. The lists merge upward exactly as merge sort does.",
           "That is an ordinary segment tree.",
           "A node must be searchable within its own segment.",
         ],
       },
       {
-        prompt: "How much memory does the structure use?",
-        options: [
+        question: "How much memory does the structure use?",
+        choices: [
           "The array size times the number of levels",
           "The same as the array",
           "The square of the array size",
         ],
-        answerIndex: 0,
-        hint: "Every element appears once per level.",
-        explanations: [
+        answer: 0,
+        explanation: "Every element appears once per level.",
+        why: [
           "Correct. That is roughly seventeen copies at a hundred thousand.",
           "Each level holds a full copy.",
           "Levels are logarithmic, not linear.",
         ],
       },
       {
-        prompt: "When is a simpler offline sweep preferable?",
-        options: [
+        question: "When is a simpler offline sweep preferable?",
+        choices: [
           "When the array is static and all queries are known in advance",
           "When queries arrive one at a time",
           "When the value range is small",
         ],
-        answerIndex: 0,
-        hint: "Sorting queries needs them all up front.",
-        explanations: [
+        answer: 0,
+        explanation: "Sorting queries needs them all up front.",
+        why: [
           "Correct. A Fenwick sweep is smaller and faster there.",
           "Online queries cannot be sorted.",
           "A small value range suggests counting instead.",
@@ -377,46 +377,46 @@ print(query(table, add, 0, 4), sum(data[0:5]))`,
     checkpoint:
       "Which property lets two blocks overlap without corrupting the answer?",
     checkpointAnswer:
-      "Idempotence - combining a value with itself gives that value back, so counting an element twice changes nothing.",
+      "Idempotence — combining a value with itself gives that value back, so counting an element twice changes nothing.",
     remember:
       "Overlap for idempotent, partition for everything else.",
     checks: [
       {
-        prompt: "Which operation may use the overlapping query?",
-        options: ["Minimum", "Sum", "Count of distinct values"],
-        answerIndex: 0,
-        hint: "The test is whether repeating an element matters.",
-        explanations: [
+        question: "Which operation may use the overlapping query?",
+        choices: ["Minimum", "Sum", "Count of distinct values"],
+        answer: 0,
+        explanation: "The test is whether repeating an element matters.",
+        why: [
           "Correct. Minimum is idempotent.",
           "Overlapping elements are added twice.",
           "That is not even associative in the required sense.",
         ],
       },
       {
-        prompt: "What does a sparse table cost to build?",
-        options: [
+        question: "What does a sparse table cost to build?",
+        choices: [
           "Linear-times-logarithmic time and memory",
           "Linear time and memory",
           "Quadratic time",
         ],
-        answerIndex: 0,
-        hint: "One row per power of two.",
-        explanations: [
+        answer: 0,
+        explanation: "One row per power of two.",
+        why: [
           "Correct. That is the trade for constant queries.",
           "There are logarithmically many rows.",
           "Each row is built in linear time.",
         ],
       },
       {
-        prompt: "The array changes between queries. Is a sparse table appropriate?",
-        options: [
+        question: "The array changes between queries. Is a sparse table appropriate?",
+        choices: [
           "No; the table would need a full rebuild",
           "Yes; only one row changes",
           "Yes; updates are logarithmic",
         ],
-        answerIndex: 0,
-        hint: "There is no update path in the structure.",
-        explanations: [
+        answer: 0,
+        explanation: "There is no update path in the structure.",
+        why: [
           "Correct. A segment tree handles updates instead.",
           "One element appears in every row.",
           "There is no update operation at all.",

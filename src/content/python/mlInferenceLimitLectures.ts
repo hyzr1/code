@@ -24,7 +24,7 @@ const ML_INFERENCE_LIMIT_SPECS: GuidedMasterySpec[] = [
     why:
       "Sparsity papers report the zero fraction and the memory saving. The speedup depends entirely on whether the pattern matches what the kernels support.",
     mentalModel:
-      "Picture the weights as a grid. Lower precision shrinks each cell; sparsity removes cells - but only if they are removed in a shape the hardware recognises.",
+      "Picture the weights as a grid. Lower precision shrinks each cell; sparsity removes cells — but only if they are removed in a shape the hardware recognises.",
     firstTitle: "The savings compound",
     firstIntro:
       "Halving the bit width halves the memory, and so does halving the non-zero count. Applied together they quarter it.",
@@ -60,41 +60,41 @@ for sparsity in (0.5, 0.75, 0.9):
       "Precision and sparsity compound for memory; only structure buys speed.",
     checks: [
       {
-        prompt: "How do precision and sparsity savings combine?",
-        options: ["They multiply", "They add", "The larger one wins"],
-        answerIndex: 0,
-        hint: "Each scales the dense size.",
-        explanations: [
+        question: "How do precision and sparsity savings combine?",
+        choices: ["They multiply", "They add", "The larger one wins"],
+        answer: 0,
+        explanation: "Each scales the dense size.",
+        why: [
           "Correct. Four bits at half sparsity is an eighth of half precision.",
           "Both are multiplicative factors.",
           "Both apply at once.",
         ],
       },
       {
-        prompt: "Why does unstructured sparsity not speed anything up?",
-        options: [
+        question: "Why does unstructured sparsity not speed anything up?",
+        choices: [
           "Dense kernels multiply every element regardless",
           "The zeros are stored anyway",
           "It reduces accuracy",
         ],
-        answerIndex: 0,
-        hint: "The kernel cannot tell which to skip.",
-        explanations: [
+        answer: 0,
+        explanation: "The kernel cannot tell which to skip.",
+        why: [
           "Correct. The memory saving is real, the speedup is not.",
           "Compressed formats do avoid storing them.",
           "Accuracy is a separate question.",
         ],
       },
       {
-        prompt: "What makes sparsity structured?",
-        options: [
+        question: "What makes sparsity structured?",
+        choices: [
           "The zeros fall in a pattern the kernel can skip",
           "There are more of them",
           "They are contiguous in memory",
         ],
-        answerIndex: 0,
-        hint: "The hardware has to recognise it.",
-        explanations: [
+        answer: 0,
+        explanation: "The hardware has to recognise it.",
+        why: [
           "Correct, and the pattern is fixed by the hardware.",
           "The fraction is separate from the shape.",
           "Contiguity alone is not sufficient.",
@@ -154,45 +154,45 @@ for block in (1, 16, 256, 2048):
       "Small enough to avoid rounding, large enough to keep the table cheap.",
     checks: [
       {
-        prompt: "What causes internal fragmentation here?",
-        options: [
+        question: "What causes internal fragmentation here?",
+        choices: [
           "Requests round their cache up to whole blocks",
           "Requests finish at different times",
           "The cache is compressed",
         ],
-        answerIndex: 0,
-        hint: "Look at a short request in a large block.",
-        explanations: [
+        answer: 0,
+        explanation: "Look at a short request in a large block.",
+        why: [
           "Correct, and short requests waste the most.",
           "That is a scheduling effect.",
           "No compression is involved.",
         ],
       },
       {
-        prompt: "What does a very small block size cost?",
-        options: [
+        question: "What does a very small block size cost?",
+        choices: [
           "Table entries and lookup overhead",
           "More fragmentation",
           "Accuracy",
         ],
-        answerIndex: 0,
-        hint: "Every block needs bookkeeping.",
-        explanations: [
+        answer: 0,
+        explanation: "Every block needs bookkeeping.",
+        why: [
           "Correct. A block of one needs an entry per token.",
           "Small blocks minimise fragmentation.",
           "Nothing about the model changes.",
         ],
       },
       {
-        prompt: "Why does fragmentation limit concurrency?",
-        options: [
+        question: "Why does fragmentation limit concurrency?",
+        choices: [
           "Wasted cache memory is memory another request cannot use",
           "It slows each request",
           "It increases compute",
         ],
-        answerIndex: 0,
-        hint: "The cache is the binding resource.",
-        explanations: [
+        answer: 0,
+        explanation: "The cache is the binding resource.",
+        why: [
           "Correct. Less waste means a larger batch.",
           "Per-request speed is unchanged.",
           "Compute is unaffected.",
@@ -253,48 +253,48 @@ print("large draft ", profile(0.90, 8, 0.30))`,
     checkpointAnswer:
       "Its own cost per step is high enough to consume the extra tokens it gains. The ratio, not the token count, is what matters.",
     remember:
-      "Tokens gained over cost paid - not tokens gained.",
+      "Tokens gained over cost paid — not tokens gained.",
     checks: [
       {
-        prompt: "What decides which proposal scheme is best?",
-        options: [
+        question: "What decides which proposal scheme is best?",
+        choices: [
           "Tokens gained divided by total cost",
           "Tokens gained",
           "Acceptance rate",
         ],
-        answerIndex: 0,
-        hint: "Both halves matter.",
-        explanations: [
+        answer: 0,
+        explanation: "Both halves matter.",
+        why: [
           "Correct. The largest draft gained most and netted least.",
           "That ignores what the draft cost.",
           "Acceptance alone does not price the draft.",
         ],
       },
       {
-        prompt: "Why is a draft head cheap?",
-        options: [
+        question: "Why is a draft head cheap?",
+        choices: [
           "It reuses the main model's computation instead of running a second model",
           "It proposes fewer tokens",
           "It has a lower acceptance rate",
         ],
-        answerIndex: 0,
-        hint: "It is attached rather than separate.",
-        explanations: [
+        answer: 0,
+        explanation: "It is attached rather than separate.",
+        why: [
           "Correct, which is why its cost per proposal is tiny.",
           "Length is a separate choice.",
           "Cheapness is not about accuracy.",
         ],
       },
       {
-        prompt: "The draft cost triples with everything else fixed. What happens?",
-        options: [
+        question: "The draft cost triples with everything else fixed. What happens?",
+        choices: [
           "Net speedup falls even though the tokens gained are identical",
           "Nothing",
           "Acceptance falls",
         ],
-        answerIndex: 0,
-        hint: "The denominator grew.",
-        explanations: [
+        answer: 0,
+        explanation: "The denominator grew.",
+        why: [
           "Correct. Cost alone can erase the gain.",
           "The ratio changes.",
           "Acceptance is a property of the draft's predictions.",
@@ -355,45 +355,45 @@ for peak in (5, 12, 30):
       "Fit the memory, respect the power envelope, and check the operators.",
     checks: [
       {
-        prompt: "What is the memory budget on an edge device?",
-        options: [
+        question: "What is the memory budget on an edge device?",
+        choices: [
           "What remains after the operating system and application take theirs",
           "The device's total memory",
           "The model's parameter count",
         ],
-        answerIndex: 0,
-        hint: "The model is not alone on the device.",
-        explanations: [
+        answer: 0,
+        explanation: "The model is not alone on the device.",
+        why: [
           "Correct, and the overhead is substantial.",
           "Very little of the total is available.",
           "Parameters are what must fit into it.",
         ],
       },
       {
-        prompt: "Why is a cold benchmark misleading?",
-        options: [
+        question: "Why is a cold benchmark misleading?",
+        choices: [
           "It is taken before thermal throttling engages",
           "The model is not loaded",
           "Memory is not allocated",
         ],
-        answerIndex: 0,
-        hint: "Sustained and peak differ.",
-        explanations: [
+        answer: 0,
+        explanation: "Sustained and peak differ.",
+        why: [
           "Correct. Sustained throughput can be a third of it.",
           "Loading happens first.",
           "Allocation is complete before timing.",
         ],
       },
       {
-        prompt: "What is the third constraint besides memory and power?",
-        options: [
+        question: "What is the third constraint besides memory and power?",
+        choices: [
           "Whether the runtime implements every operation the model uses",
           "The screen size",
           "Network bandwidth",
         ],
-        answerIndex: 0,
-        hint: "An unsupported operation is a hard stop.",
-        explanations: [
+        answer: 0,
+        explanation: "An unsupported operation is a hard stop.",
+        why: [
           "Correct, and it fails at conversion rather than at runtime.",
           "Display is unrelated.",
           "On-device inference needs no network.",

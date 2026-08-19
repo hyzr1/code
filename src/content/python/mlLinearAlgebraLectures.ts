@@ -31,20 +31,30 @@ const ML_LINEAR_ALGEBRA_SPECS: GuidedMasterySpec[] = [
     outcome: "You will be able to read matrix shape, check compatible dimensions, and compute a matrix-vector product one row at a time.",
     why: "A dense neural-network layer begins with this operation. A batch of features meets a grid of weights. If shape and row meaning are unclear here, every later layer feels mysterious.",
     mentalModel: "Picture several judges looking at the same contestant. The input vector holds the contestant's features. Each matrix row is one judge's scoring rule. The output vector holds all judges' scores.",
+    idea: [
+      "A **matrix** is a grid of numbers written in rows and columns. Its **shape** is those two counts, rows first. A grid with two rows and three columns is a two-by-three matrix.",
+      "In machine learning a matrix is usually doing something rather than storing something. It takes a vector in and hands a different vector back. That is what **linear map** means: a rule that turns one list of numbers into another.",
+      "The rule itself is short. Take one row of the matrix. Pair its numbers with the numbers in the input vector, one for one. Multiply each pair, then add the results together. That single number is one output. Pairing, multiplying and adding like this is a **dot product**.",
+      "Now do the same for every row. One row gives one output number. So a matrix with two rows always answers with a vector of length two, whatever went in.",
+      "That is where the shape rule comes from, and it is worth saying slowly. Every row needs exactly as many weights as the vector has values, or the pairing runs out partway. So the number of **columns** must match the input length. The number of **rows** decides the output length.",
+    ],
     firstTitle: "Compute two weighted scores",
     firstIntro: "This two-by-three matrix accepts a length-three vector. Each of its two rows produces one output number.",
     firstCode: `def matrix_vector(matrix, vector):
+    # each row needs one weight per input value, or the pairing runs out
     if any(len(row) != len(vector) for row in matrix):
         raise ValueError("shape mismatch")
     return [
+        # pair, multiply, add: that is one dot product, and one output number
         sum(weight * value for weight, value in zip(row, vector))
-        for row in matrix
+        for row in matrix   # one row in, one number out
     ]
 
 weights = [[1, 0, 2], [-1, 3, 1]]
 features = [4, 5, 2]
 print(matrix_vector(weights, features))`,
-    firstTrace: "The first row computes `1*4 + 0*5 + 2*2`, which is eight. The second computes `-1*4 + 3*5 + 1*2`, which is thirteen. A two-row matrix therefore produces the vector `[8, 13]`.",
+    firstTrace:
+      "Take it one row at a time. The first row is `[1, 0, 2]` and the vector is `[4, 5, 2]`. Pair them up: one times four is four, zero times five is zero, two times two is four. Add those three and you get eight, and that is the entire first output. Now the second row, `[-1, 3, 1]`, against the same vector: minus one times four is minus four, three times five is fifteen, one times two is two. Adding those gives thirteen. Two rows produced two numbers, so the answer is `[8, 13]`. Notice that the input had length three while the output has length two. The columns matched the input, and the rows decided the output.",
     secondTitle: "Connect the result to a tiny model",
     secondIntro: "Let the features mean hours studied, hours slept, and missed classes. Each row can score a different outcome.",
     secondCode: `student = [3, 8, 1]
@@ -81,16 +91,25 @@ print(exam_score, absence_risk)`,
     outcome: "You will be able to predict output shape, compute a cell, and explain how multiplication composes model layers or processes a batch.",
     why: "Training code performs enormous matrix multiplications. Understanding the small version lets you reason about tensor shapes, computation cost, and what each axis represents.",
     mentalModel: "Imagine a spreadsheet of interviews. Every left row is a candidate. Every right column is a scoring rubric. One output cell is that candidate scored by that rubric.",
+    idea: [
+      "Multiplying two matrices is the dot product you already know, done many times over. There is no new operation to learn here, only a bookkeeping pattern.",
+      "Take the left matrix row by row and the right matrix column by column. Every row meets every column exactly once. Each meeting is one dot product, and each dot product fills in one number of the answer.",
+      "That gives you the shape of the result before you do any arithmetic. The answer has one row for each row on the left, and one column for each column on the right. An `m`-by-`n` matrix times an `n`-by-`p` matrix produces an `m`-by-`p` matrix.",
+      "It also tells you when the multiplication is illegal. A row from the left and a column from the right must hold the same count of numbers, or the pairing runs out. So the left matrix's column count has to equal the right matrix's row count. The two inner numbers must agree, and the outer two survive into the answer.",
+      "One warning catches almost everyone. Matrix multiplication is **not commutative**: `A` times `B` is generally not the same as `B` times `A`, and often the reversed version is not even a legal shape. Order carries meaning, because each product says apply this transformation, then that one.",
+    ],
     firstTitle: "Multiply a two-by-three matrix by a three-by-two matrix",
     firstIntro: "The shared inner size is three. The result keeps the left row count and right column count, so its shape is two-by-two.",
     firstCode: `def transpose(matrix):
     return [list(column) for column in zip(*matrix)]
 
 def matrix_multiply(left, right):
+    # the inner numbers must agree: left's columns == right's rows
     if not left or not right or len(left[0]) != len(right):
         raise ValueError("shape mismatch")
-    columns = transpose(right)
+    columns = transpose(right)   # walk the right matrix column by column
     return [
+        # every row meets every column once; each meeting is one dot product
         [sum(a * b for a, b in zip(row, column))
          for column in columns]
         for row in left
@@ -138,12 +157,20 @@ print(matrix_multiply(batch, weights))`,
     outcome: "You will be able to transpose shapes, recognize identity behavior, and explain why information-losing matrices cannot be inverted.",
     why: "Transposes appear in gradients and data layout. Identity appears in residual connections and regularization. Inverses explain linear systems, even though practical ML code usually solves systems without building an inverse explicitly.",
     mentalModel: "Transpose rotates the labeling grid across its diagonal. Identity is a clear window. Inverse is a rewind button. A rewind cannot recover details that the original action erased.",
+    idea: [
+      "Three tools turn up constantly in machine-learning code, and each has a plain job.",
+      "The **transpose** flips a matrix over its diagonal. Row one becomes column one, row two becomes column two, and so on. A two-by-three matrix transposes into a three-by-two matrix. Most of the time you reach for it to make two shapes line up so that a product becomes legal.",
+      "The **identity matrix** is the do-nothing matrix. It carries ones down its diagonal and zeros everywhere else. Multiply any matrix by it and the same matrix comes back untouched. It plays the part that the number `1` plays in ordinary arithmetic.",
+      "The **inverse** is the undo matrix. The inverse of `A` is written `A` to the power minus one, and multiplying the two together gives the identity. Doing `A` and then its inverse leaves you exactly where you started.",
+      "Here is the part that matters in practice. Not every matrix has an inverse. If a transformation throws information away, nothing can bring it back. Squash a flat shape down onto a single line and you cannot un-squash it, because many different inputs landed on the same output. A matrix like that is called **singular**, and asking for its inverse is an error rather than a slow computation.",
+    ],
     firstTitle: "Turn rows into columns",
     firstIntro: "A two-by-three matrix becomes three-by-two. Entry at row `r`, column `c` moves to row `c`, column `r`.",
     firstCode: `def transpose(matrix):
+    # zip(*matrix) reads the grid column-wise, so rows and columns swap
     return [list(column) for column in zip(*matrix)]
 
-matrix = [[1, 2, 3], [4, 5, 6]]
+matrix = [[1, 2, 3], [4, 5, 6]]   # two rows, three columns
 print(transpose(matrix))`,
     firstTrace: "The first column `[1,4]` becomes the first output row. The next columns become `[2,5]` and `[3,6]`. The result is `[[1,4],[2,5],[3,6]]`.",
     secondTitle: "Undo a tiny diagonal scaling",
@@ -183,13 +210,21 @@ print(changed, restored)`,
     outcome: "You will be able to recognize redundant vectors, explain a basis, and interpret rank as preserved dimensional information.",
     why: "Redundant features can make fitting unstable and waste memory. Low-rank structure powers compression, embeddings, and efficient model adaptation.",
     mentalModel: "Imagine directions painted on the floor. One east arrow and one north arrow can reach every point on a flat floor. A northeast arrow adds no new freedom because east plus north already creates it.",
+    idea: [
+      "These three words all answer one question: how much room does a set of vectors actually reach?",
+      "The **span** of some vectors is every point you can build out of them using two moves only, scaling a vector up or down and adding vectors together. Two arrows pointing in different directions across a flat page span the whole page, because some combination of them reaches any point on it.",
+      "But suppose the second arrow points the same way as the first, only longer. It adds nothing new. Everything you can build still lies on a single line. Vectors like that are **linearly dependent**, meaning at least one of them was already reachable from the others. When no vector is redundant, they are **linearly independent**.",
+      "A **basis** is a set that is independent and spans the space, with no spare parts in it. It is the smallest honest description of the room you are working in.",
+      "The **rank** of a matrix is the count of genuinely independent directions its columns reach. A three-column matrix whose third column is just the first two added together has rank two, not three. It looks three-dimensional and behaves two-dimensionally.",
+      "This is not trivia. Rank tells you whether a matrix squashes space, and a matrix that squashes space cannot be inverted. Two features that always move together give you a redundant column, a lower rank, and a model with no way to decide how to split the credit between them.",
+    ],
     firstTitle: "Spot a dependent direction",
     firstIntro: "The third vector is the sum of the first two. It changes the list length but not the reachable plane.",
-    firstCode: `east = [1, 0]
-north = [0, 1]
-northeast = [1, 1]
+    firstCode: `east = [1, 0]        # two independent directions:
+north = [0, 1]       # neither can be built from the other
+northeast = [1, 1]   # this one is already inside their span
 
-rebuilt = [
+rebuilt = [                    # scale by one each, then add
     east[0] + north[0],
     east[1] + north[1],
 ]
@@ -230,6 +265,14 @@ for point in [[1, 0], [0, 1], [2, -1]]:
     outcome: "You will be able to verify a proposed eigenvector, read its eigenvalue, and connect repeated matrix action to dominant directions.",
     why: "Eigen ideas appear in principal components, graph ranking, dynamical systems, and curvature. The goal is not memorizing a determinant equation; it is seeing stable directions inside a transformation.",
     mentalModel: "Stretch a rubber sheet. Most drawn arrows tilt. An arrow aligned with a pure stretch direction stays aimed along the same line. Its eigenvalue says how much it stretches or flips.",
+    idea: [
+      "Most vectors get knocked off course by a matrix. They go in pointing one way and come out pointing somewhere else. A few special ones do not.",
+      "An **eigenvector** of a matrix is a vector whose direction survives the transformation. Apply the matrix and it comes back out along the same line it started on. The only thing that changed is its length.",
+      "The number describing that stretch is its **eigenvalue**. An eigenvalue of `3` means the vector comes out three times longer, still pointing the same way. An eigenvalue of `0.5` means it was halved. A negative eigenvalue means it flipped to point backwards along the same line.",
+      "So the whole idea fits into one equation: `A` times `v` equals `lambda` times `v`. The left side transforms the vector. The right side merely scales it. An eigenvector is exactly where those two very different operations happen to agree.",
+      "Why anyone cares is that eigenvectors are the natural axes of a transformation. Along those directions the matrix does nothing complicated, it only stretches.",
+      "Repeated application makes this vivid. Apply the matrix over and over and the direction with the largest eigenvalue grows fastest, so almost any starting vector drifts toward it. That single fact powers **principal component analysis**, which finds the directions your data varies along most. It also explains why gradients explode or vanish in a deep network, where the same weight matrix is applied at every step.",
+    ],
     firstTitle: "Verify two directions by direct multiplication",
     firstIntro: "A diagonal matrix scales horizontal and vertical coordinates separately, so the coordinate axes are easy eigenvectors.",
     firstCode: `def apply(matrix, vector):
@@ -238,10 +281,10 @@ for point in [[1, 0], [0, 1], [2, -1]]:
         for row in matrix
     ]
 
-matrix = [[3, 0], [0, 2]]
-print(apply(matrix, [1, 0]))
-print(apply(matrix, [0, 1]))
-print(apply(matrix, [1, 1]))`,
+matrix = [[3, 0], [0, 2]]     # stretches one axis by 3, the other by 2
+print(apply(matrix, [1, 0]))  # direction survives -> eigenvector
+print(apply(matrix, [0, 1]))  # direction survives -> eigenvector
+print(apply(matrix, [1, 1]))  # rotated off its line -> not one`,
     firstTrace: "`[1,0]` becomes `[3,0]`, so its eigenvalue is three. `[0,1]` becomes `[0,2]`, so its eigenvalue is two. `[1,1]` becomes `[3,2]`, which is not a single scale of `[1,1]`, so it is not an eigenvector.",
     secondTitle: "Let repeated action reveal the dominant direction",
     secondIntro: "The horizontal coordinate grows by three while the vertical grows by two. Normalizing after each step prevents size from exploding.",

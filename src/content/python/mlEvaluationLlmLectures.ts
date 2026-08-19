@@ -62,45 +62,45 @@ print("headroom left:", round(1.0 - history[-1], 3))`,
       "Check contamination, check headroom, check what is being measured.",
     checks: [
       {
-        prompt: "What does a long exact overlap indicate?",
-        options: [
+        question: "What does a long exact overlap indicate?",
+        choices: [
           "The benchmark item is in the training corpus",
           "The model memorised it during evaluation",
           "The benchmark is too easy",
         ],
-        answerIndex: 0,
-        hint: "Eight-word overlaps do not arise by chance.",
-        explanations: [
+        answer: 0,
+        explanation: "Eight-word overlaps do not arise by chance.",
+        why: [
           "Correct, and the item must be removed.",
           "Evaluation does not train.",
           "Difficulty is a separate question.",
         ],
       },
       {
-        prompt: "What makes a benchmark saturated?",
-        options: [
+        question: "What makes a benchmark saturated?",
+        choices: [
           "Remaining headroom smaller than the measurement noise",
           "A score above fifty percent",
           "Many models evaluated on it",
         ],
-        answerIndex: 0,
-        hint: "It has stopped discriminating.",
-        explanations: [
+        answer: 0,
+        explanation: "It has stopped discriminating.",
+        why: [
           "Correct. Movement there is noise.",
           "Half is not a threshold.",
           "Popularity is unrelated.",
         ],
       },
       {
-        prompt: "What is construct mismatch?",
-        options: [
+        question: "What is construct mismatch?",
+        choices: [
           "The benchmark measures something other than its name suggests",
           "The scores are miscalculated",
           "The items are too hard",
         ],
-        answerIndex: 0,
-        hint: "It is about validity, not arithmetic.",
-        explanations: [
+        answer: 0,
+        explanation: "It is about validity, not arithmetic.",
+        why: [
           "Correct, and it survives every contamination check.",
           "Arithmetic errors are a different problem.",
           "Difficulty does not affect validity.",
@@ -160,50 +160,50 @@ print("chance-corrected", chance_corrected(human, judge))`,
     checkpoint:
       "A judge agrees with humans seventy-five percent of the time on a two-way choice. Is that good?",
     checkpointAnswer:
-      "Not necessarily. Chance alone gives fifty percent, so the chance-corrected figure is about a half - moderate, not strong.",
+      "Not necessarily. Chance alone gives fifty percent, so the chance-corrected figure is about a half — moderate, not strong.",
     remember:
       "Correct for chance, swap the order, and hold back a human sample.",
     checks: [
       {
-        prompt: "Why correct agreement for chance?",
-        options: [
+        question: "Why correct agreement for chance?",
+        choices: [
           "A two-way choice already agrees half the time at random",
           "Humans are inconsistent",
           "Judges are biased",
         ],
-        answerIndex: 0,
-        hint: "The floor is not zero.",
-        explanations: [
+        answer: 0,
+        explanation: "The floor is not zero.",
+        why: [
           "Correct. Raw agreement overstates the signal.",
           "That is a separate issue.",
           "Bias is measured differently.",
         ],
       },
       {
-        prompt: "How is position bias detected?",
-        options: [
+        question: "How is position bias detected?",
+        choices: [
           "Present each pair in both orders and compare",
           "Ask the judge to explain",
           "Use a larger judge",
         ],
-        answerIndex: 0,
-        hint: "An unbiased judge splits evenly.",
-        explanations: [
+        answer: 0,
+        explanation: "An unbiased judge splits evenly.",
+        why: [
           "Correct, and the split should be near half.",
           "Explanations are also subject to the bias.",
           "Larger judges show it too.",
         ],
       },
       {
-        prompt: "What is wrong with judging a model with one from its own family?",
-        options: [
+        question: "What is wrong with judging a model with one from its own family?",
+        choices: [
           "It prefers its own style, invisibly inflating the score",
           "It is too slow",
           "It cannot follow a rubric",
         ],
-        answerIndex: 0,
-        hint: "The bias does not appear in the score itself.",
-        explanations: [
+        answer: 0,
+        explanation: "The bias does not appear in the score itself.",
+        why: [
           "Correct. A held-back human sample is the check.",
           "Speed is not the concern.",
           "Rubric-following is usually fine.",
@@ -260,7 +260,7 @@ print("even mix       ", weighted(per_slice, even))`,
     secondTrace:
       "Eighty-two percent against seventy-four, from exactly the same model. The improvement is entirely in the evaluation mix.",
     mistake:
-      "Defining a failure as an answer that is unhelpful. Two people will score that differently, so the measurement has no stability - the criterion has to be something observable, like a citation that does not support the claim.",
+      "Defining a failure as an answer that is unhelpful. Two people will score that differently, so the measurement has no stability — the criterion has to be something observable, like a citation that does not support the claim.",
     checkpoint:
       "A model's aggregate score rises. What must be checked before claiming improvement?",
     checkpointAnswer:
@@ -269,45 +269,45 @@ print("even mix       ", weighted(per_slice, even))`,
       "Report slices; the aggregate describes the mix.",
     checks: [
       {
-        prompt: "Why report per-slice rates?",
-        options: [
+        question: "Why report per-slice rates?",
+        choices: [
           "The aggregate can sit far from every slice",
           "It is required by convention",
           "Slices are easier to compute",
         ],
-        answerIndex: 0,
-        hint: "Nobody experiences the average.",
-        explanations: [
+        answer: 0,
+        explanation: "Nobody experiences the average.",
+        why: [
           "Correct. Seventy-four covered fifty-two to ninety-four.",
           "It is a substantive point, not a convention.",
           "Slicing is extra work.",
         ],
       },
       {
-        prompt: "An aggregate improves with unchanged per-slice rates. What happened?",
-        options: [
+        question: "An aggregate improves with unchanged per-slice rates. What happened?",
+        choices: [
           "The evaluation mix shifted",
           "The model improved",
           "The metric changed",
         ],
-        answerIndex: 0,
-        hint: "The rates themselves did not move.",
-        explanations: [
+        answer: 0,
+        explanation: "The rates themselves did not move.",
+        why: [
           "Correct, and that is not an improvement.",
           "Unchanged slice rates mean unchanged behaviour.",
           "The metric is the same.",
         ],
       },
       {
-        prompt: "What makes a good failure criterion?",
-        options: [
+        question: "What makes a good failure criterion?",
+        choices: [
           "Two people scoring it independently would agree",
           "It is strict",
           "It is easy to satisfy",
         ],
-        answerIndex: 0,
-        hint: "Stability of measurement is the requirement.",
-        explanations: [
+        answer: 0,
+        explanation: "Stability of measurement is the requirement.",
+        why: [
           "Correct. A citation not supporting its claim qualifies.",
           "Strictness without agreement is still unstable.",
           "Ease is irrelevant.",
@@ -377,45 +377,45 @@ for tests in (1, 5, 20, 100):
       "Bands not points, and correct for how many comparisons you made.",
     checks: [
       {
-        prompt: "How does interval width scale with the sample size?",
-        options: [
+        question: "How does interval width scale with the sample size?",
+        choices: [
           "With the reciprocal square root",
           "Inversely",
           "It does not depend on it",
         ],
-        answerIndex: 0,
-        hint: "Quadrupling the sample halves the width.",
-        explanations: [
+        answer: 0,
+        explanation: "Quadrupling the sample halves the width.",
+        why: [
           "Correct. Precision is expensive.",
           "That would make large samples cheaper than they are.",
           "Sample size is the dominant factor.",
         ],
       },
       {
-        prompt: "Two models' intervals overlap. What follows?",
-        options: [
+        question: "Two models' intervals overlap. What follows?",
+        choices: [
           "This evaluation does not establish a ranking",
           "The models are equal",
           "The evaluation is invalid",
         ],
-        answerIndex: 0,
-        hint: "Absence of evidence is not evidence of absence.",
-        explanations: [
+        answer: 0,
+        explanation: "Absence of evidence is not evidence of absence.",
+        why: [
           "Correct. A larger sample might separate them.",
           "Equality is not demonstrated either.",
           "The evaluation is fine; it is just underpowered.",
         ],
       },
       {
-        prompt: "Twenty benchmarks are run and three wins reported. What is missing?",
-        options: [
+        question: "Twenty benchmarks are run and three wins reported. What is missing?",
+        choices: [
           "A correction for the number of comparisons",
           "A larger model",
           "More benchmarks",
         ],
-        answerIndex: 0,
-        hint: "Some wins are expected by chance.",
-        explanations: [
+        answer: 0,
+        explanation: "Some wins are expected by chance.",
+        why: [
           "Correct. The threshold tightens to a quarter of a percent.",
           "Model size is not the issue.",
           "More comparisons make it worse.",

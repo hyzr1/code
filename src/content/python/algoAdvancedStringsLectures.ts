@@ -52,7 +52,7 @@ sa = suffix_array(text)
 print(sa)
 print([text[i:] for i in sa])`,
     firstTrace:
-      "Five, three, one, zero, four, two - the suffixes a, ana, anana, banana, na, nana in sorted order. Six positions took three doubling rounds.",
+      "Five, three, one, zero, four, two — the suffixes a, ana, anana, banana, na, nana in sorted order. Six positions took three doubling rounds.",
     secondTitle: "Counting distinct substrings",
     secondIntro:
       "Every substring is a prefix of some suffix. Sorting groups the duplicates together, and the shared-prefix length says exactly how many each suffix repeats.",
@@ -90,45 +90,45 @@ print(n * (n + 1) // 2 - sum(lcp))`,
       "Sort by rank pairs, double the window, then derive the shared prefixes.",
     checks: [
       {
-        prompt: "What does each doubling round compare?",
-        options: [
+        question: "What does each doubling round compare?",
+        choices: [
           "A pair of ranks from the previous round",
           "The full suffixes",
           "One character at a time",
         ],
-        answerIndex: 0,
-        hint: "That is what keeps each comparison constant.",
-        explanations: [
+        answer: 0,
+        explanation: "That is what keeps each comparison constant.",
+        why: [
           "Correct. The pair stands for twice the previous length.",
           "That would be linear per comparison.",
           "Only the first round looks at single characters.",
         ],
       },
       {
-        prompt: "What does the shared-prefix array measure?",
-        options: [
+        question: "What does the shared-prefix array measure?",
+        choices: [
           "Characters shared with the previous suffix in sorted order",
           "The length of each suffix",
           "How often each substring occurs",
         ],
-        answerIndex: 0,
-        hint: "It is defined against the sorted neighbour.",
-        explanations: [
+        answer: 0,
+        explanation: "It is defined against the sorted neighbour.",
+        why: [
           "Correct. Those shared characters are the repeated prefixes.",
           "Lengths are determined by position.",
           "Occurrence counts come from ranges, not this array.",
         ],
       },
       {
-        prompt: "How many distinct substrings does a text of length n have at most?",
-        options: [
+        question: "How many distinct substrings does a text of length n have at most?",
+        choices: [
           "n times n plus one, halved",
           "n squared",
           "Two to the n",
         ],
-        answerIndex: 0,
-        hint: "Count every start and end pair.",
-        explanations: [
+        answer: 0,
+        explanation: "Count every start and end pair.",
+        why: [
           "Correct. Repeats subtract from that maximum.",
           "That double-counts orderings.",
           "Substrings are contiguous, so not exponential.",
@@ -213,45 +213,45 @@ print(n * (n + 1) // 2 - sum(lcp))`,
       "One state per equivalence class, spans summed for the count.",
     checks: [
       {
-        prompt: "What does a suffix automaton accept?",
-        options: [
+        question: "What does a suffix automaton accept?",
+        choices: [
           "Exactly the substrings of the text",
           "Exactly the suffixes",
           "Every string over the alphabet",
         ],
-        answerIndex: 0,
-        hint: "The name refers to construction, not to what it accepts.",
-        explanations: [
+        answer: 0,
+        explanation: "The name refers to construction, not to what it accepts.",
+        why: [
           "Correct. Every walk from the start spells a substring.",
           "Suffixes are a subset of what it accepts.",
           "It rejects anything not present.",
         ],
       },
       {
-        prompt: "How many distinct substrings does one state account for?",
-        options: [
+        question: "How many distinct substrings does one state account for?",
+        choices: [
           "Its length minus its suffix link's length",
           "Its length",
           "One",
         ],
-        answerIndex: 0,
-        hint: "A state covers a contiguous run of lengths.",
-        explanations: [
+        answer: 0,
+        explanation: "A state covers a contiguous run of lengths.",
+        why: [
           "Correct. Summing that over all states gives the total.",
           "That would count shorter substrings repeatedly.",
           "A state usually covers several lengths.",
         ],
       },
       {
-        prompt: "When does construction need to clone a state?",
-        options: [
+        question: "When does construction need to clone a state?",
+        choices: [
           "When a state stands for lengths that no longer behave alike",
           "When the text repeats a character",
           "When the alphabet is large",
         ],
-        answerIndex: 0,
-        hint: "The condition compares lengths across a transition.",
-        explanations: [
+        answer: 0,
+        explanation: "The condition compares lengths across a transition.",
+        why: [
           "Correct. The clone splits the run of lengths.",
           "Repetition makes it likely but is not the condition.",
           "Alphabet size is irrelevant.",
@@ -335,45 +335,45 @@ print(n * (n + 1) // 2 - sum(lcp))`,
       "Two roots, one new palindrome per character at most.",
     checks: [
       {
-        prompt: "Why does the tree use a root of length minus one?",
-        options: [
+        question: "Why does the tree use a root of length minus one?",
+        choices: [
           "So a single character extends it into a length-one palindrome",
           "To mark errors",
           "To store the empty string",
         ],
-        answerIndex: 0,
-        hint: "Adding a character to both ends adds two to the length.",
-        explanations: [
+        answer: 0,
+        explanation: "Adding a character to both ends adds two to the length.",
+        why: [
           "Correct. It unifies the odd and even cases.",
           "It is a real structural node.",
           "The length-zero root does that.",
         ],
       },
       {
-        prompt: "How many distinct palindromic substrings can appear?",
-        options: [
+        question: "How many distinct palindromic substrings can appear?",
+        choices: [
           "At most the text length",
           "At most the square of the length",
           "At most twice the length",
         ],
-        answerIndex: 0,
-        hint: "Each character adds at most one.",
-        explanations: [
+        answer: 0,
+        explanation: "Each character adds at most one.",
+        why: [
           "Correct. That bound is why the structure is small.",
           "That is the bound on occurrences.",
           "The bound is tighter than that.",
         ],
       },
       {
-        prompt: "Is the total number of palindromic occurrences also linear?",
-        options: [
+        question: "Is the total number of palindromic occurrences also linear?",
+        choices: [
           "No; it can be quadratic",
           "Yes; it matches the distinct count",
           "Yes; it is always smaller",
         ],
-        answerIndex: 0,
-        hint: "Think about a text of one repeated character.",
-        explanations: [
+        answer: 0,
+        explanation: "Think about a text of one repeated character.",
+        why: [
           "Correct. A run of n identical characters has quadratically many.",
           "Occurrences and distinct counts differ sharply.",
           "Occurrences are never fewer than distinct ones.",
@@ -448,7 +448,7 @@ print(search(build(patterns), text, patterns))
 print(sorted((i, p) for p in patterns
              for i in range(len(text)) if text.startswith(p, i)))`,
     secondTrace:
-      "She at one, he at two and hers at two - identical to the brute-force scan. Overlapping matches are reported because outputs travel along the failure links.",
+      "She at one, he at two and hers at two — identical to the brute-force scan. Overlapping matches are reported because outputs travel along the failure links.",
     mistake:
       "Reporting only the pattern ending at the current state. Without propagating outputs along failure links, a pattern that is a suffix of another is silently missed.",
     checkpoint:
@@ -459,45 +459,45 @@ print(sorted((i, p) for p in patterns
       "Trie plus failure links plus propagated outputs, one pass.",
     checks: [
       {
-        prompt: "What does a failure link point to?",
-        options: [
+        question: "What does a failure link point to?",
+        choices: [
           "The longest proper suffix of the current path that is also a trie path",
           "The root",
           "The parent node",
         ],
-        answerIndex: 0,
-        hint: "It is what lets the scan continue without backtracking.",
-        explanations: [
+        answer: 0,
+        explanation: "It is what lets the scan continue without backtracking.",
+        why: [
           "Correct. That is the longest still-viable partial match.",
           "The root is only the fallback.",
           "The parent would lose the progress made.",
         ],
       },
       {
-        prompt: "Why must outputs propagate along failure links?",
-        options: [
+        question: "Why must outputs propagate along failure links?",
+        choices: [
           "A pattern can be a suffix of another and would otherwise be missed",
           "To reduce memory",
           "To speed up construction",
         ],
-        answerIndex: 0,
-        hint: "Consider searching for both hers and he.",
-        explanations: [
+        answer: 0,
+        explanation: "Consider searching for both hers and he.",
+        why: [
           "Correct. He ends inside hers and must still be reported.",
           "It costs memory rather than saving it.",
           "Construction gets slightly slower.",
         ],
       },
       {
-        prompt: "How does the cost scale with the number of patterns?",
-        options: [
+        question: "How does the cost scale with the number of patterns?",
+        choices: [
           "The scan is one pass regardless; only construction grows",
           "One pass per pattern",
           "The square of the pattern count",
         ],
-        answerIndex: 0,
-        hint: "That is the whole point of the automaton.",
-        explanations: [
+        answer: 0,
+        explanation: "That is the whole point of the automaton.",
+        why: [
           "Correct. Construction is linear in the total pattern length.",
           "That is the naive approach it replaces.",
           "Nothing here is quadratic in the pattern count.",

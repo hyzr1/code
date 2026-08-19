@@ -71,45 +71,45 @@ print(convex_hull([(2, 2)]))`,
       "Sort, two chains, and decide about collinear on purpose.",
     checks: [
       {
-        prompt: "What does the sign of the cross product tell you?",
-        options: [
+        question: "What does the sign of the cross product tell you?",
+        choices: [
           "Whether three points turn left, right or lie on a line",
           "The distance between two points",
           "Which point is furthest from the origin",
         ],
-        answerIndex: 0,
-        hint: "It is an orientation test.",
-        explanations: [
+        answer: 0,
+        explanation: "It is an orientation test.",
+        why: [
           "Correct. That is the whole primitive.",
           "Distance needs a different formula.",
           "It says nothing about the origin.",
         ],
       },
       {
-        prompt: "Why is the input sorted first?",
-        options: [
+        question: "Why is the input sorted first?",
+        choices: [
           "So the two chains can be built in one pass each",
           "To remove duplicates",
           "To find the centroid",
         ],
-        answerIndex: 0,
-        hint: "The sweep depends on the order.",
-        explanations: [
+        answer: 0,
+        explanation: "The sweep depends on the order.",
+        why: [
           "Correct. Sorting dominates the running time.",
           "Deduplication is a separate step.",
           "No centroid is computed.",
         ],
       },
       {
-        prompt: "Coordinates are floating point. What must change?",
-        options: [
+        question: "Coordinates are floating point. What must change?",
+        choices: [
           "The zero comparison needs a tolerance",
           "The sort order",
           "The chain count",
         ],
-        answerIndex: 0,
-        hint: "Exact zero is unreliable with floats.",
-        explanations: [
+        answer: 0,
+        explanation: "Exact zero is unreliable with floats.",
+        why: [
           "Correct, and the tolerance depends on the magnitudes.",
           "Sorting is unaffected.",
           "Two chains are still needed.",
@@ -205,37 +205,37 @@ print("pairwise comparisons:", len(points) ** 2)`,
       "Hull first, then one forward-only lap.",
     checks: [
       {
-        prompt: "Where do the two furthest points always lie?",
-        options: ["On the convex hull", "At the centroid", "On the same edge"],
-        answerIndex: 0,
-        hint: "An interior point is always dominated.",
-        explanations: [
+        question: "Where do the two furthest points always lie?",
+        choices: ["On the convex hull", "At the centroid", "On the same edge"],
+        answer: 0,
+        explanation: "An interior point is always dominated.",
+        why: [
           "Correct. That is why the hull comes first.",
           "The centroid is usually interior.",
           "They are typically far apart on the boundary.",
         ],
       },
       {
-        prompt: "How many times does the second pointer go round?",
-        options: ["Once, in total", "Once per vertex", "Twice per vertex"],
-        answerIndex: 0,
-        hint: "It only ever advances.",
-        explanations: [
+        question: "How many times does the second pointer go round?",
+        choices: ["Once, in total", "Once per vertex", "Twice per vertex"],
+        answer: 0,
+        explanation: "It only ever advances.",
+        why: [
           "Correct. That is what makes the walk linear.",
           "That would make it quadratic again.",
           "It never revisits a vertex.",
         ],
       },
       {
-        prompt: "The walk is run on the unsorted point set. What happens?",
-        options: [
+        question: "The walk is run on the unsorted point set. What happens?",
+        choices: [
           "The pointer wanders and the answer is wrong",
           "It is merely slower",
           "It still works",
         ],
-        answerIndex: 0,
-        hint: "Convex order is what the argument relies on.",
-        explanations: [
+        answer: 0,
+        explanation: "Convex order is what the argument relies on.",
+        why: [
           "Correct. The hull in order is a precondition.",
           "Correctness fails, not just speed.",
           "The monotonicity argument no longer holds.",
@@ -313,41 +313,41 @@ print("feasible:", bool(region))`,
       "Start large, clip once per constraint, and accept an empty result.",
     checks: [
       {
-        prompt: "What shape is the intersection of half-planes?",
-        options: ["Always convex", "Sometimes concave", "Always a triangle"],
-        answerIndex: 0,
-        hint: "Intersections of convex sets are convex.",
-        explanations: [
+        question: "What shape is the intersection of half-planes?",
+        choices: ["Always convex", "Sometimes concave", "Always a triangle"],
+        answer: 0,
+        explanation: "Intersections of convex sets are convex.",
+        why: [
           "Correct, and possibly empty or unbounded.",
           "Concavity cannot arise from this operation.",
           "The vertex count depends on the constraints.",
         ],
       },
       {
-        prompt: "The region comes back empty. What does that mean?",
-        options: [
+        question: "The region comes back empty. What does that mean?",
+        choices: [
           "The constraints contradict each other",
           "The code failed",
           "The starting box was convex",
         ],
-        answerIndex: 0,
-        hint: "It is a meaningful answer.",
-        explanations: [
+        answer: 0,
+        explanation: "It is a meaningful answer.",
+        why: [
           "Correct. Infeasibility is a valid outcome.",
           "An empty result is not an error.",
           "Convexity of the box is unrelated.",
         ],
       },
       {
-        prompt: "The starting box is smaller than the true feasible region. What happens?",
-        options: [
+        question: "The starting box is smaller than the true feasible region. What happens?",
+        choices: [
           "The result is silently truncated",
           "The clip raises an error",
           "The box expands automatically",
         ],
-        answerIndex: 0,
-        hint: "Every constraint is applied against the box.",
-        explanations: [
+        answer: 0,
+        explanation: "Every constraint is applied against the box.",
+        why: [
           "Correct. The box must bound anything of interest.",
           "Nothing detects the truncation.",
           "The box is fixed at the start.",
@@ -419,50 +419,50 @@ print("events:", 2 * len(segments))`,
     checkpoint:
       "Which segments can the sweep skip comparing?",
     checkpointAnswer:
-      "Any two that are never crossed by the sweep line at the same time - they cannot possibly intersect.",
+      "Any two that are never crossed by the sweep line at the same time — they cannot possibly intersect.",
     remember:
       "Sort the events, keep the active set, compare only neighbours.",
     checks: [
       {
-        prompt: "What does the crossing test compute?",
-        options: [
+        question: "What does the crossing test compute?",
+        choices: [
           "Four orientation signs, with no intersection point",
           "The intersection point itself",
           "The distance between the segments",
         ],
-        answerIndex: 0,
-        hint: "Each segment must separate the other's endpoints.",
-        explanations: [
+        answer: 0,
+        explanation: "Each segment must separate the other's endpoints.",
+        why: [
           "Correct, and it stays exact on integer input.",
           "The point is only needed if asked for.",
           "Distance is a different question.",
         ],
       },
       {
-        prompt: "What does the active set contain?",
-        options: [
+        question: "What does the active set contain?",
+        choices: [
           "The segments the sweep line currently crosses",
           "Every segment",
           "The segments already processed",
         ],
-        answerIndex: 0,
-        hint: "It changes at each event.",
-        explanations: [
+        answer: 0,
+        explanation: "It changes at each event.",
+        why: [
           "Correct, and it is kept ordered by height.",
           "That would save nothing.",
           "Finished segments are removed.",
         ],
       },
       {
-        prompt: "Nearly every pair of segments crosses. How does the sweep behave?",
-        options: [
+        question: "Nearly every pair of segments crosses. How does the sweep behave?",
+        choices: [
           "It degenerates to the quadratic cost",
           "It stays near linear",
           "It fails",
         ],
-        answerIndex: 0,
-        hint: "The cost includes the number of reported intersections.",
-        explanations: [
+        answer: 0,
+        explanation: "The cost includes the number of reported intersections.",
+        why: [
           "Correct. The output itself is quadratic.",
           "It cannot beat the size of its own output.",
           "It remains correct throughout.",
@@ -523,50 +523,50 @@ for query in [(1, 1), (3, 1), (1, 3), (3, 3)]:
     checkpoint:
       "What is the relationship between the two structures?",
     checkpointAnswer:
-      "They are duals - each cell of one corresponds to a vertex of the other, so either can be derived from the other.",
+      "They are duals — each cell of one corresponds to a vertex of the other, so either can be derived from the other.",
     remember:
       "Empty circles for the triangulation, nearest cells for the queries.",
     checks: [
       {
-        prompt: "What characterises a Delaunay triangulation?",
-        options: [
+        question: "What characterises a Delaunay triangulation?",
+        choices: [
           "No point lies inside any triangle's circumcircle",
           "Every triangle is equilateral",
           "Every edge has the same length",
         ],
-        answerIndex: 0,
-        hint: "It is the empty circle property.",
-        explanations: [
+        answer: 0,
+        explanation: "It is the empty circle property.",
+        why: [
           "Correct, and a violation calls for an edge flip.",
           "Equilateral triangles are not achievable in general.",
           "Edge lengths vary with the sites.",
         ],
       },
       {
-        prompt: "What does one Voronoi cell contain?",
-        options: [
+        question: "What does one Voronoi cell contain?",
+        choices: [
           "Every location closer to that site than to any other",
           "The site's three nearest neighbours",
           "A fixed-radius disc",
         ],
-        answerIndex: 0,
-        hint: "It is defined by a distance comparison.",
-        explanations: [
+        answer: 0,
+        explanation: "It is defined by a distance comparison.",
+        why: [
           "Correct. Locating a query in a cell answers nearest neighbour.",
           "Neighbours come from the dual triangulation.",
           "Cells have varying shapes and sizes.",
         ],
       },
       {
-        prompt: "There are eighty points. Should you build these structures?",
-        options: [
+        question: "There are eighty points. Should you build these structures?",
+        choices: [
           "No; a direct distance scan is faster and simpler",
           "Yes; they are always faster",
           "Yes, if the points are in general position",
         ],
-        answerIndex: 0,
-        hint: "The constant factors are substantial.",
-        explanations: [
+        answer: 0,
+        explanation: "The constant factors are substantial.",
+        why: [
           "Correct. They pay off in the hundreds and above.",
           "Construction dominates at small sizes.",
           "General position helps correctness, not the trade-off.",

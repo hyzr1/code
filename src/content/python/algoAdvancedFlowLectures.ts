@@ -105,50 +105,50 @@ print(g.maxflow(0, 9))`,
     checkpoint:
       "What ends a phase?",
     checkpointAnswer:
-      "A blocking flow - every remaining source-to-sink route in the level graph has a saturated edge, so a new level graph is needed.",
+      "A blocking flow — every remaining source-to-sink route in the level graph has a saturated edge, so a new level graph is needed.",
     remember:
       "Layer once, saturate fully, relayer.",
     checks: [
       {
-        prompt: "What does the level graph forbid?",
-        options: [
+        question: "What does the level graph forbid?",
+        choices: [
           "Edges that do not advance exactly one level",
           "Edges with small capacity",
           "Backward residual edges",
         ],
-        answerIndex: 0,
-        hint: "That restriction is what bounds the phase count.",
-        explanations: [
+        answer: 0,
+        explanation: "That restriction is what bounds the phase count.",
+        why: [
           "Correct. Paths cannot wander sideways or backward.",
           "Capacity does not affect layering.",
           "Residual edges are used when they advance a level.",
         ],
       },
       {
-        prompt: "Why does each phase increase the source-sink distance?",
-        options: [
+        question: "Why does each phase increase the source-sink distance?",
+        choices: [
           "The blocking flow saturates every shortest route",
           "Vertices are removed each phase",
           "Capacities shrink",
         ],
-        answerIndex: 0,
-        hint: "Nothing at the current distance remains usable.",
-        explanations: [
+        answer: 0,
+        explanation: "Nothing at the current distance remains usable.",
+        why: [
           "Correct. The next path must be strictly longer.",
           "No vertices are deleted.",
           "Residual capacity can also grow.",
         ],
       },
       {
-        prompt: "What is the phase bound on unit-capacity graphs?",
-        options: [
+        question: "What is the phase bound on unit-capacity graphs?",
+        choices: [
           "The square root of the edge count",
           "The vertex count",
           "The edge count",
         ],
-        answerIndex: 0,
-        hint: "That is why bipartite matching is fast here.",
-        explanations: [
+        answer: 0,
+        explanation: "That is why bipartite matching is fast here.",
+        why: [
           "Correct. It is the same bound Hopcroft-Karp achieves.",
           "That is the general bound.",
           "That would be no better than the simple method.",
@@ -242,45 +242,45 @@ print(min_cost_flow(4, edges, 0, 3, 4))`,
       "Augment along the cheapest path, and keep potentials to stay fast.",
     checks: [
       {
-        prompt: "What do vertex potentials fix?",
-        options: [
+        question: "What do vertex potentials fix?",
+        choices: [
           "Negative residual costs that break shortest-path search",
           "Capacity violations",
           "Cycles in the graph",
         ],
-        answerIndex: 0,
-        hint: "Cancelling flow costs a negative amount.",
-        explanations: [
+        answer: 0,
+        explanation: "Cancelling flow costs a negative amount.",
+        why: [
           "Correct. They shift every cost non-negative without changing which path is cheapest.",
           "Capacities are handled separately.",
           "Cycles are not the problem here.",
         ],
       },
       {
-        prompt: "Is the minimum-cost routing always the same as a maximum-flow routing?",
-        options: [
+        question: "Is the minimum-cost routing always the same as a maximum-flow routing?",
+        choices: [
           "No; the same total flow can be routed many ways",
           "Yes; maximum flow is unique",
           "Only when costs are equal",
         ],
-        answerIndex: 0,
-        hint: "The amount is fixed but the route is not.",
-        explanations: [
+        answer: 0,
+        explanation: "The amount is fixed but the route is not.",
+        why: [
           "Correct. Cost picks among the routings achieving that amount.",
           "The value is unique; the routing is not.",
           "Equal costs make every routing tie.",
         ],
       },
       {
-        prompt: "More flow is requested than the network can carry. What should happen?",
-        options: [
+        question: "More flow is requested than the network can carry. What should happen?",
+        choices: [
           "Return the largest achievable flow and its cost",
           "Raise an error",
           "Return zero",
         ],
-        answerIndex: 0,
-        hint: "The search simply runs out of augmenting paths.",
-        explanations: [
+        answer: 0,
+        explanation: "The search simply runs out of augmenting paths.",
+        why: [
           "Correct. That is useful information, not a failure.",
           "It is a normal outcome.",
           "Partial flow is still valid.",
@@ -353,41 +353,41 @@ print("maximum possible", len(triangle) // 2)`,
       "Odd cycles are the obstacle; contracting them is the fix.",
     checks: [
       {
-        prompt: "What structure makes general matching harder than bipartite matching?",
-        options: ["The odd cycle", "The self loop", "The disconnected component"],
-        answerIndex: 0,
-        hint: "It is exactly what a two-colouring cannot handle.",
-        explanations: [
+        question: "What structure makes general matching harder than bipartite matching?",
+        choices: ["The odd cycle", "The self loop", "The disconnected component"],
+        answer: 0,
+        explanation: "It is exactly what a two-colouring cannot handle.",
+        why: [
           "Correct. Blossom contraction exists to handle it.",
           "Self loops are excluded by definition.",
           "Components are handled independently.",
         ],
       },
       {
-        prompt: "What does the blossom algorithm do with an odd cycle?",
-        options: [
+        question: "What does the blossom algorithm do with an odd cycle?",
+        choices: [
           "Contracts it to a single vertex, searches, then expands",
           "Deletes it",
           "Duplicates it",
         ],
-        answerIndex: 0,
-        hint: "The smaller graph is searched instead.",
-        explanations: [
+        answer: 0,
+        explanation: "The smaller graph is searched instead.",
+        why: [
           "Correct. A matching in the contracted graph lifts back.",
           "Deleting would lose valid matchings.",
           "Duplication does not help.",
         ],
       },
       {
-        prompt: "A graph has seven vertices. Can every vertex be matched?",
-        options: [
+        question: "A graph has seven vertices. Can every vertex be matched?",
+        choices: [
           "No; an odd count leaves at least one unmatched",
           "Yes, if the graph is connected",
           "Yes, if every vertex has degree two",
         ],
-        answerIndex: 0,
-        hint: "Each edge covers exactly two vertices.",
-        explanations: [
+        answer: 0,
+        explanation: "Each edge covers exactly two vertices.",
+        why: [
           "Correct. Parity alone settles it.",
           "Connectivity does not change the parity.",
           "Degree does not change the parity either.",
@@ -486,41 +486,41 @@ for edges in (100, 10_000, 1_000_000):
       "Layer, augment all shortest paths, relayer.",
     checks: [
       {
-        prompt: "What does a phase augment along?",
-        options: [
+        question: "What does a phase augment along?",
+        choices: [
           "Every shortest augmenting path at the current length",
           "One path",
           "Every path of any length",
         ],
-        answerIndex: 0,
-        hint: "The length restriction is what bounds the phase count.",
-        explanations: [
+        answer: 0,
+        explanation: "The length restriction is what bounds the phase count.",
+        why: [
           "Correct. Mixing lengths breaks the bound.",
           "That is the simple method.",
           "Longer paths belong to later phases.",
         ],
       },
       {
-        prompt: "How many phases are needed in the worst case?",
-        options: [
+        question: "How many phases are needed in the worst case?",
+        choices: [
           "About the square root of the vertex count",
           "One per matched pair",
           "One per edge",
         ],
-        answerIndex: 0,
-        hint: "Only so many distinct path lengths exist.",
-        explanations: [
+        answer: 0,
+        explanation: "Only so many distinct path lengths exist.",
+        why: [
           "Correct. That is the whole improvement.",
           "That is the simple method's count.",
           "Edges are not searched one at a time.",
         ],
       },
       {
-        prompt: "Four left vertices all connect to one right vertex. What is the matching size?",
-        options: ["One", "Four", "Two"],
-        answerIndex: 0,
-        hint: "A matching shares no endpoint.",
-        explanations: [
+        question: "Four left vertices all connect to one right vertex. What is the matching size?",
+        choices: ["One", "Four", "Two"],
+        answer: 0,
+        explanation: "A matching shares no endpoint.",
+        why: [
           "Correct. The single right vertex can pair with only one.",
           "They would all share an endpoint.",
           "There is only one right vertex available.",
@@ -542,7 +542,7 @@ for edges in (100, 10_000, 1_000_000):
     opening:
       "The hard part of a flow problem is almost never the flow. It is recognising that the problem in front of you is one.",
     outcome:
-      "You will apply the standard modelling moves - vertex capacities, either-or choices and lower bounds - and read the cut as the answer.",
+      "You will apply the standard modelling moves — vertex capacities, either-or choices and lower bounds — and read the cut as the answer.",
     why:
       "Project selection, image segmentation and closure problems all become minimum cut once modelled, and none of them mention flow.",
     mentalModel:
@@ -586,45 +586,45 @@ print("best net", total_profit - cut)`,
       "Recognise the shape, split vertices, and read the cut.",
     checks: [
       {
-        prompt: "How is a vertex capacity expressed in a flow network?",
-        options: [
+        question: "How is a vertex capacity expressed in a flow network?",
+        choices: [
           "Split the vertex into two joined by an edge of that capacity",
           "Set every incident edge to that capacity",
           "Remove the vertex",
         ],
-        answerIndex: 0,
-        hint: "Flow bounds edges, not vertices.",
-        explanations: [
+        answer: 0,
+        explanation: "Flow bounds edges, not vertices.",
+        why: [
           "Correct. All flow through the vertex crosses that one edge.",
           "That bounds each edge separately, which is different.",
           "Removal changes the problem.",
         ],
       },
       {
-        prompt: "In a project-selection model, what does the minimum cut represent?",
-        options: [
+        question: "In a project-selection model, what does the minimum cut represent?",
+        choices: [
           "Which projects to take and which costs to pay",
           "The maximum profit directly",
           "The number of projects",
         ],
-        answerIndex: 0,
-        hint: "Each vertex lands on one side of the cut.",
-        explanations: [
+        answer: 0,
+        explanation: "Each vertex lands on one side of the cut.",
+        why: [
           "Correct. The sides encode the decision.",
           "Profit is the total minus the cut.",
           "The count is not what is minimised.",
         ],
       },
       {
-        prompt: "An edge must carry at least two units. How is that modelled?",
-        options: [
+        question: "An edge must carry at least two units. How is that modelled?",
+        choices: [
           "With the lower-bound transformation and auxiliary terminals",
           "By setting its capacity to two",
           "By duplicating the edge",
         ],
-        answerIndex: 0,
-        hint: "A capacity permits but never requires.",
-        explanations: [
+        answer: 0,
+        explanation: "A capacity permits but never requires.",
+        why: [
           "Correct. Requirements need extra structure.",
           "That caps the flow instead of forcing it.",
           "Duplication changes the capacity, not the requirement.",

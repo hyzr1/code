@@ -59,45 +59,45 @@ print("fuse mul then relu :", safe_to_fuse("mul", "relu"))`,
       "Fuse the chain, but check what aliases what.",
     checks: [
       {
-        prompt: "How does the fusion saving scale?",
-        options: [
+        question: "How does the fusion saving scale?",
+        choices: [
           "With the length of the chain",
           "With the tensor size",
           "With the thread count",
         ],
-        answerIndex: 0,
-        hint: "Compare the unfused and fused traffic.",
-        explanations: [
+        answer: 0,
+        explanation: "Compare the unfused and fused traffic.",
+        why: [
           "Correct. Eight operations save seven eighths.",
           "Size cancels out of the ratio.",
           "Threads do not enter it.",
         ],
       },
       {
-        prompt: "What makes a fusion unsafe?",
-        options: [
+        question: "What makes a fusion unsafe?",
+        choices: [
           "An in-place operation whose ordering guarantee is lost",
           "A long chain",
           "A large tensor",
         ],
-        answerIndex: 0,
-        hint: "The compiler must track aliasing.",
-        explanations: [
+        answer: 0,
+        explanation: "The compiler must track aliasing.",
+        why: [
           "Correct. Two tensors sharing storage is the hazard.",
           "Longer chains are more valuable to fuse.",
           "Size is irrelevant to correctness.",
         ],
       },
       {
-        prompt: "What else can fusion change besides traffic?",
-        options: [
+        question: "What else can fusion change besides traffic?",
+        choices: [
           "The precision and order of intermediate values",
           "The number of parameters",
           "The model architecture",
         ],
-        answerIndex: 0,
-        hint: "Intermediates may no longer be materialised.",
-        explanations: [
+        answer: 0,
+        explanation: "Intermediates may no longer be materialised.",
+        why: [
           "Correct, and a stable chain can lose digits once fused.",
           "Parameters are untouched.",
           "The graph is equivalent by construction.",
@@ -159,45 +159,45 @@ for shapes in (1, 5, 50):
       "Compilation is amortised over calls; new shapes restart the clock.",
     checks: [
       {
-        prompt: "What does the tracing stage produce?",
-        options: [
+        question: "What does the tracing stage produce?",
+        choices: [
           "A graph of the operations performed",
           "Device kernels",
           "A fused kernel",
         ],
-        answerIndex: 0,
-        hint: "It is the first stage.",
-        explanations: [
+        answer: 0,
+        explanation: "It is the first stage.",
+        why: [
           "Correct, and later stages rewrite it.",
           "That is the final stage.",
           "Fusion comes after normalisation.",
         ],
       },
       {
-        prompt: "Why does compilation only pay off with reuse?",
-        options: [
+        question: "Why does compilation only pay off with reuse?",
+        choices: [
           "It is a fixed cost amortised over calls",
           "The kernels get faster over time",
           "The graph is cached on disk",
         ],
-        answerIndex: 0,
-        hint: "Compare the one-off cost to the per-call saving.",
-        explanations: [
+        answer: 0,
+        explanation: "Compare the one-off cost to the per-call saving.",
+        why: [
           "Correct. Few calls means it never repays.",
           "Kernel speed is fixed once emitted.",
           "Caching helps but does not change the arithmetic.",
         ],
       },
       {
-        prompt: "What triggers recompilation?",
-        options: [
+        question: "What triggers recompilation?",
+        choices: [
           "A new input shape or a changed condition",
           "A new random seed",
           "A larger batch of the same shape",
         ],
-        answerIndex: 0,
-        hint: "The graph is specialised to what it traced.",
-        explanations: [
+        answer: 0,
+        explanation: "The graph is specialised to what it traced.",
+        why: [
           "Correct, and unbounded shapes are the trap.",
           "Seeds do not change the graph.",
           "Batch size is part of the shape.",
@@ -264,45 +264,45 @@ for trials in (20, 50, 200):
       "Repeat the measurement, and compare the noise to the gap.",
     checks: [
       {
-        prompt: "Why is autotuning measured rather than predicted?",
-        options: [
+        question: "Why is autotuning measured rather than predicted?",
+        choices: [
           "The best tiling is not derivable from first principles",
           "Measurement is cheaper",
           "The hardware is undocumented",
         ],
-        answerIndex: 0,
-        hint: "The interactions are too complex to model.",
-        explanations: [
+        answer: 0,
+        explanation: "The interactions are too complex to model.",
+        why: [
           "Correct, which is why the search exists.",
           "Measurement is the expensive part.",
           "Documentation would not settle it.",
         ],
       },
       {
-        prompt: "What does a single timing run per configuration rank?",
-        options: [
+        question: "What does a single timing run per configuration rank?",
+        choices: [
           "The noise as much as the true cost",
           "The true cost accurately",
           "Nothing at all",
         ],
-        answerIndex: 0,
-        hint: "One sample from a noisy distribution.",
-        explanations: [
+        answer: 0,
+        explanation: "One sample from a noisy distribution.",
+        why: [
           "Correct, and it picked a poor configuration here.",
           "One sample cannot separate close candidates.",
           "It is informative, just unreliable.",
         ],
       },
       {
-        prompt: "Why does tuning on one shape generalise badly?",
-        options: [
+        question: "Why does tuning on one shape generalise badly?",
+        choices: [
           "The best configuration is shape-specific",
           "Shapes change the arithmetic",
           "Compilation depends on the seed",
         ],
-        answerIndex: 0,
-        hint: "Tiling interacts with the dimensions.",
-        explanations: [
+        answer: 0,
+        explanation: "Tiling interacts with the dimensions.",
+        why: [
           "Correct. The winner at one length is often mediocre at another.",
           "The arithmetic is the same.",
           "Seeds are unrelated.",

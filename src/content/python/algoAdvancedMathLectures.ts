@@ -92,45 +92,45 @@ print(direct)`,
       "Transform, multiply pointwise, transform back.",
     checks: [
       {
-        prompt: "What does a transform turn convolution into?",
-        options: [
+        question: "What does a transform turn convolution into?",
+        choices: [
           "A pointwise multiplication",
           "A sort",
           "A prefix sum",
         ],
-        answerIndex: 0,
-        hint: "That is the entire reason to change coordinates.",
-        explanations: [
+        answer: 0,
+        explanation: "That is the entire reason to change coordinates.",
+        why: [
           "Correct. The cost then lies in the transforms themselves.",
           "No ordering is involved.",
           "Prefix sums answer a different question.",
         ],
       },
       {
-        prompt: "Why must the padded length be a power of two?",
-        options: [
+        question: "Why must the padded length be a power of two?",
+        choices: [
           "The recursive halving requires it",
           "It makes the modulus prime",
           "It reduces memory",
         ],
-        answerIndex: 0,
-        hint: "Each stage splits the array in half.",
-        explanations: [
+        answer: 0,
+        explanation: "Each stage splits the array in half.",
+        why: [
           "Correct. A root of unity of that exact order is also needed.",
           "The modulus is chosen independently.",
           "Padding increases memory.",
         ],
       },
       {
-        prompt: "What does the modular version avoid?",
-        options: [
+        question: "What does the modular version avoid?",
+        choices: [
           "Floating-point rounding error",
           "The need to pad",
           "The bit-reversal step",
         ],
-        answerIndex: 0,
-        hint: "Every intermediate is an exact residue.",
-        explanations: [
+        answer: 0,
+        explanation: "Every intermediate is an exact residue.",
+        why: [
           "Correct. Coefficients come back exact.",
           "Padding is still required.",
           "Bit reversal is still required.",
@@ -195,45 +195,45 @@ print(merge([(1, 4), (2, 6)]))`,
       "Merge pairwise, check the divisor, take the least common multiple.",
     checks: [
       {
-        prompt: "What is the modulus after merging two compatible congruences?",
-        options: [
+        question: "What is the modulus after merging two compatible congruences?",
+        choices: [
           "The least common multiple of the two moduli",
           "Their product",
           "The larger of the two",
         ],
-        answerIndex: 0,
-        hint: "The product only works when they are coprime.",
-        explanations: [
+        answer: 0,
+        explanation: "The product only works when they are coprime.",
+        why: [
           "Correct. It equals the product when they share no factor.",
           "That overcounts on shared factors.",
           "The merge constrains more than either alone.",
         ],
       },
       {
-        prompt: "Two congruences share a factor and disagree on it. What follows?",
-        options: [
+        question: "Two congruences share a factor and disagree on it. What follows?",
+        choices: [
           "There is no solution at all",
           "There are two solutions",
           "The smaller modulus wins",
         ],
-        answerIndex: 0,
-        hint: "Both constraints must hold simultaneously.",
-        explanations: [
+        answer: 0,
+        explanation: "Both constraints must hold simultaneously.",
+        why: [
           "Correct. The merge must report failure.",
           "Solutions come in one progression or none.",
           "Neither constraint may be discarded.",
         ],
       },
       {
-        prompt: "Why compute in several small moduli and recombine?",
-        options: [
+        question: "Why compute in several small moduli and recombine?",
+        choices: [
           "Each computation stays inside machine word arithmetic",
           "It reduces the number of operations",
           "It avoids needing division",
         ],
-        answerIndex: 0,
-        hint: "The alternative is arbitrary-precision arithmetic.",
-        explanations: [
+        answer: 0,
+        explanation: "The alternative is arbitrary-precision arithmetic.",
+        why: [
           "Correct. The recombination restores the exact value.",
           "It multiplies the operation count.",
           "Modular inverses are still needed.",
@@ -307,45 +307,45 @@ for n in (5, 10, 100):
       "Count with a shared factor, weight by Mobius, and the sharing cancels.",
     checks: [
       {
-        prompt: "What makes the Mobius function zero?",
-        options: [
+        question: "What makes the Mobius function zero?",
+        choices: [
           "A repeated prime factor",
           "An even number of prime factors",
           "Being prime",
         ],
-        answerIndex: 0,
-        hint: "Squarefree numbers are the ones with a non-zero value.",
-        explanations: [
+        answer: 0,
+        explanation: "Squarefree numbers are the ones with a non-zero value.",
+        why: [
           "Correct. Four, eight, nine and twelve are all zero.",
           "That gives one, not zero.",
           "Primes give minus one.",
         ],
       },
       {
-        prompt: "How many pairs below n share a common divisor d?",
-        options: [
+        question: "How many pairs below n share a common divisor d?",
+        choices: [
           "The square of the count of multiples of d",
           "The count of multiples of d",
           "n divided by d",
         ],
-        answerIndex: 0,
-        hint: "Both members must be a multiple.",
-        explanations: [
+        answer: 0,
+        explanation: "Both members must be a multiple.",
+        why: [
           "Correct. Each member is chosen independently.",
           "That counts single values, not pairs.",
           "That is the count of multiples itself.",
         ],
       },
       {
-        prompt: "What replaces per-pair greatest-common-divisor testing?",
-        options: [
+        question: "What replaces per-pair greatest-common-divisor testing?",
+        choices: [
           "A single weighted pass over divisors",
           "Sorting the values",
           "A hash table of factors",
         ],
-        answerIndex: 0,
-        hint: "The Mobius weights do the cancelling.",
-        explanations: [
+        answer: 0,
+        explanation: "The Mobius weights do the cancelling.",
+        why: [
           "Correct. Quadratic work becomes near linear.",
           "Order is irrelevant here.",
           "Factorisations are not stored per value.",
@@ -413,42 +413,42 @@ print(max(a ^ b ^ c ^ d
     checkpoint:
       "Sixty values reduce to a basis of six. How many distinct combinations exist?",
     checkpointAnswer:
-      "Sixty-four - two to the rank. The other fifty-four values add nothing new.",
+      "Sixty-four — two to the rank. The other fifty-four values add nothing new.",
     remember:
       "Reduce to a basis, read the rank, then walk it greedily.",
     checks: [
       {
-        prompt: "What operation plays the role of addition over GF(2)?",
-        options: ["Exclusive or", "Ordinary addition", "Multiplication"],
-        answerIndex: 0,
-        hint: "It is addition with the carries dropped.",
-        explanations: [
+        question: "What operation plays the role of addition over GF(2)?",
+        choices: ["Exclusive or", "Ordinary addition", "Multiplication"],
+        answer: 0,
+        explanation: "It is addition with the carries dropped.",
+        why: [
           "Correct. Each bit adds independently modulo two.",
           "Carrying breaks the field structure.",
           "Multiplication is bitwise and here.",
         ],
       },
       {
-        prompt: "How many distinct values can a basis of rank r produce?",
-        options: ["Two to the r", "r", "r squared"],
-        answerIndex: 0,
-        hint: "Each basis element is either used or not.",
-        explanations: [
+        question: "How many distinct values can a basis of rank r produce?",
+        choices: ["Two to the r", "r", "r squared"],
+        answer: 0,
+        explanation: "Each basis element is either used or not.",
+        why: [
           "Correct. Every subset gives a distinct combination.",
           "That counts the basis, not the span.",
           "The growth is exponential, not quadratic.",
         ],
       },
       {
-        prompt: "Why is the greedy maximum-xor walk correct?",
-        options: [
+        question: "Why is the greedy maximum-xor walk correct?",
+        choices: [
           "Each basis element owns a leading bit no later element can affect",
           "Because the values were sorted",
           "Because exclusive or is commutative",
         ],
-        answerIndex: 0,
-        hint: "Think about which bit each reduced element controls.",
-        explanations: [
+        answer: 0,
+        explanation: "Think about which bit each reduced element controls.",
+        why: [
           "Correct. The decision on the high bit is never regretted.",
           "Sorting alone would not justify it.",
           "Commutativity does not imply greedy optimality.",
@@ -513,7 +513,7 @@ print(table_ways([1, 2, 5], 10))`,
     secondTrace:
       "Identical output. The series view explains why the coin loop must sit outside the value loop: each coin's series multiplies in exactly once.",
     mistake:
-      "Treating the series as a function to evaluate. It is formal - a coefficient list under multiplication - and questions of convergence never arise.",
+      "Treating the series as a function to evaluate. It is formal - a coefficient list under multiplication — and questions of convergence never arise.",
     checkpoint:
       "What does the coefficient at position k of a product of series mean?",
     checkpointAnswer:
@@ -522,45 +522,45 @@ print(table_ways([1, 2, 5], 10))`,
       "One series per choice, multiply, read the coefficient.",
     checks: [
       {
-        prompt: "What does multiplying two generating functions enumerate?",
-        options: [
+        question: "What does multiplying two generating functions enumerate?",
+        choices: [
           "Every pairing of one contribution from each",
           "The larger of the two counts",
           "The sum of the two counts",
         ],
-        answerIndex: 0,
-        hint: "Look at how the coefficient at k is formed.",
-        explanations: [
+        answer: 0,
+        explanation: "Look at how the coefficient at k is formed.",
+        why: [
           "Correct. That is exactly a convolution.",
           "Multiplication combines rather than selects.",
           "Adding series would count alternatives, not combinations.",
         ],
       },
       {
-        prompt: "Why is the series called formal?",
-        options: [
+        question: "Why is the series called formal?",
+        choices: [
           "It is manipulated as coefficients, never evaluated",
           "Because it is infinite",
           "Because the coefficients are integers",
         ],
-        answerIndex: 0,
-        hint: "Convergence never enters the argument.",
-        explanations: [
+        answer: 0,
+        explanation: "Convergence never enters the argument.",
+        why: [
           "Correct. There is no value substituted in.",
           "Length is not what makes it formal.",
           "Coefficients may be rational or worse.",
         ],
       },
       {
-        prompt: "How does a transform help here?",
-        options: [
+        question: "How does a transform help here?",
+        choices: [
           "It multiplies long series far faster",
           "It extracts coefficients directly",
           "It removes the need for a cap",
         ],
-        answerIndex: 0,
-        hint: "Series multiplication is convolution.",
-        explanations: [
+        answer: 0,
+        explanation: "Series multiplication is convolution.",
+        why: [
           "Correct. That is the connection to the transform lesson.",
           "Extraction is just indexing.",
           "A cap is still needed to bound the work.",
@@ -634,41 +634,41 @@ print([derangements(n) for n in range(8)])`,
       "Add the singles, subtract the pairs, add the triples.",
     checks: [
       {
-        prompt: "What sign does a three-condition intersection carry?",
-        options: ["Positive", "Negative", "It depends on the values"],
-        answerIndex: 0,
-        hint: "Odd-sized subsets are added.",
-        explanations: [
+        question: "What sign does a three-condition intersection carry?",
+        choices: ["Positive", "Negative", "It depends on the values"],
+        answer: 0,
+        explanation: "Odd-sized subsets are added.",
+        why: [
           "Correct. Odd adds, even subtracts.",
           "Pairs are subtracted, not triples.",
           "The sign depends only on the subset size.",
         ],
       },
       {
-        prompt: "How does the cost grow with the number of conditions?",
-        options: [
+        question: "How does the cost grow with the number of conditions?",
+        choices: [
           "It doubles with each one",
           "It grows linearly",
           "It grows with the square",
         ],
-        answerIndex: 0,
-        hint: "Every subset is enumerated.",
-        explanations: [
+        answer: 0,
+        explanation: "Every subset is enumerated.",
+        why: [
           "Correct. Past about twenty conditions this is unusable.",
           "Each condition doubles the subset count.",
           "Subsets are exponential, not quadratic.",
         ],
       },
       {
-        prompt: "Why is the derangement count zero for one element?",
-        options: [
+        question: "Why is the derangement count zero for one element?",
+        choices: [
           "The single element must map to itself",
           "The formula is undefined there",
           "By convention",
         ],
-        answerIndex: 0,
-        hint: "There is only one permutation available.",
-        explanations: [
+        answer: 0,
+        explanation: "There is only one permutation available.",
+        why: [
           "Correct. It is fixed, so nothing is deranged.",
           "The formula gives zero correctly.",
           "It follows from the definition.",

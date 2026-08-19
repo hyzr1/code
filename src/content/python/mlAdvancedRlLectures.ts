@@ -57,45 +57,45 @@ print("conservative best",
       "Penalise by support, or the optimiser finds the gaps.",
     checks: [
       {
-        prompt: "What is the characteristic offline failure?",
-        options: [
+        question: "What is the characteristic offline failure?",
+        choices: [
           "Confidence is highest where evidence is thinnest",
           "The model underfits",
           "Rewards are miscalculated",
         ],
-        answerIndex: 0,
-        hint: "Think about where estimation error is largest.",
-        explanations: [
+        answer: 0,
+        explanation: "Think about where estimation error is largest.",
+        why: [
           "Correct, and the optimiser then selects those actions.",
           "Underfitting is a different problem.",
           "The rewards in the data are fine.",
         ],
       },
       {
-        prompt: "What does the conservative penalty depend on?",
-        options: [
+        question: "What does the conservative penalty depend on?",
+        choices: [
           "How well the data covers the action",
           "The reward magnitude",
           "The policy's entropy",
         ],
-        answerIndex: 0,
-        hint: "It shrinks the estimate where support is thin.",
-        explanations: [
+        answer: 0,
+        explanation: "It shrinks the estimate where support is thin.",
+        why: [
           "Correct. Full support means no penalty.",
           "Magnitude is not the criterion.",
           "Entropy is a separate regulariser.",
         ],
       },
       {
-        prompt: "Can an offline policy be evaluated on its training dataset?",
-        options: [
+        question: "Can an offline policy be evaluated on its training dataset?",
+        choices: [
           "No; the data contains only the behaviour policy's actions",
           "Yes, if it is large",
           "Yes, with cross-validation",
         ],
-        answerIndex: 0,
-        hint: "The new policy does different things.",
-        explanations: [
+        answer: 0,
+        explanation: "The new policy does different things.",
+        why: [
           "Correct. Its actions are exactly what is missing.",
           "Size does not add unseen actions.",
           "Splitting the same distribution does not help.",
@@ -152,45 +152,45 @@ print("varied pool    ", diversity(["a", "b", "c", "d"]))`,
       "Measure exploitability against a diverse pool, not the win rate.",
     checks: [
       {
-        prompt: "Why is a self-play win rate uninformative?",
-        options: [
+        question: "Why is a self-play win rate uninformative?",
+        choices: [
           "Both sides improve, so it stays near even by construction",
           "It is hard to measure",
           "Games are too short",
         ],
-        answerIndex: 0,
-        hint: "The opponent is learning too.",
-        explanations: [
+        answer: 0,
+        explanation: "The opponent is learning too.",
+        why: [
           "Correct. Exploitability is the informative measure.",
           "It is trivially measurable.",
           "Length is not the issue.",
         ],
       },
       {
-        prompt: "What does exploitability measure?",
-        options: [
+        question: "What does exploitability measure?",
+        choices: [
           "How much the best available counter beats the strategy",
           "How often it wins",
           "How complex it is",
         ],
-        answerIndex: 0,
-        hint: "It looks for the worst case, not the average.",
-        explanations: [
+        answer: 0,
+        explanation: "It looks for the worst case, not the average.",
+        why: [
           "Correct. A small value means genuinely robust.",
           "Win rate is what it replaces.",
           "Complexity is unrelated.",
         ],
       },
       {
-        prompt: "Why count distinct strategies rather than pool size?",
-        options: [
+        question: "Why count distinct strategies rather than pool size?",
+        choices: [
           "A pool of duplicates tests one thing repeatedly",
           "Large pools are slow",
           "Duplicates bias the win rate",
         ],
-        answerIndex: 0,
-        hint: "Coverage, not count.",
-        explanations: [
+        answer: 0,
+        explanation: "Coverage, not count.",
+        why: [
           "Correct. Diversity is what makes the test meaningful.",
           "Speed is not the concern.",
           "The bias is in coverage rather than the rate.",
@@ -248,48 +248,48 @@ for horizon in (5, 10, 13, 15, 20):
     checkpointAnswer:
       "A little over a dozen steps before the accumulated error exceeds the signal. Beyond that the rollout is noise.",
     remember:
-      "Short rollouts, replan often - the error compounds quadratically.",
+      "Short rollouts, replan often — the error compounds quadratically.",
     checks: [
       {
-        prompt: "Why does rollout error grow faster than the step count?",
-        options: [
+        question: "Why does rollout error grow faster than the step count?",
+        choices: [
           "Each step's error is added on top of an already-wrong state",
           "The model gets worse over time",
           "The environment changes",
         ],
-        answerIndex: 0,
-        hint: "Predictions feed the next prediction.",
-        explanations: [
+        answer: 0,
+        explanation: "Predictions feed the next prediction.",
+        why: [
           "Correct. The accumulation is quadratic.",
           "The model is fixed during the rollout.",
           "The environment is not consulted during planning.",
         ],
       },
       {
-        prompt: "Halving the per-step error extends the usable horizon by how much?",
-        options: [
+        question: "Halving the per-step error extends the usable horizon by how much?",
+        choices: [
           "About forty percent",
           "Double",
           "Four times",
         ],
-        answerIndex: 0,
-        hint: "The accumulation is quadratic in the horizon.",
-        explanations: [
+        answer: 0,
+        explanation: "The accumulation is quadratic in the horizon.",
+        why: [
           "Correct, which is why longer horizons are expensive to buy.",
           "That would be linear accumulation.",
           "Quadratic accumulation works against you here.",
         ],
       },
       {
-        prompt: "What follows practically from compounding error?",
-        options: [
+        question: "What follows practically from compounding error?",
+        choices: [
           "Short rollouts with frequent replanning",
           "One long confident plan",
           "Ignoring the dynamics model",
         ],
-        answerIndex: 0,
-        hint: "Reset the state from reality often.",
-        explanations: [
+        answer: 0,
+        explanation: "Reset the state from reality often.",
+        why: [
           "Correct. Each replan restarts from a true observation.",
           "That is exactly what the error forbids.",
           "The model is useful over short horizons.",
@@ -351,48 +351,48 @@ for tries in (12, 100, 900):
     checkpointAnswer:
       "It shrinks with the number of tries by construction, so exploration retires itself as evidence accumulates.",
     remember:
-      "Bonus for ignorance, shrinking with evidence - and fix the reward first.",
+      "Bonus for ignorance, shrinking with evidence — and fix the reward first.",
     checks: [
       {
-        prompt: "What does the uncertainty bonus depend on?",
-        options: [
+        question: "What does the uncertainty bonus depend on?",
+        choices: [
           "How many times the option has been tried",
           "The reward magnitude",
           "The number of options",
         ],
-        answerIndex: 0,
-        hint: "It falls as evidence accumulates.",
-        explanations: [
+        answer: 0,
+        explanation: "It falls as evidence accumulates.",
+        why: [
           "Correct, which is why exploration ends by itself.",
           "Magnitude enters through the mean instead.",
           "The option count affects the total, not the bonus shape.",
         ],
       },
       {
-        prompt: "Why is an untried option scored as infinitely promising?",
-        options: [
+        question: "Why is an untried option scored as infinitely promising?",
+        choices: [
           "Nothing is known about it, so it must be tested at least once",
           "It is likely to be best",
           "It costs nothing",
         ],
-        answerIndex: 0,
-        hint: "The bonus is unbounded at zero tries.",
-        explanations: [
+        answer: 0,
+        explanation: "The bonus is unbounded at zero tries.",
+        why: [
           "Correct. Every option gets one trial before ranking means anything.",
           "There is no reason to believe that.",
           "Trying it costs a step.",
         ],
       },
       {
-        prompt: "What does an exploration bonus do to a misspecified reward?",
-        options: [
+        question: "What does an exploration bonus do to a misspecified reward?",
+        choices: [
           "It makes the problem worse by finding loopholes faster",
           "It corrects the specification",
           "It has no effect",
         ],
-        answerIndex: 0,
-        hint: "Exploration searches harder.",
-        explanations: [
+        answer: 0,
+        explanation: "Exploration searches harder.",
+        why: [
           "Correct. Fix the reward before adding exploration.",
           "Nothing about the bonus repairs a reward.",
           "It actively accelerates the failure.",

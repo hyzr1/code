@@ -62,45 +62,45 @@ for reproduced in (0.829, 0.798, 0.741):
       "Find the unstated claims, and rebuild the baseline yourself.",
     checks: [
       {
-        prompt: "Which claims are the risky ones?",
-        options: [
+        question: "Which claims are the risky ones?",
+        choices: [
           "Those the conclusion needs but the paper never establishes",
           "The headline result",
           "Claims in the abstract",
         ],
-        answerIndex: 0,
-        hint: "Look for what has no table behind it.",
-        explanations: [
+        answer: 0,
+        explanation: "Look for what has no table behind it.",
+        why: [
           "Correct. They are load-bearing and unexamined.",
           "That is usually the best-evidenced claim.",
           "Location does not determine support.",
         ],
       },
       {
-        prompt: "What should a reproduction gap be compared against?",
-        options: [
+        question: "What should a reproduction gap be compared against?",
+        choices: [
           "The improvement the paper claims",
           "The absolute score",
           "The baseline score",
         ],
-        answerIndex: 0,
-        hint: "A gap larger than the effect swamps it.",
-        explanations: [
+        answer: 0,
+        explanation: "A gap larger than the effect swamps it.",
+        why: [
           "Correct. Otherwise the comparison is meaningless.",
           "A four percent gap can dwarf a two percent effect.",
           "The claim is about the difference.",
         ],
       },
       {
-        prompt: "Why rebuild the baseline rather than cite it?",
-        options: [
+        question: "Why rebuild the baseline rather than cite it?",
+        choices: [
           "A cited baseline carries every unstated choice about how it was run",
           "It is faster",
           "The paper's number may be mistyped",
         ],
-        answerIndex: 0,
-        hint: "That is what the implicit claims were about.",
-        explanations: [
+        answer: 0,
+        explanation: "That is what the implicit claims were about.",
+        why: [
           "Correct. Tuning effort is the usual confound.",
           "Rebuilding is slower.",
           "Typos are the least of it.",
@@ -161,41 +161,41 @@ print("interaction", round(joint - (a + b), 4))`,
       "Run the components alone and together; the difference is the interaction.",
     checks: [
       {
-        prompt: "What does a negative interaction mean?",
-        options: [
+        question: "What does a negative interaction mean?",
+        choices: [
           "The components fix overlapping problems",
           "One component is harmful",
           "The measurement is wrong",
         ],
-        answerIndex: 0,
-        hint: "Together they add less than the sum of their parts.",
-        explanations: [
+        answer: 0,
+        explanation: "Together they add less than the sum of their parts.",
+        why: [
           "Correct. The second adds little once the first is present.",
           "Both helped individually.",
           "It is a real and common effect.",
         ],
       },
       {
-        prompt: "How many runs measure two components properly?",
-        options: ["Four", "Two", "Three"],
-        answerIndex: 0,
-        hint: "Base, each alone, and both.",
-        explanations: [
+        question: "How many runs measure two components properly?",
+        choices: ["Four", "Two", "Three"],
+        answer: 0,
+        explanation: "Base, each alone, and both.",
+        why: [
           "Correct. Three misses the interaction.",
           "That gives no base to compare against.",
           "The joint run is what reveals the overlap.",
         ],
       },
       {
-        prompt: "What must be re-tuned when ablating a component?",
-        options: [
+        question: "What must be re-tuned when ablating a component?",
+        choices: [
           "The hyperparameters that were tuned for its presence",
           "Nothing",
           "The evaluation set",
         ],
-        answerIndex: 0,
-        hint: "Otherwise the ablation measures a misconfigured model.",
-        explanations: [
+        answer: 0,
+        explanation: "Otherwise the ablation measures a misconfigured model.",
+        why: [
           "Correct, and this is the most common ablation error.",
           "Leaving them fixed confounds the result.",
           "The evaluation must stay fixed.",
@@ -260,45 +260,45 @@ print("best of B minus worst of A", round(max(b) - min(a), 4))`,
       "Report the spread, and use the same seed count on both sides.",
     checks: [
       {
-        prompt: "Why is a single-run comparison insufficient?",
-        options: [
+        question: "Why is a single-run comparison insufficient?",
+        choices: [
           "Seed variance is often as large as the claimed improvement",
           "Single runs are slower",
           "Random seeds are not reproducible",
         ],
-        answerIndex: 0,
-        hint: "Compare the within-method spread to the between-method gap.",
-        explanations: [
+        answer: 0,
+        explanation: "Compare the within-method spread to the between-method gap.",
+        why: [
           "Correct. The comparison establishes nothing.",
           "A single run is the fastest option.",
           "Seeds are perfectly reproducible.",
         ],
       },
       {
-        prompt: "What does the standard error describe?",
-        options: [
+        question: "What does the standard error describe?",
+        choices: [
           "How variable the mean itself is",
           "The spread of individual runs",
           "The measurement precision",
         ],
-        answerIndex: 0,
-        hint: "It shrinks as the seed count grows.",
-        explanations: [
+        answer: 0,
+        explanation: "It shrinks as the seed count grows.",
+        why: [
           "Correct, which is why more seeds sharpen the comparison.",
           "That is the standard deviation.",
           "Precision of the metric is separate.",
         ],
       },
       {
-        prompt: "A paper reports a mean over seeds for its method and one run for the baseline. What is that?",
-        options: [
+        question: "A paper reports a mean over seeds for its method and one run for the baseline. What is that?",
+        choices: [
           "Cherry-picking with extra steps",
           "Acceptable practice",
           "A power calculation",
         ],
-        answerIndex: 0,
-        hint: "The two sides are not measured the same way.",
-        explanations: [
+        answer: 0,
+        explanation: "The two sides are not measured the same way.",
+        why: [
           "Correct. Both sides need the same treatment.",
           "It systematically favours the method.",
           "No power analysis is involved.",
@@ -359,45 +359,45 @@ print("inflation", round(best - mean, 4))`,
       "Spread, sample size, and the experiments that failed.",
     checks: [
       {
-        prompt: "What makes a table independently checkable?",
-        options: [
+        question: "What makes a table independently checkable?",
+        choices: [
           "Spread and sample size alongside every mean",
           "More decimal places",
           "A larger font",
         ],
-        answerIndex: 0,
-        hint: "The reader needs to compare the gap to the noise.",
-        explanations: [
+        answer: 0,
+        explanation: "The reader needs to compare the gap to the noise.",
+        why: [
           "Correct. Without them a mean cannot be interpreted.",
           "Precision is not the same as information.",
           "Presentation is not the issue.",
         ],
       },
       {
-        prompt: "How much can reporting the best run inflate a result?",
-        options: [
+        question: "How much can reporting the best run inflate a result?",
+        choices: [
           "By about as much as a typical claimed improvement",
           "Negligibly",
           "By an order of magnitude",
         ],
-        answerIndex: 0,
-        hint: "Compare the best to the mean over the same runs.",
-        explanations: [
+        answer: 0,
+        explanation: "Compare the best to the mean over the same runs.",
+        why: [
           "Correct, which is why it matters so much.",
           "Fourteen thousandths is not negligible here.",
           "It is comparable, not tenfold.",
         ],
       },
       {
-        prompt: "Why report experiments that did not work?",
-        options: [
+        question: "Why report experiments that did not work?",
+        choices: [
           "Otherwise readers cannot tell which of their failures are expected",
           "To fill space",
           "Because reviewers require it",
         ],
-        answerIndex: 0,
-        hint: "Think about someone trying to apply the method.",
-        explanations: [
+        answer: 0,
+        explanation: "Think about someone trying to apply the method.",
+        why: [
           "Correct. It is what makes the method usable.",
           "It is substantive information.",
           "Most venues do not require it.",
@@ -446,7 +446,7 @@ for share in (0.5, 0.8, 0.95):
     secondTrace:
       "Eighty percent to small runs buys eight hundred cheap experiments and three expensive confirmations. Ninety-five percent leaves only one confirmation, which cannot be checked against anything.",
     mistake:
-      "Assuming a hyperparameter ranking found at small scale holds at large scale. Several choices reverse with scale, so the confirmation runs are not a formality - they are the experiment.",
+      "Assuming a hyperparameter ranking found at small scale holds at large scale. Several choices reverse with scale, so the confirmation runs are not a formality — they are the experiment.",
     checkpoint:
       "A sweep has six hyperparameters and a budget of forty runs. Is a grid appropriate?",
     checkpointAnswer:
@@ -455,41 +455,41 @@ for share in (0.5, 0.8, 0.95):
       "Check the coverage first, then split between cheap and confirming runs.",
     checks: [
       {
-        prompt: "How does grid size grow with the number of hyperparameters?",
-        options: ["Exponentially", "Linearly", "With the square"],
-        answerIndex: 0,
-        hint: "Each axis multiplies the total.",
-        explanations: [
+        question: "How does grid size grow with the number of hyperparameters?",
+        choices: ["Exponentially", "Linearly", "With the square"],
+        answer: 0,
+        explanation: "Each axis multiplies the total.",
+        why: [
           "Correct, which is why grids fail past a few axes.",
           "Each new axis multiplies rather than adds.",
           "The growth is far faster than quadratic.",
         ],
       },
       {
-        prompt: "What are small runs for?",
-        options: [
+        question: "What are small runs for?",
+        choices: [
           "Finding which direction to move",
           "Confirming the final result",
           "Reporting in the paper",
         ],
-        answerIndex: 0,
-        hint: "They are cheap and numerous.",
-        explanations: [
+        answer: 0,
+        explanation: "They are cheap and numerous.",
+        why: [
           "Correct, and large runs confirm the direction.",
           "That is what the expensive runs are for.",
           "Confirmations are what get reported.",
         ],
       },
       {
-        prompt: "Why are the confirmation runs not a formality?",
-        options: [
+        question: "Why are the confirmation runs not a formality?",
+        choices: [
           "Some hyperparameter rankings reverse with scale",
           "They are cheaper",
           "They use different data",
         ],
-        answerIndex: 0,
-        hint: "Small-scale conclusions do not always transfer.",
-        explanations: [
+        answer: 0,
+        explanation: "Small-scale conclusions do not always transfer.",
+        why: [
           "Correct. That reversal is the thing being tested.",
           "They are the expensive ones.",
           "The data is usually the same.",

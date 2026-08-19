@@ -31,16 +31,23 @@ const ALGO_FOUNDATION_SPECS: GuidedMasterySpec[] = [
     outcome: "You will be able to draw the frames for a recursive call, say which frame runs next, and explain why local variables from different calls do not collide.",
     why: "A recursive function can look as if several lines run at once. They do not. Python runs only the top frame. Every older frame waits with its own unfinished work. This model explains returned values, recursion depth, and stack-overflow errors.",
     mentalModel: "Picture a stack of cafeteria trays. A new function call places a tray on top. Only the top tray is usable. Returning removes that tray, reveals the tray underneath, and gives the waiting call its answer.",
+    idea: [
+      "When you call a function, Python has to remember two things: the values that call is working with, and where to come back to when it finishes. It stores both together in a small record called a **frame**. One call, one frame — always.",
+      "Those frames are kept in a pile called the **call stack**. Adding a frame to the top is called a **push**, and removing the top one is called a **pop**. The word *stack* is literal: you can only ever touch the top. Python runs the top frame and nothing else. Every frame underneath is frozen part-way through a line, waiting for the call above it to hand back an answer.",
+      "This is what makes recursion behave. When `factorial(3)` calls `factorial(2)`, the first call does not restart or get overwritten — it pauses. A brand new frame goes on top with its own `n`. Both frames now have a variable called `n`, and they hold different numbers, because each frame owns its own copy. Names collide only when they live in the same frame, and two calls never do.",
+      "A recursive function needs one more thing: a **base case**, a branch that returns without calling itself again. It is what stops the pile growing. Without it Python keeps pushing frames until it runs out of room and raises a `RecursionError` — the error you may have seen called a stack overflow.",
+    ],
     firstTitle: "Watch three factorial calls",
     firstIntro: "Factorial multiplies a number by the factorial below it. The base case stops at one. Use the tiny input three so every frame fits in your head.",
     firstCode: `def factorial(n):
-    if n == 1:
+    if n == 1:          # base case: stop here, do not call again
         return 1
-    smaller = factorial(n - 1)
-    return n * smaller
+    smaller = factorial(n - 1)   # pause this frame, push a new one
+    return n * smaller           # resumes only after the call above returns
 
 print(factorial(3))`,
-    firstTrace: "The first frame has `n = 3` and pauses at `factorial(2)`. A second frame has `n = 2` and pauses at `factorial(1)`. The top frame has `n = 1`, returns `1`, and is popped. The `n = 2` frame resumes, returns `2 * 1`, and is popped. The first frame resumes and returns `3 * 2`, so the output is `6`.",
+    firstTrace:
+      "Follow the pile one push at a time. `factorial(3)` starts, so frame one is pushed with `n = 3`. It is not `1`, so it reaches the call on line four and pauses there. Frame two is pushed with `n = 2` and pauses in the same place. Frame three is pushed with `n = 1` — this time the base case matches, so it returns `1` and is popped. Now frame two resumes exactly where it stopped: `smaller` receives that `1`, and it returns `2 * 1`, which is `2`, then pops. Frame one resumes, its `smaller` receives `2`, and it returns `3 * 2`. The output is `6`. Notice that the multiplications happen on the way back down, not on the way up.",
     secondTitle: "Prove that local names belong to frames",
     secondIntro: "Each call below has a local name called `label`. The names match, but they live in separate frames.",
     secondCode: `def countdown(number):
@@ -77,16 +84,23 @@ countdown(3)`,
     outcome: "You will be able to read a recursive function, separate its own work from its child calls, and write a recurrence that counts the total.",
     why: "Loop counting stops being enough when work branches into function calls. A recurrence keeps us honest. It prevents guesses such as “recursion is exponential” when a function actually makes only one smaller call.",
     mentalModel: "Imagine a family bill. One parent pays a small local charge and also pays the bills of its children. The recurrence records the local charge plus each child bill. The base case is the family member with no children.",
+    idea: [
+      "A **recurrence** is a way of writing down the cost of a recursive function using the function itself. If `T(n)` means *the number of steps this takes on an input of size n*, then a recurrence says what `T(n)` is in terms of a smaller `T`. It looks circular and is not, because the chain always ends at the base case.",
+      "Read `T(n) = T(n - 1) + 1` in plain words: to handle an input of size `n`, do one unit of work, then hand the rest to a call one size smaller. The `+ 1` is the work this call does itself; the `T(n - 1)` is the work it delegates.",
+      "To turn that into an answer, unroll it. `T(n)` is `T(n-1) + 1`, and `T(n-1)` is `T(n-2) + 1`, so `T(n)` is `T(n-2) + 2`. Keep going and you get `T(n) = T(0) + n`. The base case fixes `T(0)`, so the total is about `n` steps — the chain is `n` calls long and each does one thing.",
+      "The shape of the recurrence is what matters, not the exact constants. `T(n) = T(n - 1) + 1` is a chain and costs about `n`. `T(n) = T(n / 2) + 1` halves the input each time and costs about `log n`, because you can only halve a number roughly `log n` times before reaching one. `T(n) = 2T(n / 2) + n` splits into two halves and does `n` work to combine — that is the merge-sort shape, and it costs about `n log n`.",
+    ],
     firstTitle: "One smaller call means a chain",
     firstIntro: "This function visits one shorter prefix each time. Printing and subtracting take constant work in our model.",
     firstCode: `def count_down(n):
-    if n == 0:
+    if n == 0:        # base case: the chain ends here
         return
-    print(n)
-    count_down(n - 1)
+    print(n)          # one unit of work in this call
+    count_down(n - 1) # hand the rest to a call one size smaller
 
 count_down(4)`,
-    firstTrace: "For a positive `n`, one frame does constant local work and asks for `T(n - 1)`. We write `T(n) = T(n - 1) + constant`. The base is `T(0) = constant`. Expanding gives one frame per number, so the total grows linearly: Θ(n).",
+    firstTrace:
+      "Count the calls, not the printing. `count_down(4)` prints `4` then calls `count_down(3)`, which prints `3` then calls `count_down(2)`, and so on down to `count_down(0)`, which matches the base case and returns immediately. That is five calls in total for an input of four — the four that print, plus the one that stops. Each call did exactly one print, so the total work is one per call, which is the `+ 1` in `T(n) = T(n - 1) + 1`. Doubling the input to eight would give nine calls, not eighty-one: the cost grows in step with `n`.",
     secondTitle: "Two half-size calls form a tree",
     secondIntro: "Now one frame creates two children. Slicing also copies values, so the frame performs work proportional to its current input length.",
     secondCode: `def recursive_sum(values):
@@ -124,15 +138,22 @@ print(recursive_sum([1, 2, 3, 4]))`,
     outcome: "You will be able to draw the first levels, count the work on each level, and add the levels to estimate total time.",
     why: "The drawing reveals repeated subproblems and expensive levels. It explains why naive Fibonacci explodes, why merge sort stays controlled, and where memoization saves work.",
     mentalModel: "Picture a company org chart. The first call is the manager. Child calls are direct reports. A level is one row of employees. Total work is the sum of every employee's local task.",
+    idea: [
+      "When a function makes **two** recursive calls instead of one, the shape stops being a stack of frames in a line and becomes a **recursion tree**. Each call is a node, and its recursive calls are the children hanging beneath it.",
+      "The tree is how you count the work. Every node is one call. So the total work is just the number of nodes. A chain has one call per level, giving `n` nodes. A branching tree doubles its nodes at every level.",
+      "That doubling is where the cost comes from. A tree of depth `n` has about `2` to the power `n` nodes. At depth ten that is a thousand calls. At depth thirty it is over a billion. The function never changed — only how often it calls itself.",
+      "Now watch for one thing in the example. The same call appears in more than one place. `fib(3)` is computed under `fib(5)` and again under `fib(4)`. Neither copy knows about the other. That repetition is not a bug. It is what the shape forces. Storing each answer the first time is called memoisation. It collapses the tree back into a chain.",
+    ],
     firstTitle: "See repeated Fibonacci calls",
     firstIntro: "Naive Fibonacci asks for two overlapping smaller answers. The tiny input five already repeats the same questions.",
     firstCode: `def fib(n):
-    if n <= 1:
+    if n <= 1:                      # base case: fib(0) is 0, fib(1) is 1
         return n
-    return fib(n - 1) + fib(n - 2)
+    return fib(n - 1) + fib(n - 2)  # two calls -> the tree branches here
 
 print(fib(5))`,
-    firstTrace: "The root `fib(5)` creates `fib(4)` and `fib(3)`. The `fib(4)` branch also creates another `fib(3)`. Farther down, `fib(2)` appears several times. The number of calls grows roughly like a branching tree, so the running time is exponential.",
+    firstTrace:
+      "Draw the top of the tree and the repetition jumps out. `fib(5)` calls `fib(4)` and `fib(3)`. That `fib(4)` calls `fib(3)` and `fib(2)` — so `fib(3)` is now being computed twice, in two different branches, with no memory of each other. Follow it down and `fib(2)` appears three separate times and `fib(1)` five times. Computing `fib(5)` takes fifteen calls in total to produce the answer `5`. Push it to `fib(30)` and the same shape needs over two and a half million calls, almost all of them recomputing something already known.",
     secondTitle: "Count merge-style work by level",
     secondIntro: "This version passes boundaries instead of copying slices. Each call combines two half-size answers with constant local work.",
     secondCode: `def range_sum(values, start, stop):
@@ -170,21 +191,28 @@ print(range_sum([1, 2, 3, 4], 0, 4))`,
     outcome: "You will be able to convert a simple recursive process into a loop and choose the clearer safe form for a problem.",
     why: "Interview solutions often begin recursively because the idea is clear, then become iterative to avoid deep call stacks. Tree and graph traversals make this tradeoff especially visible.",
     mentalModel: "Recursion hands sticky notes to Python. Iteration keeps the sticky notes on your own desk. The notes contain the work that must happen later.",
+    idea: [
+      "Recursion and iteration can express the same computation. The difference is where the *bookkeeping* lives. A loop keeps its running state in variables you declared, and there is one copy of them. Recursion keeps its state in frames, and there is one frame per outstanding call.",
+      "That difference has a hard consequence. Variables cost the same however many times the loop goes round. Frames do not — each pending call holds one, so the memory grows with the depth of the recursion. Python also caps that depth (a thousand frames by default) and raises a `RecursionError` when you exceed it. A loop has no equivalent ceiling.",
+      "So the rule of thumb is about shape, not taste. When the problem is naturally a chain — do this `n` times — a loop is usually the better tool, because the recursive version pays for frames it does not need. When the problem is naturally branching or nested — a tree, a directory, an expression with sub-expressions — recursion mirrors the structure and the code says what it means.",
+      "Neither is faster in principle. Recursion carries a small constant overhead per call, because pushing and popping a frame is real work, so on a tight chain the loop usually wins on speed too. The reason to reach for recursion is that it matches the shape of the data, not that it is quicker.",
+    ],
     firstTitle: "The same factorial in two forms",
     firstIntro: "Both functions multiply the numbers from one through `n`. One stores pending multiplication in frames. The other stores the running product in a variable.",
     firstCode: `def factorial_recursive(n):
     if n <= 1:
         return 1
-    return n * factorial_recursive(n - 1)
+    return n * factorial_recursive(n - 1)  # one frame per pending call
 
 def factorial_iterative(n):
-    product = 1
+    product = 1               # one variable, reused every pass
     for value in range(2, n + 1):
-        product *= value
+        product *= value      # no frames, no depth limit
     return product
 
 print(factorial_recursive(5), factorial_iterative(5))`,
-    firstTrace: "Recursion creates five frames for input five. Iteration keeps one frame and changes `product` through `2, 6, 24, 120`. Both take Θ(n) time. The loop uses constant extra space; recursion uses Θ(n) frames.",
+    firstTrace:
+      "Both print `120`, so the answers are identical. What differs is invisible in the output. The recursive version, on input five, has five frames stacked up at its deepest moment — one each for `5, 4, 3, 2, 1` — and every multiplication waits until the base case returns. The iterative version never holds more than a single `product` variable, whatever the input. Ask both for `factorial(5000)` and the loop returns a very large number while the recursive version raises `RecursionError`, because it needed five thousand simultaneous frames and Python allows about a thousand.",
     secondTitle: "Replace recursive DFS with your own stack",
     secondIntro: "A stack lets a loop remember which graph nodes still need processing. Reversing neighbors preserves the left-to-right order used by the recursive version.",
     secondCode: `def depth_first(graph, start):
@@ -228,15 +256,30 @@ print(depth_first(graph, "A"))`,
     outcome: "You will be able to identify a tail call, explain why Python still grows the stack, and replace tail recursion with a loop.",
     why: "A learner may rewrite recursion into tail-recursive form and expect constant space. That expectation is wrong in Python. Knowing this prevents production crashes on large inputs.",
     mentalModel: "A tail call is a relay runner handing off the baton with no work left to do. An optimizing language lets the next runner reuse the same lane marker. Python keeps every runner's frame so tracebacks remain simple and predictable.",
+    idea: [
+      "A call is **tail recursive** when the recursive call is the last thing the function does. Nothing waits to happen after it returns. Compare the two factorials. In `return n * factorial(n - 1)`, the multiply happens *after* the inner call comes back. That frame must stay alive. In `return factorial_tail(n - 1, product * n)`, the multiply is already done. The frame has nothing left to do.",
+      "The trick is an **accumulator**. That is an extra parameter carrying the answer so far. It travels down the chain instead of being built on the way back. `product` starts at `1`, the value that leaves a multiply unchanged. Each call folds one more number in before handing it on.",
+      "Some languages optimise this. A frame with nothing left to do gets reused rather than stacked. The function then runs in constant memory, like a loop. That is why the pattern has a name: **tail-call optimization**.",
+      "Here is the part that matters: **Python does not do it.** CPython builds a new frame every time, needed or not. So a tail-recursive function hits the same limit as any other. The rewrite still earns its place. A function in this form converts to a loop mechanically. The accumulator becomes a variable, and the call becomes the next pass.",
+    ],
     firstTitle: "Move factorial's work into an accumulator",
     firstIntro: "The recursive call is the final expression. Nothing remains to multiply after it returns, so this is tail-recursive code.",
     firstCode: `def factorial_tail(n, product=1):
     if n <= 1:
-        return product
-    return factorial_tail(n - 1, product * n)
+        return product                        # the answer is already built
+    return factorial_tail(n - 1, product * n) # nothing waits after this call
 
-print(factorial_tail(5))`,
-    firstTrace: "The states are `(5,1)`, `(4,5)`, `(3,20)`, `(2,60)`, and `(1,120)`. The accumulator holds the answer-so-far. Python still creates a frame for every call. The result is `120`, but extra space remains Θ(n).",
+# the same function as a loop: accumulator becomes a variable
+def factorial_loop(n):
+    product = 1
+    while n > 1:
+        product *= n
+        n -= 1
+    return product
+
+print(factorial_tail(5), factorial_loop(5))`,
+    firstTrace:
+      "Watch the accumulator carry the answer forward. `factorial_tail(5)` starts with `product = 1` and calls itself with `n = 4, product = 5`. The next call gets `n = 3, product = 20`, then `n = 2, product = 60`, then `n = 1, product = 120` — which matches the base case and simply returns what it was handed. No multiplication happens on the way back, because there is none left to do. Both functions print `120`. The loop is the same arithmetic in the same order, with `product` living in one variable instead of being passed along, and it is the version that survives a large input in Python.",
     secondTitle: "Write the frame-reusing loop yourself",
     secondIntro: "The loop updates the same two names instead of asking Python to create another frame.",
     secondCode: `def factorial_loop(n):
@@ -273,17 +316,25 @@ print(factorial_loop(5))`,
     outcome: "You will be able to turn a maximum `n` into a rough work budget and reject approaches that cannot scale.",
     why: "Two correct algorithms can behave very differently. For `n = 30`, trying all subsets might be intended. For `n = 100,000`, even checking every pair is usually impossible.",
     mentalModel: "Treat time like a backpack with limited space. An O(n) solution packs one item per input. An O(n²) solution packs every pair. The constraint tells you how large the backpack is.",
+    idea: [
+      "A **constraint** is a limit the problem states up front: the largest the input can be, the range the values fall in, how long you may take. It is easy to skim past. It is actually the strongest hint you get.",
+      "The reason is that a computer does roughly a hundred million simple operations per second. That single number turns any input limit into a **budget**, meaning the rough count of operations a solution is allowed to spend.",
+      "So work backwards from the limit. If `n` can reach one hundred thousand, a solution that touches each value once does one hundred thousand steps, which is nothing. A solution that compares every pair does about `n` squared over two, which is five billion steps, and that will not finish. The approach was rejected before a single line was written.",
+      "That backwards step gives you a **target complexity**, the growth class a solution probably needs. Small limits point the other way too. An `n` of twenty is a hint that something exponential is expected, because two to the twenty is only a million.",
+      "Treat these as filters, not laws. Constants, hardware and the language all matter, so a borderline case needs measuring rather than arithmetic. What the budget reliably does is throw out whole families of approach in seconds, before you have invested in one.",
+    ],
     firstTitle: "See why pair checking breaks",
     firstIntro: "This brute-force duplicate check compares every pair. Count the comparisons before judging the short code.",
     firstCode: `def has_duplicate_slow(values):
-    for left in range(len(values)):
-        for right in range(left + 1, len(values)):
+    for left in range(len(values)):          # every starting position ...
+        for right in range(left + 1, len(values)):   # ... paired with every later one
             if values[left] == values[right]:
                 return True
     return False
 
 print(has_duplicate_slow([4, 1, 8, 4]))`,
-    firstTrace: "With `n` values, the worst case checks about `n(n - 1) / 2` pairs. At `n = 10,000`, that is almost fifty million comparisons. At `n = 100,000`, it is almost five billion. The quadratic shape is the problem, not Python syntax.",
+    firstTrace:
+      "Count the comparisons rather than the lines. The outer loop starts at each of the `n` positions, and for each one the inner loop pairs it with every position after it. That is `n` times `n - 1`, halved because each pair is visited once, so about `n` squared over two comparisons. Put numbers in it. At `n` equal to ten thousand, that is roughly fifty million comparisons, which finishes in about a second. At `n` equal to one hundred thousand, ten times the input, it is roughly five billion, which is a hundred times the work and will not finish in time. Ten times more input, a hundred times more work. That is what quadratic means, and no amount of tidying the four lines will change it.",
     secondTitle: "Trade memory for a linear scan",
     secondIntro: "A set remembers values already visited. Each new value needs one expected constant-time membership check.",
     secondCode: `def has_duplicate(values):
@@ -321,23 +372,32 @@ print(has_duplicate([4, 1, 8, 4]))`,
     outcome: "You will be able to choose useful examples, narrate a manual solution, and turn that narration into variables and updates.",
     why: "Code written before understanding often stores the wrong information. A careful example reveals what changes, what stays true, and where edge cases hide.",
     mentalModel: "Pretend you are a very literal robot. Write down every fact your hand uses. If the robot cannot see a fact, it must be stored in the program's state.",
+    idea: [
+      "The instinct when you read a problem is to start typing. The trouble is that code commits you to storing particular things, and until you have done the task once by hand you do not yet know which things matter.",
+      "So do it by hand first, on an input small enough to hold in your head. Move through it slowly and watch what your finger and your memory are actually doing.",
+      "Whatever you have to remember as you move is the **state**: the information that matters at one point in the process. If you are tracking the longest run of equal values, you are remembering two numbers, the run you are inside now and the best run seen so far. Those two become your variables. Nothing else needs storing.",
+      "Whatever changes that memory is a **transition**, the rule moving you from one state to the next. Here there are exactly two: the next value matches, so the current run grows, or it does not match, so the run restarts at one. Those two become your `if` and your `else`.",
+      "State plus transitions is the program. This is why working the example first is not a warm-up exercise, it is the design step.",
+      "Then try to break your own rule. An input that proves a proposed rule wrong is a **counterexample**, and the cheapest place to meet one is on paper. The example printed in the problem statement was written to explain the goal, not to stress your idea, so it will rarely be the input that catches your mistake.",
+    ],
     firstTitle: "Find the longest run by hand",
     firstIntro: "We want the longest number of equal neighboring values. Watch only what is needed while moving left to right.",
     firstCode: `def longest_run(values):
     if not values:
         return 0
-    best = 1
-    current = 1
+    best = 1      # the longest run seen anywhere so far
+    current = 1   # the length of the run we are inside right now
     for index in range(1, len(values)):
         if values[index] == values[index - 1]:
-            current += 1
+            current += 1   # transition one: the run continues
         else:
-            current = 1
+            current = 1    # transition two: the run breaks, start again
         best = max(best, current)
     return best
 
 print(longest_run([2, 2, 1, 1, 1, 3]))`,
-    firstTrace: "Start with `best = 1` and `current = 1`. The second `2` extends the current run to two. The first `1` breaks it, so current returns to one. The next two ones extend it to three, and best becomes three. The final `3` starts a new run. The answer is `3`.",
+    firstTrace:
+      "Follow the two variables through `[2, 2, 1, 1, 1, 3]`. Both start at one, standing on the first `2`. Next value is `2`, which matches, so `current` becomes two and `best` rises to two. Next is `1`, which does not match, so `current` resets to one while `best` stays at two, remembering what was already achieved. Next is another `1`, so `current` becomes two. Another `1`, and `current` becomes three, which is a new record, so `best` becomes three. Finally `3` breaks the run and `current` resets to one, but `best` is untouched and the answer is three. Watch what `best` is for: it is the memory that survives the reset. Without it, the final answer would be one.",
     secondTitle: "Use examples that try to break the rule",
     secondIntro: "A single friendly example is not enough. Try an empty input, one value, all equal values, and no equal neighbors.",
     secondCode: `cases = [
@@ -375,11 +435,18 @@ for case in cases:
     outcome: "You will be able to state a brute-force method, calculate its bottleneck, and derive a faster solution instead of guessing a pattern name.",
     why: "Interviewers care about reasoning, not memorized tricks. The path from slow to fast proves that you understand why the final data structure belongs there.",
     mentalModel: "Imagine looking for a phone number. Brute force rereads the whole phone book for every question. The bottleneck is repeated scanning. A lookup table spends memory once so each later question jumps to the answer.",
+    idea: [
+      "There is a repeatable path from a slow solution to a fast one, and it has three steps: brute force, bottleneck, better. Following it beats trying to recall which data structure this problem is supposed to use.",
+      "**Brute force** is the simplest method that is definitely correct, usually checking every possibility directly. Writing it is not a concession. It pins down what the right answer is, so anything faster now has something to agree with.",
+      "Then find the **bottleneck**: the repeated work that most of the cost is going into. Not the slowest-looking line, the one that runs the most times. Usually it is an inner loop redoing a search that an outer loop already did.",
+      "Now attack that specific work. The commonest move is **precomputation**, doing a job once up front so every later question becomes cheap. Scanning a list to answer each question is slow; building a set once and then asking it is fast, because the repeated scan was the bottleneck and it is now gone.",
+      "That exchange is a **tradeoff**, giving up one resource to improve another. The set costs memory proportional to the input, and buys back a whole factor of `n` in time. Naming the trade out loud is the point. It shows the structure was chosen for a reason rather than pattern-matched.",
+    ],
     firstTitle: "Start with the correct pair search",
     firstIntro: "The direct two-sum method checks every pair. It is easy to explain and easy to verify.",
     firstCode: `def has_pair_slow(values, target):
-    for left in range(len(values)):
-        for right in range(left + 1, len(values)):
+    for left in range(len(values)):                  # for each value ...
+        for right in range(left + 1, len(values)):   # ... rescan the rest: the bottleneck
             if values[left] + values[right] == target:
                 return True
     return False
@@ -424,19 +491,28 @@ print(has_pair([4, 1, 8], 9))`,
     outcome: "You will be able to write an invariant in a full sentence and use initialization, maintenance, and termination to justify an algorithm.",
     why: "Invariants guide pointer movement and prevent off-by-one errors. They are especially useful in binary search, partitioning, sliding windows, and graph traversal.",
     mentalModel: "Imagine cleaning a room from left to right. The messy boundary moves, but the promise “everything left of this boundary is clean” remains true. That promise is the invariant.",
+    idea: [
+      "An **invariant** is one statement that is true before the loop starts, and still true after every single pass. It does not say what the variables are. It says what stays reliable about them no matter how far through you are.",
+      "That is what turns a loop you believe in into a loop you can prove. The argument comes in three named parts, and each is short.",
+      "**Initialization**: the statement is true before the first pass. Usually this is obvious, because nothing has happened yet.",
+      "**Maintenance**: if the statement is true at the start of a pass, it is still true at the end of it. You only ever have to check one pass, never all of them. This is the part that does the real work, because it covers every future pass for free.",
+      "**Termination**: the loop stops, and you combine the statement with the reason it stopped to get the answer you wanted. The invariant held the whole way through, so it holds at the end too, and now the exit condition tells you the rest.",
+      "The practical payoff is that an invariant tells you when discarding data is safe. Two pointers closing in on a sorted list can throw away a whole position each pass, which sounds reckless. It is safe precisely because the invariant says nothing discarded could have been part of a valid answer. Without naming that promise, you are guessing.",
+    ],
     firstTitle: "Keep a sorted pair-search invariant",
     firstIntro: "Two pointers search a sorted list. The invariant says no discarded position can belong to a valid answer.",
     firstCode: `def pair_sum_sorted(values, target):
     left = 0
     right = len(values) - 1
+    # invariant: no position outside left..right can be part of an answer
     while left < right:
         total = values[left] + values[right]
         if total == target:
             return (left, right)
         if total < target:
-            left += 1
+            left += 1     # values[left] was too small even with its largest partner
         else:
-            right -= 1
+            right -= 1    # values[right] was too big even with its smallest partner
     return None
 
 print(pair_sum_sorted([1, 3, 4, 7, 9], 11))`,
@@ -479,12 +555,20 @@ print(maximum([4, 9, 2, 7]))`,
     outcome: "You will be able to partition the input space and choose one test from each family before submitting code.",
     why: "Most interview bugs are not failures of the main idea. They are missing contracts, bad initialization, wrong loop boundaries, or duplicate handling.",
     mentalModel: "Testing one ordinary input is like checking one tile in a bridge. Input partitions identify the different support beams. Test at least one tile resting on each beam.",
+    idea: [
+      "Edge cases have a reputation for being tricks. They are not. Nearly all of them come off a short checklist, and once you know the checklist you can generate them yourself instead of hoping to spot them.",
+      "The checklist: nothing at all, exactly one item, every item the same, values at their stated extremes, no valid answer existing, and anything sitting at the very first or very last position.",
+      "What makes these worth grouping is that each is an **input partition**, a family of inputs that all behave for the same underlying reason. Every empty input breaks a function in the same way. So testing one member of a family effectively tests the family, and a handful of well-chosen cases covers far more than a pile of random ones.",
+      "Deciding what should happen at a boundary is really deciding your **contract**, the promise about which inputs are valid, what comes back, and how failure is signalled. The maximum of an empty list is the clean example. Returning zero invents a value that was never in the data, and that lie propagates silently into whatever runs next. Raising an error says plainly that the question had no answer.",
+      "So handle the boundary once, deliberately, at the top of the function. An edge case dealt with in the contract does not have to be re-handled in the middle of the loop, where it would be much easier to get wrong.",
+    ],
     firstTitle: "Make an empty-input contract explicit",
     firstIntro: "A maximum does not exist for an empty list. Returning zero would silently invent a value, so the function raises a clear error.",
     firstCode: `def maximum(values):
     if not values:
+        # the contract: no values means no answer, so say so rather than invent one
         raise ValueError("maximum needs at least one value")
-    best = values[0]
+    best = values[0]   # safe now: the empty family was handled above
     for value in values[1:]:
         best = max(best, value)
     return best
@@ -531,16 +615,23 @@ for target in [1, 2, 9, 5]:
     outcome: "You will be able to choose trace columns, update them at one consistent boundary, and compare the final state with an independently known answer.",
     why: "Dry running catches off-by-one errors before tests. It also gives you a calm recovery tool when an interviewer says the solution fails on one input.",
     mentalModel: "Pretend you are Python's accountant. Every row is a receipt after one unit of work. Never update a value in your head without recording the new receipt.",
+    idea: [
+      "Reading code and running code are different activities. Reading it, you see what you meant. Running it, the machine does exactly what you wrote. A **dry run** closes that gap by making you execute the code by hand, one statement at a time, with no skipping.",
+      "Doing it in your head fails at about the third variable. Values get updated, half-remembered, crossed out, and you end up trusting a number you cannot actually justify.",
+      "So write a **state table** instead. One column per variable that matters, and one row per pass through the loop. It is bookkeeping, and that is the whole point: the paper remembers, so you do not have to.",
+      "Pick a consistent moment to write each row, called the **iteration boundary**. Always at the top of the pass, or always at the bottom, but never a mix. Rows recorded at different moments cannot be compared, and comparing rows is what makes the mistake visible.",
+      "Then compute the **expected result** separately, straight from the problem statement rather than from your code. Now you have two independent answers. If they disagree, the table shows you the first row where reality parted company with intent, and that row is your bug.",
+    ],
     firstTitle: "Trace lower-bound binary search",
     firstIntro: "Record `(low, high, middle, value)` before changing a boundary. Use target four in a list where four is absent.",
     firstCode: `def lower_bound(values, target):
     low, high = 0, len(values)
     while low < high:
-        middle = (low + high) // 2
+        middle = (low + high) // 2   # record (low, high, middle) here, every pass
         if values[middle] < target:
-            low = middle + 1
+            low = middle + 1   # middle is too small, so discard it too
         else:
-            high = middle
+            high = middle      # middle may still be the answer, so keep it
     return low
 
 print(lower_bound([1, 3, 5, 7], 4))`,
@@ -585,14 +676,23 @@ print(window_sums([2, 1, 4, 3], 3))`,
     outcome: "You will be able to give a compact pre-code explanation covering contract, brute force, chosen structure, invariant, complexity, and edge cases.",
     why: "Correct code with confused communication is hard to trust. Clear reasoning also reduces your own mistakes because every variable has a job before it appears in the editor.",
     mentalModel: "Give the interviewer a map before driving. Name the destination, route, safety rule, travel cost, and unusual road conditions. Then write code that follows the map.",
+    idea: [
+      "In an interview the code is only part of what is being assessed. Silent typing hides your reasoning, and it means a wrong assumption stays wrong for twenty minutes instead of thirty seconds.",
+      "A good explanation has four parts, and each has a single job.",
+      "A **clarification** removes ambiguity from the problem before you commit to anything: can the input be empty, can values repeat, is the list already sorted. These are cheap to ask and expensive to assume.",
+      "The **approach** is your ordered plan and the structures it uses, said in a couple of sentences. Not a walkthrough of every line, just the route: scan once, keep a set of what has been seen, return early on the first repeat.",
+      "The **correctness argument** is why it always works, not why it works on the example. This is usually your invariant said out loud, in a sentence or two.",
+      "The **complexity statement** names the time and the extra space, and names the variable each depends on. Saying linear time and linear extra space in the size of the list is complete. Saying fast is not.",
+      "Say all four before typing. If part of the plan is wrong, this is when it costs you nothing to hear so.",
+    ],
     firstTitle: "A complete explanation for duplicate detection",
     firstIntro: "The explanation can be short because each sentence has one job. Then the code should match it directly.",
     firstCode: `def contains_duplicate(values):
-    seen = set()
-    for value in values:
+    seen = set()                  # approach: remember what we have already met
+    for value in values:          # one pass, so linear time
         if value in seen:
-            return True
-        seen.add(value)
+            return True           # correctness: a repeat can only be a duplicate
+        seen.add(value)           # extra space grows with the input
     return False
 
 print(contains_duplicate([3, 1, 3]))`,

@@ -59,41 +59,41 @@ for tensor, pipeline in [(1, 1), (8, 1), (8, 8), (8, 16)]:
       "The three factors multiply to the device count; only two of them shrink memory.",
     checks: [
       {
-        prompt: "What must the three parallelism factors satisfy?",
-        options: [
+        question: "What must the three parallelism factors satisfy?",
+        choices: [
           "Their product equals the device count",
           "Their sum equals the device count",
           "They must be equal",
         ],
-        answerIndex: 0,
-        hint: "Each device has one coordinate on each axis.",
-        explanations: [
+        answer: 0,
+        explanation: "Each device has one coordinate on each axis.",
+        why: [
           "Correct, and many products are valid.",
           "The grid is multiplicative.",
           "Balanced splits are rarely optimal.",
         ],
       },
       {
-        prompt: "Which dimension does not reduce per-device memory?",
-        options: ["Data", "Tensor", "Pipeline"],
-        answerIndex: 0,
-        hint: "It replicates the model.",
-        explanations: [
+        question: "Which dimension does not reduce per-device memory?",
+        choices: ["Data", "Tensor", "Pipeline"],
+        answer: 0,
+        explanation: "It replicates the model.",
+        why: [
           "Correct. Each replica holds the whole model.",
           "That splits individual operations.",
           "That splits the layers.",
         ],
       },
       {
-        prompt: "Where should tensor parallelism be placed?",
-        options: [
+        question: "Where should tensor parallelism be placed?",
+        choices: [
           "Within a group joined by fast links",
           "Across the slowest links",
           "It does not matter",
         ],
-        answerIndex: 0,
-        hint: "It communicates inside every layer.",
-        explanations: [
+        answer: 0,
+        explanation: "It communicates inside every layer.",
+        why: [
           "Correct, otherwise it becomes the bottleneck.",
           "That is the worst possible placement.",
           "Topology dominates the choice.",
@@ -138,7 +138,7 @@ for overlap in (0.0, 0.5, 0.9, 1.0):
     print("comm", comm, "fully overlapped step",
           step_time(100, comm, 1.0))`,
     secondTrace:
-      "Twenty and a hundred milliseconds of traffic both hide completely. Two hundred cannot, and the step becomes two hundred - the compute is now what is hidden.",
+      "Twenty and a hundred milliseconds of traffic both hide completely. Two hundred cannot, and the step becomes two hundred — the compute is now what is hidden.",
     mistake:
       "Reporting high accelerator utilization as evidence that communication is free. Overlap makes the device busy, and the transfer is still on the critical path when it exceeds the compute it hides behind.",
     checkpoint:
@@ -149,41 +149,41 @@ for overlap in (0.0, 0.5, 0.9, 1.0):
       "Overlap hides the shorter of the two; the excess is exposed.",
     checks: [
       {
-        prompt: "What does overlap hide?",
-        options: [
+        question: "What does overlap hide?",
+        choices: [
           "The shorter of computation and communication",
           "All communication",
           "All computation",
         ],
-        answerIndex: 0,
-        hint: "Something has to run underneath.",
-        explanations: [
+        answer: 0,
+        explanation: "Something has to run underneath.",
+        why: [
           "Correct, and the excess stays on the critical path.",
           "Only what fits under the compute.",
           "The same limit applies both ways.",
         ],
       },
       {
-        prompt: "Communication exceeds computation. What sets the step time?",
-        options: ["Communication", "Computation", "Their sum"],
-        answerIndex: 0,
-        hint: "The longer track dominates.",
-        explanations: [
+        question: "Communication exceeds computation. What sets the step time?",
+        choices: ["Communication", "Computation", "Their sum"],
+        answer: 0,
+        explanation: "The longer track dominates.",
+        why: [
           "Correct. Overlap has hit its ceiling.",
           "The compute is now what is hidden.",
           "That would be zero overlap.",
         ],
       },
       {
-        prompt: "Why is high utilization misleading here?",
-        options: [
+        question: "Why is high utilization misleading here?",
+        choices: [
           "Overlap makes the device busy while the transfer remains critical",
           "Utilization is hard to measure",
           "Utilization ignores memory",
         ],
-        answerIndex: 0,
-        hint: "Busy is not the same as productive.",
-        explanations: [
+        answer: 0,
+        explanation: "Busy is not the same as productive.",
+        why: [
           "Correct. The transfer is still on the critical path.",
           "It is straightforward to measure.",
           "Memory is a separate metric.",
@@ -232,7 +232,7 @@ for failures in (0.12, 14.75, 236.0):
     print(failures, "failures ->", lost_hours(failures, 60, 20),
           "hours lost")`,
     secondTrace:
-      "Almost two hundred hours lost at the largest scale - over a week of a thirty-day run. Shortening the checkpoint interval is the main lever.",
+      "Almost two hundred hours lost at the largest scale — over a week of a thirty-day run. Shortening the checkpoint interval is the main lever.",
     mistake:
       "Checkpointing only the weights when workers can fail independently. Resuming needs a state every worker agrees on, so a partially written checkpoint from a dying worker is worse than no checkpoint at all.",
     checkpoint:
@@ -243,45 +243,45 @@ for failures in (0.12, 14.75, 236.0):
       "Failures multiply with the fleet; checkpoint often and consistently.",
     checks: [
       {
-        prompt: "Why does one device failing stop the whole run?",
-        options: [
+        question: "Why does one device failing stop the whole run?",
+        choices: [
           "Synchronous training has no partial progress",
           "The devices share memory",
           "The scheduler kills the job",
         ],
-        answerIndex: 0,
-        hint: "Every worker waits at the barrier.",
-        explanations: [
+        answer: 0,
+        explanation: "Every worker waits at the barrier.",
+        why: [
           "Correct. The step is discarded for everyone.",
           "Memory is per device.",
           "The job stops because it cannot proceed.",
         ],
       },
       {
-        prompt: "What does a failure cost on average?",
-        options: [
+        question: "What does a failure cost on average?",
+        choices: [
           "Half a checkpoint interval plus detection and restart",
           "A whole checkpoint interval",
           "The time since the run started",
         ],
-        answerIndex: 0,
-        hint: "The failure lands uniformly between checkpoints.",
-        explanations: [
+        answer: 0,
+        explanation: "The failure lands uniformly between checkpoints.",
+        why: [
           "Correct, and the restart is often the larger term.",
           "That is the worst case.",
           "Only work since the last checkpoint is lost.",
         ],
       },
       {
-        prompt: "What makes a checkpoint usable after a failure?",
-        options: [
+        question: "What makes a checkpoint usable after a failure?",
+        choices: [
           "Every worker agrees on the same state",
           "It contains the weights",
           "It was written recently",
         ],
-        answerIndex: 0,
-        hint: "A partially written checkpoint is worse than none.",
-        explanations: [
+        answer: 0,
+        explanation: "A partially written checkpoint is worse than none.",
+        why: [
           "Correct. Consistency is the requirement.",
           "Weights alone do not resume a run.",
           "Recency is useless without consistency.",
@@ -305,7 +305,7 @@ for failures in (0.12, 14.75, 236.0):
     outcome:
       "You will compute utilization from a training recipe and convert the shortfall into money.",
     why:
-      "Every inefficiency covered so far - stragglers, exposed communication, failures, pipeline bubbles - lands in this single figure.",
+      "Every inefficiency covered so far — stragglers, exposed communication, failures, pipeline bubbles — lands in this single figure.",
     mentalModel:
       "Picture the cluster's total capacity as a rectangle. The training run occupies part of it, and everything else is paid for and empty.",
     firstTitle: "Useful work over available work",
@@ -342,48 +342,48 @@ for devices in (1024, 4096):
     checkpointAnswer:
       "It falls by roughly four times, because the useful work is unchanged while the available capacity quadrupled.",
     remember:
-      "Useful operations over available ones - and say what counts as useful.",
+      "Useful operations over available ones — and say what counts as useful.",
     checks: [
       {
-        prompt: "What does model flops utilization compare?",
-        options: [
+        question: "What does model flops utilization compare?",
+        choices: [
           "Useful training operations against what the hardware could have done",
           "Time busy against time idle",
           "Memory used against memory available",
         ],
-        answerIndex: 0,
-        hint: "Both terms are operation counts.",
-        explanations: [
+        answer: 0,
+        explanation: "Both terms are operation counts.",
+        why: [
           "Correct, and every inefficiency lands in it.",
           "That is a coarser occupancy measure.",
           "Memory is accounted separately.",
         ],
       },
       {
-        prompt: "Why does adding devices without adding work lower utilization?",
-        options: [
+        question: "Why does adding devices without adding work lower utilization?",
+        choices: [
           "The denominator grows while the numerator does not",
           "More devices fail",
           "Communication rises",
         ],
-        answerIndex: 0,
-        hint: "It is arithmetic, not a systems effect.",
-        explanations: [
+        answer: 0,
+        explanation: "It is arithmetic, not a systems effect.",
+        why: [
           "Correct. Capacity grew and the work did not.",
           "Failures matter but are not the mechanism here.",
           "Communication is a separate cost.",
         ],
       },
       {
-        prompt: "Why must the accounting be stated?",
-        options: [
+        question: "Why must the accounting be stated?",
+        choices: [
           "Counting recomputation as useful inflates the figure substantially",
           "The units are ambiguous",
           "Peak rates vary",
         ],
-        answerIndex: 0,
-        hint: "Gradient checkpointing repeats forward work.",
-        explanations: [
+        answer: 0,
+        explanation: "Gradient checkpointing repeats forward work.",
+        why: [
           "Correct, by a fifth or more.",
           "Operations per second is unambiguous.",
           "Peak rates are published.",

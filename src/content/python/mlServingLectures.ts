@@ -70,45 +70,45 @@ print(validate({"age": 34}))`,
       "Freeze the weights, the preprocessing, the versions and the contract.",
     checks: [
       {
-        prompt: "What belongs in a deployable artifact?",
-        options: [
+        question: "What belongs in a deployable artifact?",
+        choices: [
           "Weights, preprocessing and pinned dependency versions",
           "Weights only",
           "Weights and training data",
         ],
-        answerIndex: 0,
-        hint: "Everything that touches the input.",
-        explanations: [
+        answer: 0,
+        explanation: "Everything that touches the input.",
+        why: [
           "Correct. The boundary must enclose all input handling.",
           "Preprocessing outside the boundary will drift.",
           "Training data is not needed at serving time.",
         ],
       },
       {
-        prompt: "What does an input contract convert a silent error into?",
-        options: [
+        question: "What does an input contract convert a silent error into?",
+        choices: [
           "A rejected request",
           "A slower response",
           "A retry",
         ],
-        answerIndex: 0,
-        hint: "Failing loudly is the goal.",
-        explanations: [
+        answer: 0,
+        explanation: "Failing loudly is the goal.",
+        why: [
           "Correct. A wrong answer is worse than a refusal.",
           "Validation costs almost nothing.",
           "Retrying a malformed request does not help.",
         ],
       },
       {
-        prompt: "Identical weights now produce different predictions. What is the likely cause?",
-        options: [
+        question: "Identical weights now produce different predictions. What is the likely cause?",
+        choices: [
           "An unpinned library version changed a default",
           "The weights were corrupted",
           "The hardware is faulty",
         ],
-        answerIndex: 0,
-        hint: "Weights are only part of the behaviour.",
-        explanations: [
+        answer: 0,
+        explanation: "Weights are only part of the behaviour.",
+        why: [
           "Correct. This is why versions are pinned.",
           "Corruption would fail loudly.",
           "That is far rarer than a version change.",
@@ -171,50 +171,50 @@ for rate in (50, 90, 99):
     checkpoint:
       "Utilisation reaches ninety-five percent. Roughly what happens to response time?",
     checkpointAnswer:
-      "It rises to about twenty times the service time - the queueing term dominates once utilisation is close to one.",
+      "It rises to about twenty times the service time — the queueing term dominates once utilisation is close to one.",
     remember:
       "Size for the tail, and leave headroom before the cliff.",
     checks: [
       {
-        prompt: "How does response time behave as utilisation approaches one?",
-        options: [
+        question: "How does response time behave as utilisation approaches one?",
+        choices: [
           "It rises without bound",
           "It rises linearly",
           "It stays near the service time",
         ],
-        answerIndex: 0,
-        hint: "Look at the denominator of the queueing term.",
-        explanations: [
+        answer: 0,
+        explanation: "Look at the denominator of the queueing term.",
+        why: [
           "Correct. That is the cliff.",
           "The growth is far steeper than linear.",
           "Only at low utilisation.",
         ],
       },
       {
-        prompt: "Why is autoscaling on average latency a mistake?",
-        options: [
+        question: "Why is autoscaling on average latency a mistake?",
+        choices: [
           "The objective is at a high percentile the average hides",
           "Averages are expensive to compute",
           "Latency is not measurable",
         ],
-        answerIndex: 0,
-        hint: "Think about which requests the users complain about.",
-        explanations: [
+        answer: 0,
+        explanation: "Think about which requests the users complain about.",
+        why: [
           "Correct. The tail breaks long before the mean moves.",
           "Averages are cheap.",
           "It is readily measurable.",
         ],
       },
       {
-        prompt: "Adding a replica drops utilisation to fifty percent. Is that waste?",
-        options: [
+        question: "Adding a replica drops utilisation to fifty percent. Is that waste?",
+        choices: [
           "No; it is the headroom that keeps the tail acceptable",
           "Yes; half the capacity is idle",
           "Yes, unless traffic doubles",
         ],
-        answerIndex: 0,
-        hint: "Consider what happens to latency without it.",
-        explanations: [
+        answer: 0,
+        explanation: "Consider what happens to latency without it.",
+        why: [
           "Correct. Running near capacity is what causes outages.",
           "Idle capacity is buying latency.",
           "The headroom is valuable at current traffic too.",
@@ -276,45 +276,45 @@ print("chosen", best)`,
       "Batch to the latency budget, and key the cache on everything that matters.",
     checks: [
       {
-        prompt: "What does a larger batch cost?",
-        options: [
+        question: "What does a larger batch cost?",
+        choices: [
           "Latency, from both compute and fill time",
           "Throughput",
           "Accuracy",
         ],
-        answerIndex: 0,
-        hint: "Requests wait for the batch to complete.",
-        explanations: [
+        answer: 0,
+        explanation: "Requests wait for the batch to complete.",
+        why: [
           "Correct. Throughput improves while latency degrades.",
           "Throughput is what batching buys.",
           "Predictions are unchanged.",
         ],
       },
       {
-        prompt: "What must a cache key include?",
-        options: [
+        question: "What must a cache key include?",
+        choices: [
           "Every input that could change the prediction",
           "The entity identifier only",
           "The timestamp only",
         ],
-        answerIndex: 0,
-        hint: "A missing input means a stale answer served confidently.",
-        explanations: [
+        answer: 0,
+        explanation: "A missing input means a stale answer served confidently.",
+        why: [
           "Correct. Otherwise the cache is silently wrong.",
           "Features change beneath a stable identifier.",
           "A timestamp alone identifies nothing.",
         ],
       },
       {
-        prompt: "Throughput keeps rising with batch size. Why not use the largest?",
-        options: [
+        question: "Throughput keeps rising with batch size. Why not use the largest?",
+        choices: [
           "The latency objective caps the usable size",
           "Memory is unlimited",
           "Throughput eventually falls",
         ],
-        answerIndex: 0,
-        hint: "Unusable throughput is not throughput.",
-        explanations: [
+        answer: 0,
+        explanation: "Unusable throughput is not throughput.",
+        why: [
           "Correct. Beyond the budget the gain cannot be taken.",
           "Memory is also a real limit, but not the argument here.",
           "It keeps rising, just with diminishing returns.",
@@ -374,45 +374,45 @@ print("ratio", requests_per_day // entities)`,
       "Compare the schedule to how fast the inputs move.",
     checks: [
       {
-        prompt: "When is batch inference safe?",
-        options: [
+        question: "When is batch inference safe?",
+        choices: [
           "When inputs change more slowly than the recomputation schedule",
           "When the model is small",
           "When traffic is low",
         ],
-        answerIndex: 0,
-        hint: "Compare the two clocks.",
-        explanations: [
+        answer: 0,
+        explanation: "Compare the two clocks.",
+        why: [
           "Correct. Otherwise the stored prediction is stale.",
           "Model size is not the criterion.",
           "Traffic affects cost, not correctness.",
         ],
       },
       {
-        prompt: "Why is batch inference usually cheaper per prediction?",
-        options: [
+        question: "Why is batch inference usually cheaper per prediction?",
+        choices: [
           "It computes once per entity rather than once per request",
           "It uses a smaller model",
           "It skips preprocessing",
         ],
-        answerIndex: 0,
-        hint: "Popular entities are requested repeatedly.",
-        explanations: [
+        answer: 0,
+        explanation: "Popular entities are requested repeatedly.",
+        why: [
           "Correct. The ratio can be twenty to one or more.",
           "The model is the same.",
           "Preprocessing still happens.",
         ],
       },
       {
-        prompt: "Only two percent of entities are ever requested. What follows?",
-        options: [
+        question: "Only two percent of entities are ever requested. What follows?",
+        choices: [
           "Precomputing all of them wastes most of the job",
           "Batch inference is still clearly cheaper",
           "Online inference becomes impossible",
         ],
-        answerIndex: 0,
-        hint: "The cost comparison depends on the request distribution.",
-        explanations: [
+        answer: 0,
+        explanation: "The cost comparison depends on the request distribution.",
+        why: [
           "Correct. A long unused tail flips the economics.",
           "It may not be, at that request rate.",
           "Online inference remains available.",
@@ -468,48 +468,48 @@ print("preloaded path", damage(700, 4, 1))`,
     checkpointAnswer:
       "Behaviour on the real request distribution, including malformed inputs, latency under real load and the serving path itself.",
     remember:
-      "Shadow, canary, ramp, full - and keep the outgoing version warm.",
+      "Shadow, canary, ramp, full — and keep the outgoing version warm.",
     checks: [
       {
-        prompt: "What makes shadow traffic safe?",
-        options: [
+        question: "What makes shadow traffic safe?",
+        choices: [
           "Its answers are recorded but never returned to users",
           "It uses synthetic requests",
           "It runs at low volume",
         ],
-        answerIndex: 0,
-        hint: "The inputs are real; the outputs go nowhere.",
-        explanations: [
+        answer: 0,
+        explanation: "The inputs are real; the outputs go nowhere.",
+        why: [
           "Correct. That is what makes it risk-free.",
           "The requests are real production traffic.",
           "It can run at full volume.",
         ],
       },
       {
-        prompt: "Why must the outgoing artifact stay loaded?",
-        options: [
+        question: "Why must the outgoing artifact stay loaded?",
+        choices: [
           "So rollback takes a minute rather than a rebuild",
           "To save storage",
           "To serve as a fallback model",
         ],
-        answerIndex: 0,
-        hint: "Recovery time multiplies by the request rate.",
-        explanations: [
+        answer: 0,
+        explanation: "Recovery time multiplies by the request rate.",
+        why: [
           "Correct. Damage scales with how long recovery takes.",
           "It costs storage rather than saving it.",
           "It is the rollback target, not a blend.",
         ],
       },
       {
-        prompt: "What should a canary be compared against?",
-        options: [
+        question: "What should a canary be compared against?",
+        choices: [
           "The current production version on the same traffic",
           "The offline evaluation set",
           "The previous canary",
         ],
-        answerIndex: 0,
-        hint: "Control for the traffic mix.",
-        explanations: [
+        answer: 0,
+        explanation: "Control for the traffic mix.",
+        why: [
           "Correct. Side-by-side is the only fair comparison.",
           "Offline metrics do not reflect live traffic.",
           "That compares two unproven versions.",

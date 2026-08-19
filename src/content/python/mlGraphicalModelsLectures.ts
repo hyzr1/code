@@ -53,46 +53,46 @@ print("full joint parameters", 2 ** len(parents) - 1)`,
     checkpoint:
       "What does a missing edge in the graph claim?",
     checkpointAnswer:
-      "Conditional independence given the parents - not that the two variables are unrelated in general.",
+      "Conditional independence given the parents — not that the two variables are unrelated in general.",
     remember:
       "One conditional per node; every missing edge is an assumption.",
     checks: [
       {
-        prompt: "What does each node contribute to the factorization?",
-        options: [
+        question: "What does each node contribute to the factorization?",
+        choices: [
           "One conditional distribution given its parents",
           "One marginal distribution",
           "One entry of the joint table",
         ],
-        answerIndex: 0,
-        hint: "Its table is over its parents only.",
-        explanations: [
+        answer: 0,
+        explanation: "Its table is over its parents only.",
+        why: [
           "Correct, and the product is the exact joint.",
           "Marginals do not reconstruct the joint.",
           "The point is to avoid the joint table.",
         ],
       },
       {
-        prompt: "How many parameters does a node with two binary parents need?",
-        options: ["Four", "Two", "One"],
-        answerIndex: 0,
-        hint: "One free value per parent configuration.",
-        explanations: [
+        question: "How many parameters does a node with two binary parents need?",
+        choices: ["Four", "Two", "One"],
+        answer: 0,
+        explanation: "One free value per parent configuration.",
+        why: [
           "Correct. Two parents give four configurations.",
           "That would be a single parent.",
           "That is a node with no parents.",
         ],
       },
       {
-        prompt: "Two variables have no edge between them. Are they independent?",
-        options: [
+        question: "Two variables have no edge between them. Are they independent?",
+        choices: [
           "Only conditionally, given the parents",
           "Yes, always",
           "No, never",
         ],
-        answerIndex: 0,
-        hint: "The claim is conditional.",
-        explanations: [
+        answer: 0,
+        explanation: "The claim is conditional.",
+        why: [
           "Correct. Unconditionally they can be strongly correlated.",
           "Marginal independence is a different claim.",
           "The graph does assert something.",
@@ -163,45 +163,45 @@ print("sums to", round(running, 4))`,
       "Potentials score, the partition function normalises.",
     checks: [
       {
-        prompt: "Is a clique potential a probability?",
-        options: [
+        question: "Is a clique potential a probability?",
+        choices: [
           "No; it is an unnormalised score",
           "Yes, over its clique",
           "Yes, after taking logarithms",
         ],
-        answerIndex: 0,
-        hint: "It does not sum to one.",
-        explanations: [
+        answer: 0,
+        explanation: "It does not sum to one.",
+        why: [
           "Correct. Only the normalised product is a distribution.",
           "It need not sum to one over the clique.",
           "Logarithms do not normalise anything.",
         ],
       },
       {
-        prompt: "What does the partition function sum over?",
-        options: [
+        question: "What does the partition function sum over?",
+        choices: [
           "Every joint configuration of every variable",
           "Each clique separately",
           "The observed data",
         ],
-        answerIndex: 0,
-        hint: "That is why it is exponential.",
-        explanations: [
+        answer: 0,
+        explanation: "That is why it is exponential.",
+        why: [
           "Correct, and that is the central cost.",
           "Per-clique sums do not normalise the joint.",
           "It does not involve data at all.",
         ],
       },
       {
-        prompt: "Can potentials be compared across two different models?",
-        options: [
+        question: "Can potentials be compared across two different models?",
+        choices: [
           "No; each has its own normaliser",
           "Yes, directly",
           "Yes, if the cliques match",
         ],
-        answerIndex: 0,
-        hint: "Rescaling a potential changes nothing observable.",
-        explanations: [
+        answer: 0,
+        explanation: "Rescaling a potential changes nothing observable.",
+        why: [
           "Correct. Only within-model ratios are meaningful.",
           "The scales are arbitrary.",
           "Matching cliques does not fix the normaliser.",
@@ -271,45 +271,45 @@ print("terms enumerated", 2 ** len(variables))`,
       "Sum out one at a time, and the order is the whole game.",
     checks: [
       {
-        prompt: "What does variable elimination avoid?",
-        options: [
+        question: "What does variable elimination avoid?",
+        choices: [
           "Enumerating every joint configuration",
           "Computing any factors",
           "Normalising the result",
         ],
-        answerIndex: 0,
-        hint: "It works one variable at a time.",
-        explanations: [
+        answer: 0,
+        explanation: "It works one variable at a time.",
+        why: [
           "Correct, which is exponential in the variable count.",
           "It computes intermediate factors throughout.",
           "Normalisation still happens at the end.",
         ],
       },
       {
-        prompt: "What sets the cost of an elimination order?",
-        options: [
+        question: "What sets the cost of an elimination order?",
+        choices: [
           "The largest intermediate factor it creates",
           "The number of variables",
           "The number of factors",
         ],
-        answerIndex: 0,
-        hint: "Cost is exponential in that size.",
-        explanations: [
+        answer: 0,
+        explanation: "Cost is exponential in that size.",
+        why: [
           "Correct, and finding the best order is itself hard.",
           "A good order makes the count almost irrelevant.",
           "Factor count matters far less.",
         ],
       },
       {
-        prompt: "The graph is densely connected. What follows?",
-        options: [
+        question: "The graph is densely connected. What follows?",
+        choices: [
           "No elimination order gives a large saving",
           "Any order works well",
           "Elimination becomes exact only approximately",
         ],
-        answerIndex: 0,
-        hint: "Intermediate factors stay large.",
-        explanations: [
+        answer: 0,
+        explanation: "Intermediate factors stay large.",
+        why: [
           "Correct. Density, not order, is the obstacle.",
           "Density defeats every order.",
           "Elimination is always exact when it finishes.",
@@ -383,45 +383,45 @@ print("paths", 2 ** 3, "vs forward operations", 3 * 2 * 2)`,
       "One number per state, carried forward, sums every path.",
     checks: [
       {
-        prompt: "What does the forward pass carry between steps?",
-        options: [
+        question: "What does the forward pass carry between steps?",
+        choices: [
           "One accumulated probability per hidden state",
           "The most likely path so far",
           "The full path distribution",
         ],
-        answerIndex: 0,
-        hint: "That is what collapses the enumeration.",
-        explanations: [
+        answer: 0,
+        explanation: "That is what collapses the enumeration.",
+        why: [
           "Correct. Paths merge at each state.",
           "That is a different recursion.",
           "The whole point is not to represent it.",
         ],
       },
       {
-        prompt: "Is the forward result an approximation?",
-        options: [
+        question: "Is the forward result an approximation?",
+        choices: [
           "No; it equals the sum over all paths exactly",
           "Yes, it is a bound",
           "Yes, for long sequences",
         ],
-        answerIndex: 0,
-        hint: "The comparison agreed to every digit.",
-        explanations: [
+        answer: 0,
+        explanation: "The comparison agreed to every digit.",
+        why: [
           "Correct. It is exact dynamic programming.",
           "No bounding is involved.",
           "Length affects numerics, not exactness.",
         ],
       },
       {
-        prompt: "Why do implementations rescale or use logarithms?",
-        options: [
+        question: "Why do implementations rescale or use logarithms?",
+        choices: [
           "The accumulated probabilities underflow on long sequences",
           "To speed up the recursion",
           "To handle more states",
         ],
-        answerIndex: 0,
-        hint: "The values shrink at every step.",
-        explanations: [
+        answer: 0,
+        explanation: "The values shrink at every step.",
+        why: [
           "Correct, and the failure is silent.",
           "Rescaling costs a little time.",
           "State count is unaffected.",

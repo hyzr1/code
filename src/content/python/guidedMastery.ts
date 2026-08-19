@@ -11,6 +11,13 @@ export interface GuidedMasterySpec {
   outcome: string;
   why: string;
   mentalModel: string;
+  /**
+   * The full conceptual explanation, in the voice of the core course: define
+   * every term the moment it is used, unpack any shorthand, and say why each
+   * mechanic is the way it is. Written as one or more paragraphs. Lectures
+   * without it fall back to the shorter mental-model-then-code shape.
+   */
+  idea?: string[];
   firstTitle: string;
   firstIntro: string;
   firstCode: string;
@@ -29,10 +36,19 @@ export interface GuidedMasterySpec {
 
 const words = (value: string) => value.trim().split(/\s+/).filter(Boolean).length;
 
+/** Renders paragraphs with a blank line between them. */
+const joinParagraphs = (paragraphs: string[]): string[] =>
+  paragraphs.flatMap((paragraph, index) =>
+    index === 0 ? [paragraph] : ["", paragraph],
+  );
+
 export function guidedMasteryAtom(spec: GuidedMasterySpec): Atom {
   const vocabulary = spec.vocabulary
     .map(([term, meaning]) => `- **${term}** — ${meaning}`)
     .join("\n");
+  const ideaSection = spec.idea && spec.idea.length
+    ? ["", "## The idea, step by step", "", ...joinParagraphs(spec.idea), ""].join("\n")
+    : "";
   const body = `${spec.opening}
 
 ## What you will be able to explain
@@ -50,7 +66,7 @@ ${spec.why}
 ## A picture to keep in your head
 
 ${spec.mentalModel}
-
+${ideaSection}
 ## ${spec.firstTitle}
 
 ${spec.firstIntro}

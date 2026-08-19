@@ -31,12 +31,19 @@ const SPECS: GuidedMasterySpec[] = [
     outcome: "You will be able to justify constant-time indexing, explain resizing, and predict why inserting or deleting near the front costs linear time.",
     why: "Arrays appear in almost every interview. Choosing a list is easy; reasoning about its operations is the real skill. Hidden shifts and occasional resizes often decide whether a solution scales.",
     mentalModel: "Picture numbered lockers in one hallway. Knowing locker zero's address lets Python jump to locker `i`. If every locker is full, the school builds a larger hallway and moves all stored references.",
+    idea: [
+      "An **array** is a run of slots sitting next to each other in memory. That neighbouring part is the whole trick. Because the slots are adjacent and all the same size, the computer can work out where slot number seven lives by arithmetic: start of the array, plus seven slot-widths.",
+      "That is why an **index** is fast. Jumping to any position costs the same as jumping to any other, no matter how long the list is. Nothing is searched. The address is computed.",
+      "But real programs grow lists, and a fixed run of slots cannot grow. There may be other data sitting immediately after it. So Python separates two numbers you should keep apart. The **length** is how many values you have stored. The **capacity** is how many slots were reserved. Capacity is normally larger, and the spare slots are what let an append be instant.",
+      "When an append arrives and capacity is full, Python asks for a bigger block, copies every existing value across, and then stores the new one. That copy touches every element, so that one append is expensive.",
+      "Here is the part worth understanding, because it looks like a contradiction. Each growth roughly doubles the capacity. Doubling means the expensive copies get rarer exactly as fast as they get costlier, and if you add up the whole cost of `n` appends and divide it by `n`, you get a constant. So an append is occasionally slow and always cheap on average. That averaged-out cost is called the **amortized** cost, and it is why appending in a loop is a perfectly normal thing to do.",
+    ],
     firstTitle: "See which operations shift values",
     firstIntro: "Reading an index jumps to one slot. Inserting at index one must open a hole, so everything from that position onward moves right.",
     firstCode: `values = [10, 20, 30, 40]
-print(values[2])
+print(values[2])   # computed address, not a search: same cost at any index
 
-values.insert(1, 15)
+values.insert(1, 15)   # shifts everything after it along: linear, unlike append
 print(values)
 
 values.pop(1)
@@ -80,12 +87,20 @@ for value in range(8):
     outcome: "You will be able to reverse, rotate, and compact an array while naming the processed and unprocessed regions.",
     why: "Pointer movement appears in sorting, partitioning, deduplication, and matrix work. A region invariant makes compact code understandable instead of clever-looking.",
     mentalModel: "Imagine rearranging books on one shelf with one empty hand. You may swap books, but you must know which shelf region is already final and which region still contains needed information.",
+    idea: [
+      "Working **in place** means rearranging the list you were handed instead of building a new one. You are allowed a couple of variables, but not a second copy of the data. What you gain is memory: constant extra space rather than another `n` slots.",
+      "The immediate hazard is that writing into a list destroys whatever was there. Assign to `values[0]` and the old value is simply gone. That is why a straight assignment is usually the wrong move and a **swap** is the right one: a swap exchanges two positions and keeps both values, just in different places.",
+      "The pattern that makes in-place work manageable uses two indices moving through the same list with different jobs. The **read pointer** moves forward over everything, inspecting values that have not been considered yet. The **write pointer** marks the slot where the next value worth keeping belongs.",
+      "The read pointer always runs ahead of, or level with, the write pointer. That gap is exactly the number of values discarded so far, and it is what makes the technique safe: the write pointer only ever lands on a slot the read pointer has already finished with, so nothing unread is ever overwritten.",
+      "Stated as an invariant, it is short. Everything to the left of the write pointer is a finished, correct answer. Everything from the read pointer rightwards is untouched input. When the read pointer runs off the end, the write pointer's position is the length of the result.",
+    ],
     firstTitle: "Reverse by shrinking an unfinished region",
     firstIntro: "Everything outside `[left, right]` is already in final reversed position. Swap the boundary pair, then shrink the unfinished region.",
     firstCode: `def reverse_in_place(values):
     left = 0
     right = len(values) - 1
     while left < right:
+        # swap, never assign: assigning would destroy one of the two values
         values[left], values[right] = values[right], values[left]
         left += 1
         right -= 1
@@ -133,17 +148,25 @@ print(letters)`,
     outcome: "You will be able to recognize the bounded-domain requirement, place values safely, and find a missing or repeated value in linear time and constant extra space.",
     why: "This pattern turns the input array into its own lookup table. It avoids a set, but it mutates the input and works only when values map cleanly to indices.",
     mentalModel: "Students hold numbered seat cards. Student five walks to index four. Swaps continue until each student reaches home or meets an identical card.",
+    idea: [
+      "Sometimes the values themselves tell you where they belong. If a list of `n` entries is promised to hold numbers from one to `n`, then the value `3` has an obvious address: index two. That address is its **home index**, and for this kind of promise it is simply the value minus one.",
+      "A promise like that is a **bounded domain**, meaning the values are known to sit in a small range tied to the length of the array. It is a strong hint. It means you can sort by placement rather than by comparison, and placement is linear.",
+      "**Cyclic placement** is the method. Look at the value in front of you and work out its home. If it is not already there, swap it into its home. That swap hands you a different value, which has its own home, so you repeat with the newcomer. You keep going in a chain until the value you are holding has nowhere to go.",
+      "Two things stop the chain. Either the value is now at home, or its home is already occupied by an identical value. That second case is a **duplicate blocker**, and it is not a failure. It is information: two copies of the same number cannot both live at one address, so you have just detected a duplicate.",
+      "The reason this is linear rather than quadratic is worth spelling out, because the nested-looking loop suggests otherwise. Every swap puts at least one value permanently into its correct home, and a value that is home is never moved again. There are only `n` values, so there can only ever be `n` such swaps in the entire run, however they are distributed across the outer loop.",
+    ],
     firstTitle: "Find the first missing positive",
     firstIntro: "Only values from one through `n` have homes in an `n`-item list. Ignore zero, negatives, and values larger than `n`.",
     firstCode: `def first_missing_positive(values):
     index = 0
     while index < len(values):
         value = values[index]
-        home = value - 1
+        home = value - 1   # a bounded value knows its own address
+        # in range, and its home is not already holding an identical value
         if 1 <= value <= len(values) and values[home] != value:
             values[index], values[home] = values[home], values[index]
         else:
-            index += 1
+            index += 1   # placed, or blocked by a duplicate: move on
 
     for index, value in enumerate(values):
         if value != index + 1:
@@ -194,14 +217,21 @@ print(duplicate_in_one_to_n([1, 3, 4, 2, 2]))`,
     outcome: "You will be able to reason about slicing cost, build text without quadratic copying, and distinguish characters, code points, and encoded bytes.",
     why: "Interview code often scans, normalizes, or constructs text. Repeated string concatenation inside a loop can copy an ever-growing prefix again and again.",
     mentalModel: "Treat a string like a printed label. You may read any letter, but changing the label requires printing another one. A list of pieces is a tray where edits happen before one final print.",
+    idea: [
+      "A Python string is **immutable**: once it exists it cannot be changed. There is no way to write into character three. Every operation that looks like editing a string is actually building a brand new one.",
+      "This matters for cost, not just for style. Adding a character to a string in a loop copies the entire string every time. Do that `n` times and you have done work proportional to `n` squared, which for a long document is the difference between instant and unusable.",
+      "The fix is a **builder**: collect the pieces in a list, which really is mutable, and join them once at the end. Appending to a list is cheap, and the single join walks the pieces once. The whole job becomes linear.",
+      "There is a second thing strings are not, and it trips people up on real-world text. A string is a sequence of **code points**, the Unicode numbers assigned to characters, not a sequence of bytes. Plenty of characters need more than one byte.",
+      "Turning text into bytes needs an **encoding**, a rule for that conversion and its reverse. This is why reversing a string by bytes can produce nonsense while reversing it by characters does not, and why the length of the text and the length of its encoded form are different numbers that are easy to confuse.",
+    ],
     firstTitle: "Build output with pieces and one join",
     firstIntro: "Keep only letters and make them lowercase. Appending to a list is amortized constant time; joining knows the final size and builds once.",
     firstCode: `def letters_only(text):
-    pieces = []
+    pieces = []          # the builder: appending here is cheap
     for character in text:
         if character.isalpha():
             pieces.append(character.casefold())
-    return "".join(pieces)
+    return "".join(pieces)   # one join at the end, so the whole job stays linear
 
 print(letters_only("Ada, 2026!"))`,
     firstTrace: "The loop appends `a`, `d`, and `a` to a mutable list. Digits and punctuation are skipped. One join produces `ada`. Time is Θ(n), and output storage is Θ(n).",
@@ -239,12 +269,19 @@ print(list(word.encode("utf-8")))`,
     outcome: "You will be able to build a padded prefix array, answer `[left,right)` sums, and explain the setup-versus-query tradeoff.",
     why: "Prefix sums power subarray counts, interval statistics, image regions, and difference arrays. The extra leading zero removes special cases at the left edge.",
     mentalModel: "Imagine an odometer beside a walking path. At every fence, record the total distance traveled. Distance between two fences is the later odometer reading minus the earlier one.",
+    idea: [
+      "Suppose you are asked for the total of a slice of a list, many times over, on the same list. Adding the slice up each time re-adds numbers you have already added. If the slices are long and the questions are many, that repetition is the entire cost.",
+      "A **prefix sum** removes it. Build one new list where each entry is the total of everything before that boundary. One pass, adding as you go, and you are done.",
+      "Now any range total is a single subtraction. The total up to the end of the range, minus the total up to its start, leaves exactly the values in between. Everything before the start was counted in both numbers and cancels out. A **range query** that used to cost the length of the range now costs one subtraction.",
+      "That is the shape of **precomputation**: one setup pass makes every later question cheap. You pay `n` once instead of paying the range length every time.",
+      "The detail that causes almost every bug here is the boundaries, so be deliberate. Use a **half-open range**, which includes its left boundary and excludes its right. Make the prefix list one longer than the data and start it with a zero. That leading zero is what lets a range starting at position zero subtract cleanly, with no special case, and half-open ranges subtract without any adjusting by one.",
+    ],
     firstTitle: "Build boundary totals with a leading zero",
     firstIntro: "`prefix[i]` means the sum of values strictly before index `i`. A list of length `n` therefore has `n + 1` boundaries.",
     firstCode: `def prefix_sums(values):
-    prefix = [0]
+    prefix = [0]   # the leading zero removes the range-starts-at-zero special case
     for value in values:
-        prefix.append(prefix[-1] + value)
+        prefix.append(prefix[-1] + value)   # running total so far
     return prefix
 
 values = [2, 5, -1, 4]
@@ -286,18 +323,25 @@ print(range_sum(prefix, 0, 2))`,
     outcome: "You will be able to encode half-open range additions with two markers and reconstruct the final array without touching every updated position each time.",
     why: "When thousands of bookings, traffic changes, or coverage intervals update long spans, editing every cell repeats work. Two boundary markers summarize each update.",
     mentalModel: "A thermostat schedule says “increase by three here” and “decrease by three there.” Between those markers, the running temperature adjustment stays active automatically.",
+    idea: [
+      "Prefix sums answer repeated questions cheaply. Difference arrays are the mirror image: they apply repeated *changes* cheaply.",
+      "The problem is a **range update**, adding some amount to every position in an interval. Done directly, one update costs the length of the interval, and many overlapping updates over a long array get expensive fast.",
+      "The insight is to stop recording values and start recording changes. In a **difference array** each entry holds the change from the position before it. Most of the time that change is zero, because most of the array is flat.",
+      "So a range update touches exactly two positions. Add the amount at the point where the interval begins, which is the **start marker**. Subtract the same amount just past where it ends, which is the **stop marker**. The addition switches the change on and the subtraction switches it off, leaving everything after the interval unaffected.",
+      "Then, once every update has been recorded, take a prefix sum of the difference array and the finished values fall out. Running totals of the changes reconstruct the levels. So `m` updates on an array of length `n` cost `m` plus `n` in total, rather than `m` times the interval length.",
+    ],
     firstTitle: "Apply several interval additions",
     firstIntro: "For update `[left,right)`, add the amount at `left` and subtract it at `right`. A padded delta array gives the stop marker a safe slot.",
     firstCode: `def apply_updates(length, updates):
     difference = [0] * (length + 1)
     for left, right, amount in updates:
-        difference[left] += amount
-        difference[right] -= amount
+        difference[left] += amount    # start marker: switch the change on
+        difference[right] -= amount   # stop marker: switch it off again
 
     values = []
     running = 0
     for index in range(length):
-        running += difference[index]
+        running += difference[index]   # prefix sum rebuilds the finished values
         values.append(running)
     return values
 
@@ -346,11 +390,20 @@ print(peak_bookings(8, [(1, 4), (2, 6), (3, 5)]))`,
     outcome: "You will be able to build a padded 2-D prefix table and answer any half-open rectangle sum with four table reads.",
     why: "This pattern appears in image regions, grid statistics, game boards, and matrix interview problems. The four-term formula becomes simple when every term is tied to a picture.",
     mentalModel: "Cover the target with one large origin sheet. Cut off its top and left strips. Their shared corner was cut twice, so tape it back once.",
+    idea: [
+      "The same idea works on a grid, and the only new part is bookkeeping. A **2-D prefix sum** stores, for each boundary pair, the total of the whole rectangle running from the origin down to that corner.",
+      "Building it needs care, because the upper rectangle and the left rectangle overlap. Add them together and everything in the shared corner has been counted twice, so subtract that overlap once, then add the current cell. That add-add-subtract move is called **inclusion and exclusion**, and it is the entire technique.",
+      "Reading a **submatrix** total uses the same idea in reverse. Start with the big rectangle from the origin to the far corner. It contains your target region plus an upper strip and a left strip. Subtract both strips.",
+      "But those two strips overlap each other. They share the small rectangle in the top-left corner, so you have now removed that piece twice. Add it back once.",
+      "That is four lookups in total: one big rectangle, two strips subtracted, one overlap restored.",
+      "The payoff is the same as in one dimension. One setup pass over the grid buys you constant-time answers for any rectangle, however large, however many times you ask.",
+    ],
     firstTitle: "Build a padded prefix table",
     firstIntro: "`prefix[r+1][c+1]` stores the rectangle from matrix origin through cell `(r,c)`. The zero border makes missing regions contribute zero.",
     firstCode: `def prefix_2d(matrix):
     rows = len(matrix)
     columns = len(matrix[0]) if rows else 0
+    # one extra row and column of zeros, so the origin edges need no special case
     prefix = [[0] * (columns + 1) for _ in range(rows + 1)]
 
     for row in range(rows):

@@ -68,7 +68,7 @@ for x in (-2.0, -0.5, 0.0, 5.0, 10.0):
     secondTrace:
       "Zero at an observed point, twenty-two percent half a unit away, and all of it by six. The model reverts to the prior rather than extrapolating confidently.",
     mistake:
-      "Reading the posterior mean far from the data as a prediction. It returns to the prior mean - usually zero - so a confident-looking zero out there means no information rather than a forecast.",
+      "Reading the posterior mean far from the data as a prediction. It returns to the prior mean — usually zero — so a confident-looking zero out there means no information rather than a forecast.",
     checkpoint:
       "What does a Gaussian process predict a long way from every training point?",
     checkpointAnswer:
@@ -77,41 +77,41 @@ for x in (-2.0, -0.5, 0.0, 5.0, 10.0):
       "A distribution over functions, with the kernel supplying the correlations.",
     checks: [
       {
-        prompt: "What does a Gaussian process place a distribution over?",
-        options: ["Functions", "Parameters", "Datasets"],
-        answerIndex: 0,
-        hint: "It has no fixed parameter vector.",
-        explanations: [
+        question: "What does a Gaussian process place a distribution over?",
+        choices: ["Functions", "Parameters", "Datasets"],
+        answer: 0,
+        explanation: "It has no fixed parameter vector.",
+        why: [
           "Correct, which is what makes it nonparametric.",
           "That is the usual Bayesian approach it replaces.",
           "Data is conditioned on, not modelled.",
         ],
       },
       {
-        prompt: "What does the kernel encode?",
-        options: [
+        question: "What does the kernel encode?",
+        choices: [
           "How correlated two inputs' outputs are",
           "The training loss",
           "The parameter count",
         ],
-        answerIndex: 0,
-        hint: "It is a function of two inputs.",
-        explanations: [
+        answer: 0,
+        explanation: "It is a function of two inputs.",
+        why: [
           "Correct, and it is the entire modelling assumption.",
           "No loss is minimised here.",
           "There is no fixed parameter count.",
         ],
       },
       {
-        prompt: "Far from every observation, what happens to the prediction?",
-        options: [
+        question: "Far from every observation, what happens to the prediction?",
+        choices: [
           "It returns to the prior mean with full prior variance",
           "It extrapolates the nearest trend",
           "It becomes undefined",
         ],
-        answerIndex: 0,
-        hint: "Nothing out there is correlated with the data.",
-        explanations: [
+        answer: 0,
+        explanation: "Nothing out there is correlated with the data.",
+        why: [
           "Correct, and a confident-looking zero means no information.",
           "It does not extrapolate trends.",
           "It remains perfectly well defined.",
@@ -173,45 +173,45 @@ for distance in (0.0, 3.5, 7.0, 14.0):
       "The kernel is the hypothesis; the hyperparameters only tune it.",
     checks: [
       {
-        prompt: "What does the length scale control?",
-        options: [
+        question: "What does the length scale control?",
+        choices: [
           "How far apart inputs must be before outputs decorrelate",
           "The output magnitude",
           "The noise level",
         ],
-        answerIndex: 0,
-        hint: "It sets the assumed smoothness.",
-        explanations: [
+        answer: 0,
+        explanation: "It sets the assumed smoothness.",
+        why: [
           "Correct. Short means wiggly, long means nearly flat.",
           "That is the scale parameter.",
           "Noise is a separate term.",
         ],
       },
       {
-        prompt: "What does a periodic kernel assert?",
-        options: [
+        question: "What does a periodic kernel assert?",
+        choices: [
           "Points a whole period apart are perfectly correlated",
           "The function is smooth",
           "The function is bounded",
         ],
-        answerIndex: 0,
-        hint: "It encodes a repeat.",
-        explanations: [
+        answer: 0,
+        explanation: "It encodes a repeat.",
+        why: [
           "Correct, and a smooth kernel cannot express that.",
           "Smoothness is a separate property.",
           "Boundedness is not encoded.",
         ],
       },
       {
-        prompt: "The fitted length scale becomes extremely short. What has happened?",
-        options: [
+        question: "The fitted length scale becomes extremely short. What has happened?",
+        choices: [
           "Every point is decorrelated from every other, so the model memorises",
           "The model has found real structure",
           "The noise was overestimated",
         ],
-        answerIndex: 0,
-        hint: "Perfect fit, no generalisation.",
-        explanations: [
+        answer: 0,
+        explanation: "Perfect fit, no generalisation.",
+        why: [
           "Correct. This is the classic failure of unchecked fitting.",
           "Fine structure and memorisation look the same on training data.",
           "Short length scales usually accompany underestimated noise.",
@@ -278,41 +278,41 @@ for name, mean, spread in [("exploit", 0.82, 0.01),
       "Score by what you might learn, not by what you already predict.",
     checks: [
       {
-        prompt: "What does the acquisition function rank?",
-        options: [
+        question: "What does the acquisition function rank?",
+        choices: [
           "How useful evaluating a candidate would be",
           "How good a candidate is predicted to be",
           "How cheap a candidate is",
         ],
-        answerIndex: 0,
-        hint: "Usefulness combines prediction and uncertainty.",
-        explanations: [
+        answer: 0,
+        explanation: "Usefulness combines prediction and uncertainty.",
+        why: [
           "Correct, which is why uncertainty enters it.",
           "That is only the surrogate's mean.",
           "Evaluation cost is usually uniform.",
         ],
       },
       {
-        prompt: "A candidate is known precisely and predicted below the best. What is its score?",
-        options: ["Essentially zero", "High", "Undefined"],
-        answerIndex: 0,
-        hint: "It cannot surprise you.",
-        explanations: [
+        question: "A candidate is known precisely and predicted below the best. What is its score?",
+        choices: ["Essentially zero", "High", "Undefined"],
+        answer: 0,
+        explanation: "It cannot surprise you.",
+        why: [
           "Correct. There is nothing to learn there.",
           "A confident bad prediction is worthless to test.",
           "The score is well defined.",
         ],
       },
       {
-        prompt: "What goes wrong if you use the surrogate mean directly?",
-        options: [
+        question: "What goes wrong if you use the surrogate mean directly?",
+        choices: [
           "It re-evaluates the current best and never explores",
           "It explores too much",
           "It ignores the surrogate",
         ],
-        answerIndex: 0,
-        hint: "Nothing pushes it toward uncertainty.",
-        explanations: [
+        answer: 0,
+        explanation: "Nothing pushes it toward uncertainty.",
+        why: [
           "Correct. It converges on whatever looked good first.",
           "It does the opposite.",
           "It uses only the surrogate.",

@@ -50,7 +50,7 @@ for mean in (0.0, 1.0, 2.0, 2.5):
     secondTrace:
       "Minus three point six at the narrowest, minus three point two at log variance minus two, and minus sixteen at the widest. The optimum is between the extremes.",
     mistake:
-      "Reading the bound as the log evidence. It is a lower bound, and the gap between them is the approximation error - which the bound itself never reveals.",
+      "Reading the bound as the log evidence. It is a lower bound, and the gap between them is the approximation error — which the bound itself never reveals.",
     checkpoint:
       "The bound improves. Does that mean the approximation got closer to the true posterior?",
     checkpointAnswer:
@@ -59,41 +59,41 @@ for mean in (0.0, 1.0, 2.0, 2.5):
       "Maximise fit minus divergence, and remember it is only a bound.",
     checks: [
       {
-        prompt: "What does variational inference replace integration with?",
-        options: ["Optimisation over a family of distributions", "Sampling", "Enumeration"],
-        answerIndex: 0,
-        hint: "You pick the best member of a simple family.",
-        explanations: [
+        question: "What does variational inference replace integration with?",
+        choices: ["Optimisation over a family of distributions", "Sampling", "Enumeration"],
+        answer: 0,
+        explanation: "You pick the best member of a simple family.",
+        why: [
           "Correct. That is what makes it scalable.",
           "Sampling is the other main approach.",
           "Enumeration is what became intractable.",
         ],
       },
       {
-        prompt: "What are the two competing terms in the bound?",
-        options: [
+        question: "What are the two competing terms in the bound?",
+        choices: [
           "Expected fit and divergence from the prior",
           "Bias and variance",
           "Precision and recall",
         ],
-        answerIndex: 0,
-        hint: "One pulls toward the data, the other back to the prior.",
-        explanations: [
+        answer: 0,
+        explanation: "One pulls toward the data, the other back to the prior.",
+        why: [
           "Correct, and the optimum balances them.",
           "That is a different decomposition.",
           "Those are evaluation metrics.",
         ],
       },
       {
-        prompt: "The bound rises. What can you conclude?",
-        options: [
+        question: "The bound rises. What can you conclude?",
+        choices: [
           "Either the fit improved or the approximation gap shrank",
           "The posterior was recovered exactly",
           "Nothing at all",
         ],
-        answerIndex: 0,
-        hint: "The bound is evidence minus gap.",
-        explanations: [
+        answer: 0,
+        explanation: "The bound is evidence minus gap.",
+        why: [
           "Correct, and the bound cannot separate them.",
           "The gap is never observed.",
           "It is informative, just ambiguous.",
@@ -166,41 +166,41 @@ print("samples needed for equal precision:",
       "Push the randomness outside the parameter and differentiate through.",
     checks: [
       {
-        prompt: "What does reparameterization move outside the parameters?",
-        options: ["The randomness", "The loss", "The gradient"],
-        answerIndex: 0,
-        hint: "The noise is drawn first, then transformed.",
-        explanations: [
+        question: "What does reparameterization move outside the parameters?",
+        choices: ["The randomness", "The loss", "The gradient"],
+        answer: 0,
+        explanation: "The noise is drawn first, then transformed.",
+        why: [
           "Correct, so the derivative flows through a smooth function.",
           "The loss is unchanged.",
           "The gradient is what is being computed.",
         ],
       },
       {
-        prompt: "Both estimators are unbiased. What distinguishes them?",
-        options: [
+        question: "Both estimators are unbiased. What distinguishes them?",
+        choices: [
           "Variance, which decides how many samples are needed",
           "Correctness",
           "Computational cost per sample",
         ],
-        answerIndex: 0,
-        hint: "Nine times the variance means nine times the samples.",
-        explanations: [
+        answer: 0,
+        explanation: "Nine times the variance means nine times the samples.",
+        why: [
           "Correct. High variance makes an unbiased estimator useless.",
           "Both are correct on average.",
           "The per-sample costs are comparable.",
         ],
       },
       {
-        prompt: "Why does reparameterization fail on a discrete variable?",
-        options: [
+        question: "Why does reparameterization fail on a discrete variable?",
+        choices: [
           "There is no smooth path from the noise to the sample",
           "Discrete variables have no gradient",
           "The variance becomes infinite",
         ],
-        answerIndex: 0,
-        hint: "Differentiation needs smoothness.",
-        explanations: [
+        answer: 0,
+        explanation: "Differentiation needs smoothness.",
+        why: [
           "Correct, which is why relaxations exist.",
           "The objective can still be differentiable in the parameters.",
           "The estimator simply does not apply.",
@@ -224,7 +224,7 @@ print("samples needed for equal precision:",
     outcome:
       "You will run the same chain at three proposal widths and see that a high acceptance rate is not a good sign.",
     why:
-      "Acceptance rate is the most-watched diagnostic and the most misread one - both extremes indicate a chain that is not exploring.",
+      "Acceptance rate is the most-watched diagnostic and the most misread one — both extremes indicate a chain that is not exploring.",
     mentalModel:
       "Picture tiny steps that are almost always accepted but go nowhere, and huge steps that are almost always rejected so the chain stands still. The useful width is between them.",
     firstTitle: "Three widths, one target",
@@ -273,45 +273,45 @@ for width in (0.05, 1.0, 10.0):
       "Both extremes of acceptance mean the chain is not exploring.",
     checks: [
       {
-        prompt: "What does a very high acceptance rate indicate?",
-        options: [
+        question: "What does a very high acceptance rate indicate?",
+        choices: [
           "The proposal is too narrow and the chain barely moves",
           "The chain is mixing well",
           "The target is easy",
         ],
-        answerIndex: 0,
-        hint: "Tiny steps are almost always accepted.",
-        explanations: [
+        answer: 0,
+        explanation: "Tiny steps are almost always accepted.",
+        why: [
           "Correct. It is a warning, not reassurance.",
           "Good mixing shows a moderate rate.",
           "Difficulty is not what it measures.",
         ],
       },
       {
-        prompt: "What does a very low acceptance rate indicate?",
-        options: [
+        question: "What does a very low acceptance rate indicate?",
+        choices: [
           "The proposal is too wide and the chain stands still",
           "The target is misspecified",
           "The chain has converged",
         ],
-        answerIndex: 0,
-        hint: "Rejected moves leave the chain where it was.",
-        explanations: [
+        answer: 0,
+        explanation: "Rejected moves leave the chain where it was.",
+        why: [
           "Correct. Long runs of repeated values.",
           "The target is fine.",
           "Convergence is a separate question.",
         ],
       },
       {
-        prompt: "What does the chain guarantee?",
-        options: [
+        question: "What does the chain guarantee?",
+        choices: [
           "Its long-run distribution is the target",
           "Each sample is independent",
           "It converges in a fixed number of steps",
         ],
-        answerIndex: 0,
-        hint: "That is the whole construction.",
-        explanations: [
+        answer: 0,
+        explanation: "That is the whole construction.",
+        why: [
           "Correct, and only in the long run.",
           "Consecutive samples are strongly correlated.",
           "Convergence time depends on the chain.",
@@ -380,45 +380,45 @@ print("accept", round(min(1.0, math.exp(-drift)), 4))`,
       "Follow the gradient, and keep the step under the stability threshold.",
     checks: [
       {
-        prompt: "What does the gradient give the proposal?",
-        options: [
+        question: "What does the gradient give the proposal?",
+        choices: [
           "A direction that follows the distribution's shape",
           "A larger step size",
           "An acceptance guarantee",
         ],
-        answerIndex: 0,
-        hint: "It replaces a blind random walk.",
-        explanations: [
+        answer: 0,
+        explanation: "It replaces a blind random walk.",
+        why: [
           "Correct. That is why it explores correlated posteriors well.",
           "Step size is tuned separately.",
           "Proposals are still accepted or rejected.",
         ],
       },
       {
-        prompt: "What becomes the rejection probability?",
-        options: [
+        question: "What becomes the rejection probability?",
+        choices: [
           "The energy drift from integration error",
           "The gradient magnitude",
           "The trajectory length",
         ],
-        answerIndex: 0,
-        hint: "Perfect integration would conserve it.",
-        explanations: [
+        answer: 0,
+        explanation: "Perfect integration would conserve it.",
+        why: [
           "Correct. Accurate integration means high acceptance.",
           "Magnitude alone does not cause rejection.",
           "Length affects cost, not directly acceptance.",
         ],
       },
       {
-        prompt: "How does the sampler fail as the step size grows?",
-        options: [
+        question: "How does the sampler fail as the step size grows?",
+        choices: [
           "Abruptly, once the integrator becomes unstable",
           "Gradually",
           "It does not fail",
         ],
-        answerIndex: 0,
-        hint: "The drift went from a quarter to fifty billion.",
-        explanations: [
+        answer: 0,
+        explanation: "The drift went from a quarter to fifty billion.",
+        why: [
           "Correct, which is why the threshold must be respected.",
           "The transition is very sharp.",
           "Past the threshold acceptance is zero.",

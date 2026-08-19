@@ -52,7 +52,7 @@ for heads, tails in [(3, 1), (30, 10), (300, 100)]:
     secondTrace:
       "The same eight-of-ten evidence gives point seven five, point six and point five one four. The prior is not a formality; it is data you asserted.",
     mistake:
-      "Choosing a uniform prior because it looks neutral. It is a specific claim - that every value is equally likely - and on a bounded parameter it is often a strong one.",
+      "Choosing a uniform prior because it looks neutral. It is a specific claim — that every value is equally likely — and on a bounded parameter it is often a strong one.",
     checkpoint:
       "Eight heads in ten tosses updates a prior of a hundred and a hundred. Where does the posterior mean land?",
     checkpointAnswer:
@@ -61,45 +61,45 @@ for heads, tails in [(3, 1), (30, 10), (300, 100)]:
       "The prior is counts you already claim; the data adds its own.",
     checks: [
       {
-        prompt: "What makes a prior and likelihood conjugate?",
-        options: [
+        question: "What makes a prior and likelihood conjugate?",
+        choices: [
           "The posterior has the same form as the prior",
           "They have the same mean",
           "Both are uniform",
         ],
-        answerIndex: 0,
-        hint: "That is what makes the update closed-form.",
-        explanations: [
+        answer: 0,
+        explanation: "That is what makes the update closed-form.",
+        why: [
           "Correct. The update becomes arithmetic on the parameters.",
           "Means are unrelated to conjugacy.",
           "Uniformity is a special case, not the definition.",
         ],
       },
       {
-        prompt: "How does posterior spread change with more data?",
-        options: [
+        question: "How does posterior spread change with more data?",
+        choices: [
           "It shrinks with the square root of the total",
           "It shrinks linearly",
           "It is unchanged",
         ],
-        answerIndex: 0,
-        hint: "Ten times the data roughly thirds the spread.",
-        explanations: [
+        answer: 0,
+        explanation: "Ten times the data roughly thirds the spread.",
+        why: [
           "Correct. Precision is expensive.",
           "That would make data far more valuable than it is.",
           "Data always sharpens a conjugate posterior.",
         ],
       },
       {
-        prompt: "Is a uniform prior neutral?",
-        options: [
+        question: "Is a uniform prior neutral?",
+        choices: [
           "No; it asserts every value is equally likely",
           "Yes, by definition",
           "Only for unbounded parameters",
         ],
-        answerIndex: 0,
-        hint: "It is a specific claim like any other.",
-        explanations: [
+        answer: 0,
+        explanation: "It is a specific claim like any other.",
+        why: [
           "Correct, and on a bounded parameter it can be strong.",
           "Neutrality is not a property any prior has.",
           "It is least defensible on bounded parameters.",
@@ -159,45 +159,45 @@ for x in (0.0, 1.0, 5.0, 20.0):
       "Weight uncertainty scales with the input; noise does not.",
     checks: [
       {
-        prompt: "Why do predictive intervals widen away from the data?",
-        options: [
+        question: "Why do predictive intervals widen away from the data?",
+        choices: [
           "Parameter uncertainty is scaled by the input",
           "The noise grows",
           "The model gets less accurate",
         ],
-        answerIndex: 0,
-        hint: "One term is multiplied by the squared input.",
-        explanations: [
+        answer: 0,
+        explanation: "One term is multiplied by the squared input.",
+        why: [
           "Correct. Plausible lines diverge as you extrapolate.",
           "The noise term is constant.",
           "Accuracy is not what is being computed.",
         ],
       },
       {
-        prompt: "What does the noise term represent?",
-        options: [
+        question: "What does the noise term represent?",
+        choices: [
           "Variation more data cannot remove",
           "Uncertainty about the weights",
           "Numerical error",
         ],
-        answerIndex: 0,
-        hint: "It is a floor.",
-        explanations: [
+        answer: 0,
+        explanation: "It is a floor.",
+        why: [
           "Correct. It sets the task's ceiling.",
           "That is the other term.",
           "Numerical issues are unrelated.",
         ],
       },
       {
-        prompt: "A wide interval comes mostly from parameter uncertainty. What should you do?",
-        options: [
+        question: "A wide interval comes mostly from parameter uncertainty. What should you do?",
+        choices: [
           "Collect more data",
           "Accept it as irreducible",
           "Reduce the model size",
         ],
-        answerIndex: 0,
-        hint: "Only one of the two terms shrinks with data.",
-        explanations: [
+        answer: 0,
+        explanation: "Only one of the two terms shrinks with data.",
+        why: [
           "Correct. That component is reducible.",
           "Only the noise term is irreducible.",
           "Size is a separate question.",
@@ -263,45 +263,45 @@ for name, fit, parameters in [("linear", -60.0, 2),
       "Integrate over parameters and flexibility pays for itself.",
     checks: [
       {
-        prompt: "Why does integrating over parameters penalise complexity?",
-        options: [
+        question: "Why does integrating over parameters penalise complexity?",
+        choices: [
           "A flexible model spreads its belief over more possible datasets",
           "The integration is harder to compute",
           "Extra parameters fit worse",
         ],
-        answerIndex: 0,
-        hint: "The total belief is fixed.",
-        explanations: [
+        answer: 0,
+        explanation: "The total belief is fixed.",
+        why: [
           "Correct. Each dataset gets a smaller share.",
           "Computational cost is not the mechanism.",
           "They fit better, which is the whole tension.",
         ],
       },
       {
-        prompt: "What happens to the penalty as data accumulates?",
-        options: [
+        question: "What happens to the penalty as data accumulates?",
+        choices: [
           "It grows, so each parameter is harder to justify",
           "It shrinks",
           "It stays fixed",
         ],
-        answerIndex: 0,
-        hint: "It scales with the logarithm of the sample size.",
-        explanations: [
+        answer: 0,
+        explanation: "It scales with the logarithm of the sample size.",
+        why: [
           "Correct. The chosen model can become simpler.",
           "More data makes complexity costlier, not cheaper.",
           "It depends on the sample size.",
         ],
       },
       {
-        prompt: "Can evidence be compared across different datasets?",
-        options: [
+        question: "Can evidence be compared across different datasets?",
+        choices: [
           "No; it is the probability of that specific data",
           "Yes, after normalising",
           "Yes, if the models are the same",
         ],
-        answerIndex: 0,
-        hint: "The quantity is conditional on the data.",
-        explanations: [
+        answer: 0,
+        explanation: "The quantity is conditional on the data.",
+        why: [
           "Correct. The comparison requires identical data.",
           "No normalisation makes it comparable.",
           "The data, not the model, is the problem.",
@@ -362,46 +362,46 @@ print("overconfident", calibration_error([(0.6, 0.45, 100), (0.8, 0.60, 100),
     checkpoint:
       "An ensemble agrees closely but each member reports high variance. What kind of uncertainty is this?",
     checkpointAnswer:
-      "Aleatoric - noise in the data. The models agree about the answer, and the answer is genuinely uncertain, so more data will not help.",
+      "Aleatoric — noise in the data. The models agree about the answer, and the answer is genuinely uncertain, so more data will not help.",
     remember:
       "Disagreement means unfamiliar; shared variance means noisy.",
     checks: [
       {
-        prompt: "Which uncertainty does more data reduce?",
-        options: ["Epistemic", "Aleatoric", "Both equally"],
-        answerIndex: 0,
-        hint: "One is about the model, the other about the world.",
-        explanations: [
+        question: "Which uncertainty does more data reduce?",
+        choices: ["Epistemic", "Aleatoric", "Both equally"],
+        answer: 0,
+        explanation: "One is about the model, the other about the world.",
+        why: [
           "Correct. It is uncertainty about the model itself.",
           "Noise in the data is irreducible.",
           "They respond very differently.",
         ],
       },
       {
-        prompt: "What does ensemble disagreement indicate?",
-        options: [
+        question: "What does ensemble disagreement indicate?",
+        choices: [
           "The input is unlike the training data",
           "The data is noisy",
           "The models are undertrained",
         ],
-        answerIndex: 0,
-        hint: "Compare it against the members' own variances.",
-        explanations: [
+        answer: 0,
+        explanation: "Compare it against the members' own variances.",
+        why: [
           "Correct. That is the epistemic term.",
           "Noise shows as shared high variance instead.",
           "Trained models still disagree off-distribution.",
         ],
       },
       {
-        prompt: "What is the limitation of ensemble uncertainty?",
-        options: [
+        question: "What is the limitation of ensemble uncertainty?",
+        choices: [
           "A blind spot shared by every member produces confident agreement",
           "It is expensive",
           "It needs a Bayesian prior",
         ],
-        answerIndex: 0,
-        hint: "The members share architecture and data.",
-        explanations: [
+        answer: 0,
+        explanation: "The members share architecture and data.",
+        why: [
           "Correct, and that is exactly the dangerous case.",
           "Cost is real but not the epistemic limitation.",
           "Ensembles need no explicit prior.",

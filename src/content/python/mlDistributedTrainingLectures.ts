@@ -22,7 +22,7 @@ const ML_DISTRIBUTED_SPECS: GuidedMasterySpec[] = [
     outcome:
       "You will find where half precision underflows and overflows, and recover a lost gradient by scaling it.",
     why:
-      "The memory saving is what makes large models trainable at all, and the failure mode is silent - the loss simply stops improving.",
+      "The memory saving is what makes large models trainable at all, and the failure mode is silent — the loss simply stops improving.",
     mentalModel:
       "Picture a narrow window of representable magnitudes. Gradients naturally sit underneath that window, so you shift them up before storing and shift back afterwards.",
     firstTitle: "The window",
@@ -62,45 +62,45 @@ for scale in (1, 1024, 65536):
       "Scale up before the backward pass, scale down after.",
     checks: [
       {
-        prompt: "What is the silent failure of half precision?",
-        options: [
+        question: "What is the silent failure of half precision?",
+        choices: [
           "Small gradients round to zero and the update vanishes",
           "The loss becomes negative",
           "Weights are corrupted",
         ],
-        answerIndex: 0,
-        hint: "Nothing raises an error.",
-        explanations: [
+        answer: 0,
+        explanation: "Nothing raises an error.",
+        why: [
           "Correct. The loss simply stops improving.",
           "The loss remains well defined.",
           "Weights are typically kept in full precision.",
         ],
       },
       {
-        prompt: "What does loss scaling multiply?",
-        options: [
+        question: "What does loss scaling multiply?",
+        choices: [
           "The loss, before the backward pass",
           "The learning rate",
           "The weights",
         ],
-        answerIndex: 0,
-        hint: "Gradients inherit the factor by the chain rule.",
-        explanations: [
+        answer: 0,
+        explanation: "Gradients inherit the factor by the chain rule.",
+        why: [
           "Correct, and the gradients are divided back afterwards.",
           "Scaling the learning rate does not fix representation.",
           "Weights are unaffected.",
         ],
       },
       {
-        prompt: "Why is the scale adjusted dynamically?",
-        options: [
+        question: "Why is the scale adjusted dynamically?",
+        choices: [
           "A fixed scale either underflows or overflows as training progresses",
           "To reduce memory",
           "To speed up the optimizer",
         ],
-        answerIndex: 0,
-        hint: "Gradient magnitudes change over a run.",
-        explanations: [
+        answer: 0,
+        explanation: "Gradient magnitudes change over a run.",
+        why: [
           "Correct. Implementations back off on observed overflows.",
           "Memory is unaffected by the scale.",
           "The optimizer is unchanged.",
@@ -159,50 +159,50 @@ for segments in (6, 7, 8, 9):
     checkpoint:
       "How many segments minimise stored activations for a network of a hundred layers?",
     checkpointAnswer:
-      "About ten - the square root of the layer count, where the per-segment and boundary terms balance.",
+      "About ten — the square root of the layer count, where the per-segment and boundary terms balance.",
     remember:
       "Segment count near the square root of the depth.",
     checks: [
       {
-        prompt: "What does gradient checkpointing trade away?",
-        options: [
+        question: "What does gradient checkpointing trade away?",
+        choices: [
           "Time, by recomputing activations",
           "Accuracy",
           "Batch size",
         ],
-        answerIndex: 0,
-        hint: "The results are identical.",
-        explanations: [
+        answer: 0,
+        explanation: "The results are identical.",
+        why: [
           "Correct. The gradients are exactly the same.",
           "Nothing about the mathematics changes.",
           "It usually allows a larger batch.",
         ],
       },
       {
-        prompt: "Roughly how many segments minimise stored activations?",
-        options: [
+        question: "Roughly how many segments minimise stored activations?",
+        choices: [
           "The square root of the layer count",
           "One",
           "The layer count",
         ],
-        answerIndex: 0,
-        hint: "Two terms balance at that point.",
-        explanations: [
+        answer: 0,
+        explanation: "Two terms balance at that point.",
+        why: [
           "Correct, and the curve is flat nearby.",
           "That stores a whole segment's activations.",
           "That maximises boundaries.",
         ],
       },
       {
-        prompt: "Why does checkpointing every layer help little?",
-        options: [
+        question: "Why does checkpointing every layer help little?",
+        choices: [
           "The boundary count then dominates the stored total",
           "Recomputation becomes free",
           "The gradients become approximate",
         ],
-        answerIndex: 0,
-        hint: "Every boundary is itself a stored activation.",
-        explanations: [
+        answer: 0,
+        explanation: "Every boundary is itself a stored activation.",
+        why: [
           "Correct, for maximum recomputation cost.",
           "Recomputation is at its most expensive there.",
           "Gradients stay exact throughout.",
@@ -261,45 +261,45 @@ for batch in (256, 2048, 8192, 65536):
       "Effective batch is per-device times devices times accumulation.",
     checks: [
       {
-        prompt: "What does each device hold in data parallelism?",
-        options: [
+        question: "What does each device hold in data parallelism?",
+        choices: [
           "A complete copy of the model",
           "One layer of the model",
           "A shard of the parameters",
         ],
-        answerIndex: 0,
-        hint: "Only the data is split.",
-        explanations: [
+        answer: 0,
+        explanation: "Only the data is split.",
+        why: [
           "Correct. That is what limits it to models that fit.",
           "That is pipeline parallelism.",
           "That is sharded training.",
         ],
       },
       {
-        prompt: "What is the effective batch?",
-        options: [
+        question: "What is the effective batch?",
+        choices: [
           "Per-device batch times devices times accumulation steps",
           "The per-device batch",
           "The device count",
         ],
-        answerIndex: 0,
-        hint: "All three contribute to one update.",
-        explanations: [
+        answer: 0,
+        explanation: "All three contribute to one update.",
+        why: [
           "Correct, and it is what governs the dynamics.",
           "That is only one factor of three.",
           "Batch size has to appear.",
         ],
       },
       {
-        prompt: "Why does a large batch need a learning-rate warmup?",
-        options: [
+        question: "Why does a large batch need a learning-rate warmup?",
+        choices: [
           "The scaled rate is large enough to destroy the initialisation",
           "The gradients are noisier",
           "Memory fills gradually",
         ],
-        answerIndex: 0,
-        hint: "The scaled rate applies from the first step.",
-        explanations: [
+        answer: 0,
+        explanation: "The scaled rate applies from the first step.",
+        why: [
           "Correct. Warmup ramps into it.",
           "A large batch gives less noise, not more.",
           "Memory is allocated up front.",
@@ -360,45 +360,45 @@ for microbatches in (1, 4, 16, 64):
       "Split when it does not fit, and fill the pipeline with microbatches.",
     checks: [
       {
-        prompt: "What does tensor parallelism split?",
-        options: [
+        question: "What does tensor parallelism split?",
+        choices: [
           "The weights of a single operation",
           "Consecutive layers",
           "The training batch",
         ],
-        answerIndex: 0,
-        hint: "It works inside one operation.",
-        explanations: [
+        answer: 0,
+        explanation: "It works inside one operation.",
+        why: [
           "Correct, which needs fast interconnect between the devices.",
           "That is pipeline parallelism.",
           "That is data parallelism.",
         ],
       },
       {
-        prompt: "What causes a pipeline bubble?",
-        options: [
+        question: "What causes a pipeline bubble?",
+        choices: [
           "Stages idle while the pipeline fills and drains",
           "Network congestion",
           "Uneven layer sizes",
         ],
-        answerIndex: 0,
-        hint: "It is inherent to the schedule.",
-        explanations: [
+        answer: 0,
+        explanation: "It is inherent to the schedule.",
+        why: [
           "Correct, and more microbatches amortise it.",
           "Congestion is a separate problem.",
           "Imbalance adds to it but is not the cause.",
         ],
       },
       {
-        prompt: "How is the bubble reduced?",
-        options: [
+        question: "How is the bubble reduced?",
+        choices: [
           "More microbatches per step",
           "Fewer devices",
           "A larger learning rate",
         ],
-        answerIndex: 0,
-        hint: "The startup is amortised over the work.",
-        explanations: [
+        answer: 0,
+        explanation: "The startup is amortised over the work.",
+        why: [
           "Correct. Sixty-four brings eight stages under ten percent.",
           "Fewer stages helps, but that limits model size.",
           "Optimisation settings are unrelated.",
@@ -467,41 +467,41 @@ for number, what, cost in stages:
       "Shard the optimizer state first; it is free and it is most of the memory.",
     checks: [
       {
-        prompt: "Which sharding stage gives the largest saving for the least cost?",
-        options: [
+        question: "Which sharding stage gives the largest saving for the least cost?",
+        choices: [
           "Sharding the optimizer state",
           "Sharding the parameters",
           "Sharding the gradients",
         ],
-        answerIndex: 0,
-        hint: "It adds no communication at all.",
-        explanations: [
+        answer: 0,
+        explanation: "It adds no communication at all.",
+        why: [
           "Correct. It removes about three quarters of the memory.",
           "That is the most expensive stage.",
           "That helps, but less than the optimizer state.",
         ],
       },
       {
-        prompt: "What does full parameter sharding require at each layer?",
-        options: [
+        question: "What does full parameter sharding require at each layer?",
+        choices: [
           "Gathering the parameters before use",
           "A second backward pass",
           "Recomputing activations",
         ],
-        answerIndex: 0,
-        hint: "No device holds a whole layer.",
-        explanations: [
+        answer: 0,
+        explanation: "No device holds a whole layer.",
+        why: [
           "Correct, which is why interconnect speed decides whether it pays.",
           "The backward pass is unchanged.",
           "That is gradient checkpointing.",
         ],
       },
       {
-        prompt: "Roughly how much memory does the optimizer state take per parameter?",
-        options: ["About twelve bytes", "About two bytes", "About one byte"],
-        answerIndex: 0,
-        hint: "Moments plus a full-precision master copy.",
-        explanations: [
+        question: "Roughly how much memory does the optimizer state take per parameter?",
+        choices: ["About twelve bytes", "About two bytes", "About one byte"],
+        answer: 0,
+        explanation: "Moments plus a full-precision master copy.",
+        why: [
           "Correct. That dwarfs the weight and its gradient.",
           "That is the weight alone in half precision.",
           "Far too small for moments and a master copy.",
@@ -550,7 +550,7 @@ for devices in (8, 64, 512):
     print(devices, "ring", ring_ms(payload, devices, 400),
           "gather-to-one", gather_ms(payload, devices, 400))`,
     secondTrace:
-      "At five hundred twelve devices the ring costs seventy milliseconds and gathering costs seventeen thousand nine hundred - two hundred fifty times more.",
+      "At five hundred twelve devices the ring costs seventy milliseconds and gathering costs seventeen thousand nine hundred — two hundred fifty times more.",
     mistake:
       "Treating communication as free because the profile shows high accelerator utilisation. Overlapping communication with computation hides it in the profile without removing it from the critical path.",
     checkpoint:
@@ -561,45 +561,45 @@ for devices in (8, 64, 512):
       "Ring for all-reduce; never gather to one.",
     checks: [
       {
-        prompt: "What does an all-reduce leave on each device?",
-        options: [
+        question: "What does an all-reduce leave on each device?",
+        choices: [
           "The combined result, identical everywhere",
           "Its own contribution only",
           "One slice of the result",
         ],
-        answerIndex: 0,
-        hint: "That is what distinguishes it from reduce-scatter.",
-        explanations: [
+        answer: 0,
+        explanation: "That is what distinguishes it from reduce-scatter.",
+        why: [
           "Correct. Every device ends up with the same value.",
           "That would be no communication at all.",
           "That is reduce-scatter.",
         ],
       },
       {
-        prompt: "Why does the ring algorithm scale?",
-        options: [
+        question: "Why does the ring algorithm scale?",
+        choices: [
           "Every link carries the same load, so no device is a bottleneck",
           "It sends less total data",
           "It skips some devices",
         ],
-        answerIndex: 0,
-        hint: "Compare it with one device receiving everything.",
-        explanations: [
+        answer: 0,
+        explanation: "Compare it with one device receiving everything.",
+        why: [
           "Correct. The per-device cost saturates.",
           "It moves about twice the payload per device.",
           "Every device participates.",
         ],
       },
       {
-        prompt: "Overlapping communication with computation does what?",
-        options: [
+        question: "Overlapping communication with computation does what?",
+        choices: [
           "Hides it in the profile without removing it from the critical path",
           "Eliminates the cost",
           "Reduces the bytes moved",
         ],
-        answerIndex: 0,
-        hint: "The bytes still have to move.",
-        explanations: [
+        answer: 0,
+        explanation: "The bytes still have to move.",
+        why: [
           "Correct, which is why high utilisation can be misleading.",
           "The transfer still takes time.",
           "The payload is unchanged.",

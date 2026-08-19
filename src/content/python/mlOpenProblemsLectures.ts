@@ -66,45 +66,45 @@ for failure, evidence in cases:
       "Unsupported, unfaithful and deceptive are three failures, not one.",
     checks: [
       {
-        prompt: "What distinguishes an unfaithful rationale from an unsupported claim?",
-        options: [
+        question: "What distinguishes an unfaithful rationale from an unsupported claim?",
+        choices: [
           "The claim is correct; the stated reasoning is not the real one",
           "The claim is wrong",
           "There is no evidence",
         ],
-        answerIndex: 0,
-        hint: "The two questions are independent.",
-        explanations: [
+        answer: 0,
+        explanation: "The two questions are independent.",
+        why: [
           "Correct, and the mitigations differ entirely.",
           "That is the unsupported case.",
           "Evidence may be present and correctly used.",
         ],
       },
       {
-        prompt: "Why is deception the hardest to establish?",
-        options: [
+        question: "Why is deception the hardest to establish?",
+        choices: [
           "It requires evidence the model represented the truth",
           "It is rare",
           "It is subjective",
         ],
-        answerIndex: 0,
-        hint: "Knowing better is an internal-state claim.",
-        explanations: [
+        answer: 0,
+        explanation: "Knowing better is an internal-state claim.",
+        why: [
           "Correct, which makes it an interpretability question.",
           "Rarity is not the difficulty.",
           "It has a precise definition.",
         ],
       },
       {
-        prompt: "What settles whether a rationale is faithful?",
-        options: [
+        question: "What settles whether a rationale is faithful?",
+        choices: [
           "Intervene on the stated reason and see if behaviour follows",
           "Ask the model to explain again",
           "Check the answer against sources",
         ],
-        answerIndex: 0,
-        hint: "It has to be a causal test.",
-        explanations: [
+        answer: 0,
+        explanation: "It has to be a causal test.",
+        why: [
           "Correct. Explanations are cheap; interventions are not.",
           "A second explanation is subject to the same problem.",
           "That tests support, not faithfulness.",
@@ -159,44 +159,44 @@ for name, clean, shifted in [("natural", 0.91, 0.84),
     checkpointAnswer:
       "It is caused by the deployment itself. The behaviour that produces it does not exist until people are responding to the model.",
     remember:
-      "Natural, adversarial and strategic - say which one you measured.",
+      "Natural, adversarial and strategic — say which one you measured.",
     checks: [
       {
-        prompt: "Which shift is caused by the deployment itself?",
-        options: ["Strategic", "Natural", "Adversarial"],
-        answerIndex: 0,
-        hint: "People respond to being scored.",
-        explanations: [
+        question: "Which shift is caused by the deployment itself?",
+        choices: ["Strategic", "Natural", "Adversarial"],
+        answer: 0,
+        explanation: "People respond to being scored.",
+        why: [
           "Correct, and it grows with adoption.",
           "That would have happened anyway.",
           "That is deliberate attack, not response.",
         ],
       },
       {
-        prompt: "Why is strategic shift invisible to a held-out set?",
-        options: [
+        question: "Why is strategic shift invisible to a held-out set?",
+        choices: [
           "The behaviour producing it does not exist before deployment",
           "The set is too small",
           "It is hard to measure",
         ],
-        answerIndex: 0,
-        hint: "It is a response to the model.",
-        explanations: [
+        answer: 0,
+        explanation: "It is a response to the model.",
+        why: [
           "Correct. No historical data contains it.",
           "Size does not help here.",
           "It is measurable once deployed.",
         ],
       },
       {
-        prompt: "What does testing only natural shift establish?",
-        options: [
+        question: "What does testing only natural shift establish?",
+        choices: [
           "Robustness to the easiest of the three",
           "General robustness",
           "Adversarial robustness",
         ],
-        answerIndex: 0,
-        hint: "Compare the magnitudes.",
-        explanations: [
+        answer: 0,
+        explanation: "Compare the magnitudes.",
+        why: [
           "Correct, and it is usually reported as more.",
           "It covers one case of three.",
           "Adversarial degradation was ten times larger.",
@@ -264,45 +264,45 @@ for a, b in pairs:
       "Compare assumptions and failure modes, not ambitions.",
     checks: [
       {
-        prompt: "What should proposals be compared on?",
-        options: [
+        question: "What should proposals be compared on?",
+        choices: [
           "Their load-bearing assumptions and failure modes",
           "How much they promise",
           "How well specified they are",
         ],
-        answerIndex: 0,
-        hint: "The bet, not the description.",
-        explanations: [
+        answer: 0,
+        explanation: "The bet, not the description.",
+        why: [
           "Correct. That is the tractable comparison.",
           "Ambition is the easy part.",
           "Specification quality is secondary.",
         ],
       },
       {
-        prompt: "Why does combining two proposals with a shared assumption help less?",
-        options: [
+        question: "Why does combining two proposals with a shared assumption help less?",
+        choices: [
           "They fail together under the same condition",
           "They cost more",
           "They contradict each other",
         ],
-        answerIndex: 0,
-        hint: "Hedging needs independent failures.",
-        explanations: [
+        answer: 0,
+        explanation: "Hedging needs independent failures.",
+        why: [
           "Correct. The shared risk is not hedged.",
           "Cost is a separate consideration.",
           "They can be perfectly compatible.",
         ],
       },
       {
-        prompt: "What is the failure mode of interpretability-based oversight?",
-        options: [
+        question: "What is the failure mode of interpretability-based oversight?",
+        choices: [
           "Features are superposed and not readable",
           "It is too slow",
           "It needs too much data",
         ],
-        answerIndex: 0,
-        hint: "Recall what superposition implies about neurons.",
-        explanations: [
+        answer: 0,
+        explanation: "Recall what superposition implies about neurons.",
+        why: [
           "Correct, and superposition is the default rather than the exception.",
           "Speed is not the load-bearing issue.",
           "It reads a trained model rather than needing data.",
@@ -366,45 +366,45 @@ for name, metric, baseline, scoped in candidates:
       "Pick where the problem matters and progress can be measured.",
     checks: [
       {
-        prompt: "What does maturity measure?",
-        options: [
+        question: "What does maturity measure?",
+        choices: [
           "How well understood a problem is",
           "How important it is",
           "How long it has been studied",
         ],
-        answerIndex: 0,
-        hint: "It is separate from importance.",
-        explanations: [
+        answer: 0,
+        explanation: "It is separate from importance.",
+        why: [
           "Correct, and the two do not correlate.",
           "Importance is the other axis.",
           "Age does not imply understanding.",
         ],
       },
       {
-        prompt: "What makes a contribution tractable?",
-        options: [
+        question: "What makes a contribution tractable?",
+        choices: [
           "A metric, a baseline, and a scope someone can finish",
           "Importance",
           "Novelty",
         ],
-        answerIndex: 0,
-        hint: "Progress has to be checkable.",
-        explanations: [
+        answer: 0,
+        explanation: "Progress has to be checkable.",
+        why: [
           "Correct. All three are needed.",
           "Important and unmeasurable is a trap.",
           "Novelty without a metric is unevaluable.",
         ],
       },
       {
-        prompt: "Why is a problem with no metric hard to work on?",
-        options: [
+        question: "Why is a problem with no metric hard to work on?",
+        choices: [
           "Effort and result cannot be distinguished",
           "It is not interesting",
           "Nobody has tried",
         ],
-        answerIndex: 0,
-        hint: "Think about how you would know you succeeded.",
-        explanations: [
+        answer: 0,
+        explanation: "Think about how you would know you succeeded.",
+        why: [
           "Correct, and that blocks publication and reuse.",
           "It is often the most interesting kind.",
           "Many people usually have.",

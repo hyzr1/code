@@ -54,48 +54,48 @@ for params in (1e9, 5e9, 1e10, 5e10, 1e11):
     checkpointAnswer:
       "Loss goes up. Both the parameter and the data term matter, so starving either one costs more than the other gains.",
     remember:
-      "Loss is a floor plus two decaying terms - balance them.",
+      "Loss is a floor plus two decaying terms — balance them.",
     checks: [
       {
-        prompt: "What does the constant term in a scaling law represent?",
-        options: [
+        question: "What does the constant term in a scaling law represent?",
+        choices: [
           "The irreducible loss of the data itself",
           "A fitting artefact with no meaning",
           "The loss at one parameter",
         ],
-        answerIndex: 0,
-        hint: "It is the floor neither term can go below.",
-        explanations: [
+        answer: 0,
+        explanation: "It is the floor neither term can go below.",
+        why: [
           "Correct. No amount of scale reaches below it.",
           "It is the most interpretable term of the three.",
           "The other terms dominate at that size.",
         ],
       },
       {
-        prompt: "Roughly how much compute does training cost?",
-        options: [
+        question: "Roughly how much compute does training cost?",
+        choices: [
           "About six times parameters times tokens",
           "About parameters times tokens",
           "About parameters squared",
         ],
-        answerIndex: 0,
-        hint: "Forward and backward passes both contribute.",
-        explanations: [
+        answer: 0,
+        explanation: "Forward and backward passes both contribute.",
+        why: [
           "Correct. That is the standard estimate.",
           "That misses the backward pass and the factor entirely.",
           "Token count has to appear.",
         ],
       },
       {
-        prompt: "Why is the compute-optimal split interior rather than extreme?",
-        options: [
+        question: "Why is the compute-optimal split interior rather than extreme?",
+        choices: [
           "Both the parameter and the data term must be reduced",
           "Because of memory limits",
           "Because of the constant term",
         ],
-        answerIndex: 0,
-        hint: "Starving either term costs more than the other gains.",
-        explanations: [
+        answer: 0,
+        explanation: "Starving either term costs more than the other gains.",
+        why: [
           "Correct. Neither alone reaches the floor.",
           "Memory is a separate constraint.",
           "The constant does not depend on the split.",
@@ -152,45 +152,45 @@ for scale in range(6, 16):
       "Check the metric before believing the threshold.",
     checks: [
       {
-        prompt: "What can make a smooth improvement look like a sudden jump?",
-        options: [
+        question: "What can make a smooth improvement look like a sudden jump?",
+        choices: [
           "A metric scoring only fully correct answers",
           "A larger training set",
           "A lower learning rate",
         ],
-        answerIndex: 0,
-        hint: "Think about a task requiring several steps to all be right.",
-        explanations: [
+        answer: 0,
+        explanation: "Think about a task requiring several steps to all be right.",
+        why: [
           "Correct. Partial progress earns nothing.",
           "Data size affects the underlying curve, not the scoring.",
           "Optimisation choices are unrelated.",
         ],
       },
       {
-        prompt: "How do you tell genuine emergence from a metric artefact?",
-        options: [
+        question: "How do you tell genuine emergence from a metric artefact?",
+        choices: [
           "Score the same runs with a partial-credit metric",
           "Train a larger model",
           "Repeat the evaluation",
         ],
-        answerIndex: 0,
-        hint: "The runs already exist.",
-        explanations: [
+        answer: 0,
+        explanation: "The runs already exist.",
+        why: [
           "Correct. Steady progress there means the jump was scoring.",
           "That answers a different question.",
           "Repetition does not change the metric.",
         ],
       },
       {
-        prompt: "Why does the distinction matter?",
-        options: [
+        question: "Why does the distinction matter?",
+        choices: [
           "A smooth underlying gain can be forecast; a true threshold cannot",
           "It changes the training cost",
           "It changes the model architecture",
         ],
-        answerIndex: 0,
-        hint: "Think about predicting the next model.",
-        explanations: [
+        answer: 0,
+        explanation: "Think about predicting the next model.",
+        why: [
           "Correct. Forecasting is the practical stake.",
           "Cost is unaffected.",
           "Architecture is a separate decision.",
@@ -260,45 +260,45 @@ print("reported score is measuring recall on:",
       "Deduplicate, decontaminate, and know what your filter throws away.",
     checks: [
       {
-        prompt: "What does a duplicate document cost?",
-        options: [
+        question: "What does a duplicate document cost?",
+        choices: [
           "Compute spent encouraging memorisation",
           "Nothing; extra copies are harmless",
           "Storage only",
         ],
-        answerIndex: 0,
-        hint: "Repetition raises a document's effective weight.",
-        explanations: [
+        answer: 0,
+        explanation: "Repetition raises a document's effective weight.",
+        why: [
           "Correct. Deduplication improves the model, not just the size.",
           "Repetition changes the training distribution.",
           "Storage is the least of it.",
         ],
       },
       {
-        prompt: "A benchmark's questions appear in the training corpus. What can be done?",
-        options: [
+        question: "A benchmark's questions appear in the training corpus. What can be done?",
+        choices: [
           "Nothing after the fact; the evaluation is invalid",
           "Subtract the contaminated fraction",
           "Reweight the score",
         ],
-        answerIndex: 0,
-        hint: "The score blends two different quantities.",
-        explanations: [
+        answer: 0,
+        explanation: "The score blends two different quantities.",
+        why: [
           "Correct. Only a clean held-out set restores meaning.",
           "The two effects cannot be separated afterwards.",
           "Reweighting assumes a separation that does not exist.",
         ],
       },
       {
-        prompt: "What is the hidden risk of a quality filter?",
-        options: [
+        question: "What is the hidden risk of a quality filter?",
+        choices: [
           "It removes registers and languages the filter was not built for",
           "It runs too slowly",
           "It keeps too much data",
         ],
-        answerIndex: 0,
-        hint: "The filter encodes one notion of good writing.",
-        explanations: [
+        answer: 0,
+        explanation: "The filter encodes one notion of good writing.",
+        why: [
           "Correct, and the loss shows only on evaluations you did not run.",
           "Speed is a minor concern at this scale.",
           "Filters are usually aggressive, not lenient.",

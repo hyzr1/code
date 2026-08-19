@@ -71,45 +71,45 @@ print(message(validate({}, schema)))`,
       "Validate outside the model, and return errors it can act on.",
     checks: [
       {
-        prompt: "Where must permission boundaries be enforced?",
-        options: [
+        question: "Where must permission boundaries be enforced?",
+        choices: [
           "In the tool layer, outside the model",
           "In the system prompt",
           "In the model's training",
         ],
-        answerIndex: 0,
-        hint: "Instructions are advisory to a model.",
-        explanations: [
+        answer: 0,
+        explanation: "Instructions are advisory to a model.",
+        why: [
           "Correct. Only there can they be guaranteed.",
           "A prompt cannot enforce anything.",
           "Training shapes tendencies, not guarantees.",
         ],
       },
       {
-        prompt: "What makes a tool error useful to an agent?",
-        options: [
+        question: "What makes a tool error useful to an agent?",
+        choices: [
           "It names the field and what was expected",
           "It includes a stack trace",
           "It is short",
         ],
-        answerIndex: 0,
-        hint: "The model has to decide what to do next.",
-        explanations: [
+        answer: 0,
+        explanation: "The model has to decide what to do next.",
+        why: [
           "Correct. The next call becomes a repair.",
           "A trace describes internals the model cannot act on.",
           "Brevity without specifics does not help.",
         ],
       },
       {
-        prompt: "Which failures should a schema distinguish?",
-        options: [
+        question: "Which failures should a schema distinguish?",
+        choices: [
           "Missing, wrong type, and unknown fields",
           "Only missing fields",
           "Only type errors",
         ],
-        answerIndex: 0,
-        hint: "Each needs a different repair.",
-        explanations: [
+        answer: 0,
+        explanation: "Each needs a different repair.",
+        why: [
           "Correct, and reporting all of them at once saves retries.",
           "Type errors need naming too.",
           "An unknown field signals a different misunderstanding.",
@@ -170,45 +170,45 @@ print("steps", len(steps), "load-bearing", len(useful),
       "State is what changes the next action; everything else is narration.",
     checks: [
       {
-        prompt: "What test distinguishes state from commentary?",
-        options: [
+        question: "What test distinguishes state from commentary?",
+        choices: [
           "Whether removing it changes the next action",
           "Whether it is well written",
           "Whether it mentions the goal",
         ],
-        answerIndex: 0,
-        hint: "It has to be a counterfactual.",
-        explanations: [
+        answer: 0,
+        explanation: "It has to be a counterfactual.",
+        why: [
           "Correct, and much of a transcript fails it.",
           "Fluency is not the criterion.",
           "Mentioning the goal changes nothing by itself.",
         ],
       },
       {
-        prompt: "Why do reflection steps that change nothing still matter?",
-        options: [
+        question: "Why do reflection steps that change nothing still matter?",
+        choices: [
           "They cost tokens and latency",
           "They confuse the model",
           "They are always harmful",
         ],
-        answerIndex: 0,
-        hint: "Overhead is the cost.",
-        explanations: [
+        answer: 0,
+        explanation: "Overhead is the cost.",
+        why: [
           "Correct. Pure overhead dressed as deliberation.",
           "They are usually harmless, just wasteful.",
           "Harmless is not the same as free.",
         ],
       },
       {
-        prompt: "A reflection step improves a benchmark score. Is it planning?",
-        options: [
+        question: "A reflection step improves a benchmark score. Is it planning?",
+        choices: [
           "Not necessarily; check whether it changes actions",
           "Yes, the score proves it",
           "No, scores are irrelevant",
         ],
-        answerIndex: 0,
-        hint: "Consuming tokens before answering can help for other reasons.",
-        explanations: [
+        answer: 0,
+        explanation: "Consuming tokens before answering can help for other reasons.",
+        why: [
           "Correct. The action test is the one that settles it.",
           "A score improvement has several possible causes.",
           "Scores matter, they just do not identify the mechanism.",
@@ -269,37 +269,37 @@ for catches in (0.0, 0.8, 0.99):
       "Decompose only where you can verify; otherwise the chain multiplies.",
     checks: [
       {
-        prompt: "How do unverified subtask accuracies combine?",
-        options: ["They multiply", "They average", "The weakest wins"],
-        answerIndex: 0,
-        hint: "All of them must succeed.",
-        explanations: [
+        question: "How do unverified subtask accuracies combine?",
+        choices: ["They multiply", "They average", "The weakest wins"],
+        answer: 0,
+        explanation: "All of them must succeed.",
+        why: [
           "Correct, which is why long chains collapse.",
           "Averaging would be far too generous.",
           "The product is below the weakest link.",
         ],
       },
       {
-        prompt: "When does decomposition beat a single agent?",
-        options: [
+        question: "When does decomposition beat a single agent?",
+        choices: [
           "When each subtask can be verified independently",
           "When there are many subtasks",
           "When the agents are identical",
         ],
-        answerIndex: 0,
-        hint: "Verification is what stops the compounding.",
-        explanations: [
+        answer: 0,
+        explanation: "Verification is what stops the compounding.",
+        why: [
           "Correct. Without it the chain is worse.",
           "More subtasks makes it worse, not better.",
           "Identical agents change nothing.",
         ],
       },
       {
-        prompt: "In a verified pipeline, what is doing most of the work?",
-        options: ["The verifier", "The agents", "The orchestrator"],
-        answerIndex: 0,
-        hint: "Compare the accuracies with and without it.",
-        explanations: [
+        question: "In a verified pipeline, what is doing most of the work?",
+        choices: ["The verifier", "The agents", "The orchestrator"],
+        answer: 0,
+        explanation: "Compare the accuracies with and without it.",
+        why: [
           "Correct. It took forty-three percent to ninety-nine.",
           "The agents were unchanged throughout.",
           "Routing does not repair errors.",
@@ -363,48 +363,48 @@ print("cost per success     ", round(total / wins, 1))`,
     checkpointAnswer:
       "Failed runs consume tokens without producing anything, and they are often the longest. Dividing by successes is the honest figure.",
     remember:
-      "Success, cost per success, recoveries and side effects - all four.",
+      "Success, cost per success, recoveries and side effects — all four.",
     checks: [
       {
-        prompt: "What does a success rate omit?",
-        options: [
+        question: "What does a success rate omit?",
+        choices: [
           "Cost, recoveries and side effects",
           "The final answer",
           "The task definition",
         ],
-        answerIndex: 0,
-        hint: "Three of the four axes.",
-        explanations: [
+        answer: 0,
+        explanation: "Three of the four axes.",
+        why: [
           "Correct, and all three change the decision.",
           "That is what it reports.",
           "The task is fixed by the benchmark.",
         ],
       },
       {
-        prompt: "Why divide cost by successes rather than by runs?",
-        options: [
+        question: "Why divide cost by successes rather than by runs?",
+        choices: [
           "Failed runs spend tokens without producing anything",
           "Successes are more expensive",
           "It gives a smaller number",
         ],
-        answerIndex: 0,
-        hint: "Failures are often the longest runs.",
-        explanations: [
+        answer: 0,
+        explanation: "Failures are often the longest runs.",
+        why: [
           "Correct, and that is the budgeting figure.",
           "Failures usually cost more here.",
           "It gives a larger and more honest one.",
         ],
       },
       {
-        prompt: "Why report side effects?",
-        options: [
+        question: "Why report side effects?",
+        choices: [
           "An agent that succeeds and leaves unintended writes may be worse than one that fails cleanly",
           "They are easy to count",
           "They correlate with cost",
         ],
-        answerIndex: 0,
-        hint: "The path is part of the result.",
-        explanations: [
+        answer: 0,
+        explanation: "The path is part of the result.",
+        why: [
           "Correct. What it touched is a result too.",
           "Ease of counting is not the reason.",
           "The correlation is weak and beside the point.",

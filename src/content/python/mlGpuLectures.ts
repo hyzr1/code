@@ -57,48 +57,48 @@ for registers in (16, 32, 64, 128):
     checkpointAnswer:
       "Far fewer threads are resident to hide memory latency, so stalls that would have been overlapped are now exposed.",
     remember:
-      "Threads, registers, shared memory - whichever runs out first wins.",
+      "Threads, registers, shared memory — whichever runs out first wins.",
     checks: [
       {
-        prompt: "What does occupancy measure?",
-        options: [
+        question: "What does occupancy measure?",
+        choices: [
           "The share of thread slots actually in use",
           "The share of time the kernel runs",
           "Memory bandwidth used",
         ],
-        answerIndex: 0,
-        hint: "It is about residency, not speed.",
-        explanations: [
+        answer: 0,
+        explanation: "It is about residency, not speed.",
+        why: [
           "Correct, and residency is what hides latency.",
           "That is utilisation.",
           "Bandwidth is measured separately.",
         ],
       },
       {
-        prompt: "Why does register use cap occupancy?",
-        options: [
+        question: "Why does register use cap occupancy?",
+        choices: [
           "Every resident thread holds its registers for the kernel's lifetime",
           "Registers are slow",
           "Registers are shared between blocks",
         ],
-        answerIndex: 0,
-        hint: "The register file is a fixed size.",
-        explanations: [
+        answer: 0,
+        explanation: "The register file is a fixed size.",
+        why: [
           "Correct. More per thread means fewer threads.",
           "Registers are the fastest storage available.",
           "They are private to each thread.",
         ],
       },
       {
-        prompt: "Is maximum occupancy always the goal?",
-        options: [
+        question: "Is maximum occupancy always the goal?",
+        choices: [
           "No; more registers per thread can be worth the lower occupancy",
           "Yes, always",
           "Only for memory-bound kernels",
         ],
-        answerIndex: 0,
-        hint: "It is a diagnostic, not the objective.",
-        explanations: [
+        answer: 0,
+        explanation: "It is a diagnostic, not the objective.",
+        why: [
           "Correct, if it avoids a memory round trip.",
           "Occupancy is a means, not an end.",
           "The trade-off applies to both kinds.",
@@ -159,45 +159,45 @@ for stride in (1, 2, 4, 32):
       "Agree on branches, and read neighbouring addresses.",
     checks: [
       {
-        prompt: "What is a warp?",
-        options: [
+        question: "What is a warp?",
+        choices: [
           "A group of threads executing one instruction together",
           "A block of shared memory",
           "A kernel launch",
         ],
-        answerIndex: 0,
-        hint: "They share an instruction pointer.",
-        explanations: [
+        answer: 0,
+        explanation: "They share an instruction pointer.",
+        why: [
           "Correct. Divergence is judged at this level.",
           "Shared memory is allocated per block.",
           "A launch contains many warps.",
         ],
       },
       {
-        prompt: "What does branch divergence cost?",
-        options: [
+        question: "What does branch divergence cost?",
+        choices: [
           "Both paths execute, with threads idle through the other",
           "Nothing, threads are independent",
           "A kernel restart",
         ],
-        answerIndex: 0,
-        hint: "Lockstep execution cannot take two paths at once.",
-        explanations: [
+        answer: 0,
+        explanation: "Lockstep execution cannot take two paths at once.",
+        why: [
           "Correct, even when only one thread disagrees.",
           "Threads within a warp are not independent.",
           "Nothing restarts.",
         ],
       },
       {
-        prompt: "Why does access stride matter so much?",
-        options: [
+        question: "Why does access stride matter so much?",
+        choices: [
           "It multiplies the memory transactions for the same values",
           "It changes the arithmetic",
           "It affects register use",
         ],
-        answerIndex: 0,
-        hint: "Count the distinct cache lines touched.",
-        explanations: [
+        answer: 0,
+        explanation: "Count the distinct cache lines touched.",
+        why: [
           "Correct, and it is invisible in the instruction count.",
           "The computation is identical.",
           "Registers are unaffected.",
@@ -266,45 +266,45 @@ for weight, bias in [(0.0, 0.0), (-1.0, 5.0), (3.5, -2.5)]:
       "Fuse to remove traffic, and check against the reference.",
     checks: [
       {
-        prompt: "What does fusion remove?",
-        options: [
+        question: "What does fusion remove?",
+        choices: [
           "Round trips to memory for intermediate values",
           "Arithmetic operations",
           "Thread synchronisation",
         ],
-        answerIndex: 0,
-        hint: "The computation is identical.",
-        explanations: [
+        answer: 0,
+        explanation: "The computation is identical.",
+        why: [
           "Correct, and elementwise chains are memory bound.",
           "The same arithmetic still happens.",
           "Synchronisation is a separate concern.",
         ],
       },
       {
-        prompt: "What must be checked before trusting a fused kernel?",
-        options: [
+        question: "What must be checked before trusting a fused kernel?",
+        choices: [
           "That it matches the unfused reference elementwise",
           "That it is faster",
           "That it uses fewer registers",
         ],
-        answerIndex: 0,
-        hint: "It is new code with a silent failure mode.",
-        explanations: [
+        answer: 0,
+        explanation: "It is new code with a silent failure mode.",
+        why: [
           "Correct. Speed is worthless if the values changed.",
           "Speed is the reason, not the check.",
           "Register use is incidental.",
         ],
       },
       {
-        prompt: "When is fusing across an operation unsafe?",
-        options: [
+        question: "When is fusing across an operation unsafe?",
+        choices: [
           "When it writes in place and the ordering mattered",
           "When the tensors are large",
           "When there are more than three operations",
         ],
-        answerIndex: 0,
-        hint: "Think about a guaranteed write-before-read.",
-        explanations: [
+        answer: 0,
+        explanation: "Think about a guaranteed write-before-read.",
+        why: [
           "Correct, and the result then depends on scheduling.",
           "Size makes fusion more valuable, not less safe.",
           "Longer chains fuse fine.",
@@ -375,45 +375,45 @@ for label, flops, moved in [("memory bound", 1e9, 12e9),
       "Classify first; under the ridge only traffic matters.",
     checks: [
       {
-        prompt: "What is arithmetic intensity?",
-        options: [
+        question: "What is arithmetic intensity?",
+        choices: [
           "Operations performed per byte moved",
           "Operations per second",
           "Bytes moved per second",
         ],
-        answerIndex: 0,
-        hint: "It is a ratio, not a rate.",
-        explanations: [
+        answer: 0,
+        explanation: "It is a ratio, not a rate.",
+        why: [
           "Correct, and it places the kernel on the roofline.",
           "That is throughput.",
           "That is bandwidth.",
         ],
       },
       {
-        prompt: "A kernel is memory bound. What helps?",
-        options: [
+        question: "A kernel is memory bound. What helps?",
+        choices: [
           "Reducing memory traffic",
           "Reducing arithmetic",
           "Using more threads",
         ],
-        answerIndex: 0,
-        hint: "It is waiting on the memory system.",
-        explanations: [
+        answer: 0,
+        explanation: "It is waiting on the memory system.",
+        why: [
           "Correct. Fusion and better layouts are the levers.",
           "It is not waiting on arithmetic.",
           "More threads do not create bandwidth.",
         ],
       },
       {
-        prompt: "Why use measured rather than datasheet bandwidth?",
-        options: [
+        question: "Why use measured rather than datasheet bandwidth?",
+        choices: [
           "Real bandwidth is well below peak, so the ridge sits lower",
           "Datasheets are usually wrong",
           "Bandwidth varies by kernel",
         ],
-        answerIndex: 0,
-        hint: "More kernels are memory bound than the paper figure suggests.",
-        explanations: [
+        answer: 0,
+        explanation: "More kernels are memory bound than the paper figure suggests.",
+        why: [
           "Correct, typically seventy to eighty percent.",
           "They state a theoretical maximum, not an error.",
           "The hardware limit is fixed.",

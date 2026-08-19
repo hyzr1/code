@@ -63,45 +63,45 @@ for batch in (1, 8, 32):
       "The cache trades quadratic compute for linear, growing memory.",
     checks: [
       {
-        prompt: "What does the cache store?",
-        options: [
+        question: "What does the cache store?",
+        choices: [
           "Attention keys and values for tokens already processed",
           "The generated tokens themselves",
           "The model weights",
         ],
-        answerIndex: 0,
-        hint: "It is what the next token needs to attend to.",
-        explanations: [
+        answer: 0,
+        explanation: "It is what the next token needs to attend to.",
+        why: [
           "Correct. Two tensors per layer per head per token.",
           "Those are cheap and not the issue.",
           "Weights are shared across requests.",
         ],
       },
       {
-        prompt: "How does cache memory scale?",
-        options: [
+        question: "How does cache memory scale?",
+        choices: [
           "With sequence length times batch size",
           "With sequence length only",
           "It is constant per model",
         ],
-        answerIndex: 0,
-        hint: "Each request keeps its own.",
-        explanations: [
+        answer: 0,
+        explanation: "Each request keeps its own.",
+        why: [
           "Correct, which is why batch and context trade against each other.",
           "Batch multiplies it too.",
           "It grows with every generated token.",
         ],
       },
       {
-        prompt: "What usually limits how many requests a server can hold?",
-        options: [
+        question: "What usually limits how many requests a server can hold?",
+        choices: [
           "Cache memory, not model weights",
           "Model weights",
           "Network bandwidth",
         ],
-        answerIndex: 0,
-        hint: "Weights are loaded once and shared.",
-        explanations: [
+        answer: 0,
+        explanation: "Weights are loaded once and shared.",
+        why: [
           "Correct. At batch it dwarfs the weights.",
           "Those are a fixed one-time cost.",
           "Bandwidth is rarely the binding constraint here.",
@@ -165,48 +165,48 @@ for bits in (16, 8, 4):
     checkpointAnswer:
       "The scale spans the whole range, so a distant value widens the step size for every ordinary weight sharing that scale.",
     remember:
-      "Fewer bits, bigger steps - and outliers set the range.",
+      "Fewer bits, bigger steps — and outliers set the range.",
     checks: [
       {
-        prompt: "What does the scale represent?",
-        options: [
+        question: "What does the scale represent?",
+        choices: [
           "The gap between adjacent representable values",
           "The largest weight",
           "The bit width",
         ],
-        answerIndex: 0,
-        hint: "It is range divided by level count.",
-        explanations: [
+        answer: 0,
+        explanation: "It is range divided by level count.",
+        why: [
           "Correct, and it sets the rounding error.",
           "That fixes the range, not the step.",
           "Bits determine the level count.",
         ],
       },
       {
-        prompt: "Why do practical methods treat outliers separately?",
-        options: [
+        question: "Why do practical methods treat outliers separately?",
+        choices: [
           "A shared scale stretched by one value coarsens everything else",
           "Outliers are always errors",
           "They cost more memory",
         ],
-        answerIndex: 0,
-        hint: "The error grew fourteen-fold from one value.",
-        explanations: [
+        answer: 0,
+        explanation: "The error grew fourteen-fold from one value.",
+        why: [
           "Correct. Isolating them protects the rest.",
           "They are often the most important weights.",
           "They occupy the same space as any other.",
         ],
       },
       {
-        prompt: "How should quantization damage be measured?",
-        options: [
+        question: "How should quantization damage be measured?",
+        choices: [
           "Broad evaluation with slices, since damage concentrates in rare inputs",
           "Perplexity on a small sample",
           "The maximum weight error",
         ],
-        answerIndex: 0,
-        hint: "An aggregate hides a concentrated loss.",
-        explanations: [
+        answer: 0,
+        explanation: "An aggregate hides a concentrated loss.",
+        why: [
           "Correct. Averages hide the failure mode.",
           "That is exactly what misses it.",
           "Weight error does not predict behaviour.",
@@ -263,50 +263,50 @@ print("soft target T=5", soft(logits, 5.0))`,
     checkpoint:
       "What does a soft target carry that a hard label does not?",
     checkpointAnswer:
-      "The teacher's relative ranking of the wrong answers - how close each one was - which is far more information per example.",
+      "The teacher's relative ranking of the wrong answers — how close each one was — which is far more information per example.",
     remember:
       "Transfer the whole distribution, not just the winner.",
     checks: [
       {
-        prompt: "What does raising the temperature do?",
-        options: [
+        question: "What does raising the temperature do?",
+        choices: [
           "Flattens the distribution and exposes the ranking",
           "Sharpens the top choice",
           "Changes the winner",
         ],
-        answerIndex: 0,
-        hint: "It divides the scores before the softmax.",
-        explanations: [
+        answer: 0,
+        explanation: "It divides the scores before the softmax.",
+        why: [
           "Correct. The losing options become visible.",
           "That is what lowering it does.",
           "The ordering is preserved.",
         ],
       },
       {
-        prompt: "Why is a soft target more informative?",
-        options: [
+        question: "Why is a soft target more informative?",
+        choices: [
           "It encodes how close each wrong answer was",
           "It is numerically larger",
           "It has more entries",
         ],
-        answerIndex: 0,
-        hint: "Compare two teachers with different second choices.",
-        explanations: [
+        answer: 0,
+        explanation: "Compare two teachers with different second choices.",
+        why: [
           "Correct. A hard label cannot distinguish them.",
           "Magnitude is not the point.",
           "Both cover the same vocabulary.",
         ],
       },
       {
-        prompt: "A student is distilled on a narrow prompt set. What is the risk?",
-        options: [
+        question: "A student is distilled on a narrow prompt set. What is the risk?",
+        choices: [
           "It matches the teacher there and diverges elsewhere",
           "It becomes larger than the teacher",
           "It cannot be quantized",
         ],
-        answerIndex: 0,
-        hint: "Coverage of the deployment distribution is what matters.",
-        explanations: [
+        answer: 0,
+        explanation: "Coverage of the deployment distribution is what matters.",
+        why: [
           "Correct. The evaluation must span deployment.",
           "The student is smaller by construction.",
           "Quantization is independent.",
@@ -370,45 +370,45 @@ for rate in (0.2, 0.5, 0.8, 0.95):
       "Draft several, verify once, keep the agreed prefix.",
     checks: [
       {
-        prompt: "What does the target model do with the draft?",
-        options: [
+        question: "What does the target model do with the draft?",
+        choices: [
           "Verifies it in one pass and keeps the agreed prefix",
           "Regenerates it from scratch",
           "Averages with it",
         ],
-        answerIndex: 0,
-        hint: "That is what makes it exact.",
-        explanations: [
+        answer: 0,
+        explanation: "That is what makes it exact.",
+        why: [
           "Correct, and it adds one token of its own.",
           "That would remove the saving.",
           "No blending is involved.",
         ],
       },
       {
-        prompt: "How does the output distribution compare?",
-        options: [
+        question: "How does the output distribution compare?",
+        choices: [
           "Identical to ordinary decoding",
           "Slightly different",
           "Depends on the draft model",
         ],
-        answerIndex: 0,
-        hint: "Verification is exact by construction.",
-        explanations: [
+        answer: 0,
+        explanation: "Verification is exact by construction.",
+        why: [
           "Correct. It is purely a latency method.",
           "Nothing is approximated.",
           "The draft affects speed only.",
         ],
       },
       {
-        prompt: "What should decide the choice of draft model?",
-        options: [
+        question: "What should decide the choice of draft model?",
+        choices: [
           "Agreement with the target divided by its cost",
           "Its standalone quality",
           "Its parameter count alone",
         ],
-        answerIndex: 0,
-        hint: "Both terms matter.",
-        explanations: [
+        answer: 0,
+        explanation: "Both terms matter.",
+        why: [
           "Correct. A slow accurate draft can be a net loss.",
           "Quality without speed does not pay.",
           "Size is a proxy for cost, not for agreement.",
@@ -474,45 +474,45 @@ print("continuous", continuous_batching(lengths, 4), "steps")`,
       "Refill the slot the moment it frees.",
     checks: [
       {
-        prompt: "What does continuous batching change?",
-        options: [
+        question: "What does continuous batching change?",
+        choices: [
           "A freed slot admits a waiting request immediately",
           "The batch size",
           "The model's outputs",
         ],
-        answerIndex: 0,
-        hint: "It is purely a scheduling change.",
-        explanations: [
+        answer: 0,
+        explanation: "It is purely a scheduling change.",
+        why: [
           "Correct. The batch stays full.",
           "The maximum batch is unchanged.",
           "Outputs are identical.",
         ],
       },
       {
-        prompt: "When do the two schemes perform identically?",
-        options: [
+        question: "When do the two schemes perform identically?",
+        choices: [
           "When every request has the same length",
           "When the batch is large",
           "When the model is small",
         ],
-        answerIndex: 0,
-        hint: "That is why uniform benchmarks mislead.",
-        explanations: [
+        answer: 0,
+        explanation: "That is why uniform benchmarks mislead.",
+        why: [
           "Correct, and real traffic never looks like that.",
           "Larger batches make the gap worse.",
           "Model size is irrelevant.",
         ],
       },
       {
-        prompt: "What is head-of-line blocking here?",
-        options: [
+        question: "What is head-of-line blocking here?",
+        choices: [
           "Short requests waiting on one long request in the batch",
           "Network queuing",
           "Cache eviction",
         ],
-        answerIndex: 0,
-        hint: "It is about the batch, not the network.",
-        explanations: [
+        answer: 0,
+        explanation: "It is about the batch, not the network.",
+        why: [
           "Correct. Continuous batching removes it.",
           "This is a scheduling effect inside the server.",
           "Eviction is a memory concern.",
@@ -571,45 +571,45 @@ for recall in (0.70, 0.92, 0.99):
       "Measure every stage; the product is what users see.",
     checks: [
       {
-        prompt: "How do stage rates combine?",
-        options: [
+        question: "How do stage rates combine?",
+        choices: [
           "They multiply",
           "They average",
           "The minimum wins",
         ],
-        answerIndex: 0,
-        hint: "The document must survive every stage.",
-        explanations: [
+        answer: 0,
+        explanation: "The document must survive every stage.",
+        why: [
           "Correct, which is why the total is worse than any stage.",
           "Averaging would overstate it badly.",
           "The product is lower than the minimum.",
         ],
       },
       {
-        prompt: "Retrieval recall is seventy percent. Can prompt engineering reach ninety end to end?",
-        options: [
+        question: "Retrieval recall is seventy percent. Can prompt engineering reach ninety end to end?",
+        choices: [
           "No; the ceiling is set upstream",
           "Yes, with a better prompt",
           "Yes, with a larger model",
         ],
-        answerIndex: 0,
-        hint: "Generation only sees what it was given.",
-        explanations: [
+        answer: 0,
+        explanation: "Generation only sees what it was given.",
+        why: [
           "Correct. Seventy percent caps everything after it.",
           "Prompting cannot recover a missing document.",
           "Model size does not affect retrieval.",
         ],
       },
       {
-        prompt: "Why measure each stage separately?",
-        options: [
+        question: "Why measure each stage separately?",
+        choices: [
           "Otherwise a failure cannot be attributed to a stage",
           "To reduce latency",
           "To simplify the code",
         ],
-        answerIndex: 0,
-        hint: "Think about which stage to fix.",
-        explanations: [
+        answer: 0,
+        explanation: "Think about which stage to fix.",
+        why: [
           "Correct. The binding stage is often not the obvious one.",
           "Measurement adds latency rather than removing it.",
           "It adds instrumentation.",

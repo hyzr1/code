@@ -59,45 +59,45 @@ print("passes check  :", identical([0.3, 0.2, 0.5], [0.1, 0.4, 0.5]))`,
       "Keep the sign, and randomise the model before believing the map.",
     checks: [
       {
-        prompt: "What does taking absolute values lose?",
-        options: [
+        question: "What does taking absolute values lose?",
+        choices: [
           "Whether the input pushed for or against the prediction",
           "The magnitude",
           "The input values",
         ],
-        answerIndex: 0,
-        hint: "Direction and importance are different questions.",
-        explanations: [
+        answer: 0,
+        explanation: "Direction and importance are different questions.",
+        why: [
           "Correct. Opposing evidence looks like supporting evidence.",
           "Magnitude is exactly what is kept.",
           "Inputs are unchanged.",
         ],
       },
       {
-        prompt: "What does the randomized-model check test?",
-        options: [
+        question: "What does the randomized-model check test?",
+        choices: [
           "Whether the explanation depends on the model at all",
           "Whether the model is accurate",
           "Whether the input is typical",
         ],
-        answerIndex: 0,
-        hint: "Randomise the weights and recompute.",
-        explanations: [
+        answer: 0,
+        explanation: "Randomise the weights and recompute.",
+        why: [
           "Correct, and several popular methods fail it.",
           "Accuracy is not what is being checked.",
           "The input is held fixed.",
         ],
       },
       {
-        prompt: "What does a saliency map actually report?",
-        options: [
+        question: "What does a saliency map actually report?",
+        choices: [
           "A local sensitivity, not a causal claim",
           "The model's reasoning",
           "The training data",
         ],
-        answerIndex: 0,
-        hint: "It is a derivative at one point.",
-        explanations: [
+        answer: 0,
+        explanation: "It is a derivative at one point.",
+        why: [
           "Correct, which is why it can mislead.",
           "It does not recover reasoning.",
           "Training data is not involved.",
@@ -155,45 +155,45 @@ print("weakly separable, high capacity:", probe_accuracy(0.3, 2.0))`,
       "A probe shows presence; only ablation shows use.",
     checks: [
       {
-        prompt: "What does high probe accuracy establish?",
-        options: [
+        question: "What does high probe accuracy establish?",
+        choices: [
           "The information is present in the representation",
           "The model uses the information",
           "The model was trained on it",
         ],
-        answerIndex: 0,
-        hint: "Presence and use are different claims.",
-        explanations: [
+        answer: 0,
+        explanation: "Presence and use are different claims.",
+        why: [
           "Correct, and nothing more.",
           "That needs an intervention to establish.",
           "Probes say nothing about training.",
         ],
       },
       {
-        prompt: "Why must probe capacity be controlled?",
-        options: [
+        question: "Why must probe capacity be controlled?",
+        choices: [
           "A large enough probe recovers almost anything",
           "Large probes are slow",
           "Small probes overfit",
         ],
-        answerIndex: 0,
-        hint: "The accuracy becomes a fact about the probe.",
-        explanations: [
+        answer: 0,
+        explanation: "The accuracy becomes a fact about the probe.",
+        why: [
           "Correct. The result stops being about the model.",
           "Speed is not the issue.",
           "Large probes overfit more, not less.",
         ],
       },
       {
-        prompt: "How do you test whether information is used?",
-        options: [
+        question: "How do you test whether information is used?",
+        choices: [
           "Ablate it from the representation and measure the behaviour",
           "Train a larger probe",
           "Compare layers",
         ],
-        answerIndex: 0,
-        hint: "It has to be an intervention.",
-        explanations: [
+        answer: 0,
+        explanation: "It has to be an intervention.",
+        why: [
           "Correct. A large behavioural drop means it was load-bearing.",
           "That only strengthens the decodability claim.",
           "Layer comparisons are still correlational.",
@@ -250,45 +250,45 @@ for features in (8, 16, 64, 256):
       "More features than directions means every neuron is shared.",
     checks: [
       {
-        prompt: "What is superposition?",
-        options: [
+        question: "What is superposition?",
+        choices: [
           "Representing more features than there are dimensions",
           "Stacking layers",
           "Averaging activations",
         ],
-        answerIndex: 0,
-        hint: "It is a counting argument.",
-        explanations: [
+        answer: 0,
+        explanation: "It is a counting argument.",
+        why: [
           "Correct, and it forces features to share directions.",
           "Depth is a separate matter.",
           "No averaging is involved.",
         ],
       },
       {
-        prompt: "What does superposition cost?",
-        options: [
+        question: "What does superposition cost?",
+        choices: [
           "Interference between features sharing directions",
           "Memory",
           "Training time",
         ],
-        answerIndex: 0,
-        hint: "Reading one feature picks up others.",
-        explanations: [
+        answer: 0,
+        explanation: "Reading one feature picks up others.",
+        why: [
           "Correct. That is why neurons respond to unrelated things.",
           "It saves memory rather than costing it.",
           "Training cost is unchanged.",
         ],
       },
       {
-        prompt: "Why is naming a neuron from its top activations unreliable?",
-        options: [
+        question: "Why is naming a neuron from its top activations unreliable?",
+        choices: [
           "The top examples are a biased sample of what it responds to",
           "Activations are noisy",
           "The neuron changes during training",
         ],
-        answerIndex: 0,
-        hint: "The neuron carries several features.",
-        explanations: [
+        answer: 0,
+        explanation: "The neuron carries several features.",
+        why: [
           "Correct. Its other features never appear in that sample.",
           "Noise is not the main problem.",
           "The model is frozen when analysed.",
@@ -314,7 +314,7 @@ for features in (8, 16, 64, 256):
     why:
       "An edit that moves the target behaviour and three unrelated ones is not an edit, and the report usually only measures the target.",
     mentalModel:
-      "Picture pushing the representation in one direction. The target moves, and so does everything that shares that direction - which, under superposition, is several things.",
+      "Picture pushing the representation in one direction. The target moves, and so does everything that shares that direction — which, under superposition, is several things.",
     firstTitle: "Measure what else moved",
     firstIntro:
       "Divide the target effect by the total effect. A specificity near one means the intervention landed where it was aimed.",
@@ -347,45 +347,45 @@ print("retained after five turns:",
       "Measure the side effects and the later turns, not just the first response.",
     checks: [
       {
-        prompt: "What does specificity measure?",
-        options: [
+        question: "What does specificity measure?",
+        choices: [
           "How much of the effect landed on the target behaviour",
           "How large the effect is",
           "How long it lasts",
         ],
-        answerIndex: 0,
-        hint: "It is a ratio, not a magnitude.",
-        explanations: [
+        answer: 0,
+        explanation: "It is a ratio, not a magnitude.",
+        why: [
           "Correct. A large but unspecific effect is not an edit.",
           "Magnitude alone says nothing about aim.",
           "That is persistence.",
         ],
       },
       {
-        prompt: "Why are side effects expected rather than surprising?",
-        options: [
+        question: "Why are side effects expected rather than surprising?",
+        choices: [
           "Under superposition the steering direction is shared by several features",
           "The model is noisy",
           "The vector is randomly chosen",
         ],
-        answerIndex: 0,
-        hint: "Features share directions.",
-        explanations: [
+        answer: 0,
+        explanation: "Features share directions.",
+        why: [
           "Correct. Private directions do not exist.",
           "Noise is not the mechanism.",
           "The vector is chosen deliberately.",
         ],
       },
       {
-        prompt: "Why evaluate an edit over several turns?",
-        options: [
+        question: "Why evaluate an edit over several turns?",
+        choices: [
           "A one-off intervention usually washes out",
           "Later turns are longer",
           "The model retrains",
         ],
-        answerIndex: 0,
-        hint: "Three percent survived five turns.",
-        explanations: [
+        answer: 0,
+        explanation: "Three percent survived five turns.",
+        why: [
           "Correct, and a first-response test misses it.",
           "Length is not the issue.",
           "No training occurs at inference.",

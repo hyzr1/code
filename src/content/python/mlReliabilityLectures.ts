@@ -58,41 +58,41 @@ for name, delay, note in signals:
       "Watch the proxies while the labels are in flight.",
     checks: [
       {
-        prompt: "What does a label delay prevent?",
-        options: [
+        question: "What does a label delay prevent?",
+        choices: [
           "Measuring accuracy on recent predictions",
           "Serving predictions",
           "Detecting input drift",
         ],
-        answerIndex: 0,
-        hint: "Accuracy needs ground truth.",
-        explanations: [
+        answer: 0,
+        explanation: "Accuracy needs ground truth.",
+        why: [
           "Correct. Recent deployments are unevaluated.",
           "Serving is unaffected.",
           "Inputs are observable immediately.",
         ],
       },
       {
-        prompt: "Why is a prediction-drift alert alone insufficient?",
-        options: [
+        question: "Why is a prediction-drift alert alone insufficient?",
+        choices: [
           "Output distributions move whenever the input population legitimately changes",
           "Predictions are not measurable",
           "Drift is always harmless",
         ],
-        answerIndex: 0,
-        hint: "Pair it with an input check.",
-        explanations: [
+        answer: 0,
+        explanation: "Pair it with an input check.",
+        why: [
           "Correct. Without the input context it is mostly noise.",
           "Predictions are observable immediately.",
           "Drift can be serious; the point is ambiguity.",
         ],
       },
       {
-        prompt: "Which signal catches a serving fault rather than a model fault?",
-        options: ["Latency", "Prediction distribution", "Error rate"],
-        answerIndex: 0,
-        hint: "It is a systems measure.",
-        explanations: [
+        question: "Which signal catches a serving fault rather than a model fault?",
+        choices: ["Latency", "Prediction distribution", "Error rate"],
+        answer: 0,
+        explanation: "It is a systems measure.",
+        why: [
           "Correct. It says nothing about prediction quality.",
           "That reflects the model's behaviour.",
           "That is the model quality metric.",
@@ -160,45 +160,45 @@ print("ship:", not breaches)`,
       "Power first, guardrails always, and do not peek.",
     checks: [
       {
-        prompt: "How does required sample size scale with the effect being detected?",
-        options: [
+        question: "How does required sample size scale with the effect being detected?",
+        choices: [
           "With the inverse square of the effect",
           "Inversely with the effect",
           "It does not depend on the effect",
         ],
-        answerIndex: 0,
-        hint: "Halving the effect quadruples the sample.",
-        explanations: [
+        answer: 0,
+        explanation: "Halving the effect quadruples the sample.",
+        why: [
           "Correct. Small effects are very expensive to prove.",
           "That would understate the cost badly.",
           "It is the dominant factor.",
         ],
       },
       {
-        prompt: "A test improves clicks but breaks a latency guardrail. What follows?",
-        options: [
+        question: "A test improves clicks but breaks a latency guardrail. What follows?",
+        choices: [
           "It should not ship as is",
           "It should ship; clicks are the target",
           "The guardrail should be relaxed",
         ],
-        answerIndex: 0,
-        hint: "Guardrails exist to be binding.",
-        explanations: [
+        answer: 0,
+        explanation: "Guardrails exist to be binding.",
+        why: [
           "Correct. A guardrail that never blocks is decoration.",
           "The target metric is not the only consideration.",
           "Relaxing it after the fact defeats its purpose.",
         ],
       },
       {
-        prompt: "Why is stopping at first significance a problem?",
-        options: [
+        question: "Why is stopping at first significance a problem?",
+        choices: [
           "Repeated peeking inflates the false-positive rate",
           "The sample is always too small",
           "Significance is meaningless",
         ],
-        answerIndex: 0,
-        hint: "Each look is another chance to be fooled by noise.",
-        explanations: [
+        answer: 0,
+        explanation: "Each look is another chance to be fooled by noise.",
+        why: [
           "Correct. The stated threshold no longer holds.",
           "The size may be fine; the stopping rule is the issue.",
           "Significance is meaningful under a fixed plan.",
@@ -256,48 +256,48 @@ print("rebuildable:", not broken, "broken:", broken)`,
     checkpointAnswer:
       "The commit hash. A branch name points at whatever the branch holds now, which changes with every push.",
     remember:
-      "Pin code, data, configuration and environment - all four or none.",
+      "Pin code, data, configuration and environment — all four or none.",
     checks: [
       {
-        prompt: "Why is a branch name unsuitable as a lineage reference?",
-        options: [
+        question: "Why is a branch name unsuitable as a lineage reference?",
+        choices: [
           "Its contents change as the branch moves",
           "It is too long",
           "It is not human readable",
         ],
-        answerIndex: 0,
-        hint: "Immutability is the requirement.",
-        explanations: [
+        answer: 0,
+        explanation: "Immutability is the requirement.",
+        why: [
           "Correct. A commit hash is the immutable alternative.",
           "Length is irrelevant.",
           "Readability is not the criterion.",
         ],
       },
       {
-        prompt: "Three of four references are immutable. Is the model rebuildable?",
-        options: [
+        question: "Three of four references are immutable. Is the model rebuildable?",
+        choices: [
           "No; lineage requires all of them",
           "Yes; three quarters is enough",
           "Only if the fourth is the configuration",
         ],
-        answerIndex: 0,
-        hint: "It is a conjunction, not a score.",
-        explanations: [
+        answer: 0,
+        explanation: "It is a conjunction, not a score.",
+        why: [
           "Correct. One moving reference breaks the rebuild.",
           "Partial lineage does not reproduce anything.",
           "Any single mutable reference is fatal.",
         ],
       },
       {
-        prompt: "How should the training dataset be recorded?",
-        options: [
+        question: "How should the training dataset be recorded?",
+        choices: [
           "As an immutable snapshot identifier",
           "As the query that produced it",
           "As a row count",
         ],
-        answerIndex: 0,
-        hint: "A query returns different data over time.",
-        explanations: [
+        answer: 0,
+        explanation: "A query returns different data over time.",
+        why: [
           "Correct. The snapshot is what can be reconstructed.",
           "The query is stable but its result is not.",
           "A count identifies nothing.",
@@ -361,45 +361,45 @@ print("promote:", not failures)`,
       "Gate on subgroups and on specific behaviours, not on the average.",
     checks: [
       {
-        prompt: "Why is an overall metric an insufficient promotion gate?",
-        options: [
+        question: "Why is an overall metric an insufficient promotion gate?",
+        choices: [
           "It can hide a serious regression in a subgroup",
           "It is hard to compute",
           "It is not comparable across versions",
         ],
-        answerIndex: 0,
-        hint: "Averages pool across populations.",
-        explanations: [
+        answer: 0,
+        explanation: "Averages pool across populations.",
+        why: [
           "Correct. Subgroup checks are what catch it.",
           "It is the easiest metric to compute.",
           "It is comparable; it is just incomplete.",
         ],
       },
       {
-        prompt: "What does a behavioural test assert?",
-        options: [
+        question: "What does a behavioural test assert?",
+        choices: [
           "That a specific input produces a specific response",
           "That accuracy exceeds a threshold",
           "That training completed",
         ],
-        answerIndex: 0,
-        hint: "It is about individual cases.",
-        explanations: [
+        answer: 0,
+        explanation: "It is about individual cases.",
+        why: [
           "Correct. Some cases must hold whatever the metrics say.",
           "That is an aggregate gate.",
           "Completion is not a quality check.",
         ],
       },
       {
-        prompt: "What is the risk of scheduled retraining with no gate?",
-        options: [
+        question: "What is the risk of scheduled retraining with no gate?",
+        choices: [
           "A worse model gets promoted automatically",
           "Training takes longer",
           "Lineage is lost",
         ],
-        answerIndex: 0,
-        hint: "Automation without checks automates the mistake.",
-        explanations: [
+        answer: 0,
+        explanation: "Automation without checks automates the mistake.",
+        why: [
           "Correct. A corrupted feed ships on schedule.",
           "Duration is unaffected.",
           "Lineage is a separate concern.",
@@ -465,45 +465,45 @@ for threat, control in threats:
       "Measure the smallest group, and treat the endpoint as an interface to the data.",
     checks: [
       {
-        prompt: "What does the smallest group size tell you?",
-        options: [
+        question: "What does the smallest group size tell you?",
+        choices: [
           "The anonymity guarantee the release actually provides",
           "How balanced the dataset is",
           "How many records are duplicated",
         ],
-        answerIndex: 0,
-        hint: "A group of one is an identified person.",
-        explanations: [
+        answer: 0,
+        explanation: "A group of one is an identified person.",
+        why: [
           "Correct. That is the k in k-anonymity.",
           "Balance is a different property.",
           "Duplicates are not the concern.",
         ],
       },
       {
-        prompt: "Why limit the precision of returned confidence scores?",
-        options: [
+        question: "Why limit the precision of returned confidence scores?",
+        choices: [
           "Precise scores enable membership inference",
           "They are expensive to compute",
           "They confuse callers",
         ],
-        answerIndex: 0,
-        hint: "The score differs subtly for training records.",
-        explanations: [
+        answer: 0,
+        explanation: "The score differs subtly for training records.",
+        why: [
           "Correct. Coarse scores blunt the attack.",
           "They are already computed.",
           "Usefulness is exactly the tension.",
         ],
       },
       {
-        prompt: "How should text retrieved from an external source be treated?",
-        options: [
+        question: "How should text retrieved from an external source be treated?",
+        choices: [
           "As data, never as instructions",
           "As trusted context",
           "As part of the system prompt",
         ],
-        answerIndex: 0,
-        hint: "The source is outside your control.",
-        explanations: [
+        answer: 0,
+        explanation: "The source is outside your control.",
+        why: [
           "Correct. That is the control for injection.",
           "External sources are not trusted.",
           "That grants it the highest privilege.",

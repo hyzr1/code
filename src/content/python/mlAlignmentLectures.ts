@@ -66,45 +66,45 @@ for name, count, consistency in sets:
       "Mask the prompt, and curate before you scale.",
     checks: [
       {
-        prompt: "What does response masking exclude from the loss?",
-        options: [
+        question: "What does response masking exclude from the loss?",
+        choices: [
           "The prompt tokens",
           "The rarest tokens",
           "The longest examples",
         ],
-        answerIndex: 0,
-        hint: "The model is not learning to generate those.",
-        explanations: [
+        answer: 0,
+        explanation: "The model is not learning to generate those.",
+        why: [
           "Correct. Only response positions count.",
           "Frequency is not the criterion.",
           "Length is unrelated.",
         ],
       },
       {
-        prompt: "Why does inconsistency cost a demonstration set so much?",
-        options: [
+        question: "Why does inconsistency cost a demonstration set so much?",
+        choices: [
           "The model imitates inconsistency as readily as content",
           "Small sets train faster",
           "Large sets overfit",
         ],
-        answerIndex: 0,
-        hint: "Think about what a demonstration teaches.",
-        explanations: [
+        answer: 0,
+        explanation: "Think about what a demonstration teaches.",
+        why: [
           "Correct. Disagreement in the data becomes disagreement in the model.",
           "Speed is not the argument.",
           "Overfitting is a different failure.",
         ],
       },
       {
-        prompt: "A model gives inconsistent answers after fine-tuning. What is the first fix?",
-        options: [
+        question: "A model gives inconsistent answers after fine-tuning. What is the first fix?",
+        choices: [
           "Audit the demonstrations for disagreement",
           "Add more demonstrations",
           "Raise the learning rate",
         ],
-        answerIndex: 0,
-        hint: "More of a mixed signal is still mixed.",
-        explanations: [
+        answer: 0,
+        explanation: "More of a mixed signal is still mixed.",
+        why: [
           "Correct. Consistency is the lever.",
           "That strengthens the disagreement.",
           "Optimisation is not the problem.",
@@ -163,48 +163,48 @@ for step, proxy, true_quality in trajectory(6):
     checkpointAnswer:
       "Reward hacking. The policy has found regions where the proxy disagrees with real preference, which is what the divergence penalty exists to prevent.",
     remember:
-      "The reward model is a proxy - constrain how far you optimise it.",
+      "The reward model is a proxy — constrain how far you optimise it.",
     checks: [
       {
-        prompt: "What does the reward model learn from?",
-        options: [
+        question: "What does the reward model learn from?",
+        choices: [
           "Pairs of responses with one marked better",
           "Absolute quality ratings",
           "The pretraining corpus",
         ],
-        answerIndex: 0,
-        hint: "Comparison is easier than scoring.",
-        explanations: [
+        answer: 0,
+        explanation: "Comparison is easier than scoring.",
+        why: [
           "Correct, and only the score difference matters.",
           "Absolute ratings are far noisier to collect.",
           "The corpus has no preference labels.",
         ],
       },
       {
-        prompt: "What is reward hacking?",
-        options: [
+        question: "What is reward hacking?",
+        choices: [
           "Raising the proxy score while true quality falls",
           "An attack on the training data",
           "Overfitting the reward model",
         ],
-        answerIndex: 0,
-        hint: "The training loop cannot see true quality.",
-        explanations: [
+        answer: 0,
+        explanation: "The training loop cannot see true quality.",
+        why: [
           "Correct. It is the central failure of the method.",
           "No adversary is involved.",
           "The policy, not the reward model, is at fault.",
         ],
       },
       {
-        prompt: "What does the divergence penalty do?",
-        options: [
+        question: "What does the divergence penalty do?",
+        choices: [
           "Keeps the policy near where the reward model was trained",
           "Speeds up convergence",
           "Reduces memory",
         ],
-        answerIndex: 0,
-        hint: "The proxy is only valid in a region.",
-        explanations: [
+        answer: 0,
+        explanation: "The proxy is only valid in a region.",
+        why: [
           "Correct. Without it the proxy is optimised out of validity.",
           "It slows progress deliberately.",
           "Memory is unaffected.",
@@ -266,45 +266,45 @@ for values in [(-1.0, -2.0, -1.0, -1.0),
       "Reward as a log-probability gap; one loop instead of three.",
     checks: [
       {
-        prompt: "What is the implicit reward?",
-        options: [
+        question: "What is the implicit reward?",
+        choices: [
           "The log-probability gap between policy and reference",
           "A separately trained score",
           "The human label",
         ],
-        answerIndex: 0,
-        hint: "It is expressed through the policy itself.",
-        explanations: [
+        answer: 0,
+        explanation: "It is expressed through the policy itself.",
+        why: [
           "Correct. That is what removes the second model.",
           "That is the reinforcement approach.",
           "Labels are pairwise, not scalar.",
         ],
       },
       {
-        prompt: "What does the temperature factor control?",
-        options: [
+        question: "What does the temperature factor control?",
+        choices: [
           "How far the policy may drift from the reference",
           "The learning rate",
           "The batch size",
         ],
-        answerIndex: 0,
-        hint: "It plays the role of the divergence penalty.",
-        explanations: [
+        answer: 0,
+        explanation: "It plays the role of the divergence penalty.",
+        why: [
           "Correct. Small values keep the policy close.",
           "The optimizer is separate.",
           "Batching is unrelated.",
         ],
       },
       {
-        prompt: "What can the reinforcement approach do that this cannot?",
-        options: [
+        question: "What can the reinforcement approach do that this cannot?",
+        choices: [
           "Learn from responses the current policy generates",
           "Use preference pairs",
           "Keep a reference model",
         ],
-        answerIndex: 0,
-        hint: "One method is online and the other is not.",
-        explanations: [
+        answer: 0,
+        explanation: "One method is online and the other is not.",
+        why: [
           "Correct. That is the flexibility given up.",
           "Both use preference pairs.",
           "Both keep a reference.",
@@ -367,45 +367,45 @@ print(revise(5, 8))`,
       "Write the rules down, critique against them, revise, repeat.",
     checks: [
       {
-        prompt: "What generates the supervision in a constitutional method?",
-        options: [
+        question: "What generates the supervision in a constitutional method?",
+        choices: [
           "The model critiquing its own output against written principles",
           "Human raters",
           "A separate reward model",
         ],
-        answerIndex: 0,
-        hint: "That is what makes it scalable.",
-        explanations: [
+        answer: 0,
+        explanation: "That is what makes it scalable.",
+        why: [
           "Correct. Humans write the principles, not the labels.",
           "Humans are the bottleneck this avoids.",
           "No reward model is required.",
         ],
       },
       {
-        prompt: "What is the main advantage over preference labels?",
-        options: [
+        question: "What is the main advantage over preference labels?",
+        choices: [
           "The target is written down and auditable",
           "It needs less compute",
           "It is more accurate",
         ],
-        answerIndex: 0,
-        hint: "Think about disagreeing with the result.",
-        explanations: [
+        answer: 0,
+        explanation: "Think about disagreeing with the result.",
+        why: [
           "Correct. Disagreement moves to the principle list.",
           "Compute is comparable.",
           "Accuracy depends on the principles.",
         ],
       },
       {
-        prompt: "What happens to a principle the model cannot evaluate?",
-        options: [
+        question: "What happens to a principle the model cannot evaluate?",
+        choices: [
           "It has no effect, because the critique never fires",
           "It is enforced anyway",
           "It causes an error",
         ],
-        answerIndex: 0,
-        hint: "The loop fixes only what it identifies.",
-        explanations: [
+        answer: 0,
+        explanation: "The loop fixes only what it identifies.",
+        why: [
           "Correct. Such a rule is decorative.",
           "Nothing enforces an undetected violation.",
           "The loop runs normally.",
@@ -468,45 +468,45 @@ for before, after in [(40, 4), (40, 38), (10, 0)]:
       "Report coverage with findings, and measure mitigation by rerunning.",
     checks: [
       {
-        prompt: "A red-team report lists findings in one category only. What should you ask?",
-        options: [
+        question: "A red-team report lists findings in one category only. What should you ask?",
+        choices: [
           "Which categories were tested at all",
           "How many people tested",
           "How long testing took",
         ],
-        answerIndex: 0,
-        hint: "Findings cluster where you looked.",
-        explanations: [
+        answer: 0,
+        explanation: "Findings cluster where you looked.",
+        why: [
           "Correct. Coverage frames every count.",
           "Team size does not establish coverage.",
           "Duration says little about breadth.",
         ],
       },
       {
-        prompt: "A fix reduces failures from forty to thirty-eight. What does that suggest?",
-        options: [
+        question: "A fix reduces failures from forty to thirty-eight. What does that suggest?",
+        choices: [
           "It addressed the examples rather than the cause",
           "The attacks were weak",
           "The model is safe",
         ],
-        answerIndex: 0,
-        hint: "A real fix removes most of the class.",
-        explanations: [
+        answer: 0,
+        explanation: "A real fix removes most of the class.",
+        why: [
           "Correct. Five percent is a patch, not a mitigation.",
           "The attacks clearly worked.",
           "Thirty-eight failures remain.",
         ],
       },
       {
-        prompt: "Why not fine-tune on the exact prompts that were found?",
-        options: [
+        question: "Why not fine-tune on the exact prompts that were found?",
+        choices: [
           "The model learns the strings, and paraphrases still work",
           "It is too slow",
           "It needs too much data",
         ],
-        answerIndex: 0,
-        hint: "Memorising an attack is not fixing it.",
-        explanations: [
+        answer: 0,
+        explanation: "Memorising an attack is not fixing it.",
+        why: [
           "Correct. The behaviour has to change, not the lookup.",
           "It is fast; that is the temptation.",
           "The dataset is small by construction.",

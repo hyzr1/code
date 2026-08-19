@@ -58,45 +58,45 @@ for samples in (1, 4, 16, 64):
       "Samples find the answer; the verifier decides whether you keep it.",
     checks: [
       {
-        prompt: "Why does the chance of at least one correct answer rise so fast?",
-        options: [
+        question: "Why does the chance of at least one correct answer rise so fast?",
+        choices: [
           "Every attempt must fail for the set to fail",
           "The model improves with each sample",
           "The samples are dependent",
         ],
-        answerIndex: 0,
-        hint: "It is one minus a product.",
-        explanations: [
+        answer: 0,
+        explanation: "It is one minus a product.",
+        why: [
           "Correct, and failures coincide rarely.",
           "The model is unchanged between samples.",
           "Independence is what makes it work.",
         ],
       },
       {
-        prompt: "What caps the accuracy of a sampling method?",
-        options: [
+        question: "What caps the accuracy of a sampling method?",
+        choices: [
           "The verifier's accuracy",
           "The sample count",
           "The model's single-attempt accuracy",
         ],
-        answerIndex: 0,
-        hint: "The answer must be chosen, not just present.",
-        explanations: [
+        answer: 0,
+        explanation: "The answer must be chosen, not just present.",
+        why: [
           "Correct, and no sample count exceeds it.",
           "More samples stop helping once the ceiling is reached.",
           "That is what sampling overcomes.",
         ],
       },
       {
-        prompt: "What does an oracle-selected result measure?",
-        options: [
+        question: "What does an oracle-selected result measure?",
+        choices: [
           "Whether the correct answer was generated at all",
           "Whether the method works end to end",
           "The verifier's quality",
         ],
-        answerIndex: 0,
-        hint: "The oracle removes the selection problem.",
-        explanations: [
+        answer: 0,
+        explanation: "The oracle removes the selection problem.",
+        why: [
           "Correct, which is a much weaker claim.",
           "That needs a real verifier.",
           "The oracle replaces the verifier entirely.",
@@ -158,45 +158,45 @@ for name, old, new in results:
       "Report old and new together; retention and adaptation trade off.",
     checks: [
       {
-        prompt: "What is catastrophic forgetting?",
-        options: [
+        question: "What is catastrophic forgetting?",
+        choices: [
           "Losing old-task performance while learning a new one",
           "Failing to learn the new task",
           "Overfitting the new task",
         ],
-        answerIndex: 0,
-        hint: "The weights are shared.",
-        explanations: [
+        answer: 0,
+        explanation: "The weights are shared.",
+        why: [
           "Correct, and it can be most of the old performance.",
           "That is a different failure.",
           "Overfitting is about generalisation on the same task.",
         ],
       },
       {
-        prompt: "What does a frozen backbone trade away?",
-        options: [
+        question: "What does a frozen backbone trade away?",
+        choices: [
           "How well it can learn the new task",
           "Old-task performance",
           "Inference speed",
         ],
-        answerIndex: 0,
-        hint: "It cannot move the shared weights.",
-        explanations: [
+        answer: 0,
+        explanation: "It cannot move the shared weights.",
+        why: [
           "Correct. It retained everything and learned least.",
           "That is exactly what it protects.",
           "Speed is unchanged.",
         ],
       },
       {
-        prompt: "Why is a new-task score alone uninformative?",
-        options: [
+        question: "Why is a new-task score alone uninformative?",
+        choices: [
           "Every strategy scores well on what it just trained on",
           "The score is noisy",
           "New tasks are easier",
         ],
-        answerIndex: 0,
-        hint: "The comparison is about the old tasks.",
-        explanations: [
+        answer: 0,
+        explanation: "The comparison is about the old tasks.",
+        why: [
           "Correct. The interesting number is what was lost.",
           "Noise is a separate concern.",
           "Difficulty varies either way.",
@@ -260,45 +260,45 @@ for text, relevance, age in store:
       "Decay for age, expire for contradiction, and retrieve on both.",
     checks: [
       {
-        prompt: "What does recency decay express?",
-        options: [
+        question: "What does recency decay express?",
+        choices: [
           "That an older memory is less likely to still hold",
           "That older memories are less relevant",
           "That storage is limited",
         ],
-        answerIndex: 0,
-        hint: "It is about truth over time.",
-        explanations: [
+        answer: 0,
+        explanation: "It is about truth over time.",
+        why: [
           "Correct, and it is separate from relevance.",
           "Relevance is the other factor entirely.",
           "Storage is a different constraint.",
         ],
       },
       {
-        prompt: "What does decay fail to handle?",
-        options: [
+        question: "What does decay fail to handle?",
+        choices: [
           "A memory that has become false",
           "A memory that is very old",
           "A memory with low relevance",
         ],
-        answerIndex: 0,
-        hint: "Contradiction is immediate, not gradual.",
-        explanations: [
+        answer: 0,
+        explanation: "Contradiction is immediate, not gradual.",
+        why: [
           "Correct. That needs expiry.",
           "Age is exactly what decay handles.",
           "Low relevance already scores low.",
         ],
       },
       {
-        prompt: "What is the failure mode of a naive growing store?",
-        options: [
+        question: "What is the failure mode of a naive growing store?",
+        choices: [
           "Confident recall of something that has since changed",
           "Running out of space",
           "Slow retrieval",
         ],
-        answerIndex: 0,
-        hint: "Worse than having no memory.",
-        explanations: [
+        answer: 0,
+        explanation: "Worse than having no memory.",
+        why: [
           "Correct, and it is the reason expiry matters.",
           "Space is manageable.",
           "Speed is an engineering concern.",
@@ -361,45 +361,45 @@ for effect in (0.05, 0.02, 0.01):
       "Check the design can see the effect before spending the compute.",
     checks: [
       {
-        prompt: "When should experimental power be computed?",
-        options: [
+        question: "When should experimental power be computed?",
+        choices: [
           "Before running the experiment",
           "After seeing the result",
           "Only if the result is surprising",
         ],
-        answerIndex: 0,
-        hint: "Post-hoc power depends on the result.",
-        explanations: [
+        answer: 0,
+        explanation: "Post-hoc power depends on the result.",
+        why: [
           "Correct. It determines whether the design is worth running.",
           "That makes it a function of the outcome.",
           "Surprise is not a criterion.",
         ],
       },
       {
-        prompt: "How does the required run count scale with the effect size?",
-        options: [
+        question: "How does the required run count scale with the effect size?",
+        choices: [
           "With the inverse square",
           "Inversely",
           "It does not depend on it",
         ],
-        answerIndex: 0,
-        hint: "Halving the effect quadruples the cost.",
-        explanations: [
+        answer: 0,
+        explanation: "Halving the effect quadruples the cost.",
+        why: [
           "Correct, which is why small effects are expensive.",
           "That would understate the cost badly.",
           "It is the dominant factor.",
         ],
       },
       {
-        prompt: "An underpowered experiment produces a positive result. What does it establish?",
-        options: [
+        question: "An underpowered experiment produces a positive result. What does it establish?",
+        choices: [
           "Nothing; the design could not distinguish it from noise",
           "A real effect",
           "The absence of an effect",
         ],
-        answerIndex: 0,
-        hint: "It produces a number either way.",
-        explanations: [
+        answer: 0,
+        explanation: "It produces a number either way.",
+        why: [
           "Correct, and that is what makes it dangerous.",
           "The result is uninformative in both directions.",
           "It cannot establish absence either.",

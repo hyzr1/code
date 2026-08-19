@@ -55,45 +55,45 @@ print("specified but unintended:", sorted(specified - intended))`,
       "Every objective is a proxy; watch for where it stops agreeing.",
     checks: [
       {
-        prompt: "Why is early agreement between proxy and intent misleading?",
-        options: [
+        question: "Why is early agreement between proxy and intent misleading?",
+        choices: [
           "It gives no warning of where they will separate",
           "The measurements are noisy",
           "The proxy is wrong from the start",
         ],
-        answerIndex: 0,
-        hint: "The first steps looked fine.",
-        explanations: [
+        answer: 0,
+        explanation: "The first steps looked fine.",
+        why: [
           "Correct. The divergence appears only under harder optimisation.",
           "Noise is not the mechanism.",
           "It tracked intent correctly at first.",
         ],
       },
       {
-        prompt: "What does patching the objective achieve?",
-        options: [
+        question: "What does patching the objective achieve?",
+        choices: [
           "It moves the divergence point rather than removing it",
           "It solves the problem",
           "Nothing at all",
         ],
-        answerIndex: 0,
-        hint: "The new objective is also a proxy.",
-        explanations: [
+        answer: 0,
+        explanation: "The new objective is also a proxy.",
+        why: [
           "Correct, which is why monitoring is the durable answer.",
           "Any writable objective is still a proxy.",
           "Patches do help, temporarily.",
         ],
       },
       {
-        prompt: "Which list will the optimiser honour?",
-        options: [
+        question: "Which list will the optimiser honour?",
+        choices: [
           "What was specified, including the parts you did not mean",
           "What was intended",
           "Both equally",
         ],
-        answerIndex: 0,
-        hint: "It optimises what is written.",
-        explanations: [
+        answer: 0,
+        explanation: "It optimises what is written.",
+        why: [
           "Correct. Brevity gets pursued; honesty does not.",
           "Intent is not visible to the optimiser.",
           "Only the specification has any force.",
@@ -154,41 +154,41 @@ for kinds in (["test", "review", "assertion"], ["proof", "test", "test"]):
       "Enumerate hazards first, then mitigations, then state what is left.",
     checks: [
       {
-        prompt: "What makes an assurance case checkable?",
-        options: [
+        question: "What makes an assurance case checkable?",
+        choices: [
           "Named hazards, evidence per hazard, and a stated residual",
           "A safety claim",
           "A test suite",
         ],
-        answerIndex: 0,
-        hint: "A bare claim cannot be evaluated.",
-        explanations: [
+        answer: 0,
+        explanation: "A bare claim cannot be evaluated.",
+        why: [
           "Correct. Each part can be argued with.",
           "That is what it replaces.",
           "Tests are evidence, not the case.",
         ],
       },
       {
-        prompt: "A case reports zero residual risk. What is the likely explanation?",
-        options: [
+        question: "A case reports zero residual risk. What is the likely explanation?",
+        choices: [
           "The hazard list is incomplete",
           "The system is safe",
           "The mitigations are strong",
         ],
-        answerIndex: 0,
-        hint: "Real systems retain risk.",
-        explanations: [
+        answer: 0,
+        explanation: "Real systems retain risk.",
+        why: [
           "Correct. The enumeration stopped too early.",
           "No deployed system reaches zero.",
           "Strength does not eliminate hazards.",
         ],
       },
       {
-        prompt: "How much does an assertion contribute to evidence strength?",
-        options: ["Nothing", "As much as a review", "As much as a test"],
-        answerIndex: 0,
-        hint: "It establishes no fact.",
-        explanations: [
+        question: "How much does an assertion contribute to evidence strength?",
+        choices: ["Nothing", "As much as a review", "As much as a test"],
+        answer: 0,
+        explanation: "It establishes no fact.",
+        why: [
           "Correct. It is a claim, not evidence for one.",
           "A review at least involves inspection.",
           "A test produces an observation.",
@@ -245,45 +245,45 @@ for rounds in range(5):
       "Measure against the expert, not against the unaided baseline.",
     checks: [
       {
-        prompt: "What does sandwiching compare?",
-        options: [
+        question: "What does sandwiching compare?",
+        choices: [
           "Unaided non-expert, assisted non-expert, and expert",
           "Two models",
           "Two experts",
         ],
-        answerIndex: 0,
-        hint: "Three levels, not two.",
-        explanations: [
+        answer: 0,
+        explanation: "Three levels, not two.",
+        why: [
           "Correct, and the middle must reach the top.",
           "The judges are people here.",
           "One expert baseline suffices.",
         ],
       },
       {
-        prompt: "Why is the lift alone insufficient?",
-        options: [
+        question: "Why is the lift alone insufficient?",
+        choices: [
           "A large lift can still fall short of the expert",
           "Lifts are hard to measure",
           "Experts disagree",
         ],
-        answerIndex: 0,
-        hint: "Twenty-three points still missed by nine.",
-        explanations: [
+        answer: 0,
+        explanation: "Twenty-three points still missed by nine.",
+        why: [
           "Correct. The expert baseline is the standard.",
           "The lift is the easy measurement.",
           "Disagreement is a separate issue.",
         ],
       },
       {
-        prompt: "How do the gains from successive rounds of argument behave?",
-        options: [
+        question: "How do the gains from successive rounds of argument behave?",
+        choices: [
           "They compound but diminish",
           "They are constant",
           "They grow",
         ],
-        answerIndex: 0,
-        hint: "Each round closes a fraction of what remains.",
-        explanations: [
+        answer: 0,
+        explanation: "Each round closes a fraction of what remains.",
+        why: [
           "Correct. Most of the gain arrives early.",
           "The remaining gap shrinks each time.",
           "Later rounds have less left to find.",
@@ -338,45 +338,45 @@ for rate in (0.001, 0.01, 0.05):
       "Multiply the rate by the volume before believing a detector is usable.",
     checks: [
       {
-        prompt: "What does an anomaly score express?",
-        options: [
+        question: "What does an anomaly score express?",
+        choices: [
           "Distance from the usual value in units of the usual spread",
           "The raw activation",
           "The model's confidence",
         ],
-        answerIndex: 0,
-        hint: "It is a standardised distance.",
-        explanations: [
+        answer: 0,
+        explanation: "It is a standardised distance.",
+        why: [
           "Correct, which makes the threshold interpretable.",
           "The raw value has no scale.",
           "Confidence is an output, not an internal.",
         ],
       },
       {
-        prompt: "Why can an excellent false-positive rate still be unusable?",
-        options: [
+        question: "Why can an excellent false-positive rate still be unusable?",
+        choices: [
           "The absolute alert count scales with request volume",
           "The rate is measured wrongly",
           "Detectors are slow",
         ],
-        answerIndex: 0,
-        hint: "One in a thousand of ten million is ten thousand.",
-        explanations: [
+        answer: 0,
+        explanation: "One in a thousand of ten million is ten thousand.",
+        why: [
           "Correct. The budget is in alerts, not rates.",
           "The rate can be perfectly accurate.",
           "Speed is not the constraint.",
         ],
       },
       {
-        prompt: "How should internal evidence be treated?",
-        options: [
+        question: "How should internal evidence be treated?",
+        choices: [
           "As a correlational signal, not as proof",
           "As decisive",
           "As equivalent to a test",
         ],
-        answerIndex: 0,
-        hint: "The mechanism is usually not established.",
-        explanations: [
+        answer: 0,
+        explanation: "The mechanism is usually not established.",
+        why: [
           "Correct. It is the least verified part of the system.",
           "That puts weight where it is least earned.",
           "A test observes behaviour directly.",
@@ -426,7 +426,7 @@ print("without recourse",
     secondTrace:
       "Ninety-seven percent of affected people have no route at all. That figure belongs in the deployment review alongside the accuracy.",
     mistake:
-      "Treating an ethics review as a stage that runs after the system is built. The decisions with the largest effect - what to train on, what to refuse, who to serve - are made early and are expensive to revisit.",
+      "Treating an ethics review as a stage that runs after the system is built. The decisions with the largest effect — what to train on, what to refuse, who to serve — are made early and are expensive to revisit.",
     checkpoint:
       "A refusal threshold has no named owner. What follows?",
     checkpointAnswer:
@@ -435,45 +435,45 @@ print("without recourse",
       "Name an owner for every decision, and count who has recourse.",
     checks: [
       {
-        prompt: "What happens to a decision with no accountable owner?",
-        options: [
+        question: "What happens to a decision with no accountable owner?",
+        choices: [
           "It is still made, by whoever set the default",
           "It is deferred",
           "It is escalated",
         ],
-        answerIndex: 0,
-        hint: "Defaults are decisions.",
-        explanations: [
+        answer: 0,
+        explanation: "Defaults are decisions.",
+        why: [
           "Correct, and nobody can be asked to justify it.",
           "Deferral is itself a choice.",
           "Escalation needs an owner to escalate to.",
         ],
       },
       {
-        prompt: "Why report the share of affected people without recourse?",
-        options: [
+        question: "Why report the share of affected people without recourse?",
+        choices: [
           "It describes who bears the cost of an error",
           "It is a legal requirement everywhere",
           "It improves accuracy",
         ],
-        answerIndex: 0,
-        hint: "It belongs next to the accuracy figure.",
-        explanations: [
+        answer: 0,
+        explanation: "It belongs next to the accuracy figure.",
+        why: [
           "Correct. It is the other half of the deployment picture.",
           "Requirements vary by jurisdiction.",
           "It is a measure, not an intervention.",
         ],
       },
       {
-        prompt: "When should the impact questions be asked?",
-        options: [
+        question: "When should the impact questions be asked?",
+        choices: [
           "Early, since the decisions with the largest effect are made first",
           "After deployment",
           "During the final review",
         ],
-        answerIndex: 0,
-        hint: "Training data and refusal policy are chosen early.",
-        explanations: [
+        answer: 0,
+        explanation: "Training data and refusal policy are chosen early.",
+        why: [
           "Correct, and they are expensive to revisit later.",
           "By then the choices are locked in.",
           "A final review cannot undo them.",

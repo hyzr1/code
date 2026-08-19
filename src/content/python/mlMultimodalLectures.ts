@@ -68,45 +68,45 @@ for t in (1.0, 0.2, 0.07):
       "Diagonal correct, both directions, negatives from the batch.",
     checks: [
       {
-        prompt: "What supplies the negative examples in contrastive training?",
-        options: [
+        question: "What supplies the negative examples in contrastive training?",
+        choices: [
           "The other pairs in the same batch",
           "A separate corpus of mismatched pairs",
           "Randomly generated noise vectors",
         ],
-        answerIndex: 0,
-        hint: "That is why batch size matters so much.",
-        explanations: [
+        answer: 0,
+        explanation: "That is why batch size matters so much.",
+        why: [
           "Correct. Every off-diagonal cell is a negative.",
           "No extra data is needed.",
           "Noise would be trivially separable.",
         ],
       },
       {
-        prompt: "Why is the loss averaged over rows and columns?",
-        options: [
+        question: "Why is the loss averaged over rows and columns?",
+        choices: [
           "So retrieval works from image to text and from text to image",
           "To halve the gradient magnitude",
           "Because the matrix is symmetric",
         ],
-        answerIndex: 0,
-        hint: "Both retrieval directions are wanted at inference.",
-        explanations: [
+        answer: 0,
+        explanation: "Both retrieval directions are wanted at inference.",
+        why: [
           "Correct. One direction alone leaves the other weak.",
           "Scaling is not the reason.",
           "The similarity matrix is not symmetric.",
         ],
       },
       {
-        prompt: "What does the temperature control?",
-        options: [
+        question: "What does the temperature control?",
+        choices: [
           "How sharply the softmax separates the true pair from the rest",
           "The learning rate",
           "The embedding dimension",
         ],
-        answerIndex: 0,
-        hint: "It divides the similarities before the softmax.",
-        explanations: [
+        answer: 0,
+        explanation: "It divides the similarities before the softmax.",
+        why: [
           "Correct. It is usually learned rather than fixed.",
           "It is applied inside the loss, not the optimizer.",
           "Dimension is an architecture choice.",
@@ -160,48 +160,48 @@ print("full attention pairs", (spatial * frames) ** 2)`,
     checkpointAnswer:
       "It reduces the grid on both axes, so tokens fall with the square of the factor, and attention cost falls with the square of that.",
     remember:
-      "Compress, generate small, decode - and watch the detail ceiling.",
+      "Compress, generate small, decode — and watch the detail ceiling.",
     checks: [
       {
-        prompt: "Where does latent diffusion run its generative process?",
-        options: [
+        question: "Where does latent diffusion run its generative process?",
+        choices: [
           "In a compressed space produced by an autoencoder",
           "Directly on pixels",
           "On the frequency spectrum",
         ],
-        answerIndex: 0,
-        hint: "The name states it.",
-        explanations: [
+        answer: 0,
+        explanation: "The name states it.",
+        why: [
           "Correct. The decoder restores pixels afterwards.",
           "That is the expensive approach it replaces.",
           "Spectral methods are a different lineage.",
         ],
       },
       {
-        prompt: "What does raising the compression factor cost?",
-        options: [
+        question: "What does raising the compression factor cost?",
+        choices: [
           "Fine detail the decoder can no longer recover",
           "Training stability",
           "The number of diffusion steps",
         ],
-        answerIndex: 0,
-        hint: "Something has to be thrown away.",
-        explanations: [
+        answer: 0,
+        explanation: "Something has to be thrown away.",
+        why: [
           "Correct. Faces and text degrade first.",
           "Stability is largely unaffected.",
           "Step count is a separate choice.",
         ],
       },
       {
-        prompt: "Why does video generation need attention across frames?",
-        options: [
+        question: "Why does video generation need attention across frames?",
+        choices: [
           "Independently generated frames are inconsistent with each other",
           "Frames are too large otherwise",
           "It reduces the token count",
         ],
-        answerIndex: 0,
-        hint: "Think about what an object looks like frame to frame.",
-        explanations: [
+        answer: 0,
+        explanation: "Think about what an object looks like frame to frame.",
+        why: [
           "Correct. Temporal attention is what stops the flicker.",
           "Frame size is a spatial matter.",
           "It increases the cost, not reduces it.",
@@ -269,45 +269,45 @@ for name, error, rating in systems:
       "Error rate for recognition, listener ratings for synthesis, and never one alone.",
     checks: [
       {
-        prompt: "Why can word error rate exceed one?",
-        options: [
+        question: "Why can word error rate exceed one?",
+        choices: [
           "Insertions are counted while the divisor is the reference length",
           "It is a percentage, so it caps at one",
           "Because of rounding",
         ],
-        answerIndex: 0,
-        hint: "Think about a transcript far longer than the reference.",
-        explanations: [
+        answer: 0,
+        explanation: "Think about a transcript far longer than the reference.",
+        why: [
           "Correct. A verbose transcript can score above one.",
           "There is no cap.",
           "Rounding is not the cause.",
         ],
       },
       {
-        prompt: "What does a listener rating measure that error rate does not?",
-        options: [
+        question: "What does a listener rating measure that error rate does not?",
+        choices: [
           "Naturalness of the audio",
           "Transcription accuracy",
           "Inference latency",
         ],
-        answerIndex: 0,
-        hint: "It is a human judgement of the sound.",
-        explanations: [
+        answer: 0,
+        explanation: "It is a human judgement of the sound.",
+        why: [
           "Correct. The two can disagree sharply.",
           "That is exactly what error rate measures.",
           "Latency is a systems metric.",
         ],
       },
       {
-        prompt: "A model scores well on read speech. What should you expect in a noisy setting?",
-        options: [
+        question: "A model scores well on read speech. What should you expect in a noisy setting?",
+        choices: [
           "A substantially higher error rate",
           "The same error rate",
           "A lower error rate",
         ],
-        answerIndex: 0,
-        hint: "The evaluation condition is part of the number.",
-        explanations: [
+        answer: 0,
+        explanation: "The evaluation condition is part of the number.",
+        why: [
           "Correct. Noise and accents commonly triple it.",
           "Conditions change the result markedly.",
           "Noise never helps.",
@@ -374,41 +374,41 @@ print(propagate(features, 10))`,
       "Order-blind aggregation, one hop per layer, and stop before everything blurs.",
     checks: [
       {
-        prompt: "Why must neighbour aggregation be order independent?",
-        options: [
+        question: "Why must neighbour aggregation be order independent?",
+        choices: [
           "A graph has no canonical ordering of neighbours",
           "It makes the computation faster",
           "Gradients require it",
         ],
-        answerIndex: 0,
-        hint: "The same graph can be written down many ways.",
-        explanations: [
+        answer: 0,
+        explanation: "The same graph can be written down many ways.",
+        why: [
           "Correct. Otherwise the answer depends on the encoding.",
           "Speed is not the reason.",
           "Gradients flow through ordered operations fine.",
         ],
       },
       {
-        prompt: "What is oversmoothing?",
-        options: [
+        question: "What is oversmoothing?",
+        choices: [
           "Node representations converging toward each other with depth",
           "Gradients vanishing in deep layers",
           "Overfitting to the training graph",
         ],
-        answerIndex: 0,
-        hint: "It comes from repeated averaging.",
-        explanations: [
+        answer: 0,
+        explanation: "It comes from repeated averaging.",
+        why: [
           "Correct. The distinctions disappear.",
           "That is a different failure.",
           "It happens even without overfitting.",
         ],
       },
       {
-        prompt: "How far can information travel in a three-layer graph network?",
-        options: ["Three hops", "The whole graph", "One hop"],
-        answerIndex: 0,
-        hint: "Each layer moves messages one edge.",
-        explanations: [
+        question: "How far can information travel in a three-layer graph network?",
+        choices: ["Three hops", "The whole graph", "One hop"],
+        answer: 0,
+        explanation: "Each layer moves messages one edge.",
+        why: [
           "Correct. Depth and reach are the same number.",
           "Only if the graph has diameter three.",
           "That would be a single layer.",
@@ -467,45 +467,45 @@ print("a perfect ranker cannot fix a missing candidate")`,
       "Retrieve wide, rank narrow, and divide by exposure.",
     checks: [
       {
-        prompt: "Why are recommenders split into two stages?",
-        options: [
+        question: "Why are recommenders split into two stages?",
+        choices: [
           "Scoring every item with an expensive model is too slow",
           "The two stages use different data",
           "It improves accuracy directly",
         ],
-        answerIndex: 0,
-        hint: "Think about a million items and a latency budget.",
-        explanations: [
+        answer: 0,
+        explanation: "Think about a million items and a latency budget.",
+        why: [
           "Correct. Latency forces the funnel.",
           "They typically share the same logs.",
           "It trades some accuracy for feasibility.",
         ],
       },
       {
-        prompt: "What does implicit feedback confound?",
-        options: [
+        question: "What does implicit feedback confound?",
+        choices: [
           "Interest with exposure",
           "Clicks with purchases",
           "Users with sessions",
         ],
-        answerIndex: 0,
-        hint: "An item must be shown before it can be clicked.",
-        explanations: [
+        answer: 0,
+        explanation: "An item must be shown before it can be clicked.",
+        why: [
           "Correct. Correcting for exposure changes the ranking.",
           "Those are separate signals, not a confound.",
           "That is an identity question.",
         ],
       },
       {
-        prompt: "Retrieval drops the correct item from the shortlist. What can ranking do?",
-        options: [
+        question: "Retrieval drops the correct item from the shortlist. What can ranking do?",
+        choices: [
           "Nothing; the ceiling is set upstream",
           "Recover it by rescoring",
           "Expand the shortlist",
         ],
-        answerIndex: 0,
-        hint: "Ranking only sees the shortlist.",
-        explanations: [
+        answer: 0,
+        explanation: "Ranking only sees the shortlist.",
+        why: [
           "Correct. Recall at the shortlist bounds the system.",
           "It cannot score what it never received.",
           "That would be a retrieval change.",
@@ -569,45 +569,45 @@ print("temporal split err :",
       "Cut the timeline once, fit features left of the cut, and report intervals.",
     checks: [
       {
-        prompt: "Why is a random split invalid for forecasting?",
-        options: [
+        question: "Why is a random split invalid for forecasting?",
+        choices: [
           "It trains on points later than the ones it evaluates",
           "It uses too little training data",
           "It ignores seasonality",
         ],
-        answerIndex: 0,
-        hint: "Think about what a deployed model can see.",
-        explanations: [
+        answer: 0,
+        explanation: "Think about what a deployed model can see.",
+        why: [
           "Correct. That leak makes the score optimistic.",
           "The proportion can be identical.",
           "Seasonality is a modelling concern.",
         ],
       },
       {
-        prompt: "Where must a scaler or rolling feature be fitted?",
-        options: [
+        question: "Where must a scaler or rolling feature be fitted?",
+        choices: [
           "On the training portion only",
           "On the whole series",
           "On the test portion",
         ],
-        answerIndex: 0,
-        hint: "Anything fitted on all the data has seen the future.",
-        explanations: [
+        answer: 0,
+        explanation: "Anything fitted on all the data has seen the future.",
+        why: [
           "Correct. Otherwise the leak is invisible in the metrics.",
           "That carries future information backward.",
           "The test portion must stay untouched.",
         ],
       },
       {
-        prompt: "What happens to prediction intervals as the horizon grows?",
-        options: [
+        question: "What happens to prediction intervals as the horizon grows?",
+        choices: [
           "They widen",
           "They stay constant",
           "They narrow as the trend clarifies",
         ],
-        answerIndex: 0,
-        hint: "Uncertainty compounds with distance.",
-        explanations: [
+        answer: 0,
+        explanation: "Uncertainty compounds with distance.",
+        why: [
           "Correct. A point forecast hides that entirely.",
           "Constant width would understate distant uncertainty.",
           "Distance adds uncertainty, never removes it.",

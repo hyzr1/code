@@ -63,45 +63,45 @@ print(point_in_time(events, labels))`,
       "Join at the label's moment, and compute the same way on both sides.",
     checks: [
       {
-        prompt: "What does a point-in-time join enforce?",
-        options: [
+        question: "What does a point-in-time join enforce?",
+        choices: [
           "Only feature values recorded at or before the label's moment are used",
           "Features and labels come from the same table",
           "Every entity has a feature value",
         ],
-        answerIndex: 0,
-        hint: "It is about time, not completeness.",
-        explanations: [
+        answer: 0,
+        explanation: "It is about time, not completeness.",
+        why: [
           "Correct. Anything later is a leak.",
           "They usually come from different sources.",
           "Missing values are a separate concern.",
         ],
       },
       {
-        prompt: "What symptom does a training-time leak produce?",
-        options: [
+        question: "What symptom does a training-time leak produce?",
+        choices: [
           "Strong offline metrics and weak production metrics",
           "Slow training",
           "Unstable gradients",
         ],
-        answerIndex: 0,
-        hint: "The model had information it will never have again.",
-        explanations: [
+        answer: 0,
+        explanation: "The model had information it will never have again.",
+        why: [
           "Correct. The gap between the two is the tell.",
           "Leakage does not affect speed.",
           "The optimisation is unaffected.",
         ],
       },
       {
-        prompt: "Why does a feature store keep one definition per feature?",
-        options: [
+        question: "Why does a feature store keep one definition per feature?",
+        choices: [
           "So training and serving compute it identically",
           "To reduce storage",
           "To speed up joins",
         ],
-        answerIndex: 0,
-        hint: "Two implementations drift apart.",
-        explanations: [
+        answer: 0,
+        explanation: "Two implementations drift apart.",
+        why: [
           "Correct. That is train-serve parity.",
           "Storage is a minor consideration.",
           "Join speed is an implementation detail.",
@@ -161,46 +161,46 @@ print("held", held, "of", capacity, "doing useful work 0")`,
     checkpoint:
       "One worker in sixty-four runs forty percent slower. How much of the cluster is wasted?",
     checkpointAnswer:
-      "Twenty-eight percent of the step, and two thousand five hundred twenty idle worker-units - every other worker waits at the barrier.",
+      "Twenty-eight percent of the step, and two thousand five hundred twenty idle worker-units — every other worker waits at the barrier.",
     remember:
       "The barrier costs the gap, and partial allocations cost everything.",
     checks: [
       {
-        prompt: "What determines the duration of a synchronous step?",
-        options: ["The slowest worker", "The average worker", "The fastest worker"],
-        answerIndex: 0,
-        hint: "Everyone waits at the barrier.",
-        explanations: [
+        question: "What determines the duration of a synchronous step?",
+        choices: ["The slowest worker", "The average worker", "The fastest worker"],
+        answer: 0,
+        explanation: "Everyone waits at the barrier.",
+        why: [
           "Correct. That is why stragglers matter so much.",
           "Averages hide the barrier entirely.",
           "The fastest worker waits longest.",
         ],
       },
       {
-        prompt: "Why does a larger cluster suffer more from one straggler?",
-        options: [
+        question: "Why does a larger cluster suffer more from one straggler?",
+        choices: [
           "More workers idle for the same waiting period",
           "Stragglers become more likely",
           "The network saturates",
         ],
-        answerIndex: 0,
-        hint: "The waste is idle workers times waiting time.",
-        explanations: [
+        answer: 0,
+        explanation: "The waste is idle workers times waiting time.",
+        why: [
           "Correct. The same delay multiplies across more hardware.",
           "That is a separate effect.",
           "Network load is unrelated to this calculation.",
         ],
       },
       {
-        prompt: "What does gang scheduling prevent?",
-        options: [
+        question: "What does gang scheduling prevent?",
+        choices: [
           "Jobs holding hardware they cannot yet use",
           "Stragglers",
           "Checkpoint corruption",
         ],
-        answerIndex: 0,
-        hint: "Think about two half-allocated jobs.",
-        explanations: [
+        answer: 0,
+        explanation: "Think about two half-allocated jobs.",
+        why: [
           "Correct. All workers start together or none do.",
           "Stragglers are a runtime problem.",
           "That is the checkpointing lesson.",
@@ -257,50 +257,50 @@ for name, (price, throughput) in devices.items():
     checkpoint:
       "Utilization is forty percent and most idle time is waiting for batches. What do you fix?",
     checkpointAnswer:
-      "The input pipeline - more loader workers, prefetching or a faster data format. The model is not the bottleneck.",
+      "The input pipeline — more loader workers, prefetching or a faster data format. The model is not the bottleneck.",
     remember:
       "Profile first, then divide price by throughput.",
     checks: [
       {
-        prompt: "What does utilization measure?",
-        options: [
+        question: "What does utilization measure?",
+        choices: [
           "The fraction of wall-clock time spent computing",
           "The fraction of memory used",
           "The fraction of workers running",
         ],
-        answerIndex: 0,
-        hint: "It is a time measure, not a capacity measure.",
-        explanations: [
+        answer: 0,
+        explanation: "It is a time measure, not a capacity measure.",
+        why: [
           "Correct. Idle time is billed but produces nothing.",
           "Memory occupancy is a different metric.",
           "That is cluster allocation.",
         ],
       },
       {
-        prompt: "A device costs half as much per hour but delivers a third of the throughput. Is it cheaper?",
-        options: [
+        question: "A device costs half as much per hour but delivers a third of the throughput. Is it cheaper?",
+        choices: [
           "No; cost per unit of work is higher",
           "Yes; the hourly rate is lower",
           "It depends on the model",
         ],
-        answerIndex: 0,
-        hint: "Divide price by throughput.",
-        explanations: [
+        answer: 0,
+        explanation: "Divide price by throughput.",
+        why: [
           "Correct. Half the price for a third of the work is worse.",
           "Hourly rate alone is misleading.",
           "The arithmetic holds regardless of model.",
         ],
       },
       {
-        prompt: "Utilization is low and the dominant segment is waiting for other workers. What is the fix?",
-        options: [
+        question: "Utilization is low and the dominant segment is waiting for other workers. What is the fix?",
+        choices: [
           "Address communication and stragglers",
           "Speed up the data loader",
           "Use a smaller model",
         ],
-        answerIndex: 0,
-        hint: "The profile names the segment.",
-        explanations: [
+        answer: 0,
+        explanation: "The profile names the segment.",
+        why: [
           "Correct. That is a synchronisation problem.",
           "The loader is not the dominant segment here.",
           "Model size does not address waiting.",
@@ -359,45 +359,45 @@ print("missing:", [item for item in required if item not in saved])`,
       "Save everything stateful, and test the restore.",
     checks: [
       {
-        prompt: "On average, how much work does one failure destroy?",
-        options: [
+        question: "On average, how much work does one failure destroy?",
+        choices: [
           "Half a checkpoint interval",
           "A whole interval",
           "The time since the run started",
         ],
-        answerIndex: 0,
-        hint: "The failure lands at a uniform point between checkpoints.",
-        explanations: [
+        answer: 0,
+        explanation: "The failure lands at a uniform point between checkpoints.",
+        why: [
           "Correct. That is the expected value.",
           "That would be the worst case.",
           "Only work since the last checkpoint is lost.",
         ],
       },
       {
-        prompt: "Which item is most often forgotten in a checkpoint?",
-        options: [
+        question: "Which item is most often forgotten in a checkpoint?",
+        choices: [
           "The data loader position",
           "The weights",
           "The model architecture",
         ],
-        answerIndex: 0,
-        hint: "It is the one that silently changes the run.",
-        explanations: [
+        answer: 0,
+        explanation: "It is the one that silently changes the run.",
+        why: [
           "Correct. Resuming replays data the model already saw.",
           "Nobody forgets the weights.",
           "That lives in the code.",
         ],
       },
       {
-        prompt: "What should be tested alongside checkpoint writing?",
-        options: [
+        question: "What should be tested alongside checkpoint writing?",
+        choices: [
           "That a restore reproduces the run exactly",
           "That the file compresses well",
           "That writes are fast",
         ],
-        answerIndex: 0,
-        hint: "The write is only half the mechanism.",
-        explanations: [
+        answer: 0,
+        explanation: "The write is only half the mechanism.",
+        why: [
           "Correct. An untested restore path fails when it matters.",
           "Compression is secondary.",
           "Speed matters less than correctness.",
@@ -465,45 +465,45 @@ print("pipeline proceeds:", not failures)`,
       "Score the drift, set a threshold, and fail the run.",
     checks: [
       {
-        prompt: "What does a stability index of zero mean?",
-        options: [
+        question: "What does a stability index of zero mean?",
+        choices: [
           "The two distributions are identical",
           "The data is empty",
           "The check could not run",
         ],
-        answerIndex: 0,
-        hint: "The score grows with the gap.",
-        explanations: [
+        answer: 0,
+        explanation: "The score grows with the gap.",
+        why: [
           "Correct. Every bucket has the same share.",
           "Empty data would fail a different check.",
           "Zero is a valid, meaningful result.",
         ],
       },
       {
-        prompt: "Why should a validation failure stop the pipeline?",
-        options: [
+        question: "Why should a validation failure stop the pipeline?",
+        choices: [
           "A logged warning gets ignored until the model is already worse",
           "It saves storage",
           "It is faster than training",
         ],
-        answerIndex: 0,
-        hint: "Think about what people actually act on.",
-        explanations: [
+        answer: 0,
+        explanation: "Think about what people actually act on.",
+        why: [
           "Correct. Blocking converts a silent problem into a visible one.",
           "Storage is not the concern.",
           "Speed is not the argument.",
         ],
       },
       {
-        prompt: "Where else do these checks belong?",
-        options: [
+        question: "Where else do these checks belong?",
+        choices: [
           "On the serving inputs",
           "Only on the training data",
           "Only on the model outputs",
         ],
-        answerIndex: 0,
-        hint: "Upstream changes reach serving first.",
-        explanations: [
+        answer: 0,
+        explanation: "Upstream changes reach serving first.",
+        why: [
           "Correct. That is where damage starts.",
           "Training data is only half the picture.",
           "Output checks catch a different failure.",
