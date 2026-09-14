@@ -11,7 +11,7 @@
  *
  * Run: npm run check:solutions
  */
-import { PROBLEMS } from "../.check/content.mjs";
+import { PROBLEMS, INTERVIEW_SUPPORT } from "../.check/content.mjs";
 import { expect, assert, deepEqual } from "../.check/harness.mjs";
 import { loadPyodide } from "pyodide";
 
@@ -28,9 +28,11 @@ for (const problem of PROBLEMS) {
     try {
       pythonRuntime ??= await loadPyodide();
       pythonRuntime.globals.set("__check_solution", problem.solution);
+      pythonRuntime.globals.set("__check_support", INTERVIEW_SUPPORT);
       pythonRuntime.globals.set("__check_name", problem.exportName);
       await pythonRuntime.runPythonAsync(`
 __check_scope = {"__name__": "__solution__"}
+exec(__check_support, __check_scope, __check_scope)
 exec(compile(__check_solution, "solution.py", "exec"), __check_scope, __check_scope)
 if __check_name not in __check_scope or not callable(__check_scope[__check_name]):
     raise AssertionError(f'solution defines nothing callable named "{__check_name}"')

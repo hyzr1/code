@@ -1,4 +1,5 @@
 /** Entry point for the content checks in `scripts/`. Not shipped. */
+export { INTERVIEW_SUPPORT } from "./engine/interviewSupport";
 export {
   ATOMS,
   COURSE_LESSONS,

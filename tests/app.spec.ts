@@ -168,7 +168,7 @@ test("the live course is the complete fixed Frontier and FAANG path", async ({ p
   await expect(page.locator(".company-map, .company-graph-node")).toHaveCount(0);
   await expect(page.getByRole("button", { name: "Python Reels" })).toHaveCount(0);
   await expect(page.getByText("Mastery tier · optional")).toHaveCount(0);
-  await expect(page.locator(".mastery-coming-row b")).toHaveCount(3);
+  await expect(page.locator(".mastery-coming-row b")).toHaveCount(0);
 
   const horizontalOverflow = await page.evaluate(() =>
     document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,

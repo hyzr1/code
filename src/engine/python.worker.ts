@@ -1,5 +1,6 @@
 import type { RunResult, TestSpec } from "../types";
 import { loadPyodide } from "pyodide";
+import { INTERVIEW_SUPPORT } from "./interviewSupport";
 
 interface PyodideApi {
   runPythonAsync: (source: string, options?: { globals?: unknown }) => Promise<unknown>;
@@ -47,6 +48,7 @@ async def _run_submission(code, export_name, tests_json):
     suite_logs = []
     results = []
     scope = {"__name__": "__submission__"}
+    exec(interview_support, scope, scope)
     capture = io.StringIO()
 
     try:
@@ -108,6 +110,7 @@ self.onmessage = async (
   try {
     const pyodide = await loadRuntime();
     pyodide.globals.set("submission_code", code);
+    pyodide.globals.set("interview_support", INTERVIEW_SUPPORT);
     pyodide.globals.set("submission_name", exportName);
     pyodide.globals.set("submission_tests", JSON.stringify(tests));
     await pyodide.runPythonAsync(HARNESS);

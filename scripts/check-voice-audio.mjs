@@ -40,10 +40,23 @@ const auditLecture = async (lecture, asset) => {
   const info = await stat(file);
   if (info.size < 1024) lectureFailures.push(`${lecture}: encoded file is only ${info.size} bytes`);
 
-  const meta = JSON.parse(await readFile(
-    path.join(ROOT, ".voice-pack-cache", VOICE, `${lecture}.json`),
-    "utf8",
-  ));
+  let meta;
+  try {
+    meta = JSON.parse(await readFile(
+      path.join(ROOT, ".voice-pack-cache", VOICE, `${lecture}.json`),
+      "utf8",
+    ));
+  } catch (error) {
+    if (error?.code !== "ENOENT") throw error;
+    // CI checks out the published pack without the ignored synthesis cache.
+    // The manifest carries the same cue timing data required by this audit.
+    meta = {
+      duration: asset.duration,
+      cues: Object.values(manifest.entries)
+        .filter((entry) => entry.lecture === lecture)
+        .sort((a, b) => a.start - b.start),
+    };
+  }
   let previousEnd = 0;
   for (const [index, cue] of meta.cues.entries()) {
     lectureCueCount += 1;

@@ -78,6 +78,9 @@ export default function App() {
     if (!tourOpen) setDrawerOpen(false);
   }, [route, tourOpen]);
   useEffect(() => {
+    document.querySelector<HTMLElement>(".main")?.scrollTo({ top: 0 });
+  }, [route]);
+  useEffect(() => {
     if (!isMobile) setDrawerOpen(false);
   }, [isMobile]);
 

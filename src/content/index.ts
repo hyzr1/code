@@ -23,7 +23,7 @@ import {
 } from "./python";
 import { forLanguage } from "./language";
 import { PYTHON_ADVANCED_PROBLEMS } from "./python/advancedProblems";
-import { PYTHON_LEETCODE_PROBLEMS } from "./python/leetcode";
+import { INTERVIEW_PROBLEMS } from "./python/interviewProblems";
 import { PYTHON_ML_PROBLEMS } from "./python/mlProblems";
 import {
   MASTERY_EXERCISES,
@@ -703,7 +703,7 @@ export const PROBLEMS: Problem[] = [
   ...PATTERN_PROBLEMS,
   ...PYTHON_PROBLEMS,
   ...PYTHON_ADVANCED_PROBLEMS,
-  ...PYTHON_LEETCODE_PROBLEMS,
+  ...INTERVIEW_PROBLEMS,
   ...PYTHON_ML_PROBLEMS,
   ...MASTERY_EXERCISES,
 ];

@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
+    "content:interview": "node scripts/build-interview-catalog.mjs",
     "sync:roadmaps": "node scripts/sync-course-roadmaps.mjs",
     "prepare:python": "node scripts/copy-pyodide.mjs",
     "assets:companies": "node scripts/download-company-logos.mjs",
@@ -58,12 +59,12 @@
     "@vitejs/plugin-react": "^6.0.4",
     "esbuild": "^0.28.1",
     "ffmpeg-static": "^5.3.0",
-    "sharp": "0.35.3",
+    "sharp": "0.35.4",
     "typescript": "^5.9.2",
     "vite": "^8.1.5"
   },
   "overrides": {
     "nanoid": "^3.3.18",
-    "sharp": "0.35.3"
+    "sharp": "0.35.4"
   }
 }

@@ -6,7 +6,7 @@ import { useSettings } from "../settings";
 import EmptyState from "./EmptyState";
 import Icon from "./Icon";
 import { trackFit } from "../content/tracks";
-import { ACTIVE_SWE_PREPARATION_LEVEL, COURSE_BY_ID, trackForCourse } from "../content/courses";
+import { ACTIVE_SWE_PREPARATION_LEVEL, trackForCourse } from "../content/courses";
 import LanguagePicker from "./LanguagePicker";
 import { problemFitsPreparation } from "../content/companies";
 
@@ -32,6 +32,7 @@ function band(problem: Problem) {
 }
 
 type Filter = "recommended" | "all" | "todo" | "done" | "cold";
+type Collection = "neetcode250" | "neetcode150" | "blind75" | "all";
 
 const FILTERS: { id: Filter; label: string }[] = [
   { id: "recommended", label: "For you" },
@@ -39,6 +40,13 @@ const FILTERS: { id: Filter; label: string }[] = [
   { id: "todo", label: "Not started" },
   { id: "done", label: "Cleared" },
   { id: "cold", label: "Cold-solved" },
+];
+
+const COLLECTIONS: { id: Collection; label: string; count?: number }[] = [
+  { id: "neetcode250", label: "NeetCode 250", count: 250 },
+  { id: "neetcode150", label: "NeetCode 150", count: 150 },
+  { id: "blind75", label: "Blind 75", count: 75 },
+  { id: "all", label: "All practice" },
 ];
 
 export default function ProblemsView({
@@ -49,24 +57,29 @@ export default function ProblemsView({
   onOpen: (id: string) => void;
 }) {
   const [filter, setFilter] = useState<Filter>("recommended");
+  const [collection, setCollection] = useState<Collection>("neetcode250");
   const [query, setQuery] = useState("");
   const { settings } = useSettings();
   const language = settings.learning.language;
   const course = settings.learning.course;
   const preparationLevel = course === "swe" ? ACTIVE_SWE_PREPARATION_LEVEL : undefined;
   const track = trackForCourse(course, preparationLevel);
-  const courseMeta = COURSE_BY_ID.get(course) ?? COURSE_BY_ID.get("python")!;
 
-  const all = useMemo(
-    () => PROBLEMS
-      .filter((p) => p.tier !== "rep" && contentLanguage(p) === language)
-      .sort((a, b) => trackFit(b, track) - trackFit(a, track)),
-    [language, track],
-  );
+  const all = useMemo(() => {
+    const candidates = PROBLEMS.filter((p) => p.tier !== "rep" && contentLanguage(p) === language);
+    const ordered = [...candidates].sort((a, b) => Number(Boolean(b.lists)) - Number(Boolean(a.lists)) || trackFit(b, track) - trackFit(a, track));
+    const unique = new Map<string, Problem>();
+    for (const problem of ordered) {
+      const key = problem.title.toLowerCase();
+      if (!unique.has(key)) unique.set(key, problem);
+    }
+    return [...unique.values()];
+  }, [course, language, track]);
 
   const shown = all.filter((problem) => {
     const cleared = progress.cleared[problem.id];
-    if (filter === "recommended" && trackFit(problem, track) < 2) return false;
+    if (collection !== "all" && !problem.lists?.includes(collection)) return false;
+    if (filter === "recommended" && collection === "all" && trackFit(problem, track) < 2) return false;
     if (filter === "recommended" && preparationLevel && !problemFitsPreparation(problem, preparationLevel)) return false;
     if (filter === "todo" && cleared) return false;
     if (filter === "done" && !cleared) return false;
@@ -78,29 +91,33 @@ export default function ProblemsView({
     return true;
   });
 
-  const patterns = [...new Set(all.map((p) => p.pattern).filter(Boolean))];
+  const collectionProblems = all.filter(problem => collection === "all" || problem.lists?.includes(collection));
+  const patterns = [...new Set(collectionProblems.map((p) => p.pattern).filter(Boolean))];
+  const solved = collectionProblems.filter(problem => progress.cleared[problem.id]).length;
 
   return (
     <div className="page">
       <div className="page-head">
         <div className="row spread wrap" style={{ gap: 16 }}>
           <div>
-            <h1>Problems</h1>
+            <h1>Interview Practice</h1>
             <p className="small muted" style={{ margin: "-4px 0 0" }}>
-              Practice and submit in your interview language.
+              Structured problem sets, executable tests, progressive hints, and reference solutions.
             </p>
           </div>
           <div data-tour="algo-language">
             <LanguagePicker />
           </div>
         </div>
-        <p>
-          Interview-shaped exercises with hidden tests, a five-rung help ladder
-          and failure tagging. Picking your own is fine for a warm-up — the
-          daily session interleaves on purpose, because choosing by topic hands
-          you the category for free.
-        </p>
-        <div className="prep-inline"><span className="badge">{courseMeta.label} course</span><span>{courseMeta.detail}</span></div>
+        <p>Work through a curated study plan or search the complete library. Your code drafts and solved status stay on this device.</p>
+        <div className="prep-inline"><span className="badge">Algo Mastery</span><span>Data structures, algorithms, and interview preparation in Python.</span></div>
+      </div>
+
+      <div className="problem-collections" aria-label="Problem lists">
+        {COLLECTIONS.map(option => <button key={option.id} className={collection === option.id ? "on" : ""} onClick={() => { setCollection(option.id); setFilter("all"); }}>
+          <span>{option.label}</span>{option.count ? <b>{option.count}</b> : null}
+        </button>)}
+        <div className="collection-progress"><strong>{solved}</strong><span>of {collectionProblems.length} solved</span></div>
       </div>
 
       <div className="card" style={{ padding: "14px 16px" }}>
@@ -202,7 +219,7 @@ export default function ProblemsView({
                   {problem.pattern ? (
                     <span className="badge">{problem.pattern}</span>
                   ) : null}
-                  {trackFit(problem, track) >= 3 ? <span className="badge role-fit">Course fit</span> : null}
+                  {problem.lists?.includes("blind75") ? <span className="badge role-fit">Blind 75</span> : null}
                   <span
                     className="row tiny"
                     style={{ gap: 6, minWidth: 68, color: "var(--text-muted)" }}
@@ -215,7 +232,7 @@ export default function ProblemsView({
                         background: band(problem).tone,
                       }}
                     />
-                    {band(problem).label}
+                    {problem.displayDifficulty ?? band(problem).label}
                   </span>
                   <span
                     className="tiny dim"

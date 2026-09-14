@@ -104,6 +104,10 @@ export interface HintRung {
 export type Tier = "rep" | "problem" | "challenge";
 
 export interface Problem {
+  displayDifficulty?: "Easy" | "Medium" | "Hard";
+  lists?: string[];
+  source?: string;
+  examples?: { input: string; output: string }[];
   id: string;
   kind: "problem";
   tier: Tier;
