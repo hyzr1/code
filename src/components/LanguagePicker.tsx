@@ -200,7 +200,7 @@ export default function LanguagePicker({
                   </button>
                 );
               })}
-              <p>The adaptive SWE path is available now. Mastery catalogs open only when their lectures are complete.</p>
+              <p>Choose Python to learn the language or DSA to prepare for coding interviews.</p>
             </div>,
             document.body,
           )

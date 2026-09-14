@@ -11,7 +11,7 @@ import { isDue } from "../engine/mastery";
 import { conceptIdsFor } from "../engine/scheduler";
 import { todayKey } from "../engine/storage";
 import { useSettings } from "../settings";
-import { ACTIVE_SWE_PREPARATION_LEVEL } from "../content/courses";
+import { ACTIVE_SWE_PREPARATION_LEVEL, COURSE_BY_ID } from "../content/courses";
 import { DayRing, Heatmap, Mark, StreakLabel } from "./Brand";
 import Icon, { type IconName } from "./Icon";
 
@@ -378,7 +378,7 @@ export default function Sidebar({
           {!collapsed ? (
             <>
               <span className="user-name">
-                Your preparation <span>· Frontier path</span>
+                Your course <span>· {COURSE_BY_ID.get(course)?.shortLabel ?? "Python"}</span>
               </span>
               <Icon name="settings" size={15} style={{ color: "var(--text-faint)" }} />
             </>

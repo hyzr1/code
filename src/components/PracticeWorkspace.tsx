@@ -3,6 +3,7 @@ import type { Problem, RunResult } from "../types";
 import { runTests } from "../engine/runner";
 import Editor from "./Editor";
 import Markdown from "./Markdown";
+import Icon from "./Icon";
 
 export interface PracticeOutcome { hintsUsed: number; seconds: number; attempts: number; timeToFirstKeystroke?: number }
 
@@ -37,6 +38,16 @@ export default function PracticeWorkspace({ problem, starter, onComplete, onRevi
   const container = useRef<HTMLDivElement>(null);
   const visibleTests = problem.tests.filter(test => !test.hidden);
   const examples = problem.examples ?? visibleTests.map(test => ({ input: test.code, output: "Run to verify" }));
+  const runCases = problem.tests.slice(0, Math.max(2, Math.min(3, examples.length))).map(test => ({ ...test, hidden: false }));
+  const stressTests = problem.id === "py.nc.two-sum" ? [{
+    name: "200 deterministic edge combinations", hidden: true, checks: 200,
+    code: `solver = fn()\nfor seed in range(200):\n    left = seed * 17 - 900\n    right = seed * -11 + 307\n    nums = [seed + 5000, left, seed - 7000, right]\n    answer = solver.twoSum(nums, left + right)\n    assert len(answer) == 2 and answer[0] != answer[1]\n    assert nums[answer[0]] + nums[answer[1]] == left + right`,
+  }] : problem.id === "py.nc.contains-duplicate" ? [{
+    name: "200 deterministic duplicate boundaries", hidden: true, checks: 200,
+    code: `solver = fn()\nfor seed in range(200):\n    unique = list(range(seed, seed + 12))\n    assert solver.containsDuplicate(unique) is False\n    unique.insert(seed % 12, unique[(seed * 7) % 12])\n    assert solver.containsDuplicate(unique) is True`,
+  }] : [];
+  const submitTests = [...problem.tests, ...stressTests];
+  const totalChecks = submitTests.reduce((sum, test) => sum + (test.checks ?? 1), 0);
   const difficulty = problem.displayDifficulty ?? (["Easy", "Easy", "Medium", "Hard", "Hard"][Math.max(0, Math.round((problem.difficulty.concept + problem.difficulty.implementation) / 2) - 1)]);
 
   useEffect(() => { mounted.current = true; const timer = setInterval(() => setElapsed(Math.floor((Date.now() - start.current) / 1000)), 1000); return () => { mounted.current = false; clearInterval(timer); }; }, []);
@@ -44,7 +55,7 @@ export default function PracticeWorkspace({ problem, starter, onComplete, onRevi
 
   const run = async (submit: boolean) => {
     if (busy.current) return;
-    const tests = submit ? problem.tests : [...visibleTests, ...(custom.trim() ? [{ name: "Custom test", code: custom }] : [])];
+    const tests = submit ? submitTests : [...runCases, ...(custom.trim() ? [{ name: "Custom test", code: custom }] : [])];
     if (!tests.length) return;
     busy.current = true; setRunning(true); setSubmitted(submit); setBottomTab("Test result"); setResult(null);
     const source = code;
@@ -68,8 +79,8 @@ export default function PracticeWorkspace({ problem, starter, onComplete, onRevi
     <div className="practice-toolbar">
       <span className="practice-context">{label ?? "Algorithm practice"}</span>
       <div className="practice-run-actions">
-        <button disabled={running} onClick={() => void run(false)} title="Ctrl+Enter">▷ Run</button>
-        <button className="submit-button" disabled={running} onClick={() => void run(true)} title="Ctrl+Shift+Enter">{running ? "Running…" : "Submit"}</button>
+        <button disabled={running} onClick={() => void run(false)} title="Ctrl+Enter"><Icon name="play" size={15} /> Run</button>
+        <button className="submit-button" disabled={running} onClick={() => void run(true)} title="Ctrl+Shift+Enter"><Icon name="upload" size={15} />{running ? "Running…" : "Submit"}</button>
       </div>
       <span className="practice-clock">{Math.floor(elapsed / 60)}:{String(elapsed % 60).padStart(2, "0")}</span>
     </div>
@@ -95,7 +106,7 @@ export default function PracticeWorkspace({ problem, starter, onComplete, onRevi
         onPointerUp={event => { event.currentTarget.releasePointerCapture(event.pointerId); }} />
       <section className="practice-coding">
         <div className="practice-code-panel">
-          <div className="practice-panel-title"><strong>〈〉 Code</strong><span>{problem.language === "python" ? "Python 3" : "JavaScript"}</span></div>
+          <div className="practice-panel-title"><strong><Icon name="code" size={16} /> Code</strong><span>{problem.language === "python" ? "Python 3" : "JavaScript"}</span></div>
           <div className="practice-editor-meta"><span>{problem.exportName}.{problem.language === "python" ? "py" : "js"}</span><button className="ghost small" disabled={running} onClick={() => setResetting(true)}>Reset</button></div>
           {resetting && <div className="practice-reset">Replace your draft with starter code? <button onClick={() => { setCode(initial); setAcceptedCode(null); setResetting(false); }}>Reset code</button><button onClick={() => setResetting(false)}>Cancel</button></div>}
           <Editor value={code} onChange={value => { firstKey.current ??= Math.floor((Date.now() - start.current) / 1000); setCode(value); }} cold={false} language={problem.language} />
@@ -104,11 +115,11 @@ export default function PracticeWorkspace({ problem, starter, onComplete, onRevi
         <div className="practice-test-panel">
           <div className="practice-tabs" role="tablist" aria-label="Execution">{["Test cases", "Test result"].map(name => <button key={name} role="tab" aria-selected={bottomTab === name} onClick={() => setBottomTab(name)}>{name}</button>)}</div>
           <div className="practice-tests" role="tabpanel" aria-live="polite">
-            {bottomTab === "Test cases" ? <><div className="practice-case-tabs">{examples.map((_, index) => <button className={selectedCase === index ? "on" : ""} key={index} onClick={() => setSelectedCase(index)}>Case {index + 1}</button>)}<button className={selectedCase === -1 ? "on" : ""} onClick={() => setSelectedCase(-1)}>+ Custom</button></div>{selectedCase === -1 ? <><label htmlFor="custom-test">Custom assertion using <code>fn</code></label><textarea id="custom-test" value={custom} onChange={event => setCustom(event.target.value)} placeholder={problem.language === "python" ? "assert fn(...) == expected" : "expect(fn(...)).toEqual(expected)"} /><p className="tiny muted">Custom tests run locally with Run. Submit uses the official suite.</p></> : <pre><code>{examples[selectedCase] ? `Input\n${examples[selectedCase].input}\n\nExpected\n${examples[selectedCase].output}` : "Submit to run the test suite."}</code></pre>}</> : running ? <p className="practice-running"><span className="spinner" /> Running {submitted ? "all tests" : "examples"}…</p> : result ? <><h2 className={result.ok ? "result-pass" : "result-fail"}>{result.ok ? (submitted ? "Accepted" : "Examples passed") : result.timedOut ? "Time limit exceeded" : result.fatal ? "Runtime error" : "Wrong answer"}</h2><p className="small muted">{result.results.filter(test => test.passed).length} / {result.results.length} tests passed · {result.ms} ms{!submitted && result.ok ? " · Submit to check all tests" : ""}</p>{result.fatal && <pre className="fatal">{result.fatal}</pre>}{result.results.map((test, index) => <details className={`practice-test ${test.passed ? "pass" : "fail"}`} key={index}><summary>{test.passed ? "✓" : "✕"} {test.hidden ? `Hidden case ${index + 1}` : test.name}</summary>{!test.hidden && <pre>{test.message || "Passed"}{test.logs?.length ? `\n${test.logs.join("\n")}` : ""}</pre>}{test.hidden && <p>Additional edge case {test.passed ? "passed" : "failed"}. Check the input constraints and boundary conditions.</p>}</details>)}{result.logs.length > 0 && <><h3>Console</h3><pre>{result.logs.join("\n")}</pre></>}{acceptedCode === code && <button className="submit-button" onClick={() => complete(true)}>Save solve & continue →</button>}</> : <p className="muted">Run your code to see the result here.</p>}
+            {bottomTab === "Test cases" ? <><div className="practice-case-tabs">{examples.slice(0, runCases.length).map((_, index) => <button className={selectedCase === index ? "on" : ""} key={index} onClick={() => setSelectedCase(index)}>Case {index + 1}</button>)}<button className={selectedCase === -1 ? "on" : ""} onClick={() => setSelectedCase(-1)}>+ Custom</button></div>{selectedCase === -1 ? <><label htmlFor="custom-test">Custom assertion using <code>fn</code></label><textarea id="custom-test" value={custom} onChange={event => setCustom(event.target.value)} placeholder={problem.language === "python" ? "assert fn(...) == expected" : "expect(fn(...)).toEqual(expected)"} /><p className="tiny muted">Custom tests run locally with Run. Submit uses the official suite.</p></> : <pre><code>{examples[selectedCase] ? `Input\n${examples[selectedCase].input}\n\nExpected output\n${examples[selectedCase].output}` : "Submit to run the test suite."}</code></pre>}</> : running ? <p className="practice-running"><span className="spinner" /> Running {submitted ? `${totalChecks} checks` : `${runCases.length} examples`}…</p> : result ? <div className={result.ok && submitted ? "accepted-card" : ""}>{result.ok && submitted ? <div className="accepted-icon"><Icon name="check" size={28} /></div> : null}<h2 className={result.ok ? "result-pass" : "result-fail"}>{result.ok ? (submitted ? "Accepted" : "Examples passed") : result.timedOut ? "Time limit exceeded" : result.fatal ? "Runtime error" : "Wrong answer"}</h2><p className="small muted">{result.results.filter(test => test.passed).length} / {result.results.length} cases passed · {result.ms} ms{!submitted && result.ok ? ` · Submit to run ${totalChecks} checks` : ""}</p>{result.fatal && <pre className="fatal">{result.fatal}</pre>}{result.results.map((test, index) => { const example = !submitted ? examples[index] : undefined; return <details className={`practice-test ${test.passed ? "pass" : "fail"}`} key={index} open={!test.passed}><summary>{test.passed ? "✓" : "✕"} {test.hidden ? `Hidden case ${index + 1}` : test.name}</summary>{!test.hidden && <pre>{example ? `Input\n${example.input}\n\nExpected\n${example.output}\n\nActual\n${test.passed ? example.output : test.message || "Wrong answer"}` : test.message || "Passed"}{test.logs?.length ? `\n\nConsole\n${test.logs.join("\n")}` : ""}</pre>}{test.hidden && <p>{test.passed ? "Passed" : "Failed"} an additional boundary or stress case.</p>}</details>; })}{result.logs.length > 0 && <><h3>Console</h3><pre>{result.logs.join("\n")}</pre></>}{acceptedCode === code && <button className="submit-button accepted-continue" onClick={() => complete(true)}>Save solve & continue <Icon name="arrowRight" size={15} /></button>}</div> : <p className="muted empty-result">Run your code to see input, expected output, and actual output.</p>}
           </div>
         </div>
       </section>
     </div>
-    <div className="practice-footer"><span>{problem.tests.length} tests · {problem.tests.filter(test => test.hidden).length} hidden</span><button className="ghost small" onClick={() => complete(false)}>Skip for now</button></div>
+    <div className="practice-footer"><span><strong>{runCases.length}</strong> visible cases · <strong>{totalChecks}</strong> submit checks</span><button className="ghost small" onClick={() => complete(false)}>Skip for now</button></div>
   </div>;
 }

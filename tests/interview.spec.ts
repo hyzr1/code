@@ -30,10 +30,12 @@ test("ships the exact interview collections and responsive practice workspace", 
   await page.getByRole("button", { name: "Two Sum", exact: false }).first().click();
   await expect(page.getByRole("heading", { name: "Two Sum", exact: true })).toBeVisible();
   await expect(page.getByText("Python 3", { exact: true })).toBeVisible();
-  await expect(page.getByRole("button", { name: "▷ Run" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Run" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Submit" })).toBeVisible();
   await expect(page.getByRole("tab", { name: "Hints" })).toBeVisible();
   await expect(page.getByRole("tab", { name: "Solution" })).toBeVisible();
+  await expect(page.locator(".practice-case-tabs button")).toHaveCount(4);
+  await expect(page.locator(".practice-footer")).toContainText("203 submit checks");
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1);
   expect(overflow).toBe(false);
   expect(errors).toEqual([]);
@@ -48,7 +50,7 @@ test("runs and submits Python against examples and hidden cases", async ({ page 
   await openAlgo(page);
   await page.getByRole("button", { name: "Blind 75 75" }).click();
   await page.getByRole("button", { name: "Two Sum", exact: false }).first().click();
-  await page.getByRole("button", { name: "▷ Run" }).click();
+  await page.getByRole("button", { name: "Run" }).click();
   await expect(page.getByRole("heading", { name: "Examples passed" })).toBeVisible({ timeout: 35_000 });
   await page.getByRole("button", { name: "Submit", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Accepted" })).toBeVisible({ timeout: 15_000 });

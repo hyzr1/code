@@ -25,10 +25,10 @@ export interface CourseOption {
 export const COURSES: CourseOption[] = [
   {
     id: "swe",
-    label: "Frontier + FAANG SWE",
-    shortLabel: "Frontier SWE",
-    detail: "The complete path through practical Python, hard technical interviews, and production systems reasoning.",
-    accent: "#8d6ae8",
+    label: "Python",
+    shortLabel: "PY",
+    detail: "Learn Python from fundamentals through production-ready software engineering.",
+    accent: "#4f8fd8",
     assumesPython: false,
   },
   // Python Mastery is authored but not on the release path, so it is hidden
@@ -46,9 +46,9 @@ export const COURSES: CourseOption[] = [
   },
   {
     id: "algo",
-    label: "Algo Mastery",
+    label: "Data Structures & Algorithms",
     shortLabel: "DSA",
-    detail: "Data structures, algorithms, and interview mastery. Assumes Python.",
+    detail: "A guided DSA path for technical interviews. Assumes Python.",
     accent: "#c96442",
     assumesPython: true,
   },
@@ -59,6 +59,7 @@ export const COURSES: CourseOption[] = [
     detail: "Bridge from Python into building ML — the math and the models. Assumes Python.",
     accent: "#2f9668",
     assumesPython: true,
+    hidden: true,
   },
 ];
 

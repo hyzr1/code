@@ -156,14 +156,16 @@ test("loads the course without runtime errors", async ({ page, isMobile }) => {
   expect(horizontalOverflow).toBe(false);
 });
 
-test("the live course is the complete fixed Frontier and FAANG path", async ({ page }) => {
+test("the courses page offers Python and DSA", async ({ page }) => {
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
 
   await page.goto("/");
-  await expect(page.getByRole("heading", { name: "Frontier + FAANG SWE" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Python", exact: true })).toBeVisible();
+  await expect(page.locator(".course-choice > button")).toHaveCount(2);
+  await expect(page.getByRole("tab", { name: /Data Structures & Algorithms/ })).toBeVisible();
   await expect(page.locator(".frontier-path-pillars > div")).toHaveCount(3);
-  await expect(page.locator(".prep-roadmap")).toContainText("Finish every lesson, exercise, and scheduled review");
+  await expect(page.locator(".prep-roadmap")).toContainText("Learn Python");
   await expect(page.locator(".lesson-row")).toHaveCount(73);
   await expect(page.locator(".company-map, .company-graph-node")).toHaveCount(0);
   await expect(page.getByRole("button", { name: "Python Reels" })).toHaveCount(0);
@@ -192,7 +194,7 @@ test("portfolio projects stay archived and absent from the live course", async (
   expect(errors).toEqual([]);
 });
 
-test("the fixed preparation course fills every responsive layout without overflow", async ({ page }, testInfo) => {
+test("the two-course selector fills every responsive layout without overflow", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "desktop", "One browser is enough for the responsive width matrix.");
 
   const errors: string[] = [];
@@ -202,7 +204,7 @@ test("the fixed preparation course fills every responsive layout without overflo
 
   for (const width of [320, 390, 479, 480, 540, 700, 760, 900, 1064, 1280, 1440]) {
     await page.setViewportSize({ width, height: 900 });
-    await expect(page.getByRole("heading", { name: "Frontier + FAANG SWE" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Python", exact: true })).toBeVisible();
     await expect(page.locator(".frontier-path-pillars > div")).toHaveCount(3);
     await expect(page.locator(".lesson-row")).toHaveCount(73);
 

@@ -7,7 +7,6 @@ import EmptyState from "./EmptyState";
 import Icon from "./Icon";
 import { trackFit } from "../content/tracks";
 import { ACTIVE_SWE_PREPARATION_LEVEL, trackForCourse } from "../content/courses";
-import LanguagePicker from "./LanguagePicker";
 import { problemFitsPreparation } from "../content/companies";
 
 /** Internal ids are for the scheduler, not the reader. */
@@ -56,7 +55,7 @@ export default function ProblemsView({
   progress: Progress;
   onOpen: (id: string) => void;
 }) {
-  const [filter, setFilter] = useState<Filter>("recommended");
+  const [filter, setFilter] = useState<Filter>("all");
   const [collection, setCollection] = useState<Collection>("neetcode250");
   const [query, setQuery] = useState("");
   const { settings } = useSettings();
@@ -67,7 +66,9 @@ export default function ProblemsView({
 
   const all = useMemo(() => {
     const candidates = PROBLEMS.filter((p) => p.tier !== "rep" && contentLanguage(p) === language);
-    const ordered = [...candidates].sort((a, b) => Number(Boolean(b.lists)) - Number(Boolean(a.lists)) || trackFit(b, track) - trackFit(a, track));
+    // Catalog order is intentional: NeetCode's lists build each problem on the
+    // patterns introduced by the problems before it.
+    const ordered = [...candidates].sort((a, b) => Number(Boolean(b.lists)) - Number(Boolean(a.lists)));
     const unique = new Map<string, Problem>();
     for (const problem of ordered) {
       const key = problem.title.toLowerCase();
@@ -100,20 +101,18 @@ export default function ProblemsView({
       <div className="page-head">
         <div className="row spread wrap" style={{ gap: 16 }}>
           <div>
-            <h1>Interview Practice</h1>
+            <h1>DSA Interview Prep</h1>
             <p className="small muted" style={{ margin: "-4px 0 0" }}>
-              Structured problem sets, executable tests, progressive hints, and reference solutions.
+              Follow the learning path in order. Each pattern prepares you for the next one.
             </p>
           </div>
-          <div data-tour="algo-language">
-            <LanguagePicker />
-          </div>
         </div>
-        <p>Work through a curated study plan or search the complete library. Your code drafts and solved status stay on this device.</p>
-        <div className="prep-inline"><span className="badge">Algo Mastery</span><span>Data structures, algorithms, and interview preparation in Python.</span></div>
+        <p>Start with arrays and hashing, then move through pointer techniques, search, linked structures, trees, graphs, and dynamic programming. Problems inside every topic are ordered from foundation to synthesis.</p>
+        <div className="prep-inline"><span className="badge">DSA</span><span>Python coding interview preparation · beginner to advanced</span></div>
       </div>
 
-      <div className="problem-collections" aria-label="Problem lists">
+      <div className="problem-plan-label"><Icon name="route" size={16} /><span>Choose a study plan</span></div>
+      <div className="problem-collections" aria-label="Study plans">
         {COLLECTIONS.map(option => <button key={option.id} className={collection === option.id ? "on" : ""} onClick={() => { setCollection(option.id); setFilter("all"); }}>
           <span>{option.label}</span>{option.count ? <b>{option.count}</b> : null}
         </button>)}
@@ -183,9 +182,11 @@ export default function ProblemsView({
         ) : (
           shown.map((problem, i) => {
             const cleared = progress.cleared[problem.id];
+            const startsTopic = i === 0 || shown[i - 1]?.pattern !== problem.pattern;
             return (
+              <div key={problem.id} className="problem-path-item">
+              {startsTopic ? <div className="problem-topic-head"><span>{problem.pattern}</span><small>Learn this pattern in order</small></div> : null}
               <button
-                key={problem.id}
                 className="lesson-row"
                 onClick={() => onOpen(problem.id)}
                 style={{
@@ -209,6 +210,7 @@ export default function ProblemsView({
                     }}
                   />
                 </span>
+                <span className="problem-order">{String(i + 1).padStart(2, "0")}</span>
                 <span className="row-main">
                   <span className="lesson-title">{problem.title}</span>
                   <span className="lesson-goal">
@@ -242,6 +244,7 @@ export default function ProblemsView({
                   </span>
                 </span>
               </button>
+              </div>
             );
           })
         )}

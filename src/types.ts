@@ -84,6 +84,8 @@ export const SCAFFOLD_INFO: Record<
 
 export interface TestSpec {
   name: string;
+  /** Number of deterministic assertions performed inside this case. */
+  checks?: number;
   /** Hidden tests still run; you just don't see the body until you pass. */
   hidden?: boolean;
   /** Body has `fn`, `expect`, `assert`, `deepEqual` in scope. May use await. */
