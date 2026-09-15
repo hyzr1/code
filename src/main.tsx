@@ -5,8 +5,10 @@ import { SettingsProvider } from "./settings";
 import { TypingProvider } from "./components/typing/store";
 import { ToastProvider } from "./components/Toast";
 import AppErrorBoundary from "./components/AppErrorBoundary";
+import "@fontsource-variable/inter/wght.css";
 import "./styles.css";
 import "./components/typing/typing.css";
+import "./product.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

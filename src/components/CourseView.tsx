@@ -54,81 +54,23 @@ export default function CourseView({
 
   return (
     <>
-      <div className="course-switcher">
-        <span><Icon name="layers" size={16} /> Course</span>
-        <LanguagePicker />
-        <small>{course === "algo" ? "215 lessons · interview roadmap" : "73 lessons · beginner to advanced"}</small>
-      </div>
-      <div className="card prep-roadmap">
-        <div>
-          <div>
-            <span className="badge">Complete preparation path</span>
-            <h2 style={{ margin: "8px 0 4px" }}>{courseMeta.label}</h2>
-            <p className="small muted" style={{ margin: 0 }}>
-              {courseMeta.detail}
-            </p>
-          </div>
+      <header className="course-overview prep-roadmap">
+        <div className="course-heading-row">
+          <div><span className="product-eyebrow">Courses</span><h1>{courseMeta.label}</h1></div>
+          <div className="course-switcher"><LanguagePicker /></div>
         </div>
-        {course === "swe" ? (
-          <div className="frontier-path-pillars" aria-label="Course preparation pillars">
-            <div><b>Python engineering</b><span>Write, test, debug, structure, and ship real Python.</span></div>
-            <div><b>Technical interviews</b><span>Derive patterns, explain tradeoffs, and solve hard problems cold.</span></div>
-            <div><b>Systems reasoning</b><span>Reason about APIs, retries, caches, capacity, and bottlenecks.</span></div>
-          </div>
-        ) : null}
-        {courseMeta.assumesPython ? (
-          <p className="small muted" style={{ margin: "12px 0 0" }}>
-            Assumes you already know Python — start with the Python course if you don't.
-          </p>
-        ) : null}
-      </div>
-
-      <div className="card course-hero">
-        <div className="course-hero-top">
-          <span className="course-eyebrow">
-            {next ? "Up next" : availableLessons.length ? "Course complete" : "Curriculum mapped"}
-          </span>
-        </div>
-
-        <div className="course-hero-main">
-          <div className="course-hero-copy">
-            <div style={{ fontSize: 22, fontWeight: 680, letterSpacing: "-0.02em", lineHeight: 1.15 }}>
-              {next
-                ? next.title
-                : availableLessons.length
-                  ? "Every available lesson is complete"
-                  : "Lectures are being produced in order"}
-            </div>
-            {next ? (
-              <p className="small muted" style={{ margin: "6px 0 0", maxWidth: "54ch" }}>
-                {next.goal}
-              </p>
-            ) : null}
-          </div>
-          {next ? (
-            <button className="primary course-hero-cta" onClick={() => onOpen(next.id)}>
-              {doneCount === 0 ? "Start the course" : "Continue"}
-            </button>
-          ) : null}
-        </div>
-
-        <div style={{ marginTop: 18 }}>
-          <div className="row spread tiny dim" style={{ marginBottom: 5 }}>
-            <span>
-              {doneCore} of {availableCoreLessons.length} available
-              {coreLessons.length > availableCoreLessons.length
-                ? ` · ${coreLessons.length} mapped`
-                : ""}
-              {masteryCount ? ` · +${masteryCount} optional mastery` : ""}
-            </span>
-            <span>{courseMeta.label}</span>
-          </div>
-          <div className="bar">
-            <i style={{ width: `${availableCoreLessons.length ? (doneCore / availableCoreLessons.length) * 100 : 0}%` }} />
-          </div>
-        </div>
-      </div>
-
+        <p>{courseMeta.detail}</p>
+        <div className="course-facts"><span><Icon name="book" size={15} />{availableLessons.length} lessons</span><span><Icon name="layers" size={15} />{modules.length} modules</span><span><Icon name="checkCircle" size={15} />{doneCount} completed</span></div>
+        {course === "swe" && <div className="frontier-path-pillars" aria-label="Course preparation pillars"><div>Python engineering</div><div>Technical interviews</div><div>Systems reasoning</div></div>}
+        {courseMeta.assumesPython && <span className="course-prerequisite">Prerequisite: Python fundamentals</span>}
+      </header>
+      <section className="course-resume" aria-label="Next lesson">
+        <div className="resume-icon"><Icon name="play" size={20} /></div>
+        <div className="resume-copy"><span className="product-eyebrow">{next ? "Next lesson" : "Course complete"}</span><h2>{next?.title ?? "Every available lesson is complete"}</h2><p>{next?.goal ?? "Return to any module to review what you learned."}</p></div>
+        {next && <button className="primary" onClick={() => onOpen(next.id)}>{doneCount ? "Continue" : "Start the course"}<Icon name="arrowRight" size={15} /></button>}
+      </section>
+      <div className="curriculum-heading"><h2>Curriculum</h2><span>{doneCore} / {availableCoreLessons.length} lessons completed{masteryCount ? ` · ${masteryCount} optional` : ""}</span></div>
+      <div className="curriculum-progress"><i style={{width:`${availableCoreLessons.length ? doneCore / availableCoreLessons.length * 100 : 0}%`}} /></div>
       {parts.map((part) => {
         const partMods = modules.filter((m) => m.part === part);
         const isMastery = partMods.some((m) => masteryModuleIds.has(m.id));
@@ -158,17 +100,9 @@ export default function CourseView({
             const available = lessons.filter(lessonIsReady).length;
 
             return (
-              <div className="card" key={mod.id}>
-                <div className="row spread" style={{ marginBottom: 4 }}>
-                  <div style={{ fontSize: 16, fontWeight: 650 }}>{mod.title}</div>
-                  <span className="tiny dim">
-                    {available ? `${complete}/${available} available` : "Coming soon"}
-                  </span>
-                </div>
-                <p className="small muted" style={{ margin: "0 0 14px" }}>
-                  {mod.summary}
-                </p>
-
+              <details className="course-module" key={mod.id} open={mod.id === (next?.moduleId ?? modules[0]?.id)}>
+                <summary><span className="module-number">{String(modules.indexOf(mod) + 1).padStart(2,"0")}</span><span className="module-copy"><strong>{mod.title}</strong><span>{mod.summary}</span></span><span className="module-count">{complete}/{available}</span><Icon name="chevronDown" size={16}/></summary>
+                <div className="module-lessons">
                 {lessons.map((lesson) => {
                   const ready = lessonIsReady(lesson);
                   const state = lessonProgress(lesson, progress);
@@ -199,7 +133,8 @@ export default function CourseView({
                       </div>
                   );
                 })}
-              </div>
+                </div>
+              </details>
             );
           })}
           </div>
@@ -207,31 +142,6 @@ export default function CourseView({
         );
       })}
 
-      <div className="card">
-        <h2 className="section">What's after this</h2>
-        <p className="small muted" style={{ marginTop: -6 }}>
-          {course === "swe" || course === "python" ? (
-            <>
-              Complete all three pillars in order: practical Python, technical
-              interviews, and systems reasoning. Cold problem solving and
-              scheduled retrieval are required parts of the path—not work saved
-              until every lecture is over.
-            </>
-          ) : course === "algo" ? (
-            <>
-              Work every interview pattern — hashing, sliding windows, stacks,
-              trees, graphs, backtracking, and dynamic programming — with worked,
-              tested solutions.
-            </>
-          ) : (
-            <>
-              Build from the math up: linear algebra, gradient descent, classical
-              models, then neural networks and backpropagation, all coded from
-              scratch.
-            </>
-          )}
-        </p>
-      </div>
     </>
   );
 }

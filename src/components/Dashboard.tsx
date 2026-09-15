@@ -30,7 +30,7 @@ function recommend(input: {
   if (!input.started) {
     return {
       headline: "Start with one lesson.",
-      why: "Nothing here means anything until there's data. Work through a lesson in the course — the numbers on this page start answering questions after about three sessions.",
+      why: "Complete a lesson or practice session to begin tracking your progress.",
     };
   }
 
@@ -165,7 +165,8 @@ export default function Dashboard({
   });
 
   return (
-    <>
+    <div className="progress-dashboard">
+      <header className="product-page-header"><span className="product-eyebrow">Your learning</span><h1>Progress</h1><p>Track your practice, retention, and upcoming reviews.</p></header>
       <div className="prep-profile-strip">
         <div>
           <span className="badge">{activeTrack.label}</span>
@@ -186,18 +187,18 @@ export default function Dashboard({
         <div className="stat">
           <div className="value">{coldRate === null ? "—" : `${coldRate}%`}</div>
           <div className="label">Cold-solve rate</div>
-          <div className="note">the north star</div>
+          <div className="note">without hints</div>
         </div>
         <div className="stat">
           <div className="value">
             {calibration === null ? "—" : `${calibration}%`}
           </div>
           <div className="label">Calibration</div>
-          <div className="note">do you know what you know</div>
+          <div className="note">prediction accuracy</div>
         </div>
         <div className="stat">
           <div className="value">{dueCount}</div>
-          <div className="label">Concepts due</div>
+          <div className="label">{started ? "Concepts due" : "Concepts to learn"}</div>
         </div>
         <div className="stat">
           <div className="value">{lectureScore === null ? "—" : `${lectureScore}`}</div>
@@ -216,17 +217,15 @@ export default function Dashboard({
       <div className="card">
         <h2 className="section">Review forecast</h2>
         <p className="small muted" style={{ marginTop: -6, marginBottom: 16 }}>
-          What the scheduler has already committed you to. Each bar is a day;
-          the red one is work that's slipped past its interval.
+          Scheduled reviews for the next two weeks. Red marks overdue reviews.
         </p>
         <ReviewForecast progress={progress} />
       </div>
 
       <div className="card">
-        <h2 className="section">Where every concept stands</h2>
+        <h2 className="section">Concept mastery</h2>
         <p className="small muted" style={{ marginTop: -6, marginBottom: 16 }}>
-          Strength decays with time. Anything in Fading or Gone is what the
-          daily session is quietly pulling back in.
+          See which concepts are retained and which need another review.
         </p>
         <MasteryBar progress={progress} />
       </div>
@@ -256,8 +255,7 @@ export default function Dashboard({
             Twelve weeks
           </h2>
           <span className="tiny dim">
-            Consistency beats intensity — the spacing only works if tomorrow
-            happens.
+            Daily practice over the last 12 weeks.
           </span>
         </div>
         <div style={{ maxWidth: 620 }}>
@@ -267,7 +265,7 @@ export default function Dashboard({
 
       {totalFailures > 0 ? (
         <div className="card">
-          <h2 className="section">Why you fail</h2>
+          <h2 className="section">Areas to improve</h2>
           <p className="small muted" style={{ marginTop: -6 }}>
             The tallest bar is what to fix. Four of these six are not solved by
             doing more problems.
@@ -328,17 +326,8 @@ export default function Dashboard({
         </div>
       ) : null}
 
-      {!started ? (
-        <div className="card">
-          <h2 className="section">Getting started</h2>
-          <p className="small muted" style={{ marginTop: -6, marginBottom: 0 }}>
-            Nothing here fills in until you've attempted something. Work through
-            a lesson in the course, or open a problem, and this page starts
-            telling you which of the six failure modes is actually costing you.
-          </p>
-        </div>
-      ) : null}
-    </>
+
+    </div>
   );
 }
 

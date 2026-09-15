@@ -35,17 +35,16 @@ export default function TypeHome({
   return (
     <div className="type-page">
       <header className="type-hero">
-        <div className="eyebrow">Type</div>
-        <h1>Learn to type properly — then get fast.</h1>
+        <div className="product-eyebrow">Typing</div>
+        <h1>Typing practice</h1>
         <p className="dim">
-          A full course from the home row up, and a speed test to push your
-          numbers. Accuracy first; speed is what happens next.
+          Guided lessons and focused practice for faster, more accurate typing.
         </p>
       </header>
 
       <div className="type-hero-cards">
         <button className="type-cta primary-card" onClick={() => onOpenLesson(next.id)}>
-          <div className="type-cta-kicker">{started ? "Continue course" : "Start the course"}</div>
+          <Icon name="keyboard" size={22} /><div className="type-cta-kicker">{started ? "Continue course" : "Start the course"}</div>
           <div className="type-cta-title">{next.title}</div>
           <div className="type-cta-goal">{next.goal}</div>
           <span className="type-cta-go">
@@ -54,8 +53,8 @@ export default function TypeHome({
         </button>
 
         <button className="type-cta" onClick={onTest}>
-          <div className="type-cta-kicker">Speed test</div>
-          <div className="type-cta-title">Push your WPM</div>
+          <Icon name="zap" size={22} /><div className="type-cta-kicker">Speed test</div>
+          <div className="type-cta-title">Measure your speed</div>
           <div className="type-cta-goal">Time, words, quotes, or real code.</div>
           <span className="type-cta-go">Test <Icon name="arrowRight" size={16} /></span>
         </button>
