@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { EditorState, type Extension } from "@codemirror/state";
+import { Compartment, EditorState, type Extension } from "@codemirror/state";
 import {
   EditorView,
   keymap,
@@ -269,6 +269,7 @@ interface Props {
   onFirstKeystroke?: () => void;
   readOnly?: boolean;
   language?: CourseLanguage;
+  wordWrap?: boolean;
 }
 
 /**
@@ -286,10 +287,12 @@ export default function Editor({
   onFirstKeystroke,
   readOnly = false,
   language = "javascript",
+  wordWrap,
 }: Props) {
   const host = useRef<HTMLDivElement>(null);
   const view = useRef<EditorView | null>(null);
   const typed = useRef(false);
+  const wrapping = useRef(new Compartment());
   const latest = useRef({ onChange, onFirstKeystroke });
   latest.current = { onChange, onFirstKeystroke };
 
@@ -342,7 +345,7 @@ export default function Editor({
 
     if (prefs.lineNumbers) extensions.push(lineNumbers(), highlightActiveLineGutter());
     if (prefs.highlightActiveLine) extensions.push(highlightActiveLine());
-    if (prefs.wordWrap) extensions.push(EditorView.lineWrapping);
+    extensions.push(wrapping.current.of((wordWrap ?? prefs.wordWrap) ? EditorView.lineWrapping : []));
 
     const keys = [
       ...defaultKeymap,
@@ -398,6 +401,10 @@ export default function Editor({
     // Rebuilt only when the extension shape changes; doc updates are below.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shape]);
+
+  useEffect(() => {
+    view.current?.dispatch({ effects: wrapping.current.reconfigure((wordWrap ?? prefs.wordWrap) ? EditorView.lineWrapping : []) });
+  }, [wordWrap, prefs.wordWrap]);
 
   // External resets (switching problem, "reset to starter") push a new doc in.
   useEffect(() => {

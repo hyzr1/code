@@ -100,9 +100,9 @@ export default function PracticeWorkspace({ problem, starter, onComplete, onRevi
       <div className="practice-toolbar-tools"><span className="practice-clock"><Icon name="clock" size={13} />{Math.floor(elapsed / 60)}:{String(elapsed % 60).padStart(2, "0")}</span><button className="icon-button" aria-label={fullscreen ? "Exit fullscreen" : "Enter fullscreen"} title={fullscreen ? "Exit fullscreen" : "Fullscreen"} onClick={() => void toggleFullscreen()}><Icon name={fullscreen ? "minimize" : "maximize"} size={16} /></button></div>
     </div>
     <div className="practice-mobile-nav" role="tablist" aria-label="Workspace panels">
-      <button role="tab" aria-selected={mobilePane === "description"} onClick={() => setMobilePane("description")}><Icon name="book" size={15} />Problem</button>
-      <button role="tab" aria-selected={mobilePane === "code"} onClick={() => setMobilePane("code")}><Icon name="code" size={15} />Code</button>
-      <button role="tab" aria-selected={mobilePane === "tests"} onClick={() => setMobilePane("tests")}><Icon name="checkCircle" size={15} />Tests</button>
+      <button role="tab" aria-selected={mobilePane === "description"} onClick={() => { setMobilePane("description"); setFocusPane(null); }}><Icon name="book" size={15} />Problem</button>
+      <button role="tab" aria-selected={mobilePane === "code"} onClick={() => { setMobilePane("code"); setFocusPane(null); }}><Icon name="code" size={15} />Code</button>
+      <button role="tab" aria-selected={mobilePane === "tests"} onClick={() => { setMobilePane("tests"); setFocusPane(null); }}><Icon name="checkCircle" size={15} />Tests</button>
     </div>
     <div className="practice-panels">
       <section className="practice-description">
@@ -111,8 +111,8 @@ export default function PracticeWorkspace({ problem, starter, onComplete, onRevi
           <h1>{problem.title}</h1>
           <div className="practice-badges"><span className={`difficulty difficulty-${difficulty.toLowerCase()}`}>{difficulty}</span><span>{problem.pattern}</span>{onReviewLesson && <button className="ghost small" onClick={onReviewLesson}>Review lecture</button>}</div>
           {tab === "Description" && <><Markdown source={problem.prompt} language={problem.language} />
-            <h2>Function contract</h2><p>Implement <code>{problem.exportName}</code> using the starter signature. Return the result; printing alone does not return a value.</p>
-            {examples.map((example, index) => <div className="practice-example" key={index}><h3>Example {index + 1}</h3><pre><code>{`Input\n${example.input}\n\nOutput\n${example.output}`}</code></pre></div>)}
+            <div className="practice-contract"><Icon name="info" size={14} /><span>Use the starter signature and return your answer.</span></div>
+            {examples.map((example, index) => <div className="practice-example" key={index}><h3>Example {index + 1}</h3><dl className="example-values"><dt>Input</dt><dd><code>{example.input}</code></dd><dt>Output</dt><dd><code>{example.output}</code></dd></dl></div>)}
             {problem.source && <p className="tiny muted">Reference material: <a href={problem.source} target="_blank" rel="noreferrer">NeetCode</a> · MIT license</p>}
           </>}
           {tab === "Hints" && <><p>Reveal a little help at a time. Try the idea before opening the next hint.</p>{problem.hints.slice(0, hints).map((hint, index) => <div className="practice-example" key={index}><h3>Hint {index + 1}</h3><Markdown source={hint.text} /></div>)}<button disabled={hints >= problem.hints.length} onClick={() => setHints(count => count + 1)}>{hints >= problem.hints.length ? "All hints revealed" : "Reveal next hint"}</button>{hints >= problem.hints.length && <button className="ghost" onClick={() => chooseTab("Solution")}>Read the solution</button>}</>}
@@ -129,7 +129,7 @@ export default function PracticeWorkspace({ problem, starter, onComplete, onRevi
           <div className="practice-panel-title"><strong><Icon name="code" size={16} /> Code</strong><div className="editor-tools"><select aria-label="Editor font size" value={fontSize} onChange={event => setFontSize(Number(event.target.value))}><option value={12}>12px</option><option value={14}>14px</option><option value={16}>16px</option><option value={18}>18px</option></select><button className={wrap ? "on" : ""} aria-pressed={wrap} title="Toggle line wrap" aria-label="Toggle line wrap" onClick={() => setWrap(value => !value)}>↵</button><button aria-label="Reset code" title="Reset code" disabled={running} onClick={() => setResetting(true)}><Icon name="refresh" size={15} /></button><button aria-label={focusPane === "code" ? "Restore panels" : "Expand editor"} title="Expand editor" onClick={() => toggleFocus("code")}><Icon name={focusPane === "code" ? "minimize" : "maximize"} size={15} /></button></div></div>
           <div className="practice-editor-meta"><span>{problem.exportName}.{problem.language === "python" ? "py" : "js"}</span><span>{problem.language === "python" ? "Python 3" : "JavaScript"}</span></div>
           {resetting && <div className="practice-reset">Replace your draft with starter code? <button onClick={() => { setCode(initial); setAcceptedCode(null); setResetting(false); }}>Reset code</button><button onClick={() => setResetting(false)}>Cancel</button></div>}
-          <Editor value={code} onChange={value => { firstKey.current ??= Math.floor((Date.now() - start.current) / 1000); setCode(value); }} cold={false} language={problem.language} />
+          <Editor value={code} onChange={value => { firstKey.current ??= Math.floor((Date.now() - start.current) / 1000); setCode(value); }} cold={false} language={problem.language} wordWrap={wrap} />
           <div className="practice-editor-footer"><span>{saved ? "Draft saved on this device" : "Draft could not be saved"}</span><span>Ctrl + Enter to run</span></div>
         </div>
         <div className="practice-test-panel">

@@ -58,6 +58,7 @@ export default function ProblemsView({
   const [filter, setFilter] = useState<Filter>("all");
   const [collection, setCollection] = useState<Collection>("neetcode250");
   const [query, setQuery] = useState("");
+  const [topic, setTopic] = useState("");
   const { settings } = useSettings();
   const language = settings.learning.language;
   const course = settings.learning.course;
@@ -79,6 +80,7 @@ export default function ProblemsView({
 
   const shown = all.filter((problem) => {
     const cleared = progress.cleared[problem.id];
+    if (topic && problem.pattern !== topic) return false;
     if (collection !== "all" && !problem.lists?.includes(collection)) return false;
     if (filter === "recommended" && collection === "all" && trackFit(problem, track) < 2) return false;
     if (filter === "recommended" && preparationLevel && !problemFitsPreparation(problem, preparationLevel)) return false;
@@ -97,7 +99,7 @@ export default function ProblemsView({
   const solved = collectionProblems.filter(problem => progress.cleared[problem.id]).length;
 
   return (
-    <div className="page">
+    <div className="page problem-library">
       <div className="page-head">
         <div className="row spread wrap" style={{ gap: 16 }}>
           <div>
@@ -107,53 +109,30 @@ export default function ProblemsView({
             </p>
           </div>
         </div>
-        <p>Start with arrays and hashing, then move through pointer techniques, search, linked structures, trees, graphs, and dynamic programming. Problems inside every topic are ordered from foundation to synthesis.</p>
-        <div className="prep-inline"><span className="badge">DSA</span><span>Python coding interview preparation · beginner to advanced</span></div>
+        <div className="library-summary"><span><Icon name="code" size={15} /> Python 3</span><span><Icon name="layers" size={15} /> {patterns.length} patterns</span><span><Icon name="checkCircle" size={15} /> {solved} solved</span></div>
       </div>
 
       <div className="problem-plan-label"><Icon name="route" size={16} /><span>Choose a study plan</span></div>
       <div className="problem-collections" aria-label="Study plans">
-        {COLLECTIONS.map(option => <button key={option.id} className={collection === option.id ? "on" : ""} onClick={() => { setCollection(option.id); setFilter("all"); }}>
+        {COLLECTIONS.map(option => <button key={option.id} className={collection === option.id ? "on" : ""} onClick={() => { setCollection(option.id); setFilter("all"); setTopic(""); }}>
           <span>{option.label}</span>{option.count ? <b>{option.count}</b> : null}
         </button>)}
         <div className="collection-progress"><strong>{solved}</strong><span>of {collectionProblems.length} solved</span></div>
       </div>
 
-      <div className="card" style={{ padding: "14px 16px" }}>
-        <div className="row spread wrap" style={{ gap: 12 }}>
-          <div className="segmented">
-            {FILTERS.map((option) => (
-              <button
-                key={option.id}
-                className={filter === option.id ? "on" : ""}
-                onClick={() => setFilter(option.id)}
-              >
-                {option.label}
-              </button>
-            ))}
-          </div>
+      <div className="library-filters">
+          <label className="library-search"><Icon name="search" size={16} />
           <input
             type="text"
             placeholder="Search problems and patterns…"
+            aria-label="Search problems"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            style={{ flex: 1, minWidth: 200, maxWidth: 320 }}
           />
-        </div>
-        {patterns.length ? (
-          <div className="row wrap" style={{ gap: 6, marginTop: 12 }}>
-            {patterns.map((pattern) => (
-              <button
-                key={pattern}
-                className="badge"
-                onClick={() => setQuery(pattern!)}
-                style={{ cursor: "pointer" }}
-              >
-                {pattern}
-              </button>
-            ))}
-          </div>
-        ) : null}
+          </label>
+          <select aria-label="Filter by topic" value={topic} onChange={event => setTopic(event.target.value)}><option value="">All topics</option>{patterns.map(pattern => <option key={pattern} value={pattern}>{pattern}</option>)}</select>
+          <select aria-label="Filter by progress" value={filter} onChange={event => setFilter(event.target.value as Filter)}>{FILTERS.map(option => <option key={option.id} value={option.id}>{option.label === "All" ? "All progress" : option.label}</option>)}</select>
+          <span className="library-result-count">{shown.length} problems</span>
       </div>
 
       <div className="card flush">
