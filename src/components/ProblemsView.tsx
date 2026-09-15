@@ -3,6 +3,7 @@ import type { Problem, Progress } from "../types";
 import { CONCEPT_BY_ID, PROBLEMS } from "../content";
 import { contentLanguage } from "../content/language";
 import { useSettings } from "../settings";
+import FilterMenu from "./FilterMenu";
 import EmptyState from "./EmptyState";
 import Icon from "./Icon";
 import { trackFit } from "../content/tracks";
@@ -130,8 +131,8 @@ export default function ProblemsView({
             onChange={(e) => setQuery(e.target.value)}
           />
           </label>
-          <select aria-label="Filter by topic" value={topic} onChange={event => setTopic(event.target.value)}><option value="">All topics</option>{patterns.map(pattern => <option key={pattern} value={pattern}>{pattern}</option>)}</select>
-          <select aria-label="Filter by progress" value={filter} onChange={event => setFilter(event.target.value as Filter)}>{FILTERS.map(option => <option key={option.id} value={option.id}>{option.label === "All" ? "All progress" : option.label}</option>)}</select>
+          <FilterMenu label="Filter by topic" icon="layers" value={topic} onChange={setTopic} options={[{value:"",label:"All topics"}, ...patterns.map(pattern => ({value:pattern!,label:pattern!}))]} />
+          <FilterMenu label="Filter by progress" icon="checkCircle" value={filter} onChange={value => setFilter(value as Filter)} options={FILTERS.map(option => ({value:option.id,label:option.label === "All" ? "All progress" : option.label}))} />
           <span className="library-result-count">{shown.length} problems</span>
       </div>
 
@@ -164,7 +165,7 @@ export default function ProblemsView({
             const startsTopic = i === 0 || shown[i - 1]?.pattern !== problem.pattern;
             return (
               <div key={problem.id} className="problem-path-item">
-              {startsTopic ? <div className="problem-topic-head"><span>{problem.pattern}</span><small>Learn this pattern in order</small></div> : null}
+              {startsTopic ? <div className="problem-topic-head"><span><Icon name="layers" size={16} />{problem.pattern}</span><small>{collectionProblems.filter(item => item.pattern === problem.pattern && progress.cleared[item.id]).length} / {collectionProblems.filter(item => item.pattern === problem.pattern).length} solved</small></div> : null}
               <button
                 className="lesson-row"
                 onClick={() => onOpen(problem.id)}
@@ -191,7 +192,7 @@ export default function ProblemsView({
                 </span>
                 <span className="problem-order">{String(i + 1).padStart(2, "0")}</span>
                 <span className="row-main">
-                  <span className="lesson-title">{problem.title}</span>
+                  <span className="lesson-title"><Icon name="code" size={15} />{problem.title}</span>
                   <span className="lesson-goal">
                     {conceptLabels(problem.teaches)}
                   </span>
@@ -222,6 +223,7 @@ export default function ProblemsView({
                     {cleared ? `Cleared · ${cleared}` : `${problem.estimatedMinutes} min`}
                   </span>
                 </span>
+                <Icon name="next" size={15} className="problem-row-arrow" />
               </button>
               </div>
             );

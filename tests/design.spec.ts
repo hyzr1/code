@@ -5,12 +5,14 @@ test('visual surfaces and usable editor controls', async ({page}, info) => {
  await page.screenshot({path:info.outputPath('course.png')});
  if((page.viewportSize()?.width??1000)<=860) await page.getByLabel('Open menu').click();
  await page.getByTitle('Algo').click();
- await page.getByLabel('Filter by topic').selectOption('Arrays & Hashing');
+ await page.getByLabel('Filter by topic', {exact:true}).click();
+ await page.getByRole('option',{name:'Arrays & Hashing',exact:true}).click();
  await expect(page.locator('.problem-topic-head')).toHaveCount(1);
  await page.getByLabel('Search problems',{exact:true}).fill('two sum');
  await expect(page.locator('.lesson-row')).toHaveCount(1);
  await page.getByLabel('Search problems',{exact:true}).fill('');
- await page.getByLabel('Filter by topic').selectOption('');
+ await page.getByLabel('Filter by topic', {exact:true}).click();
+ await page.getByRole('option',{name:'All topics',exact:true}).click();
  await page.screenshot({path:info.outputPath('library.png')});
  await page.getByRole('button',{name:'Two Sum',exact:false}).first().click();
  if(info.project.name==='mobile') await page.getByRole('tab',{name:'Code',exact:true}).click();

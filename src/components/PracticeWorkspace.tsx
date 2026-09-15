@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import type { Problem, RunResult } from "../types";
 import { runTests } from "../engine/runner";
+import Whiteboard from "./Whiteboard";
 import Editor from "./Editor";
 import Markdown from "./Markdown";
 import Icon from "./Icon";
@@ -16,6 +17,7 @@ export default function PracticeWorkspace({ problem, starter, onComplete, onRevi
   const initial = starter || problem.scaffolds.L2 || problem.scaffolds.L3 || "";
   const draftKey = `hyzr.draft.v2.${problem.id}`;
   const [code, setCode] = useState(() => { try { return localStorage.getItem(draftKey) ?? initial; } catch { return initial; } });
+  const [whiteboard, setWhiteboard] = useState(false);
   const [tab, setTab] = useState("Description");
   const [bottomTab, setBottomTab] = useState("Test cases");
   const [selectedCase, setSelectedCase] = useState(0);
@@ -93,7 +95,7 @@ export default function PracticeWorkspace({ problem, starter, onComplete, onRevi
   return <div className={`practice-workspace ${wrap ? "editor-wrap" : ""}`} data-mobile-pane={mobilePane} data-focus-pane={focusPane ?? "all"} ref={container} style={{ "--practice-split": `${split}%`, "--editor-font-size": `${fontSize}px` } as CSSProperties}>
     <div className="practice-toolbar">
       <span className="practice-context"><Icon name="code" size={15} />{label ?? "DSA practice"}</span>
-      <div className="practice-run-actions">
+      <div className="practice-run-actions"><button className="whiteboard-launch" aria-label="Open whiteboard" title="Whiteboard" onClick={event => { event.currentTarget.focus(); setWhiteboard(true); }}><Icon name="board" size={16} /><span>Whiteboard</span></button>
         <button disabled={running} onClick={() => void run(false)} title="Ctrl+Enter"><Icon name="play" size={15} /> Run</button>
         <button className="submit-button" disabled={running} onClick={() => void run(true)} title="Ctrl+Shift+Enter"><Icon name="upload" size={15} />{running ? "Running…" : "Submit"}</button>
       </div>
@@ -140,6 +142,7 @@ export default function PracticeWorkspace({ problem, starter, onComplete, onRevi
         </div>
       </section>
     </div>
+    {whiteboard && <Whiteboard problemId={problem.id} title={problem.title} onClose={() => setWhiteboard(false)} />}
     <div className="practice-footer"><span><strong>{runCases.length}</strong> visible cases · <strong>{totalChecks}</strong> submit checks</span><button className="ghost small" onClick={() => complete(false)}>Skip for now</button></div>
   </div>;
 }

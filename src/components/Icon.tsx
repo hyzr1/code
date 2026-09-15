@@ -7,6 +7,18 @@ import type { SVGProps } from "react";
  * this app uses, and consistency matters more than breadth here.
  */
 const PATHS: Record<string, string> = {
+  pen: "m16 3 5 5-12 12-6 1 1-6zM14 5l5 5",
+  marker: "m15 3 6 6-9 9-6-6zM6 12l-3 6 3 3 6-3M2 22h8",
+  eraser: "m15 3 6 6-12 12H5l-4-4zM6 12l9 9M9 21h13",
+  undo: "M3 10h11a6 6 0 0 1 0 12M3 10l6-6M3 10l6 6",
+  redo: "M21 10H10a6 6 0 0 0 0 12M21 10l-6-6M21 10l-6 6",
+  rectangle: "M3 5h18v14H3z",
+  ellipse: "M21 12a9 7 0 1 0-18 0 9 7 0 1 0 18 0",
+  line: "M4 20 20 4",
+  hand: "M8 13V5a2 2 0 0 1 4 0v7-9a2 2 0 0 1 4 0v9-6a2 2 0 0 1 4 0v9c0 5-3 7-7 7-3 0-5-2-7-5l-3-4a2 2 0 0 1 3-2l2 2",
+  board: "M3 3h18v14H3zM12 17v5M7 22l5-5 5 5M7 8l3 3 6-5",
+  minus: "M5 12h14",
+
   book: "M4 19.5A2.5 2.5 0 0 1 6.5 17H20M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z",
   mic: "M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3zM19 10v1a7 7 0 0 1-14 0v-1M12 18v4M8 22h8",
   arrowUp: "M12 19V5M5 12l7-7 7 7",
