@@ -28,12 +28,17 @@ test("ships the exact interview collections and responsive practice workspace", 
   await page.getByRole("button", { name: "Blind 75 75" }).click();
   await expect(page.locator(".lesson-row")).toHaveCount(75);
   await page.getByRole("button", { name: "Two Sum", exact: false }).first().click();
+  const mobile = testInfo.project.name === "mobile";
+  if (mobile) await page.getByRole("tab", { name: "Problem" }).click();
   await expect(page.getByRole("heading", { name: "Two Sum", exact: true })).toBeVisible();
-  await expect(page.getByText("Python 3", { exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "Run" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Submit" })).toBeVisible();
   await expect(page.getByRole("tab", { name: "Hints" })).toBeVisible();
   await expect(page.getByRole("tab", { name: "Solution" })).toBeVisible();
+  if (mobile) await page.getByRole("tab", { name: "Code" }).click();
+  await expect(page.getByText("Python 3", { exact: true })).toBeVisible();
+  await expect(page.getByLabel("Toggle line wrap")).toBeVisible();
+  if (mobile) await page.getByRole("tab", { name: "Tests" }).click();
   await expect(page.locator(".practice-case-tabs button")).toHaveCount(4);
   await expect(page.locator(".practice-footer")).toContainText("203 submit checks");
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1);

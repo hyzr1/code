@@ -162,8 +162,11 @@ test("the courses page offers Python and DSA", async ({ page }) => {
 
   await page.goto("/");
   await expect(page.getByRole("heading", { name: "Python", exact: true })).toBeVisible();
-  await expect(page.locator(".course-choice > button")).toHaveCount(2);
-  await expect(page.getByRole("tab", { name: /Data Structures & Algorithms/ })).toBeVisible();
+  await expect(page.locator(".course-switcher")).toBeVisible();
+  await page.locator(".course-switcher .language-trigger").click();
+  await expect(page.locator(".language-option")).toHaveCount(2);
+  await expect(page.getByRole("option", { name: /Data Structures & Algorithms/ })).toBeVisible();
+  await page.keyboard.press("Escape");
   await expect(page.locator(".frontier-path-pillars > div")).toHaveCount(3);
   await expect(page.locator(".prep-roadmap")).toContainText("Learn Python");
   await expect(page.locator(".lesson-row")).toHaveCount(73);

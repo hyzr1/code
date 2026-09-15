@@ -9,7 +9,9 @@ import {
   modulesForCourse,
 } from "../content";
 import { useSettings } from "../settings";
-import { ACTIVE_SWE_PREPARATION_LEVEL, COURSE_BY_ID, VISIBLE_COURSES } from "../content/courses";
+import { ACTIVE_SWE_PREPARATION_LEVEL, COURSE_BY_ID } from "../content/courses";
+import LanguagePicker from "./LanguagePicker";
+import Icon from "./Icon";
 
 export default function CourseView({
   progress,
@@ -20,7 +22,7 @@ export default function CourseView({
   onOpen: (lessonId: string) => void;
   onToggleComplete: (lessonId: string) => void;
 }) {
-  const { settings, update } = useSettings();
+  const { settings } = useSettings();
   const course = settings.learning.course;
   const courseMeta = COURSE_BY_ID.get(course) ?? COURSE_BY_ID.get("python")!;
   const preparationLevel = course === "swe" ? ACTIVE_SWE_PREPARATION_LEVEL : undefined;
@@ -52,20 +54,10 @@ export default function CourseView({
 
   return (
     <>
-      <div className="course-choice" role="tablist" aria-label="Choose a course">
-        {VISIBLE_COURSES.map((item) => (
-          <button
-            key={item.id}
-            role="tab"
-            aria-selected={course === item.id}
-            className={course === item.id ? "active" : ""}
-            onClick={() => update("learning", { course: item.id })}
-          >
-            <span className="course-choice-icon" style={{ color: item.accent }}>{item.shortLabel}</span>
-            <span><strong>{item.label}</strong><small>{item.detail}</small></span>
-            <span className="course-choice-check">{course === item.id ? "✓" : "→"}</span>
-          </button>
-        ))}
+      <div className="course-switcher">
+        <span><Icon name="layers" size={16} /> Course</span>
+        <LanguagePicker />
+        <small>{course === "algo" ? "215 lessons · interview roadmap" : "73 lessons · beginner to advanced"}</small>
       </div>
       <div className="card prep-roadmap">
         <div>
