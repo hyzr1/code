@@ -33,8 +33,15 @@ test("ships the exact interview collections and responsive practice workspace", 
   await expect(page.getByRole("heading", { name: "Two Sum", exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "Run" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Submit" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Open whiteboard" })).toBeVisible();
+  if (!mobile) await expect(page.locator(".sidebar")).toBeVisible();
   await expect(page.getByRole("tab", { name: "Hints" })).toBeVisible();
   await expect(page.getByRole("tab", { name: "Solution" })).toBeVisible();
+  if (mobile) await page.getByRole("tab", { name: "Problem" }).click();
+  await page.getByRole("tab", { name: "Solution" }).click();
+  await expect(page.getByRole("heading", { name: "Reference solution" })).toBeVisible();
+  await expect(page.locator(".solution-complexity")).toContainText("O(n)");
+  await expect(page.locator(".practice-prose-solution")).not.toContainText("$O(n)$");
   if (mobile) await page.getByRole("tab", { name: "Code" }).click();
   await expect(page.getByText("Python 3", { exact: true })).toBeVisible();
   await expect(page.getByLabel("Toggle line wrap")).toBeVisible();

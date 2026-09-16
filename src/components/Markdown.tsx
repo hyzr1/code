@@ -13,7 +13,7 @@ import type { CourseLanguage } from "../types";
 
 function inline(text: string, keyBase: string): ReactNode[] {
   const out: ReactNode[] = [];
-  const pattern = /(`[^`]+`)|(\*\*[^*]+\*\*)|(\*[^*]+\*)/g;
+  const pattern = /(`[^`]+`)|(\$[^$]+\$)|(\*\*[^*]+\*\*)|(\*[^*]+\*)/g;
   let cursor = 0;
   let match: RegExpExecArray | null;
   let i = 0;
@@ -25,6 +25,15 @@ function inline(text: string, keyBase: string): ReactNode[] {
 
     if (token.startsWith("`")) {
       out.push(<code key={key}>{token.slice(1, -1)}</code>);
+    } else if (token.startsWith("$")) {
+      // Content imports use a small amount of LaTex for complexity notation.
+      // Rendering it as a readable inline expression is much better than
+      // exposing dollar signs and backslashes to learners.
+      const expression = token.slice(1, -1)
+        .replace(/\\frac\{([^{}]+)\}\{([^{}]+)\}/g, "$1/$2")
+        .replace(/\\(log|cdot|times|le|ge)/g, (_match, name: string) => ({ log: "log", cdot: "·", times: "×", le: "≤", ge: "≥" }[name] ?? name))
+        .replace(/[{}]/g, "");
+      out.push(<span className="inline-math" key={key}>{expression}</span>);
     } else if (token.startsWith("**")) {
       // Recurse — bold routinely wraps inline code, and not recursing leaves
       // literal backticks on screen.

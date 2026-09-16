@@ -12,6 +12,11 @@ import Icon from "./Icon";
 
 export interface PracticeOutcome { hintsUsed: number; seconds: number; attempts: number; timeToFirstKeystroke?: number }
 
+function complexityNotation(value: string) {
+  const notation = value.match(/\$([^$]+)\$/)?.[1];
+  return notation?.replace(/\\log/g, "log").replace(/[{}]/g, "") ?? value.replace(/^Time complexity:\s*/i, "");
+}
+
 /** Shared by lecture exercises and the problem library. Run never records a solve. */
 export default function PracticeWorkspace({ problem, starter, onComplete, onReviewLesson, label }: {
   problem: Problem; starter?: string; label?: string;
@@ -116,7 +121,7 @@ export default function PracticeWorkspace({ problem, starter, onComplete, onRevi
     <div className="practice-panels">
       <section className="practice-description">
         <div className="practice-tabs" role="tablist" aria-label="Problem information">{["Description", "Hints", "Solution", "Submissions", ...(selectedSubmission ? ["Submission"] : [])].map((name, index) => <button role="tab" aria-selected={tab === name} key={name} onClick={() => chooseTab(name)}>{index === 0 && <Icon name="book" size={14} />}{index === 1 && <Icon name="info" size={14} />}{index === 2 && <Icon name="sparkles" size={14} />}{name}</button>)}<button className="panel-action" aria-label={focusPane === "description" ? "Restore panels" : "Expand problem"} onClick={() => toggleFocus("description")}><Icon name={focusPane === "description" ? "minimize" : "maximize"} size={15} /></button></div>
-        <div className="practice-prose" role="tabpanel">
+        <div className={`practice-prose practice-prose-${tab.toLowerCase()}`} role="tabpanel">
           {!["Submissions","Submission"].includes(tab) && <h1>{problem.title}</h1>}
           {!["Submissions","Submission"].includes(tab) && <div className="practice-badges"><span className={`difficulty difficulty-${difficulty.toLowerCase()}`}>{difficulty}</span><span>{problem.pattern}</span>{onReviewLesson && <button className="ghost small" onClick={onReviewLesson}>Review lecture</button>}</div>}
           {tab === "Description" && <><Markdown source={problem.prompt} language={problem.language} />
@@ -127,7 +132,7 @@ export default function PracticeWorkspace({ problem, starter, onComplete, onRevi
           {tab === "Submissions" && <div className="submission-list"><h2>Your submissions</h2><p>{historySaved?"Saved on this device":"Storage is full. This session’s submissions could not be saved."}</p>{history.length?<table><thead><tr><th>Status</th><th>Runtime</th><th>Date</th></tr></thead><tbody>{history.map(entry=><tr key={entry.id}><td><button className={entry.result.ok?'result-pass':'result-fail'} onClick={()=>{setSelectedSubmission(entry);setTab("Submission");}}>{submissionStatus(entry.result)}</button></td><td>{entry.result.ms} ms</td><td>{new Date(entry.date).toLocaleDateString()}</td></tr>)}</tbody></table>:<p>Submit your solution to see its results here.</p>}</div>}
           {tab === "Submission" && selectedSubmission && <SubmissionDetails submission={selectedSubmission} history={history}/>}
           {tab === "Hints" && <><p>Reveal a little help at a time. Try the idea before opening the next hint.</p>{problem.hints.slice(0, hints).map((hint, index) => <div className="practice-example" key={index}><h3>Hint {index + 1}</h3><Markdown source={hint.text} /></div>)}<button disabled={hints >= problem.hints.length} onClick={() => setHints(count => count + 1)}>{hints >= problem.hints.length ? "All hints revealed" : "Reveal next hint"}</button>{hints >= problem.hints.length && <button className="ghost" onClick={() => chooseTab("Solution")}>Read the solution</button>}</>}
-          {tab === "Solution" && <>{INTERVIEW_VIDEOS[problem.id] && <a className="video-walkthrough" href={`https://www.youtube.com/watch?v=${INTERVIEW_VIDEOS[problem.id]}`} target="_blank" rel="noreferrer"><Icon name="play" size={18}/><span>NeetCode video walkthrough<small>Watch the explanation on YouTube</small></span><span aria-hidden="true">↗</span></a>}{problem.analysis && <><h2>Approach</h2><Markdown source={problem.analysis.approach} /><p>{problem.analysis.invariant}</p><div className="practice-badges"><span>Time: {problem.analysis.time}</span><span>Space: {problem.analysis.space}</span></div></>}<h2>Reference solution</h2>{problem.source && <p className="community-reference"><a href={problem.source} target="_blank" rel="noreferrer">Explore NeetCode explanations ↗</a></p>}<Markdown source={`\`\`\`${problem.language ?? "javascript"}\n${problem.solution}\n\`\`\``} language={problem.language} />{problem.walkthrough?.map((step, index) => <p key={index}>{step}</p>)}</>}
+          {tab === "Solution" && <>{INTERVIEW_VIDEOS[problem.id] && <a className="video-walkthrough" href={`https://www.youtube.com/watch?v=${INTERVIEW_VIDEOS[problem.id]}`} target="_blank" rel="noreferrer"><Icon name="play" size={18}/><span>NeetCode video walkthrough<small>Watch the explanation on YouTube</small></span><span aria-hidden="true">↗</span></a>}{problem.analysis && <><h2>Approach</h2><Markdown source={problem.analysis.approach} /><section className="solution-invariant"><span>Key idea</span><p>{problem.analysis.invariant}</p></section><div className="solution-complexity"><span>Time</span><strong>{complexityNotation(problem.analysis.time)}</strong></div></>}<h2>Reference solution</h2>{problem.source && <p className="community-reference"><a href={problem.source} target="_blank" rel="noreferrer">Explore NeetCode explanations ↗</a></p>}<Markdown source={`\`\`\`${problem.language ?? "javascript"}\n${problem.solution}\n\`\`\``} language={problem.language} />{problem.walkthrough?.map((step, index) => <p key={index}>{step}</p>)}</>}
         </div>
       </section>
       <div className="practice-splitter" role="separator" aria-label="Resize description and code" aria-orientation="vertical" aria-valuemin={28} aria-valuemax={65} aria-valuenow={split} tabIndex={0}
