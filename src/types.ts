@@ -261,6 +261,10 @@ export interface Atom {
 // ---------------------------------------------------------------- runner
 
 export interface TestResult {
+  input?: string;
+  actual?: string;
+  expected?: string;
+  ms?: number;
   name: string;
   hidden: boolean;
   passed: boolean;
@@ -269,6 +273,7 @@ export interface TestResult {
 }
 
 export interface RunResult {
+  memoryBytes?: number;
   ok: boolean;
   /** Set when user code itself threw before any test ran. */
   fatal?: string;

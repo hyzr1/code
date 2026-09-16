@@ -74,8 +74,16 @@ async def _run_submission(code, export_name, tests_json):
         })
 
     subject = scope[export_name]
+    memory = None
+    try:
+        import tracemalloc
+        tracemalloc.start()
+    except (ImportError, RuntimeError):
+        tracemalloc = None
     for test in json.loads(tests_json):
         test_capture = io.StringIO()
+        scope["_hyzr_capture"] = []
+        test_started = time.perf_counter()
         try:
             test_scope = dict(scope)
             test_scope["fn"] = subject
@@ -88,6 +96,8 @@ async def _run_submission(code, export_name, tests_json):
         except BaseException as error:
             passed, message = False, _message(error)
         results.append({
+            **(scope["_hyzr_capture"][-1] if scope["_hyzr_capture"] else {}),
+            "ms": round((time.perf_counter() - test_started) * 1000, 2),
             "name": test["name"],
             "hidden": bool(test.get("hidden", False)),
             "passed": passed,
@@ -95,7 +105,11 @@ async def _run_submission(code, export_name, tests_json):
             "logs": test_capture.getvalue().splitlines(),
         })
 
+    if tracemalloc is not None:
+        memory = tracemalloc.get_traced_memory()[1]
+        tracemalloc.stop()
     return json.dumps({
+        "memoryBytes": memory,
         "ok": all(item["passed"] for item in results),
         "results": results,
         "logs": suite_logs,

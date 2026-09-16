@@ -159,7 +159,10 @@ def _hyzr_equal(actual, expected):
     if isinstance(actual,list) and isinstance(expected,list): return len(actual)==len(expected) and all(_hyzr_equal(a,b) for a,b in zip(actual,expected))
     return type(actual) is type(expected) and actual == expected
 def _hyzr_check(subject, slug, meta, inputs, expected):
+    observation = {"input": json.dumps(dict(zip([p['name'] for p in meta.get('params',[])], inputs)), default=str)[:6000], "expected": json.dumps(expected, default=str)[:6000]}
+    globals().setdefault('_hyzr_capture', []).append(observation)
     actual = _hyzr_invoke(subject, slug, meta, inputs)
+    observation['actual'] = json.dumps(actual, default=str)[:6000]
     unordered = {'group-anagrams','top-k-frequent-elements','3sum','4sum','subsets','subsets-ii','permutations','permutations-ii','combinations','combination-sum','combination-sum-ii','generate-parentheses','palindrome-partitioning','letter-combinations-of-a-phone-number','n-queens','word-search-ii','pacific-atlantic-water-flow','minimum-height-trees','word-break-ii','majority-element-ii'}
     if slug in unordered:
         def canonical(value):

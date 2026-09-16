@@ -170,7 +170,7 @@ export default function App() {
           : "";
 
   return (
-    <div className={`shell ${isMobile ? "mobile" : ""}`}>
+    <div className={`shell ${isMobile ? "mobile" : ""} ${route.name === "problem" ? "problem-shell" : ""}`}>
       <Sidebar
         route={route}
         go={setRoute}

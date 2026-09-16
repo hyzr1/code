@@ -1,7 +1,11 @@
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import type { Problem, RunResult } from "../types";
 import { runTests } from "../engine/runner";
+import { INTERVIEW_VIDEOS } from "../content/python/interviewVideos";
 import Whiteboard from "./Whiteboard";
+import { interviewCases } from "../engine/interviewCases";
+import SubmissionDetails, { submissionStatus, type Submission } from "./SubmissionDetails";
+import ExecutionResults from "./ExecutionResults";
 import Editor from "./Editor";
 import Markdown from "./Markdown";
 import Icon from "./Icon";
@@ -28,7 +32,12 @@ export default function PracticeWorkspace({ problem, starter, onComplete, onRevi
   const [hints, setHints] = useState(0);
   const [solutionSeen, setSolutionSeen] = useState(false);
   const [custom, setCustom] = useState("");
-  const [split, setSplit] = useState(44);
+  const [split, setSplit] = useState(36);
+  const [editorHeight, setEditorHeight] = useState(60);
+  const historyKey = `hyzr.submissions.v1.${problem.id}`;
+  const [history, setHistory] = useState<Submission[]>(() => { try { const saved=JSON.parse(localStorage.getItem(historyKey)||"[]");return Array.isArray(saved)?saved.filter(s=>s?.result&&Array.isArray(s.result.results)&&typeof s.code==="string").slice(0,30):[]; } catch {return [];} });
+  const [selectedSubmission,setSelectedSubmission] = useState<Submission|null>(null);
+  const [historySaved,setHistorySaved] = useState(true);
   const [resetting, setResetting] = useState(false);
   const [saved, setSaved] = useState(true);
   const [elapsed, setElapsed] = useState(0);
@@ -46,14 +55,7 @@ export default function PracticeWorkspace({ problem, starter, onComplete, onRevi
   const visibleTests = problem.tests.filter(test => !test.hidden);
   const examples = problem.examples ?? visibleTests.map(test => ({ input: test.code, output: "Run to verify" }));
   const runCases = problem.tests.slice(0, Math.max(2, Math.min(3, examples.length))).map(test => ({ ...test, hidden: false }));
-  const stressTests = problem.id === "py.nc.two-sum" ? [{
-    name: "200 deterministic edge combinations", hidden: true, checks: 200,
-    code: `solver = fn()\nfor seed in range(200):\n    left = seed * 17 - 900\n    right = seed * -11 + 307\n    nums = [seed + 5000, left, seed - 7000, right]\n    answer = solver.twoSum(nums, left + right)\n    assert len(answer) == 2 and answer[0] != answer[1]\n    assert nums[answer[0]] + nums[answer[1]] == left + right`,
-  }] : problem.id === "py.nc.contains-duplicate" ? [{
-    name: "200 deterministic duplicate boundaries", hidden: true, checks: 200,
-    code: `solver = fn()\nfor seed in range(200):\n    unique = list(range(seed, seed + 12))\n    assert solver.containsDuplicate(unique) is False\n    unique.insert(seed % 12, unique[(seed * 7) % 12])\n    assert solver.containsDuplicate(unique) is True`,
-  }] : [];
-  const submitTests = [...problem.tests, ...stressTests];
+  const submitTests = useMemo(() => [...problem.tests, ...interviewCases(problem)], [problem]);
   const totalChecks = submitTests.reduce((sum, test) => sum + (test.checks ?? 1), 0);
   const difficulty = problem.displayDifficulty ?? (["Easy", "Easy", "Medium", "Hard", "Hard"][Math.max(0, Math.round((problem.difficulty.concept + problem.difficulty.implementation) / 2) - 1)]);
 
@@ -75,7 +77,12 @@ export default function PracticeWorkspace({ problem, starter, onComplete, onRevi
       const outcome = await runTests(source, problem.exportName, tests, problem.language);
       if (!mounted.current) return;
       attempts.current += 1; setResult(outcome);
-      if (submit) setAcceptedCode(outcome.ok ? source : null);
+      if (submit) {
+        setAcceptedCode(outcome.ok ? source : null);
+        const entry:Submission={id:Date.now(),date:new Date().toISOString(),code:source,language:problem.language,result:outcome,suiteSize:submitTests.length};
+        const next=[entry,...history].slice(0,30);setHistory(next);setSelectedSubmission(entry);setTab("Submission");
+        try {localStorage.setItem(historyKey,JSON.stringify(next));setHistorySaved(true);}catch{setHistorySaved(false);}
+      }
     } catch (error) {
       if (mounted.current) setResult({ ok: false, fatal: String(error), results: [], logs: [], ms: 0 });
     } finally { busy.current = false; if (mounted.current) setRunning(false); }
@@ -92,7 +99,7 @@ export default function PracticeWorkspace({ problem, starter, onComplete, onRevi
   };
   const toggleFocus = (pane: "description" | "code" | "tests") => setFocusPane(value => value === pane ? null : pane);
 
-  return <div className={`practice-workspace ${wrap ? "editor-wrap" : ""}`} data-mobile-pane={mobilePane} data-focus-pane={focusPane ?? "all"} ref={container} style={{ "--practice-split": `${split}%`, "--editor-font-size": `${fontSize}px` } as CSSProperties}>
+  return <div className={`practice-workspace ${wrap ? "editor-wrap" : ""}`} data-mobile-pane={mobilePane} data-focus-pane={focusPane ?? "all"} ref={container} style={{ "--practice-split": `${split}%`, "--editor-font-size": `${fontSize}px`, "--editor-height": `${editorHeight}%` } as CSSProperties}>
     <div className="practice-toolbar">
       <span className="practice-context"><Icon name="code" size={15} />{label ?? "DSA practice"}</span>
       <div className="practice-run-actions"><button className="whiteboard-launch" aria-label="Open whiteboard" title="Whiteboard" onClick={event => { event.currentTarget.focus(); setWhiteboard(true); }}><Icon name="board" size={16} /><span>Whiteboard</span></button>
@@ -108,17 +115,19 @@ export default function PracticeWorkspace({ problem, starter, onComplete, onRevi
     </div>
     <div className="practice-panels">
       <section className="practice-description">
-        <div className="practice-tabs" role="tablist" aria-label="Problem information">{["Description", "Hints", "Solution"].map((name, index) => <button role="tab" aria-selected={tab === name} key={name} onClick={() => chooseTab(name)}>{index === 0 && <Icon name="book" size={14} />}{index === 1 && <Icon name="info" size={14} />}{index === 2 && <Icon name="sparkles" size={14} />}{name}</button>)}<button className="panel-action" aria-label={focusPane === "description" ? "Restore panels" : "Expand problem"} onClick={() => toggleFocus("description")}><Icon name={focusPane === "description" ? "minimize" : "maximize"} size={15} /></button></div>
+        <div className="practice-tabs" role="tablist" aria-label="Problem information">{["Description", "Hints", "Solution", "Submissions", ...(selectedSubmission ? ["Submission"] : [])].map((name, index) => <button role="tab" aria-selected={tab === name} key={name} onClick={() => chooseTab(name)}>{index === 0 && <Icon name="book" size={14} />}{index === 1 && <Icon name="info" size={14} />}{index === 2 && <Icon name="sparkles" size={14} />}{name}</button>)}<button className="panel-action" aria-label={focusPane === "description" ? "Restore panels" : "Expand problem"} onClick={() => toggleFocus("description")}><Icon name={focusPane === "description" ? "minimize" : "maximize"} size={15} /></button></div>
         <div className="practice-prose" role="tabpanel">
-          <h1>{problem.title}</h1>
-          <div className="practice-badges"><span className={`difficulty difficulty-${difficulty.toLowerCase()}`}>{difficulty}</span><span>{problem.pattern}</span>{onReviewLesson && <button className="ghost small" onClick={onReviewLesson}>Review lecture</button>}</div>
+          {!["Submissions","Submission"].includes(tab) && <h1>{problem.title}</h1>}
+          {!["Submissions","Submission"].includes(tab) && <div className="practice-badges"><span className={`difficulty difficulty-${difficulty.toLowerCase()}`}>{difficulty}</span><span>{problem.pattern}</span>{onReviewLesson && <button className="ghost small" onClick={onReviewLesson}>Review lecture</button>}</div>}
           {tab === "Description" && <><Markdown source={problem.prompt} language={problem.language} />
             <div className="practice-contract"><Icon name="info" size={14} /><span>Use the starter signature and return your answer.</span></div>
             {examples.map((example, index) => <div className="practice-example" key={index}><h3>Example {index + 1}</h3><dl className="example-values"><dt>Input</dt><dd><code>{example.input}</code></dd><dt>Output</dt><dd><code>{example.output}</code></dd></dl></div>)}
             {problem.source && <p className="tiny muted">Reference material: <a href={problem.source} target="_blank" rel="noreferrer">NeetCode</a> · MIT license</p>}
           </>}
+          {tab === "Submissions" && <div className="submission-list"><h2>Your submissions</h2><p>{historySaved?"Saved on this device":"Storage is full. This session’s submissions could not be saved."}</p>{history.length?<table><thead><tr><th>Status</th><th>Runtime</th><th>Date</th></tr></thead><tbody>{history.map(entry=><tr key={entry.id}><td><button className={entry.result.ok?'result-pass':'result-fail'} onClick={()=>{setSelectedSubmission(entry);setTab("Submission");}}>{submissionStatus(entry.result)}</button></td><td>{entry.result.ms} ms</td><td>{new Date(entry.date).toLocaleDateString()}</td></tr>)}</tbody></table>:<p>Submit your solution to see its results here.</p>}</div>}
+          {tab === "Submission" && selectedSubmission && <SubmissionDetails submission={selectedSubmission} history={history}/>}
           {tab === "Hints" && <><p>Reveal a little help at a time. Try the idea before opening the next hint.</p>{problem.hints.slice(0, hints).map((hint, index) => <div className="practice-example" key={index}><h3>Hint {index + 1}</h3><Markdown source={hint.text} /></div>)}<button disabled={hints >= problem.hints.length} onClick={() => setHints(count => count + 1)}>{hints >= problem.hints.length ? "All hints revealed" : "Reveal next hint"}</button>{hints >= problem.hints.length && <button className="ghost" onClick={() => chooseTab("Solution")}>Read the solution</button>}</>}
-          {tab === "Solution" && <>{problem.analysis && <><h2>Approach</h2><Markdown source={problem.analysis.approach} /><p>{problem.analysis.invariant}</p><div className="practice-badges"><span>Time: {problem.analysis.time}</span><span>Space: {problem.analysis.space}</span></div></>}<h2>Reference solution</h2><Markdown source={`\`\`\`${problem.language ?? "javascript"}\n${problem.solution}\n\`\`\``} language={problem.language} />{problem.walkthrough?.map((step, index) => <p key={index}>{step}</p>)}</>}
+          {tab === "Solution" && <>{INTERVIEW_VIDEOS[problem.id] && <a className="video-walkthrough" href={`https://www.youtube.com/watch?v=${INTERVIEW_VIDEOS[problem.id]}`} target="_blank" rel="noreferrer"><Icon name="play" size={18}/><span>NeetCode video walkthrough<small>Watch the explanation on YouTube</small></span><span aria-hidden="true">↗</span></a>}{problem.analysis && <><h2>Approach</h2><Markdown source={problem.analysis.approach} /><p>{problem.analysis.invariant}</p><div className="practice-badges"><span>Time: {problem.analysis.time}</span><span>Space: {problem.analysis.space}</span></div></>}<h2>Reference solution</h2>{problem.source && <p className="community-reference"><a href={problem.source} target="_blank" rel="noreferrer">Explore NeetCode explanations ↗</a></p>}<Markdown source={`\`\`\`${problem.language ?? "javascript"}\n${problem.solution}\n\`\`\``} language={problem.language} />{problem.walkthrough?.map((step, index) => <p key={index}>{step}</p>)}</>}
         </div>
       </section>
       <div className="practice-splitter" role="separator" aria-label="Resize description and code" aria-orientation="vertical" aria-valuemin={28} aria-valuemax={65} aria-valuenow={split} tabIndex={0}
@@ -134,10 +143,11 @@ export default function PracticeWorkspace({ problem, starter, onComplete, onRevi
           <Editor value={code} onChange={value => { firstKey.current ??= Math.floor((Date.now() - start.current) / 1000); setCode(value); }} cold={false} language={problem.language} wordWrap={wrap} />
           <div className="practice-editor-footer"><span>{saved ? "Draft saved on this device" : "Draft could not be saved"}</span><span>Ctrl + Enter to run</span></div>
         </div>
+        <div className="practice-horizontal-splitter" role="separator" aria-label="Resize editor and tests" aria-orientation="horizontal" aria-valuemin={25} aria-valuemax={80} aria-valuenow={editorHeight} tabIndex={0} onKeyDown={event=>{if(["ArrowUp","ArrowDown"].includes(event.key)){event.preventDefault();setEditorHeight(n=>Math.max(25,Math.min(80,n+(event.key==="ArrowUp"?-3:3))));}}} onPointerDown={event=>event.currentTarget.setPointerCapture(event.pointerId)} onPointerMove={event=>{if(event.currentTarget.hasPointerCapture(event.pointerId)){const rect=event.currentTarget.parentElement!.getBoundingClientRect();setEditorHeight(Math.max(25,Math.min(80,(event.clientY-rect.top)/rect.height*100)));}}} onPointerUp={event=>event.currentTarget.releasePointerCapture(event.pointerId)}/>
         <div className="practice-test-panel">
           <div className="practice-tabs" role="tablist" aria-label="Execution">{["Test cases", "Test result"].map((name, index) => <button key={name} role="tab" aria-selected={bottomTab === name} onClick={() => setBottomTab(name)}><Icon name={index === 0 ? "checkCircle" : "chart"} size={14} />{name}</button>)}<button className="panel-action" aria-label={focusPane === "tests" ? "Restore panels" : "Expand tests"} onClick={() => toggleFocus("tests")}><Icon name={focusPane === "tests" ? "minimize" : "maximize"} size={15} /></button></div>
           <div className="practice-tests" role="tabpanel" aria-live="polite">
-            {bottomTab === "Test cases" ? <><div className="practice-case-tabs">{examples.slice(0, runCases.length).map((_, index) => <button className={selectedCase === index ? "on" : ""} key={index} onClick={() => setSelectedCase(index)}>Case {index + 1}</button>)}<button className={selectedCase === -1 ? "on" : ""} onClick={() => setSelectedCase(-1)}>+ Custom</button></div>{selectedCase === -1 ? <><label htmlFor="custom-test">Custom assertion using <code>fn</code></label><textarea id="custom-test" value={custom} onChange={event => setCustom(event.target.value)} placeholder={problem.language === "python" ? "assert fn(...) == expected" : "expect(fn(...)).toEqual(expected)"} /><p className="tiny muted">Custom tests run locally with Run. Submit uses the official suite.</p></> : <pre><code>{examples[selectedCase] ? `Input\n${examples[selectedCase].input}\n\nExpected output\n${examples[selectedCase].output}` : "Submit to run the test suite."}</code></pre>}</> : running ? <p className="practice-running"><span className="spinner" /> Running {submitted ? `${totalChecks} checks` : `${runCases.length} examples`}…</p> : result ? <div className={result.ok && submitted ? "accepted-card" : ""}>{result.ok && submitted ? <div className="accepted-icon"><Icon name="check" size={28} /></div> : null}<h2 className={result.ok ? "result-pass" : "result-fail"}>{result.ok ? (submitted ? "Accepted" : "Examples passed") : result.timedOut ? "Time limit exceeded" : result.fatal ? "Runtime error" : "Wrong answer"}</h2><p className="small muted">{result.results.filter(test => test.passed).length} / {result.results.length} cases passed · {result.ms} ms{!submitted && result.ok ? ` · Submit to run ${totalChecks} checks` : ""}</p>{result.fatal && <pre className="fatal">{result.fatal}</pre>}{result.results.map((test, index) => { const example = !submitted ? examples[index] : undefined; return <details className={`practice-test ${test.passed ? "pass" : "fail"}`} key={index} open={!test.passed}><summary>{test.passed ? "✓" : "✕"} {test.hidden ? `Hidden case ${index + 1}` : test.name}</summary>{!test.hidden && <pre>{example ? `Input\n${example.input}\n\nExpected\n${example.output}\n\nActual\n${test.passed ? example.output : test.message || "Wrong answer"}` : test.message || "Passed"}{test.logs?.length ? `\n\nConsole\n${test.logs.join("\n")}` : ""}</pre>}{test.hidden && <p>{test.passed ? "Passed" : "Failed"} an additional boundary or stress case.</p>}</details>; })}{result.logs.length > 0 && <><h3>Console</h3><pre>{result.logs.join("\n")}</pre></>}{acceptedCode === code && <button className="submit-button accepted-continue" onClick={() => complete(true)}>Save solve & continue <Icon name="arrowRight" size={15} /></button>}</div> : <p className="muted empty-result">Run your code to see input, expected output, and actual output.</p>}
+            {bottomTab === "Test cases" ? <><div className="practice-case-tabs">{examples.slice(0, runCases.length).map((_, index) => <button className={selectedCase === index ? "on" : ""} key={index} onClick={() => setSelectedCase(index)}>Case {index + 1}</button>)}<button className={selectedCase === -1 ? "on" : ""} onClick={() => setSelectedCase(-1)}>+ Custom</button></div>{selectedCase === -1 ? <><label htmlFor="custom-test">Custom assertion using <code>fn</code></label><textarea id="custom-test" value={custom} onChange={event => setCustom(event.target.value)} placeholder={problem.language === "python" ? "assert fn(...) == expected" : "expect(fn(...)).toEqual(expected)"} /><p className="tiny muted">Custom tests run locally with Run. Submit uses the Hyzr test suite.</p></> : <pre><code>{examples[selectedCase] ? `Input\n${examples[selectedCase].input}\n\nExpected output\n${examples[selectedCase].output}` : "Submit to run the test suite."}</code></pre>}</> : running ? <p className="practice-running"><span className="spinner" /> Running {submitted ? `${totalChecks} checks` : `${runCases.length} examples`}…</p> : result ? <ExecutionResults key={`${submitted}-${result.ms}-${attempts.current}`} result={result} submitted={submitted} onContinue={acceptedCode === code ? () => complete(true) : undefined}/> : <p className="muted empty-result">Run your code to see input, expected output, and actual output.</p>}
           </div>
         </div>
       </section>
