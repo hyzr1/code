@@ -9,10 +9,12 @@ h2.section,.nav-label,.badge,.stat .label,.settings-group { font-family:var(--sa
 .page-head p,.product-page-header p,.course-overview>p,.type-hero p { font:400 13px/1.7 var(--sans); color:var(--text-muted); margin:0; max-width:68ch; }
 .product-eyebrow { display:block; font:500 11px/1.5 var(--sans); color:var(--text-faint); letter-spacing:0; text-transform:none; }
 .brand-name { font-size:19px; font-weight:600; letter-spacing:-.05em; }
-.sidebar-head { padding-top:20px; padding-bottom:16px; }
-.sidebar .mode-switch { margin-bottom:24px; background:transparent; border:1px solid var(--border-soft); border-radius:7px; }
-.sidebar:not(.collapsed) .mode-switch button { font-size:11px; height:29px; border-radius:5px; }
-.sidebar .mode-indicator { border-radius:5px; }
+.sidebar-head { padding-top:18px; padding-bottom:12px; }
+/* The app rail is navigation, not a set of cards. Keep the mode controls
+   visually quiet so their three icons read as one group. */
+.sidebar .mode-switch { margin:4px 12px 18px; background:transparent; border:0; border-radius:0; padding:0; gap:2px; }
+.sidebar:not(.collapsed) .mode-switch button { font-size:11px; height:30px; border-radius:6px; }
+.sidebar .mode-indicator { border-radius:6px; }
 .nav-label { font-size:10px; color:var(--text-faint); padding-top:12px; }
 .nav-item { border-radius:6px; font-weight:450; }
 .nav-item.active,.nav-item.on { background:var(--selected); }
@@ -77,7 +79,13 @@ h2.section,.nav-label,.badge,.stat .label,.settings-group { font-family:var(--sa
 /* Interview workspace: one toolbar, neutral panels and compact controls. */
 .module-lessons { padding:6px 12px 6px 42px; }
 .page:has(.course-overview) .module-lessons .lesson-row { padding:11px 12px; border-radius:6px; }
+.brand-lockup { color:var(--text-muted); }
 .brand-lockup .wordmark { font-family:"Segoe UI",Arial,sans-serif; font-size:23px; font-weight:450; letter-spacing:-.025em; }
+/* A collapsed rail still needs a recognisable home mark. The old lockup used
+   the four quiet bars; retain that cue rather than leaving a floating menu. */
+.sidebar.collapsed .brand-lockup { display:flex; width:36px; justify-content:center; flex:none; }
+.sidebar.collapsed .sidebar-head { flex-direction:column; gap:8px; padding:12px 0; }
+.sidebar.collapsed .mode-switch { width:36px; margin:0 auto 12px; padding:0 0 12px; border:0; border-bottom:1px solid var(--border-soft); }
 .problem-shell>.sidebar { display:none; }
 .problem-shell .main { position:relative; width:100%; overflow:hidden; }
 .problem-shell .main>.topbar { position:absolute; z-index:22; top:8px; left:10px; height:36px; min-height:36px; max-width:32%; padding:0 8px; border:0; background:transparent; backdrop-filter:none; gap:8px; }
