@@ -1,3 +1,4 @@
+import TestCaseFields, { inputFields } from "./TestCaseFields";
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { createPortal } from "react-dom";
 import type { Problem, RunResult } from "../types";
@@ -16,6 +17,14 @@ export interface PracticeOutcome { hintsUsed: number; seconds: number; attempts:
 function complexityNotation(value: string) {
   const notation = value.match(/\$([^$]+)\$/)?.[1];
   return notation?.replace(/\\log/g, "log").replace(/[{}]/g, "") ?? value.replace(/^Time complexity:\s*/i, "");
+}
+
+function descriptionSource(problem: Problem) {
+  const names = new Set((problem.examples ?? []).flatMap(example => inputFields(example.input).map(field => field.name)).filter(Boolean));
+  // Preserve authored Markdown; mark only known arguments and Python literals.
+  return problem.prompt.split(/(```[\s\S]*?```|`[^`]+`)/g).map((part, i) => i % 2 ? part :
+    part.replace(/\b[A-Za-z_]\w*\b/g, word => names.has(word) || ['True', 'False', 'None'].includes(word) ? '`' + word + '`' : word)
+  ).join('');
 }
 
 /** Shared by lecture exercises and the problem library. Run never records a solve. */
@@ -127,7 +136,7 @@ export default function PracticeWorkspace({ problem, starter, onComplete, onRevi
         <div className={`practice-prose practice-prose-${tab.toLowerCase()}`} role="tabpanel">
           {!["Submissions","Submission"].includes(tab) && <h1>{problem.title}</h1>}
           {!["Submissions","Submission"].includes(tab) && <div className="practice-badges"><span className={`difficulty difficulty-${difficulty.toLowerCase()}`}>{difficulty}</span><span>{problem.pattern}</span>{onReviewLesson && <button className="ghost small" onClick={onReviewLesson}>Review lecture</button>}</div>}
-          {tab === "Description" && <><Markdown source={problem.prompt} language={problem.language} />
+          {tab === "Description" && <><Markdown source={descriptionSource(problem)} language={problem.language} />
             <div className="practice-contract"><Icon name="info" size={14} /><span>Use the starter signature and return your answer.</span></div>
             {examples.map((example, index) => <div className="practice-example" key={index}><h3>Example {index + 1}</h3><dl className="example-values"><dt>Input</dt><dd><code>{example.input}</code></dd><dt>Output</dt><dd><code>{example.output}</code></dd></dl></div>)}
             {problem.source && <p className="tiny muted">Reference material: <a href={problem.source} target="_blank" rel="noreferrer">NeetCode</a> · MIT license</p>}
@@ -155,7 +164,7 @@ export default function PracticeWorkspace({ problem, starter, onComplete, onRevi
         <div className="practice-test-panel">
           <div className="practice-tabs" role="tablist" aria-label="Execution">{["Test cases", "Test result"].map((name, index) => <button key={name} role="tab" aria-selected={bottomTab === name} onClick={() => setBottomTab(name)}><Icon name={index === 0 ? "checkCircle" : "chart"} size={14} />{name}</button>)}<button className="panel-action" aria-label={focusPane === "tests" ? "Restore panels" : "Expand tests"} onClick={() => toggleFocus("tests")}><Icon name={focusPane === "tests" ? "minimize" : "maximize"} size={15} /></button></div>
           <div className="practice-tests" role="tabpanel" aria-live="polite">
-            {bottomTab === "Test cases" ? <><div className="practice-case-tabs">{examples.slice(0, runCases.length).map((_, index) => <button className={selectedCase === index ? "on" : ""} key={index} onClick={() => setSelectedCase(index)}>Case {index + 1}</button>)}<button className={selectedCase === -1 ? "on" : ""} onClick={() => setSelectedCase(-1)}>+ Custom</button></div>{selectedCase === -1 ? <><label htmlFor="custom-test">Custom assertion using <code>fn</code></label><textarea id="custom-test" value={custom} onChange={event => setCustom(event.target.value)} placeholder={problem.language === "python" ? "assert fn(...) == expected" : "expect(fn(...)).toEqual(expected)"} /><p className="tiny muted">Custom tests run locally with Run. Submit uses the Hyzr test suite.</p></> : <pre><code>{examples[selectedCase] ? `Input\n${examples[selectedCase].input}\n\nExpected output\n${examples[selectedCase].output}` : "Submit to run the test suite."}</code></pre>}</> : running ? <p className="practice-running"><span className="spinner" /> Running {submitted ? `${totalChecks} checks` : `${runCases.length} examples`}…</p> : result ? <ExecutionResults key={`${submitted}-${result.ms}-${attempts.current}`} result={result} submitted={submitted} onContinue={acceptedCode === code ? () => complete(true) : undefined}/> : <p className="muted empty-result">Run your code to see input, expected output, and actual output.</p>}
+            {bottomTab === "Test cases" ? <><div className="practice-case-tabs">{examples.slice(0, runCases.length).map((_, index) => <button className={selectedCase === index ? "on" : ""} key={index} onClick={() => setSelectedCase(index)}>Case {index + 1}</button>)}<button className={selectedCase === -1 ? "on" : ""} onClick={() => setSelectedCase(-1)}>+ Custom</button></div>{selectedCase === -1 ? <><label htmlFor="custom-test">Custom assertion using <code>fn</code></label><textarea id="custom-test" value={custom} onChange={event => setCustom(event.target.value)} placeholder={problem.language === "python" ? "assert fn(...) == expected" : "expect(fn(...)).toEqual(expected)"} /><p className="tiny muted">Custom tests run locally with Run. Submit uses the Hyzr test suite.</p></> : (examples[selectedCase] ? <TestCaseFields input={examples[selectedCase].input} output={examples[selectedCase].output} /> : <p>Submit to run the test suite.</p>)}</> : running ? <p className="practice-running"><span className="spinner" /> Running {submitted ? `${totalChecks} checks` : `${runCases.length} examples`}…</p> : result ? <ExecutionResults key={`${submitted}-${result.ms}-${attempts.current}`} result={result} submitted={submitted} onContinue={acceptedCode === code ? () => complete(true) : undefined}/> : <p className="muted empty-result">Run your code to see input, expected output, and actual output.</p>}
           </div>
         </div>
       </section>

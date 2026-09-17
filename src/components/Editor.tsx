@@ -20,9 +20,8 @@ import {
   toggleComment,
 } from "@codemirror/commands";
 import { javascript } from "@codemirror/lang-javascript";
-import { python } from "@codemirror/lang-python";
+import { codeHighlight, pythonSupport } from "../engine/syntax";
 import {
-  HighlightStyle,
   bracketMatching,
   foldGutter,
   foldKeymap,
@@ -39,7 +38,7 @@ import {
   type CompletionResult,
 } from "@codemirror/autocomplete";
 import { highlightSelectionMatches, search, searchKeymap } from "@codemirror/search";
-import { tags } from "@lezer/highlight";
+
 import { useSettings } from "../settings";
 import type { CourseLanguage } from "../types";
 
@@ -95,24 +94,7 @@ const theme = EditorView.theme(
   { dark: true },
 );
 
-const highlight = HighlightStyle.define([
-  { tag: [tags.keyword, tags.modifier, tags.self], color: "#569cd6" },
-  { tag: [tags.controlKeyword, tags.moduleKeyword], color: "#c586c0" },
-  { tag: [tags.definitionKeyword, tags.operatorKeyword], color: "#569cd6" },
-  { tag: tags.string, color: "#ce9178" },
-  { tag: tags.special(tags.string), color: "#ce9178" },
-  { tag: [tags.number, tags.bool, tags.null, tags.atom], color: "#b5cea8" },
-  { tag: [tags.comment, tags.lineComment, tags.blockComment], color: "#6a9955", fontStyle: "italic" },
-  { tag: [tags.function(tags.variableName), tags.function(tags.propertyName)], color: "#dcdcaa" },
-  { tag: tags.definition(tags.function(tags.variableName)), color: "#dcdcaa" },
-  { tag: [tags.variableName, tags.propertyName], color: "#9cdcfe" },
-  { tag: tags.definition(tags.variableName), color: "#9cdcfe" },
-  { tag: [tags.className, tags.typeName, tags.namespace], color: "#4ec9b0" },
-  { tag: [tags.operator, tags.punctuation, tags.separator, tags.bracket], color: "#d4d4d4" },
-  { tag: tags.regexp, color: "#d16969" },
-  { tag: tags.escape, color: "#d7ba7d" },
-  { tag: tags.invalid, color: "#f44747" },
-]);
+
 
 // --------------------------------------------------------------- completions
 
@@ -329,8 +311,8 @@ export default function Editor({
       bracketMatching(),
       indentOnInput(),
       indentUnit.of(" ".repeat(prefs.tabSize)),
-      language === "python" ? python() : javascript(),
-      syntaxHighlighting(highlight),
+      language === "python" ? pythonSupport() : javascript(),
+      syntaxHighlighting(codeHighlight),
       theme,
       EditorState.readOnly.of(readOnly),
       EditorView.updateListener.of((update) => {

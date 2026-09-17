@@ -10,6 +10,7 @@
 }
 .problem-shell .main { min-width:0; flex:1; background:var(--ws-canvas); }
 .problem-shell .main > .topbar {
+  position:relative;
   display:flex; align-items:center; gap:12px; height:48px; min-height:48px;
   padding:0 12px; width:100%; max-width:none; background:var(--ws-canvas);
   border-bottom:0;
@@ -31,6 +32,22 @@
 .problem-shell .practice-run-actions .submit-button { min-width:86px; color:#63d8a0; background:#25372f; }
 .problem-shell .practice-run-actions button:hover { background:var(--ws-active); }
 .problem-shell .practice-toolbar-tools { display:flex; align-items:center; gap:10px; }
+.problem-shell #practice-command-bar .practice-run-actions { position:absolute; left:50%; transform:translateX(-50%); }
+.problem-shell #practice-command-bar .practice-toolbar-tools { margin-left:auto; }
+.problem-shell .main > .topbar .crumb { max-width:calc(50% - 210px); }
+.problem-shell .test-field-label { color:var(--ws-muted); font:500 11px var(--sans); margin:18px 0 8px; }
+.problem-shell .test-input-fields > .test-field-label:first-child { margin-top:0; }
+.problem-shell .test-value-box { background:var(--ws-field); border:1px solid #ffffff04; border-radius:7px; padding:10px 12px; margin:0 0 8px; min-width:0; }
+.problem-shell .test-argument-name { display:block; color:var(--ws-muted); font:11px/1.5 var(--mono); margin-bottom:7px; }
+.problem-shell .practice-tests .test-value-box pre { padding:0; margin:0; background:transparent; color:#eeeef3; font-weight:500; overflow:auto; }
+.problem-shell .case-observation > label { display:block; color:var(--ws-muted); font:500 11px var(--sans); margin:18px 0 0; }
+.problem-shell .case-observation > label > pre { color:#eeeef3; font-weight:500; margin-top:8px; }
+.problem-shell .practice-prose :not(pre) > code { padding:1px 4px; border:1px solid #ffffff15; border-radius:4px; background:#ffffff09; color:#e2e3ec; font-size:.9em; }
+.problem-shell .example-values { display:grid; grid-template-columns:max-content minmax(0,1fr); gap:5px 7px; }
+.problem-shell .example-values dt { color:#e3e4ec; font:600 12px/1.65 var(--mono); margin:0; }
+.problem-shell .example-values dt::after { content:':'; }
+.problem-shell .example-values dd { margin:0; min-width:0; white-space:pre-wrap; overflow-wrap:anywhere; }
+.problem-shell .example-values dd > code { background:transparent; border:0; padding:0; color:var(--ws-muted); font-size:12px; }
 .problem-shell .practice-toolbar-tools button {
   display:inline-flex; align-items:center; justify-content:center; gap:7px;
   height:30px; padding:0 9px; border:1px solid transparent; border-radius:5px;
@@ -92,6 +109,9 @@
   .problem-shell .practice-toolbar-tools { gap:2px; }
 }
 @media(max-width:860px) {
+  .problem-shell .main > .topbar .crumb { max-width:none; }
+  .problem-shell #practice-command-bar .practice-toolbar { position:relative; }
+  .problem-shell #practice-command-bar .practice-toolbar-tools .whiteboard-launch span { display:none; }
   .problem-shell .main > .topbar { height:88px; min-height:88px; max-width:none; display:flex; flex-wrap:wrap; gap:0 8px; padding:4px 8px; }
   .problem-shell .main > .topbar .crumb { display:block; flex:1; font-size:12px; }
   #practice-command-bar { order:5; flex:0 0 100%; }

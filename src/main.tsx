@@ -32,3 +32,5 @@ if ("serviceWorker" in navigator && import.meta.env.PROD) {
     });
   });
 }
+
+import "./syntax.css";
