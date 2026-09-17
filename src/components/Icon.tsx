@@ -7,6 +7,8 @@ import type { SVGProps } from "react";
  * this app uses, and consistency matters more than breadth here.
  */
 const PATHS: Record<string, string> = {
+  history: "M3 11a9 9 0 1 1 2.7 7M3 4v7h7M12 7v5l3 2",
+  wrap: "M3 5h18M3 10h14a4 4 0 0 1 0 8h-6M14 15l-3 3 3 3M3 15h4",
   pen: "m16 3 5 5-12 12-6 1 1-6zM14 5l5 5",
   marker: "m15 3 6 6-9 9-6-6zM6 12l-3 6 3 3 6-3M2 22h8",
   eraser: "m15 3 6 6-12 12H5l-4-4zM6 12l9 9M9 21h13",

@@ -221,6 +221,7 @@ export default function App() {
             ) : null}
 
             <span className="crumb">{crumb || TITLES[route.name]}</span>
+            {route.name === "problem" && <div id="practice-command-bar" />}
 
             {isMobile ? (
               <button

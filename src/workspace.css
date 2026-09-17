@@ -1,0 +1,105 @@
+/* One palette and spacing system for the complete coding workspace. */
+.problem-shell {
+  --ws-canvas: #17181c;
+  --ws-panel: #202126;
+  --ws-header: #28292f;
+  --ws-field: #2c2d34;
+  --ws-line: #34353e;
+  --ws-muted: #a0a3b1;
+  --ws-active: #363741;
+}
+.problem-shell .main { min-width:0; flex:1; background:var(--ws-canvas); }
+.problem-shell .main > .topbar {
+  display:flex; align-items:center; gap:12px; height:48px; min-height:48px;
+  padding:0 12px; width:100%; max-width:none; background:var(--ws-canvas);
+  border-bottom:0;
+}
+.problem-shell .main > .topbar .crumb { display:block; flex:0 1 240px; min-width:0; font-size:12px; color:var(--ws-muted); }
+.problem-shell .main > .topbar > button { flex-shrink:0; gap:7px; font-weight:500; }
+.problem-shell .route { height:calc(100dvh - 48px); min-height:0; }
+.problem-shell .page:has(.practice-workspace) { padding:0 8px 8px; }
+#practice-command-bar { flex:1; min-width:0; }
+.problem-shell .practice-toolbar {
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  height:40px; min-height:40px; margin:0; width:100%;
+}
+.problem-shell .practice-run-actions { display:flex; flex-shrink:0; gap:1px; border-radius:6px; overflow:hidden; }
+.problem-shell .practice-run-actions button {
+  height:30px; min-width:62px; padding:0 12px; border:0; border-radius:0;
+  color:#e4e5ed; background:var(--ws-header); font:500 12px var(--sans); gap:7px;
+}
+.problem-shell .practice-run-actions .submit-button { min-width:86px; color:#63d8a0; background:#25372f; }
+.problem-shell .practice-run-actions button:hover { background:var(--ws-active); }
+.problem-shell .practice-toolbar-tools { display:flex; align-items:center; gap:10px; }
+.problem-shell .practice-toolbar-tools button {
+  display:inline-flex; align-items:center; justify-content:center; gap:7px;
+  height:30px; padding:0 9px; border:1px solid transparent; border-radius:5px;
+  background:transparent; color:var(--ws-muted); font:500 12px var(--sans);
+}
+.problem-shell .practice-toolbar-tools button:hover { background:var(--ws-header); color:#eee; }
+.problem-shell .practice-toolbar-tools .whiteboard-launch { width:auto; min-width:0; margin:0; }
+.problem-shell .whiteboard-launch span { display:inline; }
+.problem-shell .practice-clock { color:var(--ws-muted); font-size:11px; }
+.problem-shell .practice-workspace { background:var(--ws-canvas); --surface:var(--ws-panel); --border:var(--ws-line); --border-soft:var(--ws-line); --surface-inset:var(--ws-field); }
+.problem-shell .practice-description,
+.problem-shell .practice-code-panel,
+.problem-shell .practice-test-panel { background:var(--ws-panel)!important; border:1px solid var(--ws-line); border-radius:8px; }
+.problem-shell .practice-tabs,
+.problem-shell .practice-panel-title {
+  background:var(--ws-header); height:36px; min-height:36px;
+  border-bottom:1px solid var(--ws-line); padding:0 8px; font-size:12px;
+}
+.problem-shell .practice-tabs { overflow-x:auto; gap:2px; }
+.problem-shell .practice-tabs button { height:28px; padding:0 8px; border-radius:4px; color:var(--ws-muted); font-weight:450; }
+.problem-shell .practice-tabs button[aria-selected=true] { color:#f0eff6; background:var(--ws-active); box-shadow:none; font-weight:550; }
+.problem-shell .practice-tabs button .ico { color:inherit; }
+.problem-shell .practice-tabs button[aria-selected=true] .ico { color:#b6a4ed; }
+.problem-shell .practice-tabs .panel-action { background:var(--ws-header); min-width:28px; }
+.problem-shell .practice-panel-title strong { font-weight:550; gap:7px; padding-left:3px; }
+.problem-shell .practice-panel-title strong .ico { color:#a99bcf; }
+.problem-shell .editor-tools button { color:var(--ws-muted); }
+.problem-shell .practice-editor-meta { background:var(--ws-panel); border-color:var(--ws-line); padding:7px 12px; font-size:11px; }
+.problem-shell .practice-code-panel .cm-editor,
+.problem-shell .practice-code-panel .cm-gutters { background:var(--ws-panel)!important; }
+.problem-shell .practice-code-panel .cm-activeLine,
+.problem-shell .practice-code-panel .cm-activeLineGutter { background:#ffffff04!important; }
+.problem-shell .practice-editor-footer { background:var(--ws-panel); color:var(--ws-muted); font:10px var(--sans); padding:7px 12px; }
+.problem-shell .practice-prose { padding:20px; font:400 14px/1.65 var(--sans); }
+.problem-shell .practice-prose h1 { font:600 22px/1.35 var(--sans); letter-spacing:-.025em; margin:0 0 12px; }
+.problem-shell .practice-prose h2 { font:550 15px/1.5 var(--sans); margin:24px 0 10px; }
+.problem-shell .practice-prose p { margin:0 0 16px; }
+.problem-shell .practice-badges { gap:7px; margin:0 0 24px; }
+.problem-shell .practice-badges > span { font-size:11px; padding:3px 9px; border-radius:5px; background:var(--ws-header); }
+.problem-shell .practice-example { margin:24px 0; padding:0; border:0; }
+.problem-shell .practice-example h3 { font:550 12px var(--sans); margin:0 0 12px; }
+.problem-shell .example-values { border-left:2px solid var(--ws-line); padding:0 12px; }
+.problem-shell .example-values dt { color:var(--ws-muted); font-size:11px; margin:0 0 3px; }
+.problem-shell .example-values dd { font-size:12px; line-height:1.65; margin:0 0 12px; }
+.problem-shell .practice-tests { padding:16px; }
+.problem-shell .practice-tests pre { background:var(--ws-field); border:0; font:12px/1.7 var(--mono); border-radius:6px; padding:12px; }
+.problem-shell .practice-case-tabs button { font-size:12px; padding:6px 10px; }
+.problem-shell .practice-case-tabs button.on { background:var(--ws-active); box-shadow:none; color:#f0eff6; }
+.problem-shell .practice-prose pre { background:var(--ws-canvas); border-color:var(--ws-line); border-radius:6px; }
+.problem-shell .practice-splitter { position:relative; }
+.problem-shell .practice-splitter::after { content:""; position:absolute; left:2px; top:calc(50% - 12px); width:3px; height:24px; background:#474851; border-radius:2px; }
+.problem-shell .practice-splitter:hover { background:transparent; }
+.problem-shell .practice-splitter:hover::after,.problem-shell .practice-horizontal-splitter:hover::after { background:#aa95e4; }
+.problem-shell .practice-workspace:fullscreen { padding:8px; }
+.problem-shell .practice-workspace:fullscreen > .practice-toolbar { margin-bottom:8px; }
+@media(max-width:1100px) {
+  .problem-shell .main > .topbar .crumb { flex-basis:140px; }
+  .problem-shell .practice-clock { display:none; }
+  .problem-shell .practice-toolbar-tools { gap:2px; }
+}
+@media(max-width:860px) {
+  .problem-shell .main > .topbar { height:88px; min-height:88px; max-width:none; display:flex; flex-wrap:wrap; gap:0 8px; padding:4px 8px; }
+  .problem-shell .main > .topbar .crumb { display:block; flex:1; font-size:12px; }
+  #practice-command-bar { order:5; flex:0 0 100%; }
+  .problem-shell .route { height:calc(100dvh - 88px); }
+  .problem-shell .practice-toolbar { height:36px; min-height:36px; }
+  .problem-shell .practice-toolbar-tools .whiteboard-launch span { display:inline; }
+  .problem-shell .practice-mobile-nav { background:var(--ws-header); border-radius:6px; }
+  .problem-shell .practice-mobile-nav button { font-size:12px; color:var(--ws-muted); }
+  .problem-shell .practice-mobile-nav button[aria-selected=true] { color:#eee; background:var(--ws-active); }
+  .problem-shell .practice-prose { padding:16px; }
+}

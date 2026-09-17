@@ -9,6 +9,7 @@ import "@fontsource-variable/inter/wght.css";
 import "./styles.css";
 import "./components/typing/typing.css";
 import "./product.css";
+import "./workspace.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

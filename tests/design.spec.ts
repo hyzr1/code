@@ -23,6 +23,11 @@ test('visual surfaces and usable editor controls', async ({page}, info) => {
  await page.getByLabel('Editor font size').selectOption('16');
  await expect(page.locator('.cm-scroller')).toHaveCSS('font-size','16px');
  if(info.project.name==='desktop') {
+  expect(await page.locator('.practice-panels').evaluate(el=>el.getBoundingClientRect().top)).toBeLessThan(55);
+  await page.getByLabel('Enter fullscreen',{exact:true}).click();
+  await expect(page.getByLabel('Exit fullscreen',{exact:true})).toBeVisible();
+  await page.getByLabel('Exit fullscreen',{exact:true}).click();
+  await expect(page.locator('#practice-command-bar').getByRole('button',{name:'Run',exact:true})).toBeVisible();
   await page.getByLabel('Expand editor',{exact:true}).click();
   await expect(page.locator('.practice-description')).toBeHidden();
   await page.getByLabel('Restore panels').click();
