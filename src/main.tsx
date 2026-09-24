@@ -10,7 +10,6 @@ import "./styles.css";
 import "./components/typing/typing.css";
 import "./product.css";
 import "./workspace.css";
-import "./sitewide.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
