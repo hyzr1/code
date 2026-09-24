@@ -5,6 +5,8 @@ Python, data structures and algorithms, machine learning, and coding interview
 preparation. It pairs clear instruction with deliberate practice so learners
 can build fluency, recognize patterns, and solve problems under pressure.
 
+Built and maintained by Hyzr.
+
 ## Learning paths
 
 | Path | What it covers |
