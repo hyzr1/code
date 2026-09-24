@@ -1,0 +1,10 @@
+.syntax-keyword { color:#569cd6; }
+.syntax-control { color:#c586c0; }
+.syntax-type { color:#4ec9b0; }
+.syntax-function { color:#dcdcaa; }
+.syntax-variable, .syntax-punctuation { color:#d4d4d4; }
+.syntax-string { color:#ce9178; }
+.syntax-number { color:#b5cea8; }
+.syntax-comment { color:#7b9b69; font-style:italic; }
+.syntax-escape { color:#d7ba7d; }
+.syntax-type.syntax-variable { color:#4ec9b0; }

@@ -1,0 +1,322 @@
+/* Type mode — reuses the global design tokens from styles.css. */
+
+.type-page {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: var(--sp-5) var(--sp-4) var(--sp-7);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+
+.type-page .eyebrow {
+  font-size: var(--label-size);
+  letter-spacing: var(--label-track);
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 650;
+}
+
+/* `.dim` is the app's faintest grey — right for tiny labels, too washed out
+   for the sentences on these pages. Lift descriptive copy to the readable
+   muted tone; the tiny monospace stat lines keep their own fainter colour. */
+.type-page .dim {
+  color: var(--text-muted);
+}
+.type-lesson-card-goal {
+  color: var(--text-muted) !important;
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+
+/* ---------------------------------------------------------------- arena */
+
+.arena {
+  position: relative;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: var(--r-xl);
+  padding: var(--sp-5);
+  outline: none;
+  cursor: text;
+  transition: border-color var(--t-fast);
+}
+.arena.focused {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.arena-text {
+  font-family: var(--mono);
+  font-size: 24px;
+  line-height: 1.7;
+  letter-spacing: 0.02em;
+  word-break: break-word;
+  white-space: pre-wrap;
+  user-select: none;
+}
+
+.arena-text .ch {
+  color: var(--text-faint);
+  position: relative;
+  transition: color 60ms linear;
+}
+.arena-text .ch.ok { color: var(--text); }
+.arena-text .ch.err { color: var(--fail); background: var(--fail-bg); border-radius: 2px; }
+.arena-text .ch.err-space { background: var(--fail); opacity: 0.55; }
+.arena-text .ch.caret::before {
+  content: "";
+  position: absolute;
+  left: -1px;
+  top: 0.1em;
+  bottom: 0.1em;
+  width: 2px;
+  background: var(--accent);
+  border-radius: 2px;
+  animation: type-caret 1s steps(1) infinite;
+}
+@keyframes type-caret { 50% { opacity: 0; } }
+:root[data-motion="reduced"] .arena-text .ch.caret::before { animation: none; }
+
+.arena-veil {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
+  backdrop-filter: blur(2px);
+  border-radius: var(--r-xl);
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+/* ---------------------------------------------------------------- keyboard */
+
+.kbd {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+  margin-top: var(--sp-2);
+  user-select: none;
+}
+.kbd-row { display: flex; gap: 6px; }
+.kbd-row.r2 { padding-left: 14px; }
+.kbd-row.r3 { padding-left: 30px; }
+
+.tk {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--text-muted);
+  position: relative;
+  transition: transform var(--t-fast), background var(--t-fast), color var(--t-fast);
+}
+/* A thin finger-colour bar along the bottom of each key. */
+.tk::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  right: 5px;
+  bottom: 4px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--fk, transparent);
+  opacity: 0.55;
+}
+.tk.mod { width: 58px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; }
+.tk.space { width: 280px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; }
+.tk.untaught { opacity: 0.32; }
+.tk.next {
+  background: var(--accent);
+  color: var(--accent-fg);
+  border-color: var(--accent);
+  transform: translateY(1px);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.tk.next::after { background: var(--accent-fg); opacity: 0.9; }
+
+/* ------------------------------------------------------------- hint strip */
+
+.type-hint-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+}
+.type-finger-hint { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted); }
+.type-finger-hint i { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+
+.type-tip {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  background: var(--info-bg);
+  border: 1px solid color-mix(in srgb, var(--info) 25%, transparent);
+  color: var(--text-2);
+  padding: 12px 14px;
+  border-radius: var(--r-lg);
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+.type-tip .ico { color: var(--info); flex-shrink: 0; margin-top: 2px; }
+
+.type-progress-dots { display: flex; gap: 6px; }
+.type-progress-dots i {
+  width: 26px; height: 4px; border-radius: 2px;
+  background: var(--surface-3);
+}
+.type-progress-dots i.on { background: var(--accent); }
+.type-progress-dots i.cur { background: color-mix(in srgb, var(--accent) 55%, var(--surface-3)); }
+
+/* -------------------------------------------------------------- lesson head */
+
+.type-lesson-head { display: flex; align-items: center; gap: var(--sp-3); }
+.type-lesson-title { flex: 1; }
+.type-lesson-title h1 { font-size: 20px; margin: 0; font-family: var(--display); }
+.type-lesson-title p { margin: 2px 0 0; font-size: 13px; }
+.type-live { display: flex; gap: 14px; font-size: 13px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.type-live b { color: var(--text); font-size: 16px; }
+
+/* ---------------------------------------------------------------- results */
+
+.type-results {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: var(--r-xl);
+  padding: var(--sp-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+.type-results-top {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: var(--sp-3);
+}
+.type-stat { display: flex; flex-direction: column; gap: 2px; }
+.type-stat-value { font-size: 26px; font-weight: 680; font-variant-numeric: tabular-nums; font-family: var(--mono); }
+.type-stat.accent .type-stat-value { color: var(--accent); font-size: 40px; }
+.type-stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-faint); }
+.type-graph { width: 100%; height: 96px; display: block; }
+.type-results-actions { display: flex; align-items: center; gap: var(--sp-3); flex-wrap: wrap; }
+.type-weak { font-size: 12px; color: var(--text-muted); display: inline-flex; align-items: center; gap: 6px; }
+.type-weak kbd, .type-weak-keys kbd, .type-keys kbd, .type-cta kbd { margin: 0 1px; }
+
+/* ---------------------------------------------------------------- test bar */
+
+.type-test-head { display: flex; align-items: baseline; justify-content: space-between; }
+.type-test-head h1 { font-family: var(--display); font-size: 22px; margin: 0; }
+.type-best { font-size: 13px; color: var(--accent); font-weight: 600; }
+.type-test-bar { display: flex; flex-wrap: wrap; gap: var(--sp-2); align-items: center; }
+.seg { display: inline-flex; background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--r-pill); padding: 3px; gap: 2px; }
+.seg button {
+  border: none; background: transparent; color: var(--text-muted);
+  padding: 5px 12px; border-radius: var(--r-pill); font-size: 12.5px; cursor: pointer;
+  font-family: inherit; text-transform: lowercase; transition: background var(--t-fast), color var(--t-fast);
+}
+.seg button:hover { color: var(--text); }
+.seg button.on { background: var(--surface); color: var(--text); box-shadow: var(--shadow-sm); }
+.type-restart { margin-left: auto; }
+.type-test-live { display: grid; place-items: center; min-height: 40px; }
+.type-count { font-family: var(--mono); font-size: 34px; color: var(--accent); font-variant-numeric: tabular-nums; }
+.type-count i { font-size: 13px; color: var(--text-faint); font-style: normal; margin-left: 6px; }
+
+/* ---------------------------------------------------------------- course */
+
+.type-course-head { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--sp-4); }
+.type-course-head h1 { font-family: var(--display); font-size: 26px; margin: 6px 0 6px; }
+.type-course-head p { margin: 0; max-width: 46ch; font-size: 13.5px; }
+.type-course-progress { text-align: right; flex-shrink: 0; }
+.type-ring-num { font-family: var(--mono); font-size: 30px; font-weight: 680; color: var(--accent); }
+
+.type-stage { display: flex; flex-direction: column; gap: var(--sp-3); }
+.type-stage-head h2 { font-size: 15px; margin: 0; }
+.type-stage-head p { margin: 2px 0 0; font-size: 12.5px; }
+.type-lesson-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: var(--sp-3); }
+
+.type-lesson-card {
+  text-align: left;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: var(--r-lg);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  cursor: pointer;
+  /* These are <button>s, which inherit the app's global white-space: nowrap —
+     override it so the goal sentence wraps inside the card instead of bleeding
+     past its right edge. */
+  white-space: normal;
+  overflow-wrap: break-word;
+  min-width: 0;
+  transition: border-color var(--t-fast), transform var(--t-fast), box-shadow var(--t-fast);
+}
+.type-lesson-card-title,
+.type-lesson-card-goal,
+.type-lesson-card-foot { white-space: normal; overflow-wrap: break-word; }
+.type-lesson-card:hover:not(:disabled) { border-color: var(--border-strong); transform: translateY(-1px); box-shadow: var(--shadow-md); }
+.type-lesson-card.done { border-color: color-mix(in srgb, var(--pass) 40%, var(--border)); }
+.type-lesson-card.locked { opacity: 0.5; cursor: not-allowed; }
+.type-lesson-card-top { display: flex; justify-content: space-between; align-items: center; }
+.type-lesson-card-title { font-weight: 620; font-size: 14px; }
+.type-keys kbd, .type-weak-keys kbd, .type-weak kbd {
+  font-family: var(--mono); font-size: 12px; background: var(--surface-2);
+  border: 1px solid var(--border); border-bottom-width: 2px; border-radius: 4px; padding: 1px 6px; color: var(--text-2);
+}
+.type-stars i { color: var(--surface-3); font-size: 13px; }
+.type-stars i.on { color: #e0a92e; }
+.type-lesson-card-foot { color: var(--text-faint); font-family: var(--mono); }
+
+/* ------------------------------------------------------------------- hub */
+
+.type-hero h1 { font-family: var(--display); font-size: 30px; margin: 8px 0 8px; line-height: 1.15; }
+.type-hero p { margin: 0; max-width: 52ch; font-size: 14px; }
+
+.type-hero-cards { display: grid; grid-template-columns: 1.4fr 1fr; gap: var(--sp-3); }
+.type-cta {
+  text-align: left; border: 1px solid var(--border); background: var(--surface);
+  border-radius: var(--r-xl); padding: var(--sp-4); cursor: pointer; display: flex; flex-direction: column; gap: 4px;
+  white-space: normal; overflow-wrap: break-word; min-width: 0;
+  transition: border-color var(--t-fast), transform var(--t-fast), box-shadow var(--t-fast);
+}
+.type-cta:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: var(--border-strong); }
+.type-cta.primary-card { background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 30%, transparent); }
+.type-cta-kicker { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); font-weight: 650; }
+.type-cta-title { font-size: 18px; font-weight: 650; font-family: var(--display); }
+.type-cta-goal { font-size: 13px; color: var(--text-muted); }
+.type-cta-go { margin-top: 8px; display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--text); }
+
+.type-metrics { display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--sp-2); }
+.type-metric {
+  border: 1px solid var(--border); background: var(--surface); border-radius: var(--r-lg);
+  padding: 14px; display: flex; flex-direction: column; gap: 2px; align-items: center;
+}
+.type-metric b { font-size: 24px; font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.type-metric span { font-size: 11px; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.05em; }
+
+.type-panel { border-top: 1px solid var(--border-soft); padding-top: var(--sp-4); display: flex; flex-direction: column; gap: 10px; }
+.type-panel-head { display: flex; justify-content: space-between; align-items: center; }
+.type-panel-head h2 { font-size: 15px; margin: 0; }
+.type-weak-keys { display: flex; gap: 6px; flex-wrap: wrap; }
+.type-weak-keys kbd { font-size: 15px; padding: 4px 10px; }
+.type-recent { display: flex; flex-direction: column; }
+.type-recent-row { display: grid; grid-template-columns: 1fr auto auto auto; gap: var(--sp-3); padding: 8px 0; border-bottom: 1px solid var(--border-soft); font-size: 13px; font-variant-numeric: tabular-nums; }
+.type-recent-mode { font-family: var(--mono); color: var(--text-muted); font-size: 12px; }
+
+@media (max-width: 720px) {
+  .type-hero-cards { grid-template-columns: 1fr; }
+  .type-metrics { grid-template-columns: repeat(2, 1fr); }
+  .type-results-top { grid-template-columns: repeat(3, 1fr); }
+  .arena-text { font-size: 20px; }
+  .tk { width: 30px; height: 30px; font-size: 11px; }
+  .tk.space { width: 180px; }
+}

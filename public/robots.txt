@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://code.hyzr.ai/sitemap.xml

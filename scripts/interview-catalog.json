@@ -1,0 +1,2977 @@
+[
+  {
+    "title": "Concatenation of Array",
+    "category": "Arrays & Hashing",
+    "slug": "concatenation-of-array",
+    "ncSlug": "concatenation-of-array",
+    "difficulty": "Easy",
+    "code": "1929-concatenation-of-array",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Contains Duplicate",
+    "category": "Arrays & Hashing",
+    "slug": "contains-duplicate",
+    "ncSlug": "duplicate-integer",
+    "difficulty": "Easy",
+    "code": "0217-contains-duplicate",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Valid Anagram",
+    "category": "Arrays & Hashing",
+    "slug": "valid-anagram",
+    "ncSlug": "is-anagram",
+    "difficulty": "Easy",
+    "code": "0242-valid-anagram",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Two Sum",
+    "category": "Arrays & Hashing",
+    "slug": "two-sum",
+    "ncSlug": "two-integer-sum",
+    "difficulty": "Easy",
+    "code": "0001-two-sum",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Longest Common Prefix",
+    "category": "Arrays & Hashing",
+    "slug": "longest-common-prefix",
+    "ncSlug": "longest-common-prefix",
+    "difficulty": "Easy",
+    "code": "0014-longest-common-prefix",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Group Anagrams",
+    "category": "Arrays & Hashing",
+    "slug": "group-anagrams",
+    "ncSlug": "anagram-groups",
+    "difficulty": "Medium",
+    "code": "0049-group-anagrams",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Remove Element",
+    "category": "Arrays & Hashing",
+    "slug": "remove-element",
+    "ncSlug": "remove-element",
+    "difficulty": "Easy",
+    "code": "0027-remove-element",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Majority Element",
+    "category": "Arrays & Hashing",
+    "slug": "majority-element",
+    "ncSlug": "majority-element",
+    "difficulty": "Easy",
+    "code": "0169-majority-element",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Design HashSet",
+    "category": "Arrays & Hashing",
+    "slug": "design-hashset",
+    "ncSlug": "design-hashset",
+    "difficulty": "Easy",
+    "code": "0705-design-hashset",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Design HashMap",
+    "category": "Arrays & Hashing",
+    "slug": "design-hashmap",
+    "ncSlug": "design-hashmap",
+    "difficulty": "Easy",
+    "code": "0706-design-hashmap",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Sort an Array",
+    "category": "Arrays & Hashing",
+    "slug": "sort-an-array",
+    "ncSlug": "sort-an-array",
+    "difficulty": "Medium",
+    "code": "0912-sort-an-array",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Sort Colors",
+    "category": "Arrays & Hashing",
+    "slug": "sort-colors",
+    "ncSlug": "sort-colors",
+    "difficulty": "Medium",
+    "code": "0075-sort-colors",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Top K Frequent Elements",
+    "category": "Arrays & Hashing",
+    "slug": "top-k-frequent-elements",
+    "ncSlug": "top-k-elements-in-list",
+    "difficulty": "Medium",
+    "code": "0347-top-k-frequent-elements",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Encode and Decode Strings",
+    "category": "Arrays & Hashing",
+    "slug": "encode-and-decode-strings",
+    "ncSlug": "string-encode-and-decode",
+    "difficulty": "Medium",
+    "code": "0271-encode-and-decode-strings",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Range Sum Query 2D Immutable",
+    "category": "Arrays & Hashing",
+    "slug": "range-sum-query-2d-immutable",
+    "ncSlug": "range-sum-query-2d-immutable",
+    "difficulty": "Medium",
+    "code": "0304-range-sum-query-2d-immutable",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Product of Array Except Self",
+    "category": "Arrays & Hashing",
+    "slug": "product-of-array-except-self",
+    "ncSlug": "products-of-array-discluding-self",
+    "difficulty": "Medium",
+    "code": "0238-product-of-array-except-self",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Valid Sudoku",
+    "category": "Arrays & Hashing",
+    "slug": "valid-sudoku",
+    "ncSlug": "valid-sudoku",
+    "difficulty": "Medium",
+    "code": "0036-valid-sudoku",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Longest Consecutive Sequence",
+    "category": "Arrays & Hashing",
+    "slug": "longest-consecutive-sequence",
+    "ncSlug": "longest-consecutive-sequence",
+    "difficulty": "Medium",
+    "code": "0128-longest-consecutive-sequence",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Best Time to Buy And Sell Stock II",
+    "category": "Arrays & Hashing",
+    "slug": "best-time-to-buy-and-sell-stock-ii",
+    "ncSlug": "best-time-to-buy-and-sell-stock-ii",
+    "difficulty": "Medium",
+    "code": "0122-best-time-to-buy-and-sell-stock-ii",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Majority Element II",
+    "category": "Arrays & Hashing",
+    "slug": "majority-element-ii",
+    "ncSlug": "majority-element-ii",
+    "difficulty": "Medium",
+    "code": "0229-majority-element-ii",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Subarray Sum Equals K",
+    "category": "Arrays & Hashing",
+    "slug": "subarray-sum-equals-k",
+    "ncSlug": "subarray-sum-equals-k",
+    "difficulty": "Medium",
+    "code": "0560-subarray-sum-equals-k",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "First Missing Positive",
+    "category": "Arrays & Hashing",
+    "slug": "first-missing-positive",
+    "ncSlug": "first-missing-positive",
+    "difficulty": "Hard",
+    "code": "0041-first-missing-positive",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Reverse String",
+    "category": "Two Pointers",
+    "slug": "reverse-string",
+    "ncSlug": "reverse-string",
+    "difficulty": "Easy",
+    "code": "0344-reverse-string",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Valid Palindrome",
+    "category": "Two Pointers",
+    "slug": "valid-palindrome",
+    "ncSlug": "is-palindrome",
+    "difficulty": "Easy",
+    "code": "0125-valid-palindrome",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Valid Palindrome II",
+    "category": "Two Pointers",
+    "slug": "valid-palindrome-ii",
+    "ncSlug": "valid-palindrome-ii",
+    "difficulty": "Easy",
+    "code": "0680-valid-palindrome-ii",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Merge Strings Alternately",
+    "category": "Two Pointers",
+    "slug": "merge-strings-alternately",
+    "ncSlug": "merge-strings-alternately",
+    "difficulty": "Easy",
+    "code": "1768-merge-strings-alternately",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Merge Sorted Array",
+    "category": "Two Pointers",
+    "slug": "merge-sorted-array",
+    "ncSlug": "merge-sorted-array",
+    "difficulty": "Easy",
+    "code": "0088-merge-sorted-array",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Remove Duplicates From Sorted Array",
+    "category": "Two Pointers",
+    "slug": "remove-duplicates-from-sorted-array",
+    "ncSlug": "remove-duplicates-from-sorted-array",
+    "difficulty": "Easy",
+    "code": "0026-remove-duplicates-from-sorted-array",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Two Sum II Input Array Is Sorted",
+    "category": "Two Pointers",
+    "slug": "two-sum-ii-input-array-is-sorted",
+    "ncSlug": "two-integer-sum-ii",
+    "difficulty": "Medium",
+    "code": "0167-two-sum-ii-input-array-is-sorted",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "3Sum",
+    "category": "Two Pointers",
+    "slug": "3sum",
+    "ncSlug": "three-integer-sum",
+    "difficulty": "Medium",
+    "code": "0015-3sum",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "4Sum",
+    "category": "Two Pointers",
+    "slug": "4sum",
+    "ncSlug": "4sum",
+    "difficulty": "Medium",
+    "code": "0018-4sum",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Rotate Array",
+    "category": "Two Pointers",
+    "slug": "rotate-array",
+    "ncSlug": "rotate-array",
+    "difficulty": "Medium",
+    "code": "0189-rotate-array",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Container With Most Water",
+    "category": "Two Pointers",
+    "slug": "container-with-most-water",
+    "ncSlug": "max-water-container",
+    "difficulty": "Medium",
+    "code": "0011-container-with-most-water",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Boats to Save People",
+    "category": "Two Pointers",
+    "slug": "boats-to-save-people",
+    "ncSlug": "boats-to-save-people",
+    "difficulty": "Medium",
+    "code": "0881-boats-to-save-people",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Trapping Rain Water",
+    "category": "Two Pointers",
+    "slug": "trapping-rain-water",
+    "ncSlug": "trapping-rain-water",
+    "difficulty": "Hard",
+    "code": "0042-trapping-rain-water",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Contains Duplicate II",
+    "category": "Sliding Window",
+    "slug": "contains-duplicate-ii",
+    "ncSlug": "contains-duplicate-ii",
+    "difficulty": "Easy",
+    "code": "0219-contains-duplicate-ii",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Best Time to Buy And Sell Stock",
+    "category": "Sliding Window",
+    "slug": "best-time-to-buy-and-sell-stock",
+    "ncSlug": "buy-and-sell-crypto",
+    "difficulty": "Easy",
+    "code": "0121-best-time-to-buy-and-sell-stock",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Longest Substring Without Repeating Characters",
+    "category": "Sliding Window",
+    "slug": "longest-substring-without-repeating-characters",
+    "ncSlug": "longest-substring-without-duplicates",
+    "difficulty": "Medium",
+    "code": "0003-longest-substring-without-repeating-characters",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Longest Repeating Character Replacement",
+    "category": "Sliding Window",
+    "slug": "longest-repeating-character-replacement",
+    "ncSlug": "longest-repeating-substring-with-replacement",
+    "difficulty": "Medium",
+    "code": "0424-longest-repeating-character-replacement",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Permutation In String",
+    "category": "Sliding Window",
+    "slug": "permutation-in-string",
+    "ncSlug": "permutation-string",
+    "difficulty": "Medium",
+    "code": "0567-permutation-in-string",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Minimum Size Subarray Sum",
+    "category": "Sliding Window",
+    "slug": "minimum-size-subarray-sum",
+    "ncSlug": "minimum-size-subarray-sum",
+    "difficulty": "Medium",
+    "code": "0209-minimum-size-subarray-sum",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Find K Closest Elements",
+    "category": "Sliding Window",
+    "slug": "find-k-closest-elements",
+    "ncSlug": "find-k-closest-elements",
+    "difficulty": "Medium",
+    "code": "0658-find-k-closest-elements",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Minimum Window Substring",
+    "category": "Sliding Window",
+    "slug": "minimum-window-substring",
+    "ncSlug": "minimum-window-with-characters",
+    "difficulty": "Hard",
+    "code": "0076-minimum-window-substring",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Sliding Window Maximum",
+    "category": "Sliding Window",
+    "slug": "sliding-window-maximum",
+    "ncSlug": "sliding-window-maximum",
+    "difficulty": "Hard",
+    "code": "0239-sliding-window-maximum",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Baseball Game",
+    "category": "Stack",
+    "slug": "baseball-game",
+    "ncSlug": "baseball-game",
+    "difficulty": "Easy",
+    "code": "0682-baseball-game",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Valid Parentheses",
+    "category": "Stack",
+    "slug": "valid-parentheses",
+    "ncSlug": "validate-parentheses",
+    "difficulty": "Easy",
+    "code": "0020-valid-parentheses",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Implement Stack Using Queues",
+    "category": "Stack",
+    "slug": "implement-stack-using-queues",
+    "ncSlug": "implement-stack-using-queues",
+    "difficulty": "Easy",
+    "code": "0225-implement-stack-using-queues",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Implement Queue using Stacks",
+    "category": "Stack",
+    "slug": "implement-queue-using-stacks",
+    "ncSlug": "implement-queue-using-stacks",
+    "difficulty": "Easy",
+    "code": "0232-implement-queue-using-stacks",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Min Stack",
+    "category": "Stack",
+    "slug": "min-stack",
+    "ncSlug": "minimum-stack",
+    "difficulty": "Medium",
+    "code": "0155-min-stack",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Evaluate Reverse Polish Notation",
+    "category": "Stack",
+    "slug": "evaluate-reverse-polish-notation",
+    "ncSlug": "evaluate-reverse-polish-notation",
+    "difficulty": "Medium",
+    "code": "0150-evaluate-reverse-polish-notation",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Asteroid Collision",
+    "category": "Stack",
+    "slug": "asteroid-collision",
+    "ncSlug": "asteroid-collision",
+    "difficulty": "Medium",
+    "code": "0735-asteroid-collision",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Daily Temperatures",
+    "category": "Stack",
+    "slug": "daily-temperatures",
+    "ncSlug": "daily-temperatures",
+    "difficulty": "Medium",
+    "code": "0739-daily-temperatures",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Online Stock Span",
+    "category": "Stack",
+    "slug": "online-stock-span",
+    "ncSlug": "online-stock-span",
+    "difficulty": "Medium",
+    "code": "0901-online-stock-span",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Car Fleet",
+    "category": "Stack",
+    "slug": "car-fleet",
+    "ncSlug": "car-fleet",
+    "difficulty": "Medium",
+    "code": "0853-car-fleet",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Simplify Path",
+    "category": "Stack",
+    "slug": "simplify-path",
+    "ncSlug": "simplify-path",
+    "difficulty": "Medium",
+    "code": "0071-simplify-path",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Decode String",
+    "category": "Stack",
+    "slug": "decode-string",
+    "ncSlug": "decode-string",
+    "difficulty": "Medium",
+    "code": "0394-decode-string",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Maximum Frequency Stack",
+    "category": "Stack",
+    "slug": "maximum-frequency-stack",
+    "ncSlug": "maximum-frequency-stack",
+    "difficulty": "Hard",
+    "code": "0895-maximum-frequency-stack",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Largest Rectangle In Histogram",
+    "category": "Stack",
+    "slug": "largest-rectangle-in-histogram",
+    "ncSlug": "largest-rectangle-in-histogram",
+    "difficulty": "Hard",
+    "code": "0084-largest-rectangle-in-histogram",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Binary Search",
+    "category": "Binary Search",
+    "slug": "binary-search",
+    "ncSlug": "binary-search",
+    "difficulty": "Easy",
+    "code": "0704-binary-search",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Search Insert Position",
+    "category": "Binary Search",
+    "slug": "search-insert-position",
+    "ncSlug": "search-insert-position",
+    "difficulty": "Easy",
+    "code": "0035-search-insert-position",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Guess Number Higher Or Lower",
+    "category": "Binary Search",
+    "slug": "guess-number-higher-or-lower",
+    "ncSlug": "guess-number-higher-or-lower",
+    "difficulty": "Easy",
+    "code": "0374-guess-number-higher-or-lower",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Sqrt(x)",
+    "category": "Binary Search",
+    "slug": "sqrtx",
+    "ncSlug": "sqrtx",
+    "difficulty": "Easy",
+    "code": "0069-sqrtx",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Search a 2D Matrix",
+    "category": "Binary Search",
+    "slug": "search-a-2d-matrix",
+    "ncSlug": "search-2d-matrix",
+    "difficulty": "Medium",
+    "code": "0074-search-a-2d-matrix",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Koko Eating Bananas",
+    "category": "Binary Search",
+    "slug": "koko-eating-bananas",
+    "ncSlug": "eating-bananas",
+    "difficulty": "Medium",
+    "code": "0875-koko-eating-bananas",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Capacity to Ship Packages Within D Days",
+    "category": "Binary Search",
+    "slug": "capacity-to-ship-packages-within-d-days",
+    "ncSlug": "capacity-to-ship-packages-within-d-days",
+    "difficulty": "Medium",
+    "code": "1011-capacity-to-ship-packages-within-d-days",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Find Minimum In Rotated Sorted Array",
+    "category": "Binary Search",
+    "slug": "find-minimum-in-rotated-sorted-array",
+    "ncSlug": "find-minimum-in-rotated-sorted-array",
+    "difficulty": "Medium",
+    "code": "0153-find-minimum-in-rotated-sorted-array",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Search In Rotated Sorted Array",
+    "category": "Binary Search",
+    "slug": "search-in-rotated-sorted-array",
+    "ncSlug": "find-target-in-rotated-sorted-array",
+    "difficulty": "Medium",
+    "code": "0033-search-in-rotated-sorted-array",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Search In Rotated Sorted Array II",
+    "category": "Binary Search",
+    "slug": "search-in-rotated-sorted-array-ii",
+    "ncSlug": "search-in-rotated-sorted-array-ii",
+    "difficulty": "Medium",
+    "code": "0081-search-in-rotated-sorted-array-ii",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Time Based Key Value Store",
+    "category": "Binary Search",
+    "slug": "time-based-key-value-store",
+    "ncSlug": "time-based-key-value-store",
+    "difficulty": "Medium",
+    "code": "0981-time-based-key-value-store",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Split Array Largest Sum",
+    "category": "Binary Search",
+    "slug": "split-array-largest-sum",
+    "ncSlug": "split-array-largest-sum",
+    "difficulty": "Hard",
+    "code": "0410-split-array-largest-sum",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Median of Two Sorted Arrays",
+    "category": "Binary Search",
+    "slug": "median-of-two-sorted-arrays",
+    "ncSlug": "median-of-two-sorted-arrays",
+    "difficulty": "Hard",
+    "code": "0004-median-of-two-sorted-arrays",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Find in Mountain Array",
+    "category": "Binary Search",
+    "slug": "find-in-mountain-array",
+    "ncSlug": "find-in-mountain-array",
+    "difficulty": "Hard",
+    "code": "1095-find-in-mountain-array",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Reverse Linked List",
+    "category": "Linked List",
+    "slug": "reverse-linked-list",
+    "ncSlug": "reverse-a-linked-list",
+    "difficulty": "Easy",
+    "code": "0206-reverse-linked-list",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Merge Two Sorted Lists",
+    "category": "Linked List",
+    "slug": "merge-two-sorted-lists",
+    "ncSlug": "merge-two-sorted-linked-lists",
+    "difficulty": "Easy",
+    "code": "0021-merge-two-sorted-lists",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Linked List Cycle",
+    "category": "Linked List",
+    "slug": "linked-list-cycle",
+    "ncSlug": "linked-list-cycle-detection",
+    "difficulty": "Easy",
+    "code": "0141-linked-list-cycle",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Reorder List",
+    "category": "Linked List",
+    "slug": "reorder-list",
+    "ncSlug": "reorder-linked-list",
+    "difficulty": "Medium",
+    "code": "0143-reorder-list",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Remove Nth Node From End of List",
+    "category": "Linked List",
+    "slug": "remove-nth-node-from-end-of-list",
+    "ncSlug": "remove-node-from-end-of-linked-list",
+    "difficulty": "Medium",
+    "code": "0019-remove-nth-node-from-end-of-list",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Copy List With Random Pointer",
+    "category": "Linked List",
+    "slug": "copy-list-with-random-pointer",
+    "ncSlug": "copy-linked-list-with-random-pointer",
+    "difficulty": "Medium",
+    "code": "0138-copy-list-with-random-pointer",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Add Two Numbers",
+    "category": "Linked List",
+    "slug": "add-two-numbers",
+    "ncSlug": "add-two-numbers",
+    "difficulty": "Medium",
+    "code": "0002-add-two-numbers",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Find The Duplicate Number",
+    "category": "Linked List",
+    "slug": "find-the-duplicate-number",
+    "ncSlug": "find-duplicate-integer",
+    "difficulty": "Medium",
+    "code": "0287-find-the-duplicate-number",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Reverse Linked List II",
+    "category": "Linked List",
+    "slug": "reverse-linked-list-ii",
+    "ncSlug": "reverse-linked-list-ii",
+    "difficulty": "Medium",
+    "code": "0092-reverse-linked-list-ii",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Design Circular Queue",
+    "category": "Linked List",
+    "slug": "design-circular-queue",
+    "ncSlug": "design-circular-queue",
+    "difficulty": "Medium",
+    "code": "0622-design-circular-queue",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "LRU Cache",
+    "category": "Linked List",
+    "slug": "lru-cache",
+    "ncSlug": "lru-cache",
+    "difficulty": "Medium",
+    "code": "0146-lru-cache",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "LFU Cache",
+    "category": "Linked List",
+    "slug": "lfu-cache",
+    "ncSlug": "lfu-cache",
+    "difficulty": "Hard",
+    "code": "0460-lfu-cache",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Merge K Sorted Lists",
+    "category": "Linked List",
+    "slug": "merge-k-sorted-lists",
+    "ncSlug": "merge-k-sorted-linked-lists",
+    "difficulty": "Hard",
+    "code": "0023-merge-k-sorted-lists",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Reverse Nodes In K Group",
+    "category": "Linked List",
+    "slug": "reverse-nodes-in-k-group",
+    "ncSlug": "reverse-nodes-in-k-group",
+    "difficulty": "Hard",
+    "code": "0025-reverse-nodes-in-k-group",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Binary Tree Inorder Traversal",
+    "category": "Trees",
+    "slug": "binary-tree-inorder-traversal",
+    "ncSlug": "binary-tree-inorder-traversal",
+    "difficulty": "Easy",
+    "code": "0094-binary-tree-inorder-traversal",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Binary Tree Preorder Traversal",
+    "category": "Trees",
+    "slug": "binary-tree-preorder-traversal",
+    "ncSlug": "binary-tree-preorder-traversal",
+    "difficulty": "Easy",
+    "code": "0144-binary-tree-preorder-traversal",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Binary Tree Postorder Traversal",
+    "category": "Trees",
+    "slug": "binary-tree-postorder-traversal",
+    "ncSlug": "binary-tree-postorder-traversal",
+    "difficulty": "Easy",
+    "code": "0145-binary-tree-postorder-traversal",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Invert Binary Tree",
+    "category": "Trees",
+    "slug": "invert-binary-tree",
+    "ncSlug": "invert-a-binary-tree",
+    "difficulty": "Easy",
+    "code": "0226-invert-binary-tree",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Maximum Depth of Binary Tree",
+    "category": "Trees",
+    "slug": "maximum-depth-of-binary-tree",
+    "ncSlug": "depth-of-binary-tree",
+    "difficulty": "Easy",
+    "code": "0104-maximum-depth-of-binary-tree",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Diameter of Binary Tree",
+    "category": "Trees",
+    "slug": "diameter-of-binary-tree",
+    "ncSlug": "binary-tree-diameter",
+    "difficulty": "Easy",
+    "code": "0543-diameter-of-binary-tree",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Balanced Binary Tree",
+    "category": "Trees",
+    "slug": "balanced-binary-tree",
+    "ncSlug": "balanced-binary-tree",
+    "difficulty": "Easy",
+    "code": "0110-balanced-binary-tree",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Same Tree",
+    "category": "Trees",
+    "slug": "same-tree",
+    "ncSlug": "same-binary-tree",
+    "difficulty": "Easy",
+    "code": "0100-same-tree",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Subtree of Another Tree",
+    "category": "Trees",
+    "slug": "subtree-of-another-tree",
+    "ncSlug": "subtree-of-a-binary-tree",
+    "difficulty": "Easy",
+    "code": "0572-subtree-of-another-tree",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Lowest Common Ancestor of a Binary Search Tree",
+    "category": "Trees",
+    "slug": "lowest-common-ancestor-of-a-binary-search-tree",
+    "ncSlug": "lowest-common-ancestor-in-binary-search-tree",
+    "difficulty": "Medium",
+    "code": "0235-lowest-common-ancestor-of-a-binary-search-tree",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Insert into a Binary Search Tree",
+    "category": "Trees",
+    "slug": "insert-into-a-binary-search-tree",
+    "ncSlug": "insert-into-a-binary-search-tree",
+    "difficulty": "Medium",
+    "code": "0701-insert-into-a-binary-search-tree",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Delete Node in a BST",
+    "category": "Trees",
+    "slug": "delete-node-in-a-bst",
+    "ncSlug": "delete-node-in-a-bst",
+    "difficulty": "Medium",
+    "code": "0450-delete-node-in-a-bst",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Binary Tree Level Order Traversal",
+    "category": "Trees",
+    "slug": "binary-tree-level-order-traversal",
+    "ncSlug": "level-order-traversal-of-binary-tree",
+    "difficulty": "Medium",
+    "code": "0102-binary-tree-level-order-traversal",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Binary Tree Right Side View",
+    "category": "Trees",
+    "slug": "binary-tree-right-side-view",
+    "ncSlug": "binary-tree-right-side-view",
+    "difficulty": "Medium",
+    "code": "0199-binary-tree-right-side-view",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Construct Quad Tree",
+    "category": "Trees",
+    "slug": "construct-quad-tree",
+    "ncSlug": "construct-quad-tree",
+    "difficulty": "Medium",
+    "code": "0427-construct-quad-tree",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Count Good Nodes In Binary Tree",
+    "category": "Trees",
+    "slug": "count-good-nodes-in-binary-tree",
+    "ncSlug": "count-good-nodes-in-binary-tree",
+    "difficulty": "Medium",
+    "code": "1448-count-good-nodes-in-binary-tree",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Validate Binary Search Tree",
+    "category": "Trees",
+    "slug": "validate-binary-search-tree",
+    "ncSlug": "valid-binary-search-tree",
+    "difficulty": "Medium",
+    "code": "0098-validate-binary-search-tree",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Kth Smallest Element In a Bst",
+    "category": "Trees",
+    "slug": "kth-smallest-element-in-a-bst",
+    "ncSlug": "kth-smallest-integer-in-bst",
+    "difficulty": "Medium",
+    "code": "0230-kth-smallest-element-in-a-bst",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Construct Binary Tree From Preorder And Inorder Traversal",
+    "category": "Trees",
+    "slug": "construct-binary-tree-from-preorder-and-inorder-traversal",
+    "ncSlug": "binary-tree-from-preorder-and-inorder-traversal",
+    "difficulty": "Medium",
+    "code": "0105-construct-binary-tree-from-preorder-and-inorder-traversal",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "House Robber III",
+    "category": "Trees",
+    "slug": "house-robber-iii",
+    "ncSlug": "house-robber-iii",
+    "difficulty": "Medium",
+    "code": "0337-house-robber-iii",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Delete Leaves With a Given Value",
+    "category": "Trees",
+    "slug": "delete-leaves-with-a-given-value",
+    "ncSlug": "delete-leaves-with-a-given-value",
+    "difficulty": "Medium",
+    "code": "1325-delete-leaves-with-a-given-value",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Binary Tree Maximum Path Sum",
+    "category": "Trees",
+    "slug": "binary-tree-maximum-path-sum",
+    "ncSlug": "binary-tree-maximum-path-sum",
+    "difficulty": "Hard",
+    "code": "0124-binary-tree-maximum-path-sum",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Serialize And Deserialize Binary Tree",
+    "category": "Trees",
+    "slug": "serialize-and-deserialize-binary-tree",
+    "ncSlug": "serialize-and-deserialize-binary-tree",
+    "difficulty": "Hard",
+    "code": "0297-serialize-and-deserialize-binary-tree",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Kth Largest Element In a Stream",
+    "category": "Heap / Priority Queue",
+    "slug": "kth-largest-element-in-a-stream",
+    "ncSlug": "kth-largest-integer-in-a-stream",
+    "difficulty": "Easy",
+    "code": "0703-kth-largest-element-in-a-stream",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Last Stone Weight",
+    "category": "Heap / Priority Queue",
+    "slug": "last-stone-weight",
+    "ncSlug": "last-stone-weight",
+    "difficulty": "Easy",
+    "code": "1046-last-stone-weight",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "K Closest Points to Origin",
+    "category": "Heap / Priority Queue",
+    "slug": "k-closest-points-to-origin",
+    "ncSlug": "k-closest-points-to-origin",
+    "difficulty": "Medium",
+    "code": "0973-k-closest-points-to-origin",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Kth Largest Element In An Array",
+    "category": "Heap / Priority Queue",
+    "slug": "kth-largest-element-in-an-array",
+    "ncSlug": "kth-largest-element-in-an-array",
+    "difficulty": "Medium",
+    "code": "0215-kth-largest-element-in-an-array",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Task Scheduler",
+    "category": "Heap / Priority Queue",
+    "slug": "task-scheduler",
+    "ncSlug": "task-scheduling",
+    "difficulty": "Medium",
+    "code": "0621-task-scheduler",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Design Twitter",
+    "category": "Heap / Priority Queue",
+    "slug": "design-twitter",
+    "ncSlug": "design-twitter-feed",
+    "difficulty": "Medium",
+    "code": "0355-design-twitter",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Single Threaded CPU",
+    "category": "Heap / Priority Queue",
+    "slug": "single-threaded-cpu",
+    "ncSlug": "single-threaded-cpu",
+    "difficulty": "Medium",
+    "code": "1834-single-threaded-cpu",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Reorganize String",
+    "category": "Heap / Priority Queue",
+    "slug": "reorganize-string",
+    "ncSlug": "reorganize-string",
+    "difficulty": "Medium",
+    "code": "0767-reorganize-string",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Longest Happy String",
+    "category": "Heap / Priority Queue",
+    "slug": "longest-happy-string",
+    "ncSlug": "longest-happy-string",
+    "difficulty": "Medium",
+    "code": "1405-longest-happy-string",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Car Pooling",
+    "category": "Heap / Priority Queue",
+    "slug": "car-pooling",
+    "ncSlug": "car-pooling",
+    "difficulty": "Medium",
+    "code": "1094-car-pooling",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Find Median From Data Stream",
+    "category": "Heap / Priority Queue",
+    "slug": "find-median-from-data-stream",
+    "ncSlug": "find-median-in-a-data-stream",
+    "difficulty": "Hard",
+    "code": "0295-find-median-from-data-stream",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "IPO",
+    "category": "Heap / Priority Queue",
+    "slug": "ipo",
+    "ncSlug": "ipo",
+    "difficulty": "Hard",
+    "code": "0502-ipo",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Sum of All Subsets XOR Total",
+    "category": "Backtracking",
+    "slug": "sum-of-all-subset-xor-totals",
+    "ncSlug": "sum-of-all-subset-xor-totals",
+    "difficulty": "Easy",
+    "code": "1863-sum-of-all-subset-xor-totals",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Subsets",
+    "category": "Backtracking",
+    "slug": "subsets",
+    "ncSlug": "subsets",
+    "difficulty": "Medium",
+    "code": "0078-subsets",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Combination Sum",
+    "category": "Backtracking",
+    "slug": "combination-sum",
+    "ncSlug": "combination-target-sum",
+    "difficulty": "Medium",
+    "code": "0039-combination-sum",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Combination Sum II",
+    "category": "Backtracking",
+    "slug": "combination-sum-ii",
+    "ncSlug": "combination-target-sum-ii",
+    "difficulty": "Medium",
+    "code": "0040-combination-sum-ii",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Combinations",
+    "category": "Backtracking",
+    "slug": "combinations",
+    "ncSlug": "combinations",
+    "difficulty": "Medium",
+    "code": "0077-combinations",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Permutations",
+    "category": "Backtracking",
+    "slug": "permutations",
+    "ncSlug": "permutations",
+    "difficulty": "Medium",
+    "code": "0046-permutations",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Subsets II",
+    "category": "Backtracking",
+    "slug": "subsets-ii",
+    "ncSlug": "subsets-ii",
+    "difficulty": "Medium",
+    "code": "0090-subsets-ii",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Permutations II",
+    "category": "Backtracking",
+    "slug": "permutations-ii",
+    "ncSlug": "permutations-ii",
+    "difficulty": "Medium",
+    "code": "0047-permutations-ii",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Generate Parentheses",
+    "category": "Backtracking",
+    "slug": "generate-parentheses",
+    "ncSlug": "generate-parentheses",
+    "difficulty": "Medium",
+    "code": "0022-generate-parentheses",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Word Search",
+    "category": "Backtracking",
+    "slug": "word-search",
+    "ncSlug": "search-for-word",
+    "difficulty": "Medium",
+    "code": "0079-word-search",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Palindrome Partitioning",
+    "category": "Backtracking",
+    "slug": "palindrome-partitioning",
+    "ncSlug": "palindrome-partitioning",
+    "difficulty": "Medium",
+    "code": "0131-palindrome-partitioning",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Letter Combinations of a Phone Number",
+    "category": "Backtracking",
+    "slug": "letter-combinations-of-a-phone-number",
+    "ncSlug": "combinations-of-a-phone-number",
+    "difficulty": "Medium",
+    "code": "0017-letter-combinations-of-a-phone-number",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Matchsticks to Square",
+    "category": "Backtracking",
+    "slug": "matchsticks-to-square",
+    "ncSlug": "matchsticks-to-square",
+    "difficulty": "Medium",
+    "code": "0473-matchsticks-to-square",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Partition to K Equal Sum Subsets",
+    "category": "Backtracking",
+    "slug": "partition-to-k-equal-sum-subsets",
+    "ncSlug": "partition-to-k-equal-sum-subsets",
+    "difficulty": "Medium",
+    "code": "0698-partition-to-k-equal-sum-subsets",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "N Queens",
+    "category": "Backtracking",
+    "slug": "n-queens",
+    "ncSlug": "n-queens",
+    "difficulty": "Hard",
+    "code": "0051-n-queens",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "N Queens II",
+    "category": "Backtracking",
+    "slug": "n-queens-ii",
+    "ncSlug": "n-queens-ii",
+    "difficulty": "Hard",
+    "code": "0052-n-queens-ii",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Word Break II",
+    "category": "Backtracking",
+    "slug": "word-break-ii",
+    "ncSlug": "word-break-ii",
+    "difficulty": "Hard",
+    "code": "0140-word-break-ii",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Implement Trie Prefix Tree",
+    "category": "Tries",
+    "slug": "implement-trie-prefix-tree",
+    "ncSlug": "implement-prefix-tree",
+    "difficulty": "Medium",
+    "code": "0208-implement-trie-prefix-tree",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Design Add And Search Words Data Structure",
+    "category": "Tries",
+    "slug": "design-add-and-search-words-data-structure",
+    "ncSlug": "design-word-search-data-structure",
+    "difficulty": "Medium",
+    "code": "0211-design-add-and-search-words-data-structure",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Extra Characters in a String",
+    "category": "Tries",
+    "slug": "extra-characters-in-a-string",
+    "ncSlug": "extra-characters-in-a-string",
+    "difficulty": "Medium",
+    "code": "2707-extra-characters-in-a-string",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Word Search II",
+    "category": "Tries",
+    "slug": "word-search-ii",
+    "ncSlug": "search-for-word-ii",
+    "difficulty": "Hard",
+    "code": "0212-word-search-ii",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Island Perimeter",
+    "category": "Graphs",
+    "slug": "island-perimeter",
+    "ncSlug": "island-perimeter",
+    "difficulty": "Easy",
+    "code": "0463-island-perimeter",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Verifying An Alien Dictionary",
+    "category": "Graphs",
+    "slug": "verifying-an-alien-dictionary",
+    "ncSlug": "verifying-an-alien-dictionary",
+    "difficulty": "Easy",
+    "code": "0953-verifying-an-alien-dictionary",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Find the Town Judge",
+    "category": "Graphs",
+    "slug": "find-the-town-judge",
+    "ncSlug": "find-the-town-judge",
+    "difficulty": "Easy",
+    "code": "0997-find-the-town-judge",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Number of Islands",
+    "category": "Graphs",
+    "slug": "number-of-islands",
+    "ncSlug": "count-number-of-islands",
+    "difficulty": "Medium",
+    "code": "0200-number-of-islands",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Max Area of Island",
+    "category": "Graphs",
+    "slug": "max-area-of-island",
+    "ncSlug": "max-area-of-island",
+    "difficulty": "Medium",
+    "code": "0695-max-area-of-island",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Clone Graph",
+    "category": "Graphs",
+    "slug": "clone-graph",
+    "ncSlug": "clone-graph",
+    "difficulty": "Medium",
+    "code": "0133-clone-graph",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Walls And Gates",
+    "category": "Graphs",
+    "slug": "walls-and-gates",
+    "ncSlug": "islands-and-treasure",
+    "difficulty": "Medium",
+    "code": "0286-walls-and-gates",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Rotting Oranges",
+    "category": "Graphs",
+    "slug": "rotting-oranges",
+    "ncSlug": "rotting-fruit",
+    "difficulty": "Medium",
+    "code": "0994-rotting-oranges",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Pacific Atlantic Water Flow",
+    "category": "Graphs",
+    "slug": "pacific-atlantic-water-flow",
+    "ncSlug": "pacific-atlantic-water-flow",
+    "difficulty": "Medium",
+    "code": "0417-pacific-atlantic-water-flow",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Surrounded Regions",
+    "category": "Graphs",
+    "slug": "surrounded-regions",
+    "ncSlug": "surrounded-regions",
+    "difficulty": "Medium",
+    "code": "0130-surrounded-regions",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Open The Lock",
+    "category": "Graphs",
+    "slug": "open-the-lock",
+    "ncSlug": "open-the-lock",
+    "difficulty": "Medium",
+    "code": "0752-open-the-lock",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Course Schedule",
+    "category": "Graphs",
+    "slug": "course-schedule",
+    "ncSlug": "course-schedule",
+    "difficulty": "Medium",
+    "code": "0207-course-schedule",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Course Schedule II",
+    "category": "Graphs",
+    "slug": "course-schedule-ii",
+    "ncSlug": "course-schedule-ii",
+    "difficulty": "Medium",
+    "code": "0210-course-schedule-ii",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Graph Valid Tree",
+    "category": "Graphs",
+    "slug": "graph-valid-tree",
+    "ncSlug": "valid-tree",
+    "difficulty": "Medium",
+    "code": "0261-graph-valid-tree",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Course Schedule IV",
+    "category": "Graphs",
+    "slug": "course-schedule-iv",
+    "ncSlug": "course-schedule-iv",
+    "difficulty": "Medium",
+    "code": "1462-course-schedule-iv",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Number of Connected Components In An Undirected Graph",
+    "category": "Graphs",
+    "slug": "number-of-connected-components-in-an-undirected-graph",
+    "ncSlug": "count-connected-components",
+    "difficulty": "Medium",
+    "code": "0323-number-of-connected-components-in-an-undirected-graph",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Redundant Connection",
+    "category": "Graphs",
+    "slug": "redundant-connection",
+    "ncSlug": "redundant-connection",
+    "difficulty": "Medium",
+    "code": "0684-redundant-connection",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Accounts Merge",
+    "category": "Graphs",
+    "slug": "accounts-merge",
+    "ncSlug": "accounts-merge",
+    "difficulty": "Medium",
+    "code": "0721-accounts-merge",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Evaluate Division",
+    "category": "Graphs",
+    "slug": "evaluate-division",
+    "ncSlug": "evaluate-division",
+    "difficulty": "Medium",
+    "code": "0399-evaluate-division",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Minimum Height Trees",
+    "category": "Graphs",
+    "slug": "minimum-height-trees",
+    "ncSlug": "minimum-height-trees",
+    "difficulty": "Medium",
+    "code": "0310-minimum-height-trees",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Word Ladder",
+    "category": "Graphs",
+    "slug": "word-ladder",
+    "ncSlug": "word-ladder",
+    "difficulty": "Hard",
+    "code": "0127-word-ladder",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Path with Minimum Effort",
+    "category": "Advanced Graphs",
+    "slug": "path-with-minimum-effort",
+    "ncSlug": "path-with-minimum-effort",
+    "difficulty": "Medium",
+    "code": "1631-path-with-minimum-effort",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Network Delay Time",
+    "category": "Advanced Graphs",
+    "slug": "network-delay-time",
+    "ncSlug": "network-delay-time",
+    "difficulty": "Medium",
+    "code": "0743-network-delay-time",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Reconstruct Itinerary",
+    "category": "Advanced Graphs",
+    "slug": "reconstruct-itinerary",
+    "ncSlug": "reconstruct-flight-path",
+    "difficulty": "Hard",
+    "code": "0332-reconstruct-itinerary",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Min Cost to Connect All Points",
+    "category": "Advanced Graphs",
+    "slug": "min-cost-to-connect-all-points",
+    "ncSlug": "min-cost-to-connect-points",
+    "difficulty": "Medium",
+    "code": "1584-min-cost-to-connect-all-points",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Swim In Rising Water",
+    "category": "Advanced Graphs",
+    "slug": "swim-in-rising-water",
+    "ncSlug": "swim-in-rising-water",
+    "difficulty": "Hard",
+    "code": "0778-swim-in-rising-water",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Alien Dictionary",
+    "category": "Advanced Graphs",
+    "slug": "alien-dictionary",
+    "ncSlug": "foreign-dictionary",
+    "difficulty": "Hard",
+    "code": "0269-alien-dictionary",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Cheapest Flights Within K Stops",
+    "category": "Advanced Graphs",
+    "slug": "cheapest-flights-within-k-stops",
+    "ncSlug": "cheapest-flight-path",
+    "difficulty": "Medium",
+    "code": "0787-cheapest-flights-within-k-stops",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Find Critical and Pseudo Critical Edges in Minimum Spanning Tree",
+    "category": "Advanced Graphs",
+    "slug": "find-critical-and-pseudo-critical-edges-in-minimum-spanning-tree",
+    "ncSlug": "find-critical-and-pseudo-critical-edges-in-minimum-spanning-tree",
+    "difficulty": "Hard",
+    "code": "1489-find-critical-and-pseudo-critical-edges-in-minimum-spanning-tree",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Build a Matrix With Conditions",
+    "category": "Advanced Graphs",
+    "slug": "build-a-matrix-with-conditions",
+    "ncSlug": "build-a-matrix-with-conditions",
+    "difficulty": "Hard",
+    "code": "2392-build-a-matrix-with-conditions",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Greatest Common Divisor Traversal",
+    "category": "Advanced Graphs",
+    "slug": "greatest-common-divisor-traversal",
+    "ncSlug": "greatest-common-divisor-traversal",
+    "difficulty": "Hard",
+    "code": "2709-greatest-common-divisor-traversal",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Climbing Stairs",
+    "category": "1-D Dynamic Programming",
+    "slug": "climbing-stairs",
+    "ncSlug": "climbing-stairs",
+    "difficulty": "Easy",
+    "code": "0070-climbing-stairs",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Min Cost Climbing Stairs",
+    "category": "1-D Dynamic Programming",
+    "slug": "min-cost-climbing-stairs",
+    "ncSlug": "min-cost-climbing-stairs",
+    "difficulty": "Easy",
+    "code": "0746-min-cost-climbing-stairs",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "N-th Tribonacci Number",
+    "category": "1-D Dynamic Programming",
+    "slug": "n-th-tribonacci-number",
+    "ncSlug": "n-th-tribonacci-number",
+    "difficulty": "Easy",
+    "code": "1137-n-th-tribonacci-number",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "House Robber",
+    "category": "1-D Dynamic Programming",
+    "slug": "house-robber",
+    "ncSlug": "house-robber",
+    "difficulty": "Medium",
+    "code": "0198-house-robber",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "House Robber II",
+    "category": "1-D Dynamic Programming",
+    "slug": "house-robber-ii",
+    "ncSlug": "house-robber-ii",
+    "difficulty": "Medium",
+    "code": "0213-house-robber-ii",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Longest Palindromic Substring",
+    "category": "1-D Dynamic Programming",
+    "slug": "longest-palindromic-substring",
+    "ncSlug": "longest-palindromic-substring",
+    "difficulty": "Medium",
+    "code": "0005-longest-palindromic-substring",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Palindromic Substrings",
+    "category": "1-D Dynamic Programming",
+    "slug": "palindromic-substrings",
+    "ncSlug": "palindromic-substrings",
+    "difficulty": "Medium",
+    "code": "0647-palindromic-substrings",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Decode Ways",
+    "category": "1-D Dynamic Programming",
+    "slug": "decode-ways",
+    "ncSlug": "decode-ways",
+    "difficulty": "Medium",
+    "code": "0091-decode-ways",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Coin Change",
+    "category": "1-D Dynamic Programming",
+    "slug": "coin-change",
+    "ncSlug": "coin-change",
+    "difficulty": "Medium",
+    "code": "0322-coin-change",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Maximum Product Subarray",
+    "category": "1-D Dynamic Programming",
+    "slug": "maximum-product-subarray",
+    "ncSlug": "maximum-product-subarray",
+    "difficulty": "Medium",
+    "code": "0152-maximum-product-subarray",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Word Break",
+    "category": "1-D Dynamic Programming",
+    "slug": "word-break",
+    "ncSlug": "word-break",
+    "difficulty": "Medium",
+    "code": "0139-word-break",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Longest Increasing Subsequence",
+    "category": "1-D Dynamic Programming",
+    "slug": "longest-increasing-subsequence",
+    "ncSlug": "longest-increasing-subsequence",
+    "difficulty": "Medium",
+    "code": "0300-longest-increasing-subsequence",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Partition Equal Subset Sum",
+    "category": "1-D Dynamic Programming",
+    "slug": "partition-equal-subset-sum",
+    "ncSlug": "partition-equal-subset-sum",
+    "difficulty": "Medium",
+    "code": "0416-partition-equal-subset-sum",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Combination Sum IV",
+    "category": "1-D Dynamic Programming",
+    "slug": "combination-sum-iv",
+    "ncSlug": "combination-sum-iv",
+    "difficulty": "Medium",
+    "code": "0377-combination-sum-iv",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Perfect Squares",
+    "category": "1-D Dynamic Programming",
+    "slug": "perfect-squares",
+    "ncSlug": "perfect-squares",
+    "difficulty": "Medium",
+    "code": "0279-perfect-squares",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Integer Break",
+    "category": "1-D Dynamic Programming",
+    "slug": "integer-break",
+    "ncSlug": "integer-break",
+    "difficulty": "Medium",
+    "code": "0343-integer-break",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Stone Game III",
+    "category": "1-D Dynamic Programming",
+    "slug": "stone-game-iii",
+    "ncSlug": "stone-game-iii",
+    "difficulty": "Hard",
+    "code": "1406-stone-game-iii",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Unique Paths",
+    "category": "2-D Dynamic Programming",
+    "slug": "unique-paths",
+    "ncSlug": "count-paths",
+    "difficulty": "Medium",
+    "code": "0062-unique-paths",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Unique Paths II",
+    "category": "2-D Dynamic Programming",
+    "slug": "unique-paths-ii",
+    "ncSlug": "unique-paths-ii",
+    "difficulty": "Medium",
+    "code": "0063-unique-paths-ii",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Minimum Path Sum",
+    "category": "2-D Dynamic Programming",
+    "slug": "minimum-path-sum",
+    "ncSlug": "minimum-path-sum",
+    "difficulty": "Medium",
+    "code": "0064-minimum-path-sum",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Longest Common Subsequence",
+    "category": "2-D Dynamic Programming",
+    "slug": "longest-common-subsequence",
+    "ncSlug": "longest-common-subsequence",
+    "difficulty": "Medium",
+    "code": "1143-longest-common-subsequence",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Last Stone Weight II",
+    "category": "2-D Dynamic Programming",
+    "slug": "last-stone-weight-ii",
+    "ncSlug": "last-stone-weight-ii",
+    "difficulty": "Medium",
+    "code": "1049-last-stone-weight-ii",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Best Time to Buy And Sell Stock With Cooldown",
+    "category": "2-D Dynamic Programming",
+    "slug": "best-time-to-buy-and-sell-stock-with-cooldown",
+    "ncSlug": "buy-and-sell-crypto-with-cooldown",
+    "difficulty": "Medium",
+    "code": "0309-best-time-to-buy-and-sell-stock-with-cooldown",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Coin Change II",
+    "category": "2-D Dynamic Programming",
+    "slug": "coin-change-ii",
+    "ncSlug": "coin-change-ii",
+    "difficulty": "Medium",
+    "code": "0518-coin-change-ii",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Target Sum",
+    "category": "2-D Dynamic Programming",
+    "slug": "target-sum",
+    "ncSlug": "target-sum",
+    "difficulty": "Medium",
+    "code": "0494-target-sum",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Interleaving String",
+    "category": "2-D Dynamic Programming",
+    "slug": "interleaving-string",
+    "ncSlug": "interleaving-string",
+    "difficulty": "Medium",
+    "code": "0097-interleaving-string",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Stone Game",
+    "category": "2-D Dynamic Programming",
+    "slug": "stone-game",
+    "ncSlug": "stone-game",
+    "difficulty": "Medium",
+    "code": "0877-stone-game",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Stone Game II",
+    "category": "2-D Dynamic Programming",
+    "slug": "stone-game-ii",
+    "ncSlug": "stone-game-ii",
+    "difficulty": "Medium",
+    "code": "1140-stone-game-ii",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Longest Increasing Path In a Matrix",
+    "category": "2-D Dynamic Programming",
+    "slug": "longest-increasing-path-in-a-matrix",
+    "ncSlug": "longest-increasing-path-in-matrix",
+    "difficulty": "Hard",
+    "code": "0329-longest-increasing-path-in-a-matrix",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Distinct Subsequences",
+    "category": "2-D Dynamic Programming",
+    "slug": "distinct-subsequences",
+    "ncSlug": "count-subsequences",
+    "difficulty": "Hard",
+    "code": "0115-distinct-subsequences",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Edit Distance",
+    "category": "2-D Dynamic Programming",
+    "slug": "edit-distance",
+    "ncSlug": "edit-distance",
+    "difficulty": "Medium",
+    "code": "0072-edit-distance",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Burst Balloons",
+    "category": "2-D Dynamic Programming",
+    "slug": "burst-balloons",
+    "ncSlug": "burst-balloons",
+    "difficulty": "Hard",
+    "code": "0312-burst-balloons",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Regular Expression Matching",
+    "category": "2-D Dynamic Programming",
+    "slug": "regular-expression-matching",
+    "ncSlug": "regular-expression-matching",
+    "difficulty": "Hard",
+    "code": "0010-regular-expression-matching",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Lemonade Change",
+    "category": "Greedy",
+    "slug": "lemonade-change",
+    "ncSlug": "lemonade-change",
+    "difficulty": "Easy",
+    "code": "860-lemonade-change",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Maximum Subarray",
+    "category": "Greedy",
+    "slug": "maximum-subarray",
+    "ncSlug": "maximum-subarray",
+    "difficulty": "Medium",
+    "code": "0053-maximum-subarray",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Maximum Sum Circular Subarray",
+    "category": "Greedy",
+    "slug": "maximum-sum-circular-subarray",
+    "ncSlug": "maximum-sum-circular-subarray",
+    "difficulty": "Medium",
+    "code": "0918-maximum-sum-circular-subarray",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Longest Turbulent Subarray",
+    "category": "Greedy",
+    "slug": "longest-turbulent-subarray",
+    "ncSlug": "longest-turbulent-subarray",
+    "difficulty": "Medium",
+    "code": "0978-longest-turbulent-subarray",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Jump Game",
+    "category": "Greedy",
+    "slug": "jump-game",
+    "ncSlug": "jump-game",
+    "difficulty": "Medium",
+    "code": "0055-jump-game",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Jump Game II",
+    "category": "Greedy",
+    "slug": "jump-game-ii",
+    "ncSlug": "jump-game-ii",
+    "difficulty": "Medium",
+    "code": "0045-jump-game-ii",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Jump Game VII",
+    "category": "Greedy",
+    "slug": "jump-game-vii",
+    "ncSlug": "jump-game-vii",
+    "difficulty": "Medium",
+    "code": "1871-jump-game-vii",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Gas Station",
+    "category": "Greedy",
+    "slug": "gas-station",
+    "ncSlug": "gas-station",
+    "difficulty": "Medium",
+    "code": "0134-gas-station",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Hand of Straights",
+    "category": "Greedy",
+    "slug": "hand-of-straights",
+    "ncSlug": "hand-of-straights",
+    "difficulty": "Medium",
+    "code": "0846-hand-of-straights",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Dota2 Senate",
+    "category": "Greedy",
+    "slug": "dota2-senate",
+    "ncSlug": "dota2-senate",
+    "difficulty": "Medium",
+    "code": "0649-dota2-senate",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Merge Triplets to Form Target Triplet",
+    "category": "Greedy",
+    "slug": "merge-triplets-to-form-target-triplet",
+    "ncSlug": "merge-triplets-to-form-target",
+    "difficulty": "Medium",
+    "code": "1899-merge-triplets-to-form-target-triplet",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Partition Labels",
+    "category": "Greedy",
+    "slug": "partition-labels",
+    "ncSlug": "partition-labels",
+    "difficulty": "Medium",
+    "code": "0763-partition-labels",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Valid Parenthesis String",
+    "category": "Greedy",
+    "slug": "valid-parenthesis-string",
+    "ncSlug": "valid-parenthesis-string",
+    "difficulty": "Medium",
+    "code": "0678-valid-parenthesis-string",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Candy",
+    "category": "Greedy",
+    "slug": "candy",
+    "ncSlug": "candy",
+    "difficulty": "Hard",
+    "code": "135-candy",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Insert Interval",
+    "category": "Intervals",
+    "slug": "insert-interval",
+    "ncSlug": "insert-new-interval",
+    "difficulty": "Medium",
+    "code": "0057-insert-interval",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Merge Intervals",
+    "category": "Intervals",
+    "slug": "merge-intervals",
+    "ncSlug": "merge-intervals",
+    "difficulty": "Medium",
+    "code": "0056-merge-intervals",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Non Overlapping Intervals",
+    "category": "Intervals",
+    "slug": "non-overlapping-intervals",
+    "ncSlug": "non-overlapping-intervals",
+    "difficulty": "Medium",
+    "code": "0435-non-overlapping-intervals",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Meeting Rooms",
+    "category": "Intervals",
+    "slug": "meeting-rooms",
+    "ncSlug": "meeting-schedule",
+    "difficulty": "Easy",
+    "code": "0252-meeting-rooms",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Meeting Rooms II",
+    "category": "Intervals",
+    "slug": "meeting-rooms-ii",
+    "ncSlug": "meeting-schedule-ii",
+    "difficulty": "Medium",
+    "code": "0253-meeting-rooms-ii",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Meeting Rooms III",
+    "category": "Intervals",
+    "slug": "meeting-rooms-iii",
+    "ncSlug": "meeting-rooms-iii",
+    "difficulty": "Hard",
+    "code": "2402-meeting-rooms-iii",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Minimum Interval to Include Each Query",
+    "category": "Intervals",
+    "slug": "minimum-interval-to-include-each-query",
+    "ncSlug": "minimum-interval-including-query",
+    "difficulty": "Hard",
+    "code": "1851-minimum-interval-to-include-each-query",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Excel Sheet Column Title",
+    "category": "Math & Geometry",
+    "slug": "excel-sheet-column-title",
+    "ncSlug": "excel-sheet-column-title",
+    "difficulty": "Easy",
+    "code": "0168-excel-sheet-column-title",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Greatest Common Divisor of Strings",
+    "category": "Math & Geometry",
+    "slug": "greatest-common-divisor-of-strings",
+    "ncSlug": "greatest-common-divisor-of-strings",
+    "difficulty": "Easy",
+    "code": "1071-greatest-common-divisor-of-strings",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Insert Greatest Common Divisors in Linked List",
+    "category": "Math & Geometry",
+    "slug": "insert-greatest-common-divisors-in-linked-list",
+    "ncSlug": "insert-greatest-common-divisors-in-linked-list",
+    "difficulty": "Medium",
+    "code": "2807-insert-greatest-common-divisors-in-linked-list",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Transpose Matrix",
+    "category": "Math & Geometry",
+    "slug": "transpose-matrix",
+    "ncSlug": "transpose-matrix",
+    "difficulty": "Easy",
+    "code": "0867-transpose-matrix",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Rotate Image",
+    "category": "Math & Geometry",
+    "slug": "rotate-image",
+    "ncSlug": "rotate-matrix",
+    "difficulty": "Medium",
+    "code": "0048-rotate-image",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Spiral Matrix",
+    "category": "Math & Geometry",
+    "slug": "spiral-matrix",
+    "ncSlug": "spiral-matrix",
+    "difficulty": "Medium",
+    "code": "0054-spiral-matrix",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Set Matrix Zeroes",
+    "category": "Math & Geometry",
+    "slug": "set-matrix-zeroes",
+    "ncSlug": "set-zeroes-in-matrix",
+    "difficulty": "Medium",
+    "code": "0073-set-matrix-zeroes",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Happy Number",
+    "category": "Math & Geometry",
+    "slug": "happy-number",
+    "ncSlug": "non-cyclical-number",
+    "difficulty": "Easy",
+    "code": "0202-happy-number",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Plus One",
+    "category": "Math & Geometry",
+    "slug": "plus-one",
+    "ncSlug": "plus-one",
+    "difficulty": "Easy",
+    "code": "0066-plus-one",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Roman to Integer",
+    "category": "Math & Geometry",
+    "slug": "roman-to-integer",
+    "ncSlug": "roman-to-integer",
+    "difficulty": "Easy",
+    "code": "0013-roman-to-integer",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Pow(x, n)",
+    "category": "Math & Geometry",
+    "slug": "powx-n",
+    "ncSlug": "pow-x-n",
+    "difficulty": "Medium",
+    "code": "0050-powx-n",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Multiply Strings",
+    "category": "Math & Geometry",
+    "slug": "multiply-strings",
+    "ncSlug": "multiply-strings",
+    "difficulty": "Medium",
+    "code": "0043-multiply-strings",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Detect Squares",
+    "category": "Math & Geometry",
+    "slug": "detect-squares",
+    "ncSlug": "count-squares",
+    "difficulty": "Medium",
+    "code": "2013-detect-squares",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Single Number",
+    "category": "Bit Manipulation",
+    "slug": "single-number",
+    "ncSlug": "single-number",
+    "difficulty": "Easy",
+    "code": "0136-single-number",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Number of 1 Bits",
+    "category": "Bit Manipulation",
+    "slug": "number-of-1-bits",
+    "ncSlug": "number-of-one-bits",
+    "difficulty": "Easy",
+    "code": "0191-number-of-1-bits",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Counting Bits",
+    "category": "Bit Manipulation",
+    "slug": "counting-bits",
+    "ncSlug": "counting-bits",
+    "difficulty": "Easy",
+    "code": "0338-counting-bits",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Add Binary",
+    "category": "Bit Manipulation",
+    "slug": "add-binary",
+    "ncSlug": "add-binary",
+    "difficulty": "Easy",
+    "code": "0067-add-binary",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Reverse Bits",
+    "category": "Bit Manipulation",
+    "slug": "reverse-bits",
+    "ncSlug": "reverse-bits",
+    "difficulty": "Easy",
+    "code": "0190-reverse-bits",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Missing Number",
+    "category": "Bit Manipulation",
+    "slug": "missing-number",
+    "ncSlug": "missing-number",
+    "difficulty": "Easy",
+    "code": "0268-missing-number",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Sum of Two Integers",
+    "category": "Bit Manipulation",
+    "slug": "sum-of-two-integers",
+    "ncSlug": "sum-of-two-integers",
+    "difficulty": "Medium",
+    "code": "0371-sum-of-two-integers",
+    "lists": [
+      "neetcode250",
+      "neetcode150",
+      "blind75"
+    ]
+  },
+  {
+    "title": "Reverse Integer",
+    "category": "Bit Manipulation",
+    "slug": "reverse-integer",
+    "ncSlug": "reverse-integer",
+    "difficulty": "Medium",
+    "code": "0007-reverse-integer",
+    "lists": [
+      "neetcode250",
+      "neetcode150"
+    ]
+  },
+  {
+    "title": "Bitwise AND of Numbers Range",
+    "category": "Bit Manipulation",
+    "slug": "bitwise-and-of-numbers-range",
+    "ncSlug": "bitwise-and-of-numbers-range",
+    "difficulty": "Medium",
+    "code": "0201-bitwise-and-of-numbers-range",
+    "lists": [
+      "neetcode250"
+    ]
+  },
+  {
+    "title": "Minimum Array End",
+    "category": "Bit Manipulation",
+    "slug": "minimum-array-end",
+    "ncSlug": "minimum-array-end",
+    "difficulty": "Medium",
+    "code": "3133-minimum-array-end",
+    "lists": [
+      "neetcode250"
+    ]
+  }
+]

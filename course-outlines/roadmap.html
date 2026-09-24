@@ -1,0 +1,877 @@
+<title>Hyzr Code — Course Roadmaps</title>
+<style>
+:root{
+  --ground:#f6f7f9; --surface:#ffffff; --surface-2:#eef1f5; --raise:#ffffff;
+  --ink:#1a1e26; --muted:#5c6675; --faint:#8b94a3; --line:#e3e7ee;
+  --algo:#bf5636; --ml:#1c8a5f; --gold:#a97b1f;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono","JetBrains Mono",Menlo,Consolas,monospace;
+  --accent:var(--algo);
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --ground:#0c0f14; --surface:#141922; --surface-2:#1a2029; --raise:#171d27;
+    --ink:#e8ebf0; --muted:#98a2b1; --faint:#69727f; --line:#242c37;
+    --algo:#e37c58; --ml:#41b183; --gold:#d0a446;
+  }
+}
+:root[data-theme="light"]{
+  --ground:#f6f7f9; --surface:#ffffff; --surface-2:#eef1f5; --raise:#ffffff;
+  --ink:#1a1e26; --muted:#5c6675; --faint:#8b94a3; --line:#e3e7ee;
+  --algo:#bf5636; --ml:#1c8a5f; --gold:#a97b1f;
+}
+:root[data-theme="dark"]{
+  --ground:#0c0f14; --surface:#141922; --surface-2:#1a2029; --raise:#171d27;
+  --ink:#e8ebf0; --muted:#98a2b1; --faint:#69727f; --line:#242c37;
+  --algo:#e37c58; --ml:#41b183; --gold:#d0a446;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--sans);
+  line-height:1.5;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+a{color:inherit;text-decoration:none}
+
+/* header */
+.top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--ground) 88%,transparent);
+  backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top-inner{display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:14px 20px;max-width:1120px;margin:0 auto}
+.brand{font-family:var(--mono);font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+.tabs{display:flex;gap:6px;margin-left:auto;background:var(--surface-2);padding:4px;border-radius:10px;border:1px solid var(--line)}
+.tab{font-family:var(--mono);font-size:13px;padding:7px 14px;border-radius:7px;color:var(--muted);cursor:pointer;border:0;background:transparent;transition:.15s}
+.tab[aria-selected="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.tab .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px;vertical-align:middle}
+
+/* hero */
+.hero{padding:46px 0 26px;border-bottom:1px solid var(--line)}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);font-weight:600}
+h1.title{font-size:clamp(28px,4vw,42px);line-height:1.08;margin:12px 0 8px;letter-spacing:-.02em;text-wrap:balance;font-weight:720}
+.goal{color:var(--muted);max-width:66ch;font-size:16px}
+.stats{display:flex;gap:30px;margin-top:24px;flex-wrap:wrap}
+.stat{display:flex;flex-direction:column}
+.stat b{font-size:26px;font-variant-numeric:tabular-nums;font-weight:700}
+.stat span{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+
+/* layout: nav + parts */
+.body{display:grid;grid-template-columns:230px 1fr;gap:40px;padding:34px 0 90px;align-items:start}
+.toc{position:sticky;top:78px;display:flex;flex-direction:column;gap:1px;max-height:calc(100vh-100px);overflow:auto}
+.toc-h{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin:0 0 8px;padding-left:10px}
+.nav-item{display:flex;gap:9px;align-items:baseline;padding:6px 10px;border-radius:7px;color:var(--muted);font-size:13.5px;transition:.12s}
+.nav-item:hover{background:var(--surface-2);color:var(--ink)}
+.nav-num{font-family:var(--mono);font-size:11px;color:var(--accent);min-width:16px;font-weight:600}
+.nav-item.mastery .nav-num{color:var(--gold)}
+.nav-txt{line-height:1.3}
+
+.parts{display:flex;flex-direction:column;gap:16px;min-width:0}
+.part{scroll-margin-top:78px}
+.p-head{padding:8px 0 14px;border-bottom:1px solid var(--line);margin-bottom:18px}
+.p-num{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:600}
+.mastery .p-num{color:var(--gold)}
+.p-title{font-size:23px;margin:6px 0 0;letter-spacing:-.01em;font-weight:680;text-wrap:balance;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.p-note{color:var(--faint);font-size:14px;font-style:italic;margin:8px 0 0;max-width:70ch}
+.tier-chip{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);
+  border:1px solid color-mix(in srgb,var(--gold) 45%,transparent);border-radius:20px;padding:3px 9px;font-style:normal;font-weight:600}
+
+.modules{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:14px}
+.module{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 17px;
+  border-top:2px solid var(--accent)}
+.mastery .module{border-top-color:var(--gold)}
+.m-head{display:flex;align-items:baseline;gap:9px;margin-bottom:5px}
+.m-code{font-family:var(--mono);font-size:12px;color:var(--accent);font-weight:600}
+.mastery .m-code{color:var(--gold)}
+.m-title{font-size:15.5px;margin:0;font-weight:650;letter-spacing:-.01em}
+.m-sum{color:var(--muted);font-size:13px;margin:0 0 12px;line-height:1.45}
+.lessons{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px}
+.lesson{display:flex;flex-direction:column;gap:1px;padding-left:14px;position:relative}
+.lesson::before{content:"";position:absolute;left:0;top:8px;width:5px;height:5px;border-radius:50%;
+  background:color-mix(in srgb,var(--accent) 55%,var(--faint))}
+.mastery .lesson::before{background:color-mix(in srgb,var(--gold) 55%,var(--faint))}
+.l-t{font-size:13.5px;font-weight:550;color:var(--ink)}
+.l-g{font-size:12.5px;color:var(--faint);line-height:1.4}
+
+.panel[hidden]{display:none}
+.foot{border-top:1px solid var(--line);padding:26px 0 60px;color:var(--faint);font-size:13px;font-family:var(--mono)}
+
+@media (max-width:820px){
+  .body{grid-template-columns:1fr}
+  .toc{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+html{scroll-behavior:smooth}
+</style>
+<header class="top">
+  <div class="top-inner">
+    <span class="brand">Hyzr Code · Roadmaps</span>
+    <div class="tabs" role="tablist" aria-label="Course">
+      <button class="tab" role="tab" aria-selected="true" data-target="algo"><span class="dot" style="background:var(--algo)"></span>Algorithms</button>
+      <button class="tab" role="tab" aria-selected="false" data-target="ml"><span class="dot" style="background:var(--ml)"></span>Machine Learning</button>
+    </div>
+  </div>
+</header>
+<div class="panel" id="panel-algo" role="tabpanel" style="--accent:var(--algo)" >
+  <div class="wrap">
+    <section class="hero">
+      <div class="eyebrow">Algorithms track</div>
+      <h1 class="title">Algorithms Course</h1>
+      <p class="goal">ace any coding interview at an elite level (FAANG, top quant, hard competitive-style rounds). Prerequisite: the Python course.</p>
+      <div class="stats">
+        <div class="stat"><b>12</b><span>Parts</span></div>
+        <div class="stat"><b>43</b><span>Modules</span></div>
+        <div class="stat"><b>214</b><span>Lessons</span></div>
+      </div>
+    </section>
+    <div class="body">
+      <nav class="toc" aria-label="Parts">
+        <p class="toc-h">Roadmap</p>
+        <a class="nav-item" href="#algo-p1"><span class="nav-num">1</span><span class="nav-txt">Foundations: complexity &amp; the method</span></a>
+<a class="nav-item" href="#algo-p2"><span class="nav-num">2</span><span class="nav-txt">Linear structures</span></a>
+<a class="nav-item" href="#algo-p3"><span class="nav-num">3</span><span class="nav-txt">Sorting &amp; searching</span></a>
+<a class="nav-item" href="#algo-p4"><span class="nav-num">4</span><span class="nav-txt">Trees &amp; heaps</span></a>
+<a class="nav-item" href="#algo-p5"><span class="nav-num">5</span><span class="nav-txt">Graphs</span></a>
+<a class="nav-item" href="#algo-p6"><span class="nav-num">6</span><span class="nav-txt">Algorithmic paradigms</span></a>
+<a class="nav-item" href="#algo-p7"><span class="nav-num">7</span><span class="nav-txt">Strings (advanced)</span></a>
+<a class="nav-item" href="#algo-p8"><span class="nav-num">8</span><span class="nav-txt">Math, bits &amp; geometry</span></a>
+<a class="nav-item" href="#algo-p9"><span class="nav-num">9</span><span class="nav-txt">Advanced &amp; specialized structures</span></a>
+<a class="nav-item" href="#algo-p10"><span class="nav-num">10</span><span class="nav-txt">Interview mastery</span></a>
+<a class="nav-item mastery" href="#algo-p11"><span class="nav-num">11</span><span class="nav-txt">Grandmaster structures</span></a>
+<a class="nav-item mastery" href="#algo-p12"><span class="nav-num">12</span><span class="nav-txt">Grandmaster algorithms</span></a>
+      </nav>
+      <div class="parts">
+        <section class="part" id="algo-p1">
+  <header class="p-head">
+    <span class="p-num">Part 1</span>
+    <h2 class="p-title">Foundations: complexity &amp; the method</h2>
+    <p class="p-note">You cannot choose an algorithm without a language for cost and a procedure for deriving one.</p>
+  </header>
+  <div class="modules"><article class="module">
+  <div class="m-head"><span class="m-code">1.1</span>
+  <h3 class="m-title">Measuring work</h3></div>
+  <p class="m-sum">How to put a number on an algorithm&#x27;s cost so two solutions can be compared before either is written.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Why efficiency matters</span><span class="l-g">the same problem, seconds vs hours at scale.</span></li><li class="lesson"><span class="l-t">Counting operations</span><span class="l-g">turn a loop nest into an operation count.</span></li><li class="lesson"><span class="l-t">Big-O, Big-Theta, Big-Omega</span><span class="l-g">upper, tight, and lower bounds.</span></li><li class="lesson"><span class="l-t">Common growth classes</span><span class="l-g">O(1), log n, n, n log n, n², 2ⁿ, n! and where each shows up.</span></li><li class="lesson"><span class="l-t">Dropping constants and lower terms</span><span class="l-g">what asymptotic notation ignores and why.</span></li><li class="lesson"><span class="l-t">Space complexity</span><span class="l-g">auxiliary vs total, the call stack as memory.</span></li><li class="lesson"><span class="l-t">Amortized analysis</span><span class="l-g">why a dynamic array&#x27;s append is O(1) on average.</span></li><li class="lesson"><span class="l-t">Best, worst, and average case</span><span class="l-g">and which one interviews care about.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">1.2</span>
+  <h3 class="m-title">Reasoning about recursion</h3></div>
+  <p class="m-sum">The mental model for self-referential code and how to predict its cost.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">The call stack</span><span class="l-g">how frames are pushed and popped.</span></li><li class="lesson"><span class="l-t">Recurrence relations</span><span class="l-g">express a recursive cost as an equation.</span></li><li class="lesson"><span class="l-t">The recursion tree &amp; Master Theorem</span><span class="l-g">solve divide-and-conquer recurrences.</span></li><li class="lesson"><span class="l-t">Recursion vs iteration</span><span class="l-g">converting between them, stack-overflow limits.</span></li><li class="lesson"><span class="l-t">Tail recursion</span><span class="l-g">and why Python does not optimize it.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">1.3</span>
+  <h3 class="m-title">The problem-solving method</h3></div>
+  <p class="m-sum">A repeatable procedure that turns an unseen prompt into a justified algorithm.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Reading constraints</span><span class="l-g">infer the target complexity from n&#x27;s size.</span></li><li class="lesson"><span class="l-t">Work the examples first</span><span class="l-g">find the pattern by hand before coding.</span></li><li class="lesson"><span class="l-t">Brute force → bottleneck → better</span><span class="l-g">the universal optimization loop.</span></li><li class="lesson"><span class="l-t">Naming the invariant</span><span class="l-g">the property your loop must always preserve.</span></li><li class="lesson"><span class="l-t">Edge cases as a checklist</span><span class="l-g">empty, single, duplicates, overflow, extremes.</span></li><li class="lesson"><span class="l-t">Verifying and dry-running</span><span class="l-g">trace before you run.</span></li><li class="lesson"><span class="l-t">Communicating your approach</span><span class="l-g">think aloud like an interviewer wants.</span></li></ul>
+</article></div>
+</section>
+<section class="part" id="algo-p2">
+  <header class="p-head">
+    <span class="p-num">Part 2</span>
+    <h2 class="p-title">Linear structures</h2>
+    <p class="p-note">The everyday containers and the pointer techniques that make them fast.</p>
+  </header>
+  <div class="modules"><article class="module">
+  <div class="m-head"><span class="m-code">2.1</span>
+  <h3 class="m-title">Arrays &amp; strings</h3></div>
+  <p class="m-sum">The contiguous sequence and the O(1)/O(n) tricks that live on top of it.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Arrays and dynamic arrays</span><span class="l-g">indexing, growth, cost of insert/delete.</span></li><li class="lesson"><span class="l-t">In-place manipulation</span><span class="l-g">reverse, rotate, partition without extra space.</span></li><li class="lesson"><span class="l-t">Strings as immutable sequences</span><span class="l-g">slicing, building, char codes.</span></li><li class="lesson"><span class="l-t">Prefix sums</span><span class="l-g">range-sum queries in O(1) after O(n) setup.</span></li><li class="lesson"><span class="l-t">Difference arrays</span><span class="l-g">range updates in O(1).</span></li><li class="lesson"><span class="l-t">2-D prefix sums</span><span class="l-g">submatrix sums.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">2.2</span>
+  <h3 class="m-title">Hashing</h3></div>
+  <p class="m-sum">Trading space for time so lookups, counting, and grouping become O(1).</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Hash maps and sets</span><span class="l-g">O(1) average lookup, when it degrades.</span></li><li class="lesson"><span class="l-t">Frequency counting</span><span class="l-g">the counter pattern.</span></li><li class="lesson"><span class="l-t">Grouping by key</span><span class="l-g">bucket related items (anagrams, etc.).</span></li><li class="lesson"><span class="l-t">The read-with-default write-back shape</span><span class="l-g">counting, grouping, indexing.</span></li><li class="lesson"><span class="l-t">Hashing tuples and composite keys</span><span class="l-g">remembering pairs and states.</span></li><li class="lesson"><span class="l-t">Set operations for membership and dedup.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">2.3</span>
+  <h3 class="m-title">Two pointers &amp; sliding window</h3></div>
+  <p class="m-sum">Replacing an O(n²) scan of pairs or subarrays with a single linear sweep.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Opposing pointers</span><span class="l-g">converge from both ends on sorted data.</span></li><li class="lesson"><span class="l-t">Fast/slow pointers</span><span class="l-g">cycle detection, midpoints.</span></li><li class="lesson"><span class="l-t">Fixed-size window</span><span class="l-g">running aggregates over a span.</span></li><li class="lesson"><span class="l-t">Variable-size window</span><span class="l-g">grow/shrink to maintain an invariant.</span></li><li class="lesson"><span class="l-t">Window with a hash map</span><span class="l-g">longest/shortest substring problems.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">2.4</span>
+  <h3 class="m-title">Stacks, queues &amp; deques</h3></div>
+  <p class="m-sum">Order-of-processing structures, and the monotonic variants that solve range problems.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Stack</span><span class="l-g">LIFO, matching, undo, expression evaluation.</span></li><li class="lesson"><span class="l-t">Queue and deque</span><span class="l-g">FIFO, both-ends, ring buffers.</span></li><li class="lesson"><span class="l-t">Monotonic stack</span><span class="l-g">next-greater/smaller in O(n).</span></li><li class="lesson"><span class="l-t">Monotonic deque</span><span class="l-g">sliding-window maximum in O(n).</span></li><li class="lesson"><span class="l-t">Two stacks / stack-queue conversions.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">2.5</span>
+  <h3 class="m-title">Linked lists</h3></div>
+  <p class="m-sum">Pointer-based sequences and the in-place surgery interviews love to test.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Singly and doubly linked lists</span><span class="l-g">nodes, pointers, tradeoffs vs arrays.</span></li><li class="lesson"><span class="l-t">Traversal and the dummy-head pattern.</span></li><li class="lesson"><span class="l-t">Reversal</span><span class="l-g">iterative and recursive.</span></li><li class="lesson"><span class="l-t">Fast/slow on lists</span><span class="l-g">cycle detection (Floyd), find middle, kth-from-end.</span></li><li class="lesson"><span class="l-t">Merging and partitioning lists.</span></li><li class="lesson"><span class="l-t">LRU cache</span><span class="l-g">hash map + doubly linked list.</span></li></ul>
+</article></div>
+</section>
+<section class="part" id="algo-p3">
+  <header class="p-head">
+    <span class="p-num">Part 3</span>
+    <h2 class="p-title">Sorting &amp; searching</h2>
+    <p class="p-note">Order enables search; search underlies countless optimizations.</p>
+  </header>
+  <div class="modules"><article class="module">
+  <div class="m-head"><span class="m-code">3.1</span>
+  <h3 class="m-title">Sorting</h3></div>
+  <p class="m-sum">How the standard sorts work, their tradeoffs, and when to sort at all.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Comparison sorts</span><span class="l-g">bubble/insertion/selection as baselines.</span></li><li class="lesson"><span class="l-t">Merge sort</span><span class="l-g">divide and conquer, stability, external sort.</span></li><li class="lesson"><span class="l-t">Quick sort</span><span class="l-g">partitioning, pivot choice, worst case.</span></li><li class="lesson"><span class="l-t">Heap sort</span><span class="l-g">sort with a heap in place.</span></li><li class="lesson"><span class="l-t">Non-comparison sorts</span><span class="l-g">counting, radix, bucket.</span></li><li class="lesson"><span class="l-t">Sorting by a key / custom comparator.</span></li><li class="lesson"><span class="l-t">Stability</span><span class="l-g">when it matters.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">3.2</span>
+  <h3 class="m-title">Binary search</h3></div>
+  <p class="m-sum">Halving the search space — over arrays, and over the space of answers.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Binary search on a sorted array</span><span class="l-g">the exact template.</span></li><li class="lesson"><span class="l-t">Lower/upper bound</span><span class="l-g">first/last position, insertion point.</span></li><li class="lesson"><span class="l-t">Binary search on the answer</span><span class="l-g">monotonic-predicate search.</span></li><li class="lesson"><span class="l-t">Search in rotated / mountain arrays.</span></li><li class="lesson"><span class="l-t">Quickselect</span><span class="l-g">kth element in O(n) average.</span></li><li class="lesson"><span class="l-t">Cyclic sort</span><span class="l-g">place 1..n in O(n), find missing/duplicate.</span></li></ul>
+</article></div>
+</section>
+<section class="part" id="algo-p4">
+  <header class="p-head">
+    <span class="p-num">Part 4</span>
+    <h2 class="p-title">Trees &amp; heaps</h2>
+    <p class="p-note">Hierarchical structure, ordered retrieval, and range queries.</p>
+  </header>
+  <div class="modules"><article class="module">
+  <div class="m-head"><span class="m-code">4.1</span>
+  <h3 class="m-title">Binary trees</h3></div>
+  <p class="m-sum">Recursion made concrete: solve a tree by combining its subtrees&#x27; answers.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Tree anatomy &amp; representations</span><span class="l-g">nodes, edges, height, depth.</span></li><li class="lesson"><span class="l-t">DFS traversals</span><span class="l-g">preorder, inorder, postorder (recursive &amp; iterative).</span></li><li class="lesson"><span class="l-t">BFS / level-order traversal.</span></li><li class="lesson"><span class="l-t">Divide-and-conquer on trees</span><span class="l-g">combine subtree answers.</span></li><li class="lesson"><span class="l-t">Path and depth problems</span><span class="l-g">diameter, max path sum, balanced.</span></li><li class="lesson"><span class="l-t">Serializing and reconstructing a tree.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">4.2</span>
+  <h3 class="m-title">Binary search trees</h3></div>
+  <p class="m-sum">The ordering invariant that makes search, insert, and range queries logarithmic.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">BST invariant</span><span class="l-g">ordered structure, search/insert/delete.</span></li><li class="lesson"><span class="l-t">Inorder = sorted</span><span class="l-g">validation and kth smallest.</span></li><li class="lesson"><span class="l-t">Balanced BSTs</span><span class="l-g">AVL and red-black at a conceptual level.</span></li><li class="lesson"><span class="l-t">Successor/predecessor and range queries.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">4.3</span>
+  <h3 class="m-title">Heaps &amp; priority queues</h3></div>
+  <p class="m-sum">Cheap access to the current extreme — the backbone of top-k and scheduling.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">The binary heap</span><span class="l-g">array layout, sift up/down.</span></li><li class="lesson"><span class="l-t">Push, pop, heapify</span><span class="l-g">costs and `heapq`.</span></li><li class="lesson"><span class="l-t">Top-k and streaming</span><span class="l-g">heap of size k.</span></li><li class="lesson"><span class="l-t">Two-heap patterns</span><span class="l-g">running median.</span></li><li class="lesson"><span class="l-t">k-way merge with a heap.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">4.4</span>
+  <h3 class="m-title">Tries &amp; advanced trees</h3></div>
+  <p class="m-sum">Prefix structures and the log-time range-query trees for competitive rounds.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Trie (prefix tree)</span><span class="l-g">insert/search/prefix.</span></li><li class="lesson"><span class="l-t">Trie applications</span><span class="l-g">autocomplete, word search, XOR tries.</span></li><li class="lesson"><span class="l-t">Fenwick tree / BIT</span><span class="l-g">prefix sums with point updates.</span></li><li class="lesson"><span class="l-t">Segment tree</span><span class="l-g">range query + point update.</span></li><li class="lesson"><span class="l-t">Segment tree with lazy propagation</span><span class="l-g">range update + range query.</span></li><li class="lesson"><span class="l-t">Tree DP</span><span class="l-g">rerooting, subtree aggregates.</span></li><li class="lesson"><span class="l-t">Lowest common ancestor</span><span class="l-g">binary lifting.</span></li></ul>
+</article></div>
+</section>
+<section class="part" id="algo-p5">
+  <header class="p-head">
+    <span class="p-num">Part 5</span>
+    <h2 class="p-title">Graphs</h2>
+    <p class="p-note">The most general structure — most hard problems are graphs in disguise.</p>
+  </header>
+  <div class="modules"><article class="module">
+  <div class="m-head"><span class="m-code">5.1</span>
+  <h3 class="m-title">Graph foundations</h3></div>
+  <p class="m-sum">Modeling relationships and the two traversals every graph algorithm builds on.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Representations</span><span class="l-g">adjacency list/matrix, edge list, implicit graphs.</span></li><li class="lesson"><span class="l-t">Grids as graphs</span><span class="l-g">4/8-directional movement.</span></li><li class="lesson"><span class="l-t">BFS</span><span class="l-g">shortest path in unweighted graphs.</span></li><li class="lesson"><span class="l-t">DFS</span><span class="l-g">reachability, paths, recursion vs stack.</span></li><li class="lesson"><span class="l-t">Connected components &amp; flood fill.</span></li><li class="lesson"><span class="l-t">Cycle detection</span><span class="l-g">directed and undirected.</span></li><li class="lesson"><span class="l-t">Bipartite checking / graph coloring.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">5.2</span>
+  <h3 class="m-title">Ordering &amp; connectivity</h3></div>
+  <p class="m-sum">Sequencing dependencies and grouping what&#x27;s connected.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Topological sort</span><span class="l-g">Kahn&#x27;s and DFS-based.</span></li><li class="lesson"><span class="l-t">Union-Find (DSU)</span><span class="l-g">union by rank, path compression.</span></li><li class="lesson"><span class="l-t">DSU applications</span><span class="l-g">connectivity, Kruskal, cycle detection.</span></li><li class="lesson"><span class="l-t">Strongly connected components</span><span class="l-g">Tarjan / Kosaraju.</span></li><li class="lesson"><span class="l-t">Bridges and articulation points.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">5.3</span>
+  <h3 class="m-title">Shortest paths &amp; spanning trees</h3></div>
+  <p class="m-sum">Weighted-graph optimization — cheapest route and cheapest network.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Dijkstra</span><span class="l-g">non-negative weights with a heap.</span></li><li class="lesson"><span class="l-t">0-1 BFS</span><span class="l-g">deque for 0/1 weights.</span></li><li class="lesson"><span class="l-t">Bellman-Ford</span><span class="l-g">negative edges, negative-cycle detection.</span></li><li class="lesson"><span class="l-t">Floyd-Warshall</span><span class="l-g">all-pairs shortest paths.</span></li><li class="lesson"><span class="l-t">A* search</span><span class="l-g">heuristics for faster pathfinding.</span></li><li class="lesson"><span class="l-t">Minimum spanning tree</span><span class="l-g">Kruskal and Prim.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">5.4</span>
+  <h3 class="m-title">Advanced graphs</h3></div>
+  <p class="m-sum">The specialized graph algorithms that separate strong candidates from the rest.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Max-flow / min-cut</span><span class="l-g">Ford-Fulkerson, Edmonds-Karp, Dinic (intro).</span></li><li class="lesson"><span class="l-t">Bipartite matching</span><span class="l-g">Hungarian / Hopcroft-Karp (intro).</span></li><li class="lesson"><span class="l-t">Eulerian and Hamiltonian paths.</span></li><li class="lesson"><span class="l-t">2-SAT</span><span class="l-g">implication graphs.</span></li></ul>
+</article></div>
+</section>
+<section class="part" id="algo-p6">
+  <header class="p-head">
+    <span class="p-num">Part 6</span>
+    <h2 class="p-title">Algorithmic paradigms</h2>
+    <p class="p-note">The reusable ways of thinking that generate solutions.</p>
+  </header>
+  <div class="modules"><article class="module">
+  <div class="m-head"><span class="m-code">6.1</span>
+  <h3 class="m-title">Recursion &amp; backtracking</h3></div>
+  <p class="m-sum">Systematically building and pruning the tree of all possibilities.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Generating subsets</span><span class="l-g">the include/exclude tree.</span></li><li class="lesson"><span class="l-t">Permutations and combinations.</span></li><li class="lesson"><span class="l-t">Backtracking template</span><span class="l-g">choose, explore, un-choose.</span></li><li class="lesson"><span class="l-t">Constraint problems</span><span class="l-g">N-queens, Sudoku, word search.</span></li><li class="lesson"><span class="l-t">Pruning</span><span class="l-g">cut dead branches early.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">6.2</span>
+  <h3 class="m-title">Greedy</h3></div>
+  <p class="m-sum">Making the locally optimal choice — and proving when that&#x27;s globally optimal.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">The greedy-choice property and when it&#x27;s safe.</span></li><li class="lesson"><span class="l-t">Exchange arguments</span><span class="l-g">proving greedy optimal.</span></li><li class="lesson"><span class="l-t">Interval scheduling and merging.</span></li><li class="lesson"><span class="l-t">Huffman coding.</span></li><li class="lesson"><span class="l-t">Classic greedy pitfalls</span><span class="l-g">when greedy fails.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">6.3</span>
+  <h3 class="m-title">Divide &amp; conquer</h3></div>
+  <p class="m-sum">Splitting a problem into independent halves and merging their results.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">The divide-conquer-combine shape.</span></li><li class="lesson"><span class="l-t">Counting inversions, closest pair of points.</span></li><li class="lesson"><span class="l-t">Fast exponentiation &amp; matrix exponentiation.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">6.4</span>
+  <h3 class="m-title">Dynamic programming I (foundations)</h3></div>
+  <p class="m-sum">The core idea — remember overlapping subproblems instead of recomputing them.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Overlapping subproblems &amp; optimal substructure.</span></li><li class="lesson"><span class="l-t">Memoization (top-down) vs tabulation (bottom-up).</span></li><li class="lesson"><span class="l-t">Defining the state and the transition.</span></li><li class="lesson"><span class="l-t">1-D DP</span><span class="l-g">Fibonacci, climbing stairs, house robber, decode ways.</span></li><li class="lesson"><span class="l-t">Kadane&#x27;s</span><span class="l-g">maximum subarray.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">6.5</span>
+  <h3 class="m-title">Dynamic programming II (classic)</h3></div>
+  <p class="m-sum">The canonical DP problems every interview draws from.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">0/1 knapsack and unbounded knapsack.</span></li><li class="lesson"><span class="l-t">Coin change</span><span class="l-g">count and minimum.</span></li><li class="lesson"><span class="l-t">Longest increasing subsequence</span><span class="l-g">O(n²) and O(n log n).</span></li><li class="lesson"><span class="l-t">Longest common subsequence &amp; edit distance.</span></li><li class="lesson"><span class="l-t">Partition / subset-sum.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">6.6</span>
+  <h3 class="m-title">Dynamic programming III (2-D &amp; grids)</h3></div>
+  <p class="m-sum">DP over grids and pairs of sequences.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Grid path counting and min-path-sum.</span></li><li class="lesson"><span class="l-t">Unique paths with obstacles.</span></li><li class="lesson"><span class="l-t">Matrix-region DP</span><span class="l-g">maximal square, dungeon game.</span></li><li class="lesson"><span class="l-t">String DP</span><span class="l-g">interleaving, regex/wildcard matching.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">6.7</span>
+  <h3 class="m-title">Dynamic programming IV (advanced)</h3></div>
+  <p class="m-sum">The states and optimizations that crack the hardest DP.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Interval DP</span><span class="l-g">matrix-chain, burst balloons.</span></li><li class="lesson"><span class="l-t">Bitmask DP</span><span class="l-g">traveling salesman, assignment.</span></li><li class="lesson"><span class="l-t">Digit DP</span><span class="l-g">counting numbers with properties.</span></li><li class="lesson"><span class="l-t">DP on trees</span><span class="l-g">revisited with states.</span></li><li class="lesson"><span class="l-t">DP optimizations</span><span class="l-g">monotonic queue, convex hull trick, Knuth (intro).</span></li></ul>
+</article></div>
+</section>
+<section class="part" id="algo-p7">
+  <header class="p-head">
+    <span class="p-num">Part 7</span>
+    <h2 class="p-title">Strings (advanced)</h2>
+    <p class="p-note">When linear scanning isn&#x27;t enough.</p>
+  </header>
+  <div class="modules"><article class="module">
+  <div class="m-head"><span class="m-code">7.1</span>
+  <h3 class="m-title">Pattern matching</h3></div>
+  <p class="m-sum">Finding patterns in text in linear time instead of quadratic.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Rabin-Karp</span><span class="l-g">rolling hash matching.</span></li><li class="lesson"><span class="l-t">KMP</span><span class="l-g">prefix function, failure links.</span></li><li class="lesson"><span class="l-t">Z-algorithm</span><span class="l-g">z-array and its uses.</span></li><li class="lesson"><span class="l-t">String hashing</span><span class="l-g">collisions and double hashing.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">7.2</span>
+  <h3 class="m-title">String structures</h3></div>
+  <p class="m-sum">The heavyweight indices for repeated and multi-pattern queries.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Suffix array and LCP array (intro).</span></li><li class="lesson"><span class="l-t">Suffix automaton / suffix tree (intro).</span></li><li class="lesson"><span class="l-t">Aho-Corasick</span><span class="l-g">multi-pattern matching.</span></li><li class="lesson"><span class="l-t">Manacher&#x27;s</span><span class="l-g">all palindromic substrings in O(n).</span></li></ul>
+</article></div>
+</section>
+<section class="part" id="algo-p8">
+  <header class="p-head">
+    <span class="p-num">Part 8</span>
+    <h2 class="p-title">Math, bits &amp; geometry</h2>
+    <p class="p-note">The quantitative toolkit interviews (especially quant) lean on.</p>
+  </header>
+  <div class="modules"><article class="module">
+  <div class="m-head"><span class="m-code">8.1</span>
+  <h3 class="m-title">Number theory</h3></div>
+  <p class="m-sum">The arithmetic of primes, remainders, and counting that underpins math-heavy problems.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">GCD/LCM and the Euclidean algorithm.</span></li><li class="lesson"><span class="l-t">Primes and the Sieve of Eratosthenes.</span></li><li class="lesson"><span class="l-t">Modular arithmetic</span><span class="l-g">inverse, fast exponentiation.</span></li><li class="lesson"><span class="l-t">Combinatorics</span><span class="l-g">permutations, combinations, Pascal, stars-and-bars.</span></li><li class="lesson"><span class="l-t">Probability &amp; expected value in problems.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">8.2</span>
+  <h3 class="m-title">Bit manipulation</h3></div>
+  <p class="m-sum">Treating integers as bit-sets for constant-time set operations and clever tricks.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Bitwise operators and masks.</span></li><li class="lesson"><span class="l-t">Common tricks</span><span class="l-g">lowest set bit, popcount, power-of-two.</span></li><li class="lesson"><span class="l-t">Subset enumeration via bitmasks.</span></li><li class="lesson"><span class="l-t">XOR properties</span><span class="l-g">single number, pairing.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">8.3</span>
+  <h3 class="m-title">Geometry &amp; randomization</h3></div>
+  <p class="m-sum">Coordinate reasoning and the randomized methods that beat worst cases.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Points, vectors, cross product, orientation.</span></li><li class="lesson"><span class="l-t">Line sweep</span><span class="l-g">intervals, closest pair.</span></li><li class="lesson"><span class="l-t">Convex hull (intro).</span></li><li class="lesson"><span class="l-t">Randomized algorithms</span><span class="l-g">reservoir sampling, randomized quickselect.</span></li></ul>
+</article></div>
+</section>
+<section class="part" id="algo-p9">
+  <header class="p-head">
+    <span class="p-num">Part 9</span>
+    <h2 class="p-title">Advanced &amp; specialized structures</h2>
+    <p class="p-note">The heavy machinery for the hardest rounds and competitive-style questions.</p>
+  </header>
+  <div class="modules"><article class="module">
+  <div class="m-head"><span class="m-code">9.1</span>
+  <h3 class="m-title">Query decomposition</h3></div>
+  <p class="m-sum">Answering many range queries fast by splitting the array or the tree.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Sqrt decomposition.</span></li><li class="lesson"><span class="l-t">Mo&#x27;s algorithm</span><span class="l-g">offline range queries.</span></li><li class="lesson"><span class="l-t">Heavy-light decomposition (intro).</span></li><li class="lesson"><span class="l-t">Persistent data structures (intro).</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">9.2</span>
+  <h3 class="m-title">Games &amp; specialized DP</h3></div>
+  <p class="m-sum">Adversarial reasoning and the recurrences behind winning strategies.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Game theory</span><span class="l-g">Nim, Sprague-Grundy.</span></li><li class="lesson"><span class="l-t">Minimax with memoization.</span></li><li class="lesson"><span class="l-t">Matrix exponentiation for linear recurrences (revisited).</span></li></ul>
+</article></div>
+</section>
+<section class="part" id="algo-p10">
+  <header class="p-head">
+    <span class="p-num">Part 10</span>
+    <h2 class="p-title">Interview mastery</h2>
+    <p class="p-note">Turning knowledge into a top-percentile performance.</p>
+  </header>
+  <div class="modules"><article class="module">
+  <div class="m-head"><span class="m-code">10.1</span>
+  <h3 class="m-title">Pattern recognition</h3></div>
+  <p class="m-sum">Mapping an unfamiliar prompt to the technique that solves it.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Mapping a problem to its pattern</span><span class="l-g">the decision tree.</span></li><li class="lesson"><span class="l-t">Choosing between competing approaches under a constraint.</span></li><li class="lesson"><span class="l-t">Estimating complexity before coding.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">10.2</span>
+  <h3 class="m-title">Execution under pressure</h3></div>
+  <p class="m-sum">Writing correct code fast, and getting unstuck when you aren&#x27;t.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Time budgeting within a 45-minute round.</span></li><li class="lesson"><span class="l-t">Writing clean, bug-free code the first time.</span></li><li class="lesson"><span class="l-t">Testing and edge-case walkthroughs on the spot.</span></li><li class="lesson"><span class="l-t">Recovering when stuck</span><span class="l-g">hints you can give yourself.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">10.3</span>
+  <h3 class="m-title">Communication &amp; the whole loop</h3></div>
+  <p class="m-sum">The non-coding signals that decide a hire, plus a study plan.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Narrating trade-offs the interviewer is scoring.</span></li><li class="lesson"><span class="l-t">Handling follow-ups and generalizations.</span></li><li class="lesson"><span class="l-t">Coding-adjacent system-design lite.</span></li><li class="lesson"><span class="l-t">Company-family patterns (FAANG vs quant vs startups).</span></li><li class="lesson"><span class="l-t">Mock-interview strategy and a study plan.</span></li></ul>
+</article></div>
+</section>
+<section class="part mastery" id="algo-p11">
+  <header class="p-head">
+    <span class="p-num">Part 11</span>
+    <h2 class="p-title">Grandmaster structures<span class="tier-chip">▲ Mastery</span></h2>
+    <p class="p-note">The heavyweight data structures that answer impossible-looking queries in log time.</p>
+  </header>
+  <div class="modules"><article class="module">
+  <div class="m-head"><span class="m-code">11.1</span>
+  <h3 class="m-title">Balanced &amp; self-adjusting trees</h3></div>
+  <p class="m-sum">Ordered structures you build yourself when the standard library isn&#x27;t enough.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Treaps</span><span class="l-g">randomized balanced BSTs.</span></li><li class="lesson"><span class="l-t">Splay trees</span><span class="l-g">self-adjusting access.</span></li><li class="lesson"><span class="l-t">Balanced-BST internals</span><span class="l-g">AVL and red-black in full.</span></li><li class="lesson"><span class="l-t">Order-statistics trees</span><span class="l-g">rank and select.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">11.2</span>
+  <h3 class="m-title">Trees over trees</h3></div>
+  <p class="m-sum">Decomposing a tree so path and subtree queries become range queries.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Heavy-light decomposition</span><span class="l-g">path queries in log² time.</span></li><li class="lesson"><span class="l-t">Centroid decomposition</span><span class="l-g">divide and conquer on trees.</span></li><li class="lesson"><span class="l-t">Euler tour + segment tree</span><span class="l-g">subtree queries.</span></li><li class="lesson"><span class="l-t">Link-cut trees</span><span class="l-g">dynamic connectivity on trees.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">11.3</span>
+  <h3 class="m-title">Persistence &amp; advanced range structures</h3></div>
+  <p class="m-sum">Querying past versions and multidimensional ranges.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Persistent segment trees</span><span class="l-g">query any historical version.</span></li><li class="lesson"><span class="l-t">Wavelet trees</span><span class="l-g">kth-smallest in a range.</span></li><li class="lesson"><span class="l-t">2-D and merge-sort trees.</span></li><li class="lesson"><span class="l-t">Sqrt tree and sparse tables.</span></li></ul>
+</article></div>
+</section>
+<section class="part mastery" id="algo-p12">
+  <header class="p-head">
+    <span class="p-num">Part 12</span>
+    <h2 class="p-title">Grandmaster algorithms<span class="tier-chip">▲ Mastery</span></h2>
+    <p class="p-note">The advanced math, string, flow, DP, and geometry that crown the hardest problem sets.</p>
+  </header>
+  <div class="modules"><article class="module">
+  <div class="m-head"><span class="m-code">12.1</span>
+  <h3 class="m-title">Advanced mathematics</h3></div>
+  <p class="m-sum">The number-theoretic and algebraic machinery behind math-heavy problems.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Fast Fourier transform / NTT</span><span class="l-g">polynomial multiplication.</span></li><li class="lesson"><span class="l-t">Chinese Remainder Theorem.</span></li><li class="lesson"><span class="l-t">Möbius function and number-theoretic sieves.</span></li><li class="lesson"><span class="l-t">Linear algebra over GF(2) and Gaussian elimination.</span></li><li class="lesson"><span class="l-t">Generating functions and advanced combinatorics.</span></li><li class="lesson"><span class="l-t">Inclusion-exclusion in depth.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">12.2</span>
+  <h3 class="m-title">Advanced flow &amp; matching</h3></div>
+  <p class="m-sum">The full flow toolkit for optimization and assignment problems.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Dinic&#x27;s algorithm in full.</span></li><li class="lesson"><span class="l-t">Min-cost max-flow.</span></li><li class="lesson"><span class="l-t">General graph matching</span><span class="l-g">Blossom algorithm.</span></li><li class="lesson"><span class="l-t">Hopcroft-Karp</span><span class="l-g">fast bipartite matching.</span></li><li class="lesson"><span class="l-t">Flow modeling</span><span class="l-g">reductions to max-flow/min-cut.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">12.3</span>
+  <h3 class="m-title">Advanced strings</h3></div>
+  <p class="m-sum">The linear-time indices for the hardest string problems.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Suffix array construction in O(n log n) and O(n).</span></li><li class="lesson"><span class="l-t">Suffix automaton in full.</span></li><li class="lesson"><span class="l-t">Palindromic tree (eertree).</span></li><li class="lesson"><span class="l-t">Aho-Corasick automaton in full.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">12.4</span>
+  <h3 class="m-title">DP optimizations</h3></div>
+  <p class="m-sum">The techniques that drop a DP from quadratic to near-linear.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Convex hull trick in full.</span></li><li class="lesson"><span class="l-t">Divide-and-conquer DP.</span></li><li class="lesson"><span class="l-t">Knuth&#x27;s optimization.</span></li><li class="lesson"><span class="l-t">Aliens / Lagrangian relaxation trick.</span></li><li class="lesson"><span class="l-t">Sum-over-subsets (SOS) DP and broken-profile DP.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">12.5</span>
+  <h3 class="m-title">Computational geometry</h3></div>
+  <p class="m-sum">The geometry algorithms competitive rounds hide the hardest problems in.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Convex hull algorithms in full.</span></li><li class="lesson"><span class="l-t">Rotating calipers.</span></li><li class="lesson"><span class="l-t">Half-plane intersection.</span></li><li class="lesson"><span class="l-t">Line-sweep for segment intersection.</span></li><li class="lesson"><span class="l-t">Delaunay triangulation and Voronoi diagrams (intro).</span></li></ul>
+</article></div>
+</section>
+      </div>
+    </div>
+    <footer class="foot">Hyzr Code · course roadmap · structure only, dependency-ordered</footer>
+  </div>
+</div>
+<div class="panel" id="panel-ml" role="tabpanel" style="--accent:var(--ml)" hidden>
+  <div class="wrap">
+    <section class="hero">
+      <div class="eyebrow">Machine Learning track</div>
+      <h1 class="title">Machine Learning Course</h1>
+      <p class="goal">zero → frontier. Everything an ML engineer or research scientist at a top lab (OpenAI, Anthropic, DeepMind) needs — the math, the classical ground, deep learning, modern LLMs and their training at scale, plus the systems, research, and safety skills. Prerequisite: the Python course.</p>
+      <div class="stats">
+        <div class="stat"><b>13</b><span>Parts</span></div>
+        <div class="stat"><b>55</b><span>Modules</span></div>
+        <div class="stat"><b>261</b><span>Lessons</span></div>
+      </div>
+    </section>
+    <div class="body">
+      <nav class="toc" aria-label="Parts">
+        <p class="toc-h">Roadmap</p>
+        <a class="nav-item" href="#ml-p1"><span class="nav-num">1</span><span class="nav-txt">Mathematical foundations</span></a>
+<a class="nav-item" href="#ml-p2"><span class="nav-num">2</span><span class="nav-txt">Scientific Python &amp; the ML toolkit</span></a>
+<a class="nav-item" href="#ml-p3"><span class="nav-num">3</span><span class="nav-txt">Classical machine learning</span></a>
+<a class="nav-item" href="#ml-p4"><span class="nav-num">4</span><span class="nav-txt">Deep learning foundations</span></a>
+<a class="nav-item" href="#ml-p5"><span class="nav-num">5</span><span class="nav-txt">Deep learning architectures</span></a>
+<a class="nav-item" href="#ml-p6"><span class="nav-num">6</span><span class="nav-txt">Natural language processing &amp; language models</span></a>
+<a class="nav-item" href="#ml-p7"><span class="nav-num">7</span><span class="nav-txt">Large-scale &amp; modern LLMs</span></a>
+<a class="nav-item" href="#ml-p8"><span class="nav-num">8</span><span class="nav-txt">Reinforcement learning &amp; generative models</span></a>
+<a class="nav-item" href="#ml-p9"><span class="nav-num">9</span><span class="nav-txt">ML systems &amp; engineering (MLOps)</span></a>
+<a class="nav-item" href="#ml-p10"><span class="nav-num">10</span><span class="nav-txt">Research, interpretability &amp; safety</span></a>
+<a class="nav-item mastery" href="#ml-p11"><span class="nav-num">11</span><span class="nav-txt">Advanced probabilistic &amp; causal ML</span></a>
+<a class="nav-item mastery" href="#ml-p12"><span class="nav-num">12</span><span class="nav-txt">Systems &amp; performance mastery</span></a>
+<a class="nav-item mastery" href="#ml-p13"><span class="nav-num">13</span><span class="nav-txt">The open frontier</span></a>
+      </nav>
+      <div class="parts">
+        <section class="part" id="ml-p1">
+  <header class="p-head">
+    <span class="p-num">Part 1</span>
+    <h2 class="p-title">Mathematical foundations</h2>
+    <p class="p-note">The language of ML. Nothing here is optional; everything downstream is built from it.</p>
+  </header>
+  <div class="modules"><article class="module">
+  <div class="m-head"><span class="m-code">1.1</span>
+  <h3 class="m-title">Linear algebra</h3></div>
+  <p class="m-sum">Data is vectors and matrices; this is how you compute with them.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Scalars, vectors, and vector operations</span><span class="l-g">the atom of ML data.</span></li><li class="lesson"><span class="l-t">The dot product</span><span class="l-g">geometry, projection, the neuron.</span></li><li class="lesson"><span class="l-t">Norms</span><span class="l-g">L1, L2, L∞ and what they measure.</span></li><li class="lesson"><span class="l-t">Matrices and matrix-vector products</span><span class="l-g">a linear layer.</span></li><li class="lesson"><span class="l-t">Matrix multiplication</span><span class="l-g">composition of linear maps.</span></li><li class="lesson"><span class="l-t">Transpose, identity, inverse</span><span class="l-g">and when an inverse exists.</span></li><li class="lesson"><span class="l-t">Linear independence, span, basis, rank.</span></li><li class="lesson"><span class="l-t">Eigenvalues and eigenvectors</span><span class="l-g">directions a matrix only scales.</span></li><li class="lesson"><span class="l-t">Determinant and trace.</span></li><li class="lesson"><span class="l-t">Singular value decomposition</span><span class="l-g">the most useful factorization in ML.</span></li><li class="lesson"><span class="l-t">Matrix decompositions</span><span class="l-g">LU, QR, Cholesky (intro).</span></li><li class="lesson"><span class="l-t">Vector spaces and orthogonality</span><span class="l-g">projections and least squares.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">1.2</span>
+  <h3 class="m-title">Calculus &amp; optimization math</h3></div>
+  <p class="m-sum">How a model measures which way to improve.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Derivatives as slope; rules of differentiation.</span></li><li class="lesson"><span class="l-t">Partial derivatives and the gradient</span><span class="l-g">steepest ascent.</span></li><li class="lesson"><span class="l-t">The chain rule</span><span class="l-g">the engine of backprop.</span></li><li class="lesson"><span class="l-t">Jacobians and Hessians</span><span class="l-g">vector- and second-order derivatives.</span></li><li class="lesson"><span class="l-t">Matrix calculus</span><span class="l-g">differentiating through vectors and matrices.</span></li><li class="lesson"><span class="l-t">Taylor expansions and approximations.</span></li><li class="lesson"><span class="l-t">Convexity</span><span class="l-g">why it guarantees a global minimum.</span></li><li class="lesson"><span class="l-t">Constrained optimization</span><span class="l-g">Lagrange multipliers, KKT (intro).</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">1.3</span>
+  <h3 class="m-title">Probability</h3></div>
+  <p class="m-sum">The mathematics of uncertainty that every model predicts in.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Sample spaces, events, and axioms.</span></li><li class="lesson"><span class="l-t">Conditional probability and independence.</span></li><li class="lesson"><span class="l-t">Bayes&#x27; theorem</span><span class="l-g">updating beliefs with evidence.</span></li><li class="lesson"><span class="l-t">Random variables</span><span class="l-g">discrete and continuous.</span></li><li class="lesson"><span class="l-t">Expectation, variance, covariance.</span></li><li class="lesson"><span class="l-t">Key distributions</span><span class="l-g">Bernoulli, Binomial, Categorical, Poisson.</span></li><li class="lesson"><span class="l-t">The Gaussian</span><span class="l-g">the workhorse distribution.</span></li><li class="lesson"><span class="l-t">Joint, marginal, and conditional distributions.</span></li><li class="lesson"><span class="l-t">Maximum likelihood and maximum a posteriori estimation.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">1.4</span>
+  <h3 class="m-title">Statistics &amp; information theory</h3></div>
+  <p class="m-sum">Reasoning from data, and measuring information itself.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Populations, samples, and estimators (bias, variance, consistency).</span></li><li class="lesson"><span class="l-t">Descriptive statistics and correlation.</span></li><li class="lesson"><span class="l-t">The law of large numbers and the central limit theorem.</span></li><li class="lesson"><span class="l-t">Hypothesis testing, p-values, and confidence intervals.</span></li><li class="lesson"><span class="l-t">Sampling methods and the bootstrap.</span></li><li class="lesson"><span class="l-t">Entropy</span><span class="l-g">a measure of uncertainty.</span></li><li class="lesson"><span class="l-t">Cross-entropy and KL divergence</span><span class="l-g">comparing distributions.</span></li><li class="lesson"><span class="l-t">Mutual information.</span></li></ul>
+</article></div>
+</section>
+<section class="part" id="ml-p2">
+  <header class="p-head">
+    <span class="p-num">Part 2</span>
+    <h2 class="p-title">Scientific Python &amp; the ML toolkit</h2>
+    <p class="p-note">Turn the math into fast, reproducible code before touching models.</p>
+  </header>
+  <div class="modules"><article class="module">
+  <div class="m-head"><span class="m-code">2.1</span>
+  <h3 class="m-title">Numerical Python</h3></div>
+  <p class="m-sum">Fast array math — the substrate every ML library sits on.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">NumPy arrays</span><span class="l-g">shapes, dtypes, broadcasting.</span></li><li class="lesson"><span class="l-t">Vectorization</span><span class="l-g">replacing loops with array ops.</span></li><li class="lesson"><span class="l-t">Linear algebra in NumPy</span><span class="l-g">matmul, solve, decompositions.</span></li><li class="lesson"><span class="l-t">Random number generation and seeding.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">2.2</span>
+  <h3 class="m-title">Data handling &amp; visualization</h3></div>
+  <p class="m-sum">Getting real, messy data into shape and looking at it.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">pandas</span><span class="l-g">Series, DataFrames, indexing, joins, groupby.</span></li><li class="lesson"><span class="l-t">Loading and cleaning real data.</span></li><li class="lesson"><span class="l-t">Exploratory data analysis.</span></li><li class="lesson"><span class="l-t">Plotting</span><span class="l-g">matplotlib, distributions, learning curves.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">2.3</span>
+  <h3 class="m-title">Tensors &amp; autograd</h3></div>
+  <p class="m-sum">The modern deep-learning workflow, from tensors to a training loop.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Tensors and GPU acceleration</span><span class="l-g">PyTorch basics.</span></li><li class="lesson"><span class="l-t">Automatic differentiation</span><span class="l-g">how autograd builds the graph.</span></li><li class="lesson"><span class="l-t">The training loop from scratch</span><span class="l-g">forward, loss, backward, step.</span></li><li class="lesson"><span class="l-t">Datasets, DataLoaders, and batching.</span></li><li class="lesson"><span class="l-t">Reproducibility, seeding, and determinism.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">2.4</span>
+  <h3 class="m-title">Practical workflow</h3></div>
+  <p class="m-sum">The habits that keep experiments honest and fast.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Experiment tracking and configuration.</span></li><li class="lesson"><span class="l-t">Profiling and finding bottlenecks.</span></li><li class="lesson"><span class="l-t">Working on GPUs</span><span class="l-g">memory, device placement.</span></li><li class="lesson"><span class="l-t">Notebooks vs scripts vs pipelines.</span></li></ul>
+</article></div>
+</section>
+<section class="part" id="ml-p3">
+  <header class="p-head">
+    <span class="p-num">Part 3</span>
+    <h2 class="p-title">Classical machine learning</h2>
+    <p class="p-note">The concepts and models that frame everything, and that still win on tabular data.</p>
+  </header>
+  <div class="modules"><article class="module">
+  <div class="m-head"><span class="m-code">3.1</span>
+  <h3 class="m-title">The ML framing</h3></div>
+  <p class="m-sum">The vocabulary and pitfalls that apply to every model you&#x27;ll ever train.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Supervised, unsupervised, and reinforcement learning.</span></li><li class="lesson"><span class="l-t">Features, labels, and the data matrix.</span></li><li class="lesson"><span class="l-t">Train / validation / test splits and leakage.</span></li><li class="lesson"><span class="l-t">Generalization, overfitting, and underfitting.</span></li><li class="lesson"><span class="l-t">The bias-variance tradeoff.</span></li><li class="lesson"><span class="l-t">Cross-validation and hyperparameter search.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">3.2</span>
+  <h3 class="m-title">Linear models</h3></div>
+  <p class="m-sum">The simplest predictors — and the loss/regularization ideas they introduce.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Linear regression</span><span class="l-g">normal equation and gradient descent.</span></li><li class="lesson"><span class="l-t">Loss functions</span><span class="l-g">MSE, MAE, and when to use each.</span></li><li class="lesson"><span class="l-t">Logistic regression</span><span class="l-g">the sigmoid and log-loss.</span></li><li class="lesson"><span class="l-t">Softmax regression</span><span class="l-g">multiclass.</span></li><li class="lesson"><span class="l-t">Regularization</span><span class="l-g">L1 (lasso), L2 (ridge), elastic net.</span></li><li class="lesson"><span class="l-t">Feature scaling and engineering.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">3.3</span>
+  <h3 class="m-title">Non-parametric &amp; probabilistic models</h3></div>
+  <p class="m-sum">Predictors that store data or reason with probabilities instead of fitting weights.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">k-nearest neighbors.</span></li><li class="lesson"><span class="l-t">Naive Bayes.</span></li><li class="lesson"><span class="l-t">Decision trees</span><span class="l-g">entropy, Gini, information gain.</span></li><li class="lesson"><span class="l-t">The curse of dimensionality.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">3.4</span>
+  <h3 class="m-title">Ensembles</h3></div>
+  <p class="m-sum">Combining many weak models into one strong one — still SOTA on tables.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Bagging and random forests.</span></li><li class="lesson"><span class="l-t">Boosting</span><span class="l-g">AdaBoost, gradient boosting.</span></li><li class="lesson"><span class="l-t">Gradient-boosted trees</span><span class="l-g">XGBoost / LightGBM in practice.</span></li><li class="lesson"><span class="l-t">Stacking and blending.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">3.5</span>
+  <h3 class="m-title">Kernels &amp; margins</h3></div>
+  <p class="m-sum">Maximum-margin classifiers and the trick that makes them non-linear.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Support vector machines</span><span class="l-g">the maximum margin.</span></li><li class="lesson"><span class="l-t">The kernel trick</span><span class="l-g">non-linear boundaries.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">3.6</span>
+  <h3 class="m-title">Unsupervised learning</h3></div>
+  <p class="m-sum">Finding structure when there are no labels.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">k-means clustering.</span></li><li class="lesson"><span class="l-t">Hierarchical and density-based clustering (DBSCAN).</span></li><li class="lesson"><span class="l-t">Gaussian mixtures and expectation-maximization.</span></li><li class="lesson"><span class="l-t">Principal component analysis</span><span class="l-g">variance-maximizing projection.</span></li><li class="lesson"><span class="l-t">t-SNE and UMAP</span><span class="l-g">nonlinear visualization.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">3.7</span>
+  <h3 class="m-title">Evaluation &amp; calibration</h3></div>
+  <p class="m-sum">Measuring a model honestly, including when the classes are skewed.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Classification metrics</span><span class="l-g">accuracy, precision, recall, F1.</span></li><li class="lesson"><span class="l-t">Confusion matrices and thresholds.</span></li><li class="lesson"><span class="l-t">ROC / PR curves and AUC.</span></li><li class="lesson"><span class="l-t">Regression metrics</span><span class="l-g">R², RMSE, MAE.</span></li><li class="lesson"><span class="l-t">Probability calibration.</span></li><li class="lesson"><span class="l-t">Handling imbalanced data.</span></li></ul>
+</article></div>
+</section>
+<section class="part" id="ml-p4">
+  <header class="p-head">
+    <span class="p-num">Part 4</span>
+    <h2 class="p-title">Deep learning foundations</h2>
+    <p class="p-note">From one neuron to a trained multi-layer network — the mechanics in full.</p>
+  </header>
+  <div class="modules"><article class="module">
+  <div class="m-head"><span class="m-code">4.1</span>
+  <h3 class="m-title">Neural network basics</h3></div>
+  <p class="m-sum">Why stacking linear layers with non-linearities can learn anything.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">The perceptron and its limits (XOR).</span></li><li class="lesson"><span class="l-t">Multi-layer perceptrons</span><span class="l-g">stacking linear layers.</span></li><li class="lesson"><span class="l-t">Activation functions</span><span class="l-g">sigmoid, tanh, ReLU and variants.</span></li><li class="lesson"><span class="l-t">Why non-linearity</span><span class="l-g">the universal approximation idea.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">4.2</span>
+  <h3 class="m-title">Training a network</h3></div>
+  <p class="m-sum">How gradients flow backward so every weight knows how to change.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Forward pass as repeated matmul + activation.</span></li><li class="lesson"><span class="l-t">Loss functions for deep nets</span><span class="l-g">cross-entropy, MSE.</span></li><li class="lesson"><span class="l-t">Backpropagation</span><span class="l-g">the chain rule through the whole graph.</span></li><li class="lesson"><span class="l-t">Computational graphs and reverse-mode autodiff.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">4.3</span>
+  <h3 class="m-title">Optimization</h3></div>
+  <p class="m-sum">The algorithms that actually move the weights, and how fast.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Gradient descent</span><span class="l-g">batch, stochastic, mini-batch.</span></li><li class="lesson"><span class="l-t">Momentum and Nesterov.</span></li><li class="lesson"><span class="l-t">Adaptive methods</span><span class="l-g">AdaGrad, RMSProp, Adam, AdamW.</span></li><li class="lesson"><span class="l-t">Learning-rate schedules and warmup.</span></li><li class="lesson"><span class="l-t">Second-order intuition and why we avoid it.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">4.4</span>
+  <h3 class="m-title">Making training work</h3></div>
+  <p class="m-sum">The tricks that turn a diverging run into a converging one.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Weight initialization</span><span class="l-g">Xavier, He.</span></li><li class="lesson"><span class="l-t">Normalization</span><span class="l-g">batch, layer, group.</span></li><li class="lesson"><span class="l-t">Regularization</span><span class="l-g">dropout, weight decay, early stopping, augmentation.</span></li><li class="lesson"><span class="l-t">Vanishing and exploding gradients; gradient clipping.</span></li><li class="lesson"><span class="l-t">Hyperparameter tuning and debugging a training run.</span></li></ul>
+</article></div>
+</section>
+<section class="part" id="ml-p5">
+  <header class="p-head">
+    <span class="p-num">Part 5</span>
+    <h2 class="p-title">Deep learning architectures</h2>
+    <p class="p-note">The building blocks that dominate perception and sequence modeling.</p>
+  </header>
+  <div class="modules"><article class="module">
+  <div class="m-head"><span class="m-code">5.1</span>
+  <h3 class="m-title">Convolutional networks</h3></div>
+  <p class="m-sum">Weight-sharing filters that made computer vision work.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Convolutions, filters, stride, padding.</span></li><li class="lesson"><span class="l-t">Pooling and feature hierarchies.</span></li><li class="lesson"><span class="l-t">Classic CNNs</span><span class="l-g">LeNet, AlexNet, VGG, ResNet (skip connections).</span></li><li class="lesson"><span class="l-t">Transfer learning and fine-tuning.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">5.2</span>
+  <h3 class="m-title">Computer vision tasks</h3></div>
+  <p class="m-sum">Turning a backbone into detection, segmentation, and more.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Image classification.</span></li><li class="lesson"><span class="l-t">Object detection</span><span class="l-g">R-CNN family, YOLO (intro).</span></li><li class="lesson"><span class="l-t">Semantic and instance segmentation</span><span class="l-g">U-Net, Mask R-CNN (intro).</span></li><li class="lesson"><span class="l-t">Data augmentation for vision.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">5.3</span>
+  <h3 class="m-title">Sequence models</h3></div>
+  <p class="m-sum">Modeling order and memory before attention took over.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Recurrent networks</span><span class="l-g">RNNs and the vanishing-gradient problem.</span></li><li class="lesson"><span class="l-t">LSTMs and GRUs</span><span class="l-g">gating.</span></li><li class="lesson"><span class="l-t">Sequence-to-sequence models.</span></li><li class="lesson"><span class="l-t">Encoder-decoder with attention.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">5.4</span>
+  <h3 class="m-title">The Transformer</h3></div>
+  <p class="m-sum">The architecture behind every modern language and multimodal model.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">The attention mechanism</span><span class="l-g">query, key, value.</span></li><li class="lesson"><span class="l-t">Scaled dot-product and multi-head attention.</span></li><li class="lesson"><span class="l-t">Positional encodings.</span></li><li class="lesson"><span class="l-t">The full Transformer block</span><span class="l-g">attention + FFN + residual + norm.</span></li><li class="lesson"><span class="l-t">Encoder, decoder, and encoder-decoder variants.</span></li><li class="lesson"><span class="l-t">Why attention replaced recurrence.</span></li></ul>
+</article></div>
+</section>
+<section class="part" id="ml-p6">
+  <header class="p-head">
+    <span class="p-num">Part 6</span>
+    <h2 class="p-title">Natural language processing &amp; language models</h2>
+    <p class="p-note">From text to models that understand and generate it.</p>
+  </header>
+  <div class="modules"><article class="module">
+  <div class="m-head"><span class="m-code">6.1</span>
+  <h3 class="m-title">Text representation</h3></div>
+  <p class="m-sum">Turning language into vectors a network can consume.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Tokenization</span><span class="l-g">words, subwords, BPE, WordPiece, SentencePiece.</span></li><li class="lesson"><span class="l-t">Embeddings</span><span class="l-g">word2vec, GloVe, the embedding matrix.</span></li><li class="lesson"><span class="l-t">Contextual embeddings.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">6.2</span>
+  <h3 class="m-title">Language modeling</h3></div>
+  <p class="m-sum">The objective — predict the next token — that powers today&#x27;s LLMs.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">The language-modeling objective</span><span class="l-g">predicting the next token.</span></li><li class="lesson"><span class="l-t">n-gram baselines to neural LMs.</span></li><li class="lesson"><span class="l-t">Perplexity and evaluation.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">6.3</span>
+  <h3 class="m-title">Pretrained Transformers</h3></div>
+  <p class="m-sum">The pretrain-then-adapt paradigm and its major model families.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">BERT and masked language modeling (encoders).</span></li><li class="lesson"><span class="l-t">GPT and autoregressive modeling (decoders).</span></li><li class="lesson"><span class="l-t">T5 and encoder-decoder pretraining.</span></li><li class="lesson"><span class="l-t">Transfer learning</span><span class="l-g">pretrain then fine-tune.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">6.4</span>
+  <h3 class="m-title">Using LLMs</h3></div>
+  <p class="m-sum">Getting useful behavior out of a trained model without retraining it.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Prompting and in-context learning.</span></li><li class="lesson"><span class="l-t">Decoding strategies</span><span class="l-g">greedy, beam, top-k, nucleus, temperature.</span></li><li class="lesson"><span class="l-t">Few-shot and chain-of-thought.</span></li><li class="lesson"><span class="l-t">Embeddings for search and semantic similarity.</span></li></ul>
+</article></div>
+</section>
+<section class="part" id="ml-p7">
+  <header class="p-head">
+    <span class="p-num">Part 7</span>
+    <h2 class="p-title">Large-scale &amp; modern LLMs</h2>
+    <p class="p-note">Training and aligning frontier models — the core of a top-lab role.</p>
+  </header>
+  <div class="modules"><article class="module">
+  <div class="m-head"><span class="m-code">7.1</span>
+  <h3 class="m-title">Scaling</h3></div>
+  <p class="m-sum">Why bigger models trained on more data predictably get better.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Scaling laws</span><span class="l-g">compute, data, parameters.</span></li><li class="lesson"><span class="l-t">Emergent abilities and the case for scale.</span></li><li class="lesson"><span class="l-t">Data curation, deduplication, and quality at trillion-token scale.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">7.2</span>
+  <h3 class="m-title">Training at scale</h3></div>
+  <p class="m-sum">Splitting a model and its training across thousands of accelerators.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Mixed-precision training (fp16/bf16) and loss scaling.</span></li><li class="lesson"><span class="l-t">Gradient checkpointing and memory tradeoffs.</span></li><li class="lesson"><span class="l-t">Data parallelism.</span></li><li class="lesson"><span class="l-t">Model, tensor, and pipeline parallelism.</span></li><li class="lesson"><span class="l-t">ZeRO / FSDP</span><span class="l-g">sharding optimizer state and parameters.</span></li><li class="lesson"><span class="l-t">Distributed communication</span><span class="l-g">all-reduce and collectives.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">7.3</span>
+  <h3 class="m-title">Efficient architectures &amp; attention</h3></div>
+  <p class="m-sum">The tricks that make long-context, large models trainable and fast.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Flash attention and IO-aware kernels.</span></li><li class="lesson"><span class="l-t">Long-context methods</span><span class="l-g">sparse, sliding, and linear attention.</span></li><li class="lesson"><span class="l-t">Rotary and ALiBi positional schemes.</span></li><li class="lesson"><span class="l-t">Mixture of experts</span><span class="l-g">conditional compute.</span></li><li class="lesson"><span class="l-t">Parameter-efficient fine-tuning</span><span class="l-g">LoRA, adapters, prefix tuning.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">7.4</span>
+  <h3 class="m-title">Alignment &amp; post-training</h3></div>
+  <p class="m-sum">Turning a raw predictor into a helpful, harmless assistant.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Instruction tuning / supervised fine-tuning.</span></li><li class="lesson"><span class="l-t">Reinforcement learning from human feedback (RLHF)</span><span class="l-g">reward models + PPO.</span></li><li class="lesson"><span class="l-t">Direct preference optimization (DPO) and alternatives.</span></li><li class="lesson"><span class="l-t">Constitutional AI and self-critique.</span></li><li class="lesson"><span class="l-t">Red-teaming and safety fine-tuning.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">7.5</span>
+  <h3 class="m-title">Inference &amp; deployment of LLMs</h3></div>
+  <p class="m-sum">Serving huge models cheaply and quickly.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">KV caching.</span></li><li class="lesson"><span class="l-t">Quantization</span><span class="l-g">int8/int4, GPTQ, AWQ.</span></li><li class="lesson"><span class="l-t">Distillation.</span></li><li class="lesson"><span class="l-t">Speculative and parallel decoding.</span></li><li class="lesson"><span class="l-t">Serving</span><span class="l-g">batching, throughput, latency.</span></li><li class="lesson"><span class="l-t">Retrieval-augmented generation.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">7.6</span>
+  <h3 class="m-title">Evaluating LLMs</h3></div>
+  <p class="m-sum">Measuring capability, honesty, and safety when there&#x27;s no single metric.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Benchmarks and their limits.</span></li><li class="lesson"><span class="l-t">LLM-as-judge and human evaluation.</span></li><li class="lesson"><span class="l-t">Measuring hallucination, bias, and robustness.</span></li></ul>
+</article></div>
+</section>
+<section class="part" id="ml-p8">
+  <header class="p-head">
+    <span class="p-num">Part 8</span>
+    <h2 class="p-title">Reinforcement learning &amp; generative models</h2>
+    <p class="p-note">Decision-making and generation beyond next-token text.</p>
+  </header>
+  <div class="modules"><article class="module">
+  <div class="m-head"><span class="m-code">8.1</span>
+  <h3 class="m-title">Reinforcement learning</h3></div>
+  <p class="m-sum">Learning to act from reward — the framework behind RLHF and agents.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Markov decision processes</span><span class="l-g">states, actions, rewards, returns.</span></li><li class="lesson"><span class="l-t">Value functions and the Bellman equations.</span></li><li class="lesson"><span class="l-t">Dynamic programming</span><span class="l-g">value and policy iteration.</span></li><li class="lesson"><span class="l-t">Model-free control</span><span class="l-g">Monte Carlo, TD, Q-learning, SARSA.</span></li><li class="lesson"><span class="l-t">Deep Q-networks.</span></li><li class="lesson"><span class="l-t">Policy gradients</span><span class="l-g">REINFORCE.</span></li><li class="lesson"><span class="l-t">Actor-critic and advantage estimation.</span></li><li class="lesson"><span class="l-t">Proximal policy optimization (PPO).</span></li><li class="lesson"><span class="l-t">Model-based and offline RL (intro).</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">8.2</span>
+  <h3 class="m-title">Generative models</h3></div>
+  <p class="m-sum">The model families that create images, audio, and more.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Autoencoders and variational autoencoders.</span></li><li class="lesson"><span class="l-t">Generative adversarial networks.</span></li><li class="lesson"><span class="l-t">Normalizing flows (intro).</span></li><li class="lesson"><span class="l-t">Diffusion models</span><span class="l-g">forward/reverse process, denoising.</span></li><li class="lesson"><span class="l-t">Score-based and guidance techniques.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">8.3</span>
+  <h3 class="m-title">Multimodal &amp; structured</h3></div>
+  <p class="m-sum">Models that span vision, language, audio, and graphs.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Vision-language models</span><span class="l-g">CLIP, contrastive learning.</span></li><li class="lesson"><span class="l-t">Image and video generation.</span></li><li class="lesson"><span class="l-t">Speech and audio models.</span></li><li class="lesson"><span class="l-t">Graph neural networks.</span></li><li class="lesson"><span class="l-t">Recommendation systems.</span></li><li class="lesson"><span class="l-t">Time-series forecasting.</span></li></ul>
+</article></div>
+</section>
+<section class="part" id="ml-p9">
+  <header class="p-head">
+    <span class="p-num">Part 9</span>
+    <h2 class="p-title">ML systems &amp; engineering (MLOps)</h2>
+    <p class="p-note">What separates a notebook from a product that serves millions.</p>
+  </header>
+  <div class="modules"><article class="module">
+  <div class="m-head"><span class="m-code">9.1</span>
+  <h3 class="m-title">Data &amp; training infrastructure</h3></div>
+  <p class="m-sum">The pipelines and clusters that feed and run large training jobs.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Data pipelines and feature stores.</span></li><li class="lesson"><span class="l-t">Distributed training infrastructure and clusters.</span></li><li class="lesson"><span class="l-t">GPU/TPU utilization, mixed workloads, and cost.</span></li><li class="lesson"><span class="l-t">Checkpointing, fault tolerance, and reproducibility at scale.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">9.2</span>
+  <h3 class="m-title">Serving &amp; production</h3></div>
+  <p class="m-sum">Putting a trained model behind an API at scale.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Model packaging and serving.</span></li><li class="lesson"><span class="l-t">Latency, throughput, and autoscaling.</span></li><li class="lesson"><span class="l-t">Batching and caching strategies.</span></li><li class="lesson"><span class="l-t">Online vs batch inference.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">9.3</span>
+  <h3 class="m-title">Reliability &amp; lifecycle</h3></div>
+  <p class="m-sum">Keeping a deployed model correct as the world drifts.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Monitoring, drift detection, and observability.</span></li><li class="lesson"><span class="l-t">A/B testing and online evaluation.</span></li><li class="lesson"><span class="l-t">Versioning data, models, and experiments.</span></li><li class="lesson"><span class="l-t">CI/CD for ML and the retraining loop.</span></li></ul>
+</article></div>
+</section>
+<section class="part" id="ml-p10">
+  <header class="p-head">
+    <span class="p-num">Part 10</span>
+    <h2 class="p-title">Research, interpretability &amp; safety</h2>
+    <p class="p-note">The frontier skills a research role is actually hired for.</p>
+  </header>
+  <div class="modules"><article class="module">
+  <div class="m-head"><span class="m-code">10.1</span>
+  <h3 class="m-title">Doing research</h3></div>
+  <p class="m-sum">How to move from reading papers to producing novel, rigorous results.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Reading and reproducing papers efficiently.</span></li><li class="lesson"><span class="l-t">Experimental design, ablations, and controls.</span></li><li class="lesson"><span class="l-t">Statistical rigor in ML experiments.</span></li><li class="lesson"><span class="l-t">Writing, figures, and communicating results.</span></li><li class="lesson"><span class="l-t">Managing compute and research iteration speed.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">10.2</span>
+  <h3 class="m-title">Interpretability</h3></div>
+  <p class="m-sum">Opening the black box — understanding what a network actually computes.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Feature attribution and saliency.</span></li><li class="lesson"><span class="l-t">Probing and representation analysis.</span></li><li class="lesson"><span class="l-t">Mechanistic interpretability</span><span class="l-g">circuits, features, superposition.</span></li><li class="lesson"><span class="l-t">Activation steering and model editing.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">10.3</span>
+  <h3 class="m-title">Safety &amp; alignment</h3></div>
+  <p class="m-sum">Making powerful models do what we intend — the core of Anthropic-style work.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">The alignment problem</span><span class="l-g">why it&#x27;s hard.</span></li><li class="lesson"><span class="l-t">Specification, robustness, and assurance.</span></li><li class="lesson"><span class="l-t">Scalable oversight and evaluations.</span></li><li class="lesson"><span class="l-t">Interpretability for safety.</span></li><li class="lesson"><span class="l-t">Governance, ethics, and societal impact.</span></li></ul>
+</article></div>
+</section>
+<section class="part mastery" id="ml-p11">
+  <header class="p-head">
+    <span class="p-num">Part 11</span>
+    <h2 class="p-title">Advanced probabilistic &amp; causal ML<span class="tier-chip">▲ Mastery</span></h2>
+    <p class="p-note">The rigorous theory behind uncertainty and cause — full depth.</p>
+  </header>
+  <div class="modules"><article class="module">
+  <div class="m-head"><span class="m-code">11.1</span>
+  <h3 class="m-title">Bayesian machine learning</h3></div>
+  <p class="m-sum">Treating parameters themselves as distributions to reason about uncertainty.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Bayesian inference and conjugate priors.</span></li><li class="lesson"><span class="l-t">Bayesian linear/logistic regression.</span></li><li class="lesson"><span class="l-t">Model evidence and Bayesian model selection.</span></li><li class="lesson"><span class="l-t">Bayesian neural networks and uncertainty estimation.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">11.2</span>
+  <h3 class="m-title">Probabilistic graphical models</h3></div>
+  <p class="m-sum">Encoding structured dependencies between many random variables.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Directed models (Bayesian networks) and factorization.</span></li><li class="lesson"><span class="l-t">Undirected models (Markov random fields).</span></li><li class="lesson"><span class="l-t">Exact inference</span><span class="l-g">variable elimination, belief propagation.</span></li><li class="lesson"><span class="l-t">Hidden Markov models and the forward-backward algorithm.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">11.3</span>
+  <h3 class="m-title">Approximate inference</h3></div>
+  <p class="m-sum">Estimating intractable distributions when exact inference fails.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Variational inference and the ELBO.</span></li><li class="lesson"><span class="l-t">The reparameterization trick (VAEs revisited, rigorously).</span></li><li class="lesson"><span class="l-t">Markov chain Monte Carlo</span><span class="l-g">Metropolis-Hastings, Gibbs.</span></li><li class="lesson"><span class="l-t">Hamiltonian Monte Carlo and modern samplers.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">11.4</span>
+  <h3 class="m-title">Gaussian processes &amp; kernels</h3></div>
+  <p class="m-sum">Nonparametric Bayesian models with calibrated uncertainty.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Gaussian processes</span><span class="l-g">priors over functions.</span></li><li class="lesson"><span class="l-t">Kernel design and hyperparameter learning.</span></li><li class="lesson"><span class="l-t">Bayesian optimization.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">11.5</span>
+  <h3 class="m-title">Causal inference</h3></div>
+  <p class="m-sum">Moving from correlation to cause — increasingly asked at top labs.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Causal graphs and do-calculus.</span></li><li class="lesson"><span class="l-t">Confounding, backdoor/front-door adjustment.</span></li><li class="lesson"><span class="l-t">Potential outcomes and treatment effects.</span></li><li class="lesson"><span class="l-t">Instrumental variables and natural experiments.</span></li></ul>
+</article></div>
+</section>
+<section class="part mastery" id="ml-p12">
+  <header class="p-head">
+    <span class="p-num">Part 12</span>
+    <h2 class="p-title">Systems &amp; performance mastery<span class="tier-chip">▲ Mastery</span></h2>
+    <p class="p-note">Making models fast at the hardware level — the hardest engineering.</p>
+  </header>
+  <div class="modules"><article class="module">
+  <div class="m-head"><span class="m-code">12.1</span>
+  <h3 class="m-title">GPU programming</h3></div>
+  <p class="m-sum">Writing the kernels that frameworks call.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">GPU architecture</span><span class="l-g">SMs, warps, memory hierarchy.</span></li><li class="lesson"><span class="l-t">CUDA fundamentals</span><span class="l-g">threads, blocks, shared memory.</span></li><li class="lesson"><span class="l-t">Writing a custom kernel (e.g. fused attention) in CUDA/Triton.</span></li><li class="lesson"><span class="l-t">Roofline analysis</span><span class="l-g">compute vs memory bound.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">12.2</span>
+  <h3 class="m-title">Compilers &amp; graph optimization</h3></div>
+  <p class="m-sum">Letting a compiler make your model faster than you can by hand.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Operator fusion and graph rewriting.</span></li><li class="lesson"><span class="l-t">torch.compile, XLA, and TVM.</span></li><li class="lesson"><span class="l-t">Kernel autotuning.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">12.3</span>
+  <h3 class="m-title">Extreme-scale training</h3></div>
+  <p class="m-sum">The engineering behind training a frontier model on a supercomputer.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">3-D parallelism (data × tensor × pipeline) at cluster scale.</span></li><li class="lesson"><span class="l-t">Overlapping communication and computation.</span></li><li class="lesson"><span class="l-t">Fault-tolerant training over thousands of nodes.</span></li><li class="lesson"><span class="l-t">Cost, energy, and utilization at the frontier.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">12.4</span>
+  <h3 class="m-title">Inference at the limit</h3></div>
+  <p class="m-sum">Squeezing the last order of magnitude out of serving.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Advanced quantization and sparsity.</span></li><li class="lesson"><span class="l-t">Paged attention and continuous batching.</span></li><li class="lesson"><span class="l-t">Speculative decoding, medusa, and drafting.</span></li><li class="lesson"><span class="l-t">Compiling and deploying to edge/accelerators.</span></li></ul>
+</article></div>
+</section>
+<section class="part mastery" id="ml-p13">
+  <header class="p-head">
+    <span class="p-num">Part 13</span>
+    <h2 class="p-title">The open frontier<span class="tier-chip">▲ Mastery</span></h2>
+    <p class="p-note">Where the field is unsolved — the capstone that defines a top researcher.</p>
+  </header>
+  <div class="modules"><article class="module">
+  <div class="m-head"><span class="m-code">13.1</span>
+  <h3 class="m-title">Agents &amp; tool use</h3></div>
+  <p class="m-sum">Turning a language model into a system that acts over long horizons.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Tool use, function calling, and environments.</span></li><li class="lesson"><span class="l-t">Planning, memory, and reflection.</span></li><li class="lesson"><span class="l-t">Multi-agent systems and orchestration.</span></li><li class="lesson"><span class="l-t">Evaluating agents on long-horizon tasks.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">13.2</span>
+  <h3 class="m-title">Advanced reinforcement learning</h3></div>
+  <p class="m-sum">The RL depth behind alignment and decision-making agents.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Offline RL and batch-constrained methods.</span></li><li class="lesson"><span class="l-t">Multi-agent RL and self-play.</span></li><li class="lesson"><span class="l-t">Model-based RL and world models.</span></li><li class="lesson"><span class="l-t">Exploration, reward modeling, and RL for reasoning.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">13.3</span>
+  <h3 class="m-title">Reasoning, learning &amp; memory</h3></div>
+  <p class="m-sum">The research directions aimed at more capable, adaptable models.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Reasoning and inference-time compute.</span></li><li class="lesson"><span class="l-t">Continual, few-shot, and meta-learning.</span></li><li class="lesson"><span class="l-t">Long-term memory and retrieval at scale.</span></li><li class="lesson"><span class="l-t">Emergence, generalization, and the science of scaling.</span></li></ul>
+</article><article class="module">
+  <div class="m-head"><span class="m-code">13.4</span>
+  <h3 class="m-title">Open problems &amp; the road ahead</h3></div>
+  <p class="m-sum">The unsolved questions a frontier lab is actually working on.</p>
+  <ul class="lessons"><li class="lesson"><span class="l-t">Hallucination, faithfulness, and truthfulness.</span></li><li class="lesson"><span class="l-t">Robustness, adversarial examples, and distribution shift.</span></li><li class="lesson"><span class="l-t">Scalable oversight and superalignment.</span></li><li class="lesson"><span class="l-t">Where the field goes next</span><span class="l-g">and how to contribute.</span></li></ul>
+</article></div>
+</section>
+      </div>
+    </div>
+    <footer class="foot">Hyzr Code · course roadmap · structure only, dependency-ordered</footer>
+  </div>
+</div>
+<script>
+const tabs=[...document.querySelectorAll('.tab')];
+tabs.forEach(t=>t.addEventListener('click',()=>{
+  tabs.forEach(x=>x.setAttribute('aria-selected', x===t));
+  document.getElementById('panel-algo').hidden = t.dataset.target!=='algo';
+  document.getElementById('panel-ml').hidden = t.dataset.target!=='ml';
+  window.scrollTo({top:0,behavior:'auto'});
+}));
+</script>

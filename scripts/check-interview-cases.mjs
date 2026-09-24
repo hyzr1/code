@@ -1,0 +1,13 @@
+import { build } from 'esbuild';
+import fs from 'node:fs';
+import {execFileSync} from 'node:child_process';
+fs.mkdirSync('.check',{recursive:true});
+for (const [name,entry] of Object.entries({cases:'src/engine/interviewCases.ts',problems:'src/content/python/interviewProblems.ts',support:'src/engine/interviewSupport.ts'})) await build({entryPoints:[entry],bundle:true,platform:'node',format:'esm',outfile:`.check/${name}.mjs`});
+const {interviewCases}=await import('../.check/cases.mjs');
+const {INTERVIEW_PROBLEMS}=await import('../.check/problems.mjs');
+const {INTERVIEW_SUPPORT}=await import('../.check/support.mjs');
+const rows=INTERVIEW_PROBLEMS.map(p=>({id:p.id,solution:p.solution,cases:interviewCases(p)})).filter(p=>p.cases.length);
+if(rows.length!==16)throw Error('Unexpected generated-suite coverage');
+fs.writeFileSync('.check/expanded-cases.json',JSON.stringify(rows));
+fs.writeFileSync('.check/support.py',INTERVIEW_SUPPORT);
+execFileSync('python',['scripts/check-interview-cases.py'],{stdio:'inherit'});

@@ -1,0 +1,97 @@
+import type { CareerTrack, Course, CourseModule } from "../types";
+import type { PreparationLevel } from "./companies";
+
+/** The live Python path is one maximum-depth sequence. The company graph
+ * preserved for a later release, but it does not change today's curriculum. */
+export const ACTIVE_SWE_PREPARATION_LEVEL: PreparationLevel = 5;
+
+/**
+ * The released Python, DSA, and ML paths. Empty catalogs are never presented
+ * as playable courses.
+ */
+export interface CourseOption {
+  id: Course;
+  label: string;
+  shortLabel: string;
+  detail: string;
+  accent: string;
+  /** Shown as a one-line "assumes you already know Python" note. */
+  assumesPython: boolean;
+  comingSoon?: boolean;
+  /** Kept in the content graph but not offered in the picker. */
+  hidden?: boolean;
+}
+
+export const COURSES: CourseOption[] = [
+  {
+    id: "swe",
+    label: "Python",
+    shortLabel: "PY",
+    detail: "Learn Python from fundamentals through production-ready software engineering.",
+    accent: "#4f8fd8",
+    assumesPython: false,
+  },
+  // Python Mastery is authored but not on the release path, so it is hidden
+  // from the picker entirely rather than advertised as coming soon. Its
+  // modules stay in the content graph; nothing references them until it ships.
+  {
+    id: "python",
+    label: "Python Mastery",
+    shortLabel: "PY",
+    detail: "Learn to program from zero — the foundation every other course builds on.",
+    accent: "#3776ab",
+    assumesPython: false,
+    comingSoon: true,
+    hidden: true,
+  },
+  {
+    id: "algo",
+    label: "Data Structures & Algorithms",
+    shortLabel: "DSA",
+    detail: "A guided DSA path for technical interviews. Assumes Python.",
+    accent: "#c96442",
+    assumesPython: true,
+  },
+  {
+    id: "ml",
+    label: "Machine Learning",
+    shortLabel: "ML",
+    detail: "Learn the math, models, and systems behind practical machine learning. Assumes Python.",
+    accent: "#2f9668",
+    assumesPython: true,
+  },
+];
+
+export const COURSE_BY_ID = new Map(COURSES.map((course) => [course.id, course]));
+
+/** Courses offered in the picker. */
+export const VISIBLE_COURSES = COURSES.filter((course) => !course.hidden);
+
+/** Visible catalogs that are announced but not yet playable. */
+export const COMING_SOON_COURSES = VISIBLE_COURSES.filter((course) => course.comingSoon);
+
+/**
+ * Which product owns a module. Explicit roadmap modules stay in their future
+ * mastery catalogs; the fully authored original sequence forms the SWE path.
+ */
+export function moduleCourse(module: CourseModule): Course | null {
+  // A module may declare its course explicitly (the full Algo/ML roadmaps do).
+  if (module.course) return module.course;
+  if ((module.language ?? "python") !== "python") return null;
+  // The original, fully authored sequence is the adaptive SWE spine: practical
+  // Python (m0-m7), interview reasoning (m8-m11), and systems (m12).
+  if (/^py\.m(?:[0-9]|1[0-2])$/.test(module.id)) return "swe";
+  return null;
+}
+
+/**
+ * The recommendation and daily-session engines still reason in career tracks.
+ * The user no longer picks one, so we derive a representative track from the
+ * selected course.
+ */
+export function trackForCourse(course: Course, level?: PreparationLevel): CareerTrack {
+  if (course === "ml") return "ml";
+  if (course === "algo") return "faang";
+  if (course === "swe" && (level ?? 1) >= 4) return "faang";
+  return "swe";
+}
