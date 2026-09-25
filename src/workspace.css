@@ -14,13 +14,13 @@
   --ws-submit-bg: #e8f5ee;
 }
 :root[data-theme="dark"] .problem-shell {
-  --ws-canvas: #090a0b;
-  --ws-panel: #111214;
-  --ws-header: #17191c;
-  --ws-field: #0d0e10;
-  --ws-line: #292b2f;
+  --ws-canvas: #050607;
+  --ws-panel: #0b0c0e;
+  --ws-header: #101113;
+  --ws-field: #08090a;
+  --ws-line: #202226;
   --ws-muted: #969ba5;
-  --ws-active: #1e2024;
+  --ws-active: #15171a;
   --ws-text: #f0f1f2;
   --ws-code: #f0f1f2;
   --ws-accent: #9aa0aa;

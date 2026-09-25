@@ -122,19 +122,19 @@
 }
 
 :root[data-theme="dark"] {
-  /* #181817 is a near-neutral
-     with a trace of warmth, considerably darker than a generic slate. */
-  --bg: #090a0b;
-  --bg-sidebar: #0b0c0d;
-  --surface: #111214;
-  --surface-2: #17191c;
-  --surface-3: #1e2024;
-  --surface-inset: #0d0e10;
+  /* Keep the dark theme close to black. Panels separate with small value
+     steps instead of blue/grey slabs, so the canvas remains the visual anchor. */
+  --bg: #050607;
+  --bg-sidebar: #070809;
+  --surface: #0b0c0e;
+  --surface-2: #101113;
+  --surface-3: #15171a;
+  --surface-inset: #08090a;
 
   --border: #35353300;
-  --border: #292b2f;
-  --border-soft: #202226;
-  --border-strong: #3a3d42;
+  --border: #202226;
+  --border-soft: #17191c;
+  --border-strong: #2d3035;
 
   --text: #f5f4ef;
   --text-2: #dedbd3;
@@ -161,8 +161,8 @@
   --btn-primary-hover: #e6e4dd;
   --btn-primary-fg: #1f1e1d;
 
-  --hover: rgba(255, 255, 255, 0.045);
-  --selected: rgba(255, 255, 255, 0.075);
+  --hover: rgba(255, 255, 255, 0.035);
+  --selected: rgba(255, 255, 255, 0.055);
 }
 
 /* The mark is white artwork for dark surfaces; keep it legible on the light
@@ -5927,10 +5927,10 @@ button.submit-button:hover { background:#1d754a; }
 /* Product surfaces: quiet chrome, clear hierarchy, consistent controls. */
 :root { --display: var(--sans); --sidebar-w: 236px; }
 :root[data-theme="dark"] {
-  --bg:#151619; --bg-sidebar:#191a1e; --surface:#1e2025; --surface-2:#272a30;
-  --surface-3:#30343c; --surface-inset:#181a1f; --border:#34373f;
-  --border-soft:#2b2e35; --text:#eef0f5; --text-2:#d9dde6;
-  --text-muted:#a4aab7; --text-faint:#828b9b; --code-bg:#191b20;
+  --bg:#050607; --bg-sidebar:#070809; --surface:#0b0c0e; --surface-2:#101113;
+  --surface-3:#15171a; --surface-inset:#08090a; --border:#202226;
+  --border-soft:#17191c; --text:#eef0f5; --text-2:#d9dde6;
+  --text-muted:#a4aab7; --text-faint:#828b9b; --code-bg:#08090a;
 }
 body, button, input, select, textarea { font-family:var(--sans); }
 h1,h2,h3,.brand-name { font-family:var(--sans); }
@@ -6151,6 +6151,12 @@ button { transition:background .15s,color .15s,border-color .15s; }
 .account-notice,.account-error { margin:12px 0 0; padding:9px 11px; border-radius:6px; font-size:12px; }
 .account-notice { color:var(--pass); background:var(--pass-bg); }
 .account-error { color:var(--fail); background:var(--fail-bg); }
+
+/* Beta access is product chrome, not a promotional card. Keep the global
+   button treatment from lifting it into a bright block in the sidebar. */
+.sidebar-beta { background:transparent !important; border:0 !important; border-top:1px solid var(--border-soft) !important; box-shadow:none !important; }
+.sidebar-beta:hover { background:var(--hover) !important; }
+.sidebar-beta:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
 
 /* Private beta entry. It is a page, not a modal, so first paint stays calm. */
 .access-check { min-height:100dvh; background:#101114; }
