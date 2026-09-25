@@ -3,6 +3,12 @@ import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
+  build: {
+    manifest: true,
+    // Large curricula and coding runtimes are loaded behind route boundaries.
+    // The budget check guards the small startup shell independently.
+    chunkSizeWarningLimit: 6_500,
+  },
   server: {
     // Listen on the LAN as well as localhost so the real mobile layout can be
     // tested on a phone connected to the same Wi-Fi.

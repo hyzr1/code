@@ -203,6 +203,7 @@ interface Store {
   ) => void;
   resetGroup: (group: keyof Settings) => void;
   resetAll: () => void;
+  replaceAll: (settings: Settings) => void;
   /** Resolved light/dark after applying the system preference. */
   resolvedTheme: "light" | "dark";
 }
@@ -269,6 +270,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
           [group]: structuredClone(DEFAULTS[group]),
         })),
       resetAll: () => setSettings(structuredClone(DEFAULTS)),
+      replaceAll: (next) => setSettings(hydrate(JSON.stringify(next))),
     }),
     [settings, resolvedTheme],
   );

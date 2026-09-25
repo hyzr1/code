@@ -3,6 +3,20 @@
   "framework": "vite",
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
+  "functions": {
+    "api/judge.ts": {
+      "includeFiles": "node_modules/pyodide/**",
+      "maxDuration": 20
+    }
+  },
+  "rewrites": [
+    { "source": "/courses/:path*", "destination": "/index.html" },
+    { "source": "/problems/:path*", "destination": "/index.html" },
+    { "source": "/practice/:path*", "destination": "/index.html" },
+    { "source": "/progress", "destination": "/index.html" },
+    { "source": "/concepts/:path*", "destination": "/index.html" },
+    { "source": "/typing/:path*", "destination": "/index.html" }
+  ],
   "headers": [
     {
       "source": "/(.*)",

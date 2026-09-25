@@ -32,6 +32,50 @@ export function saveProgress(progress: Progress): void {
   }
 }
 
+/** Merge two devices without double-counting sessions or losing a stronger review. */
+export function mergeProgress(local: Progress, cloud: Progress): Progress {
+  const level = { L1: 1, L2: 2, L3: 3, L4: 4 } as const;
+  const concepts = { ...local.concepts };
+  for (const [id, incoming] of Object.entries(cloud.concepts ?? {})) {
+    const current = concepts[id];
+    if (!current || incoming.lastSeen > current.lastSeen ||
+      (incoming.lastSeen === current.lastSeen && incoming.strength > current.strength)) {
+      concepts[id] = incoming;
+    }
+  }
+  const cleared = { ...local.cleared };
+  for (const [id, incoming] of Object.entries(cloud.cleared ?? {})) {
+    const current = cleared[id];
+    if (!current || level[incoming] > level[current]) cleared[id] = incoming;
+  }
+  const attempts = [...local.attempts, ...(cloud.attempts ?? [])]
+    .filter((entry, index, all) => all.findIndex(candidate =>
+      candidate.at === entry.at && candidate.unitId === entry.unitId && candidate.unitKind === entry.unitKind,
+    ) === index)
+    .sort((a, b) => a.at - b.at)
+    .slice(-2000);
+  const sessionMap = new Map(local.sessions.map(entry => [entry.date, { ...entry }]));
+  for (const incoming of cloud.sessions ?? []) {
+    const current = sessionMap.get(incoming.date);
+    if (!current || incoming.seconds > current.seconds || incoming.units > current.units) {
+      sessionMap.set(incoming.date, { ...incoming });
+    }
+  }
+  const lectureReviews = [...local.lectureReviews, ...(cloud.lectureReviews ?? [])]
+    .filter((entry, index, all) => all.findIndex(candidate =>
+      candidate.at === entry.at && candidate.atomId === entry.atomId,
+    ) === index)
+    .sort((a, b) => a.at - b.at);
+  return {
+    concepts,
+    cleared,
+    attempts,
+    sessions: [...sessionMap.values()].sort((a, b) => a.date.localeCompare(b.date)),
+    lectureReviews,
+    manualComplete: { ...local.manualComplete, ...(cloud.manualComplete ?? {}) },
+  };
+}
+
 export function logAttempt(progress: Progress, attempt: AttemptLog): void {
   progress.attempts.push(attempt);
   // Keep the log bounded; the mastery model holds the state that matters.

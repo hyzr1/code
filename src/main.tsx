@@ -1,25 +1,33 @@
-import { StrictMode } from "react";
+import { lazy, StrictMode, Suspense } from "react";
 import { createRoot } from "react-dom/client";
-import App from "./App";
 import { SettingsProvider } from "./settings";
 import { TypingProvider } from "./components/typing/store";
 import { ToastProvider } from "./components/Toast";
 import AppErrorBoundary from "./components/AppErrorBoundary";
+import { AccountProvider } from "./account";
+import { initMonitoring } from "./monitoring";
 import "@fontsource-variable/inter/wght.css";
 import "./styles.css";
 import "./components/typing/typing.css";
 import "./product.css";
 import "./workspace.css";
 
+const App = lazy(() => import("./App"));
+initMonitoring();
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <AppErrorBoundary>
       <SettingsProvider>
-        <TypingProvider>
-          <ToastProvider>
-            <App />
-          </ToastProvider>
-        </TypingProvider>
+        <AccountProvider>
+          <TypingProvider>
+            <ToastProvider>
+              <Suspense fallback={<main className="boot-screen" aria-label="Loading Hyzr Code"><span className="boot-mark" /> <strong>Hyzr Code</strong></main>}>
+                <App />
+              </Suspense>
+            </ToastProvider>
+          </TypingProvider>
+        </AccountProvider>
       </SettingsProvider>
     </AppErrorBoundary>
   </StrictMode>,

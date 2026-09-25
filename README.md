@@ -15,9 +15,11 @@ Built and maintained by Hyzr.
 | **Data Structures & Algorithms** | An ordered interview-prep path, including NeetCode 250, NeetCode 150, and Blind 75 study plans. |
 | **Machine Learning** | The mathematics, models, and systems needed to build practical ML projects. |
 
-The DSA workspace includes an in-browser Python runner, visible examples,
-hidden submission checks, progressive hints, reference solutions, saved drafts,
-and a full-screen whiteboard for working through an approach.
+The DSA workspace includes a fast local Python runner for examples, a hardened
+server-side judge for hidden submission checks, progressive hints, reference
+solutions, saved drafts, and a full-screen whiteboard for working through an
+approach. Optional Hyzr accounts synchronize progress and preferences across
+devices while the course remains usable offline.
 
 ## Run locally
 
@@ -46,6 +48,16 @@ Run the full validation suite and production build before deploying:
 npm run check
 npm run build
 ```
+
+The server judge reads its hidden catalog from the project's private Vercel
+Blob store. Publish a refreshed catalog after changing problem tests:
+
+```bash
+npm run judge:publish
+```
+
+This command requires the project's `BLOB_READ_WRITE_TOKEN`. Production also
+uses the private store for account sync and sampled reliability telemetry.
 
 ## Technology
 

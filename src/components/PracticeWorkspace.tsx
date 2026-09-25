@@ -11,6 +11,7 @@ import ExecutionResults from "./ExecutionResults";
 import Editor from "./Editor";
 import Markdown from "./Markdown";
 import Icon from "./Icon";
+import { submitToJudge } from "../engine/serverJudge";
 
 export interface PracticeOutcome { hintsUsed: number; seconds: number; attempts: number; timeToFirstKeystroke?: number }
 
@@ -91,7 +92,20 @@ export default function PracticeWorkspace({ problem, starter, onComplete, onRevi
     busy.current = true; setRunning(true); setSubmitted(submit); setBottomTab("Test result"); setMobilePane("tests"); setResult(null);
     const source = code;
     try {
-      const outcome = await runTests(source, problem.exportName, tests, problem.language);
+      let outcome: RunResult;
+      if (submit && problem.language === "python") {
+        try {
+          outcome = await submitToJudge(problem.id, source);
+        } catch (error) {
+          const status = (error as Error & { status?: number }).status;
+          if (status && status !== 404 && status < 500) throw error;
+          // Local development and offline study remain usable. Production
+          // submissions normally return verified=true from the server judge.
+          outcome = { ...(await runTests(source, problem.exportName, tests, problem.language)), verified: false };
+        }
+      } else {
+        outcome = await runTests(source, problem.exportName, tests, problem.language);
+      }
       if (!mounted.current) return;
       attempts.current += 1; setResult(outcome);
       if (submit) {

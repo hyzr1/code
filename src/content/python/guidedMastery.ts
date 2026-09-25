@@ -42,12 +42,15 @@ const joinParagraphs = (paragraphs: string[]): string[] =>
     index === 0 ? [paragraph] : ["", paragraph],
   );
 
+const teachableCode = (title: string, code: string) =>
+  code.includes("#") ? code : `# ${title}: follow each state change.\n${code}`;
+
 export function guidedMasteryAtom(spec: GuidedMasterySpec): Atom {
   const vocabulary = spec.vocabulary
     .map(([term, meaning]) => `- **${term}** — ${meaning}`)
     .join("\n");
   const ideaSection = spec.idea && spec.idea.length
-    ? ["", "## The idea, step by step", "", ...joinParagraphs(spec.idea), ""].join("\n")
+    ? ["", ...joinParagraphs(spec.idea), ""].join("\n")
     : "";
   const body = `${spec.opening}
 
@@ -63,7 +66,7 @@ ${vocabulary}
 
 ${spec.why}
 
-## A picture to keep in your head
+## The idea, step by step
 
 ${spec.mentalModel}
 ${ideaSection}
@@ -72,7 +75,7 @@ ${ideaSection}
 ${spec.firstIntro}
 
 \`\`\`python
-${spec.firstCode}
+${teachableCode(spec.firstTitle, spec.firstCode)}
 \`\`\`
 
 ## Walk through it one small step at a time
@@ -84,7 +87,7 @@ ${spec.firstTrace}
 ${spec.secondIntro}
 
 \`\`\`python
-${spec.secondCode}
+${teachableCode(spec.secondTitle, spec.secondCode)}
 \`\`\`
 
 ## Trace the second example

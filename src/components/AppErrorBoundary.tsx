@@ -1,5 +1,6 @@
 import { Component, type ErrorInfo, type ReactNode } from "react";
 import { Mark } from "./Brand";
+import { captureException } from "../monitoring";
 
 interface State {
   error: Error | null;
@@ -17,6 +18,7 @@ export default class AppErrorBoundary extends Component<
 
   componentDidCatch(error: Error, info: ErrorInfo) {
     console.error("Hyzr Code UI failed", error, info.componentStack);
+    captureException(new Error(`${error.message}\n${info.componentStack}`), "react-boundary");
   }
 
   render() {

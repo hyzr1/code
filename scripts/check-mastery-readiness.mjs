@@ -63,7 +63,7 @@ for (const course of ["algo", "ml"]) {
         if (codeBlocks < 2) failures.push(`${atom.id}: guided lesson needs two runnable examples`);
         for (const section of [
           "## Why this matters",
-          "## A picture to keep in your head",
+          "## The idea, step by step",
           "## A mistake to avoid",
           "## Pause and predict",
           "## Check your thinking",

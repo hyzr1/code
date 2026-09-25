@@ -281,6 +281,8 @@ export interface RunResult {
   results: TestResult[];
   logs: string[];
   ms: number;
+  /** Submit was evaluated by Hyzr's isolated server judge. */
+  verified?: boolean;
 }
 
 // ---------------------------------------------------------------- progress

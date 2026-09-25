@@ -1,5 +1,6 @@
 /** Entry point for the content checks in `scripts/`. Not shipped. */
 export { INTERVIEW_SUPPORT } from "./engine/interviewSupport";
+export { interviewCases } from "./engine/interviewCases";
 export {
   ATOMS,
   COURSE_LESSONS,

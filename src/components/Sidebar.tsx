@@ -14,19 +14,8 @@ import { useSettings } from "../settings";
 import { ACTIVE_SWE_PREPARATION_LEVEL, COURSE_BY_ID } from "../content/courses";
 import { DayRing, Heatmap, Mark, StreakLabel } from "./Brand";
 import Icon, { type IconName } from "./Icon";
-
-export type Route =
-  | { name: "course" }
-  | { name: "lesson"; id: string }
-  | { name: "problems" }
-  | { name: "problem"; id: string }
-  | { name: "session" }
-  | { name: "progress" }
-  | { name: "concept"; id: string }
-  | { name: "type" }
-  | { name: "typeCourse" }
-  | { name: "typeLesson"; id: string }
-  | { name: "typeTest" };
+import type { Route } from "../routing";
+export type { Route } from "../routing";
 
 interface Props {
   route: Route;
@@ -370,7 +359,7 @@ export default function Sidebar({
           onClick={onSettings}
           data-tour="settings"
           title={collapsed ? "Settings and preparation profile" : undefined}
-          aria-label={collapsed ? "Settings and preparation profile" : undefined}
+          aria-label="Settings and preparation profile"
         >
           <DayRing progress={progress} target={settings.learning.dailyMinutes}>
             <div className="avatar">U</div>

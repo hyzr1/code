@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useState } from "react";
 import type { Progress } from "./types";
 import {
   CONCEPT_BY_ID,
@@ -10,6 +10,7 @@ import { ACTIVE_SWE_PREPARATION_LEVEL } from "./content/courses";
 import {
   loadProgress,
   logAttempt,
+  mergeProgress,
   recordSessionTime,
   saveProgress,
 } from "./engine/storage";
@@ -19,20 +20,25 @@ import Sidebar, { type Route } from "./components/Sidebar";
 import Icon from "./components/Icon";
 import { MOBILE, useMediaQuery } from "./hooks";
 import CourseView from "./components/CourseView";
-import LessonView from "./components/LessonView";
 import ProblemsView from "./components/ProblemsView";
 import Dashboard from "./components/Dashboard";
-import SessionView from "./components/SessionView";
-import Settings from "./components/Settings";
-import CommandPalette from "./components/CommandPalette";
 import ConceptView from "./components/ConceptView";
-import ProblemView, { type ProblemOutcome } from "./components/ProblemView";
+import type { ProblemOutcome } from "./components/ProblemView";
 import { useSettings } from "./settings";
 import OnboardingTour, { hasSeenOnboarding } from "./components/OnboardingTour";
-import TypeHome from "./components/typing/TypeHome";
-import TypeCourse from "./components/typing/TypeCourse";
-import TypeLesson from "./components/typing/TypeLesson";
-import SpeedTest from "./components/typing/SpeedTest";
+import { courseFromPath, pathForRoute, routeFromPath, routeTitle } from "./routing";
+import { useAccount } from "./account";
+import { trackPageView } from "./monitoring";
+
+const LessonView = lazy(() => import("./components/LessonView"));
+const SessionView = lazy(() => import("./components/SessionView"));
+const Settings = lazy(() => import("./components/Settings"));
+const CommandPalette = lazy(() => import("./components/CommandPalette"));
+const ProblemView = lazy(() => import("./components/ProblemView"));
+const TypeHome = lazy(() => import("./components/typing/TypeHome"));
+const TypeCourse = lazy(() => import("./components/typing/TypeCourse"));
+const TypeLesson = lazy(() => import("./components/typing/TypeLesson"));
+const SpeedTest = lazy(() => import("./components/typing/SpeedTest"));
 
 const TITLES: Record<Route["name"], string> = {
   course: "Course",
@@ -49,15 +55,63 @@ const TITLES: Record<Route["name"], string> = {
 };
 
 export default function App() {
-  const { update } = useSettings();
+  const { settings, update, replaceAll } = useSettings();
+  const account = useAccount();
   const [progress, setProgress] = useState<Progress>(() => loadProgress());
-  const [route, setRoute] = useState<Route>({ name: "course" });
+  const [cloudReady, setCloudReady] = useState(false);
+  const [route, setRoute] = useState<Route>(() => routeFromPath());
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [tourOpen, setTourOpen] = useState(() => !hasSeenOnboarding());
 
   const isMobile = useMediaQuery(MOBILE);
   const [drawerOpen, setDrawerOpen] = useState(false);
+
+  useEffect(() => {
+    if (account.state !== "authenticated") {
+      setCloudReady(false);
+      return;
+    }
+    let active = true;
+    void account.pull().then((snapshot) => {
+      if (!active) return;
+      if (snapshot?.progress) setProgress(current => mergeProgress(current, snapshot.progress));
+      if (snapshot?.settings) replaceAll(snapshot.settings);
+      setCloudReady(true);
+    });
+    return () => { active = false; };
+  }, [account.state]);
+
+  useEffect(() => {
+    if (!cloudReady || account.state !== "authenticated") return;
+    const timer = setTimeout(() => { void account.push(progress, settings); }, 1800);
+    return () => clearTimeout(timer);
+  }, [account.state, cloudReady, progress, settings]);
+
+  const go = useCallback((next: Route, replace = false) => {
+    setRoute(next);
+    const path = pathForRoute(next, settings.learning.course);
+    if (path !== location.pathname) history[replace ? "replaceState" : "pushState"]({}, "", path);
+  }, [settings.learning.course]);
+
+  useEffect(() => {
+    const linkedCourse = courseFromPath();
+    if (linkedCourse && linkedCourse !== settings.learning.course) {
+      update("learning", { course: linkedCourse });
+    }
+  }, [settings.learning.course, update]);
+
+  useEffect(() => {
+    const onPopState = () => setRoute(routeFromPath());
+    addEventListener("popstate", onPopState);
+    return () => removeEventListener("popstate", onPopState);
+  }, []);
+
+  useEffect(() => {
+    if (route.name !== "course" && route.name !== "lesson") return;
+    const path = pathForRoute(route, settings.learning.course);
+    if (path !== location.pathname) history.replaceState({}, "", path);
+  }, [route, settings.learning.course]);
 
   const startTour = useCallback(() => {
     setSettingsOpen(false);
@@ -156,7 +210,7 @@ export default function App() {
         recordSessionTime(draft, outcome.seconds, 1);
       });
     }
-    setRoute({ name: "problems" });
+    go({ name: "problems" });
   };
 
   const lesson = route.name === "lesson" ? LESSON_BY_ID.get(route.id) : null;
@@ -169,11 +223,16 @@ export default function App() {
           ? (CONCEPT_BY_ID.get(route.id)?.title ?? "")
           : "";
 
+  useEffect(() => {
+    document.title = routeTitle(route, crumb || undefined);
+    trackPageView(route.name);
+  }, [crumb, route]);
+
   return (
     <div className={`shell ${isMobile ? "mobile" : ""} ${route.name === "problem" ? "problem-shell" : ""}`}>
       <Sidebar
         route={route}
-        go={setRoute}
+        go={go}
         progress={progress}
         onSettings={() => setSettingsOpen(true)}
         onSearch={() => setPaletteOpen(true)}
@@ -205,8 +264,9 @@ export default function App() {
             {crumb ? (
               <button
                 className="ghost small"
+                aria-label={`Back to ${TITLES[route.name]}`}
                 onClick={() =>
-                  setRoute(
+                  go(
                     route.name === "lesson"
                       ? { name: "course" }
                       : route.name === "concept"
@@ -236,12 +296,13 @@ export default function App() {
           </header>
         ) : null}
 
+        <Suspense fallback={<RouteLoading />}>
         <div className="route" key={`${route.name}-${"id" in route ? route.id : ""}`}>
         {route.name === "course" ? (
           <div className="page">
             <CourseView
               progress={progress}
-              onOpen={(id) => setRoute({ name: "lesson", id })}
+              onOpen={(id) => go({ name: "lesson", id })}
               onToggleComplete={(id) =>
                 commit((draft) => {
                   if (draft.manualComplete[id]) delete draft.manualComplete[id];
@@ -256,56 +317,56 @@ export default function App() {
               id={route.id}
               progress={progress}
               commit={commit}
-              onExit={() => setRoute({ name: "course" })}
-              onOpen={(id) => setRoute({ name: "lesson", id })}
+              onExit={() => go({ name: "course" })}
+              onOpen={(id) => go({ name: "lesson", id })}
             />
           </div>
         ) : route.name === "problems" ? (
           <ProblemsView
             progress={progress}
-            onOpen={(id) => setRoute({ name: "problem", id })}
+            onOpen={(id) => go({ name: "problem", id })}
           />
         ) : route.name === "progress" ? (
           <div className="page">
             <Dashboard
               progress={progress}
-              onStart={() => setRoute({ name: "session" })}
-              onConcept={(id) => setRoute({ name: "concept", id })}
+              onStart={() => go({ name: "session" })}
+              onConcept={(id) => go({ name: "concept", id })}
             />
           </div>
         ) : route.name === "concept" ? (
           <ConceptView
             id={route.id}
             progress={progress}
-            onProblem={(id) => setRoute({ name: "problem", id })}
-            onLesson={(id) => setRoute({ name: "lesson", id })}
+            onProblem={(id) => go({ name: "problem", id })}
+            onLesson={(id) => go({ name: "lesson", id })}
           />
         ) : route.name === "session" ? (
           <div className="page">
             <SessionView
               progress={progress}
               commit={commit}
-              onExit={() => setRoute({ name: "progress" })}
+              onExit={() => go({ name: "progress" })}
             />
           </div>
         ) : route.name === "type" ? (
           <div className="page">
             <TypeHome
-              onCourse={() => setRoute({ name: "typeCourse" })}
-              onTest={() => setRoute({ name: "typeTest" })}
-              onOpenLesson={(id) => setRoute({ name: "typeLesson", id })}
+              onCourse={() => go({ name: "typeCourse" })}
+              onTest={() => go({ name: "typeTest" })}
+              onOpenLesson={(id) => go({ name: "typeLesson", id })}
             />
           </div>
         ) : route.name === "typeCourse" ? (
           <div className="page">
-            <TypeCourse onOpen={(id) => setRoute({ name: "typeLesson", id })} />
+            <TypeCourse onOpen={(id) => go({ name: "typeLesson", id })} />
           </div>
         ) : route.name === "typeLesson" ? (
           <div className="page">
             <TypeLesson
               lessonId={route.id}
-              onExit={() => setRoute({ name: "typeCourse" })}
-              onOpenLesson={(id) => setRoute({ name: "typeLesson", id })}
+              onExit={() => go({ name: "typeCourse" })}
+              onOpenLesson={(id) => go({ name: "typeLesson", id })}
             />
           </div>
         ) : route.name === "typeTest" ? (
@@ -322,8 +383,10 @@ export default function App() {
           </div>
         )}
         </div>
+        </Suspense>
       </main>
 
+      <Suspense fallback={null}>
       {settingsOpen ? (
         <Settings
           progress={progress}
@@ -336,15 +399,20 @@ export default function App() {
       {paletteOpen ? (
         <CommandPalette
           progress={progress}
-          go={setRoute}
+          go={go}
           onSettings={() => setSettingsOpen(true)}
           onClose={() => setPaletteOpen(false)}
         />
       ) : null}
+      </Suspense>
 
       <OnboardingTour open={tourOpen} onClose={() => setTourOpen(false)} />
     </div>
   );
+}
+
+function RouteLoading() {
+  return <div className="route-loading" role="status">Loading workspace…</div>;
 }
 
 function LessonRoute({

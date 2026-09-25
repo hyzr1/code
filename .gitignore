@@ -22,3 +22,4 @@ CLAUDE.md
 CHATGPT.md
 AGENTS.md
 .vercel
+.env*

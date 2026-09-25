@@ -15,7 +15,7 @@
 import { ATOMS } from "../.check/content.mjs";
 
 /** Update this downward as lectures are deepened. Never raise it. */
-const BASELINE = 471;
+const BASELINE = 113;
 
 const lectures = ATOMS.filter((atom) => /^py\.atom\.(?:algo|ml)\./.test(atom.id));
 const shallow = [];

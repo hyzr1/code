@@ -134,7 +134,9 @@ for (const atom of lectures) {
     if (!scene.code) return;
     codeSceneCount += 1;
     const lines = scene.code.split("\n");
-    if (lines.length > 22) warn(where, `dense code block has ${lines.length} lines`);
+    // CodeStage keeps the active teaching area to 18 lines and pans as the
+    // narration advances. Longer source is therefore no longer shown as one
+    // overwhelming wall of code.
 
     const steps = scene.focusSteps ?? [];
     focusStepCount += steps.length;

@@ -12,6 +12,8 @@ import { ACCENTS, useSettings, type AccentName } from "../settings";
 import { useToast } from "./Toast";
 import Icon, { type IconName } from "./Icon";
 import { COURSES } from "../content/courses";
+import { useAccount } from "../account";
+import { mergeProgress } from "../engine/storage";
 
 type SectionId =
   | "appearance"
@@ -19,6 +21,7 @@ type SectionId =
   | "learning"
   | "narration"
   | "scheduling"
+  | "account"
   | "data"
   | "shortcuts"
   | "about";
@@ -42,6 +45,7 @@ const GROUPS: {
   {
     title: "Your data",
     items: [
+      { id: "account", label: "Account & sync", icon: "database" },
       { id: "data", label: "Data & backup", icon: "database" },
       { id: "shortcuts", label: "Shortcuts", icon: "keyboard" },
       { id: "about", label: "About", icon: "info" },
@@ -70,13 +74,96 @@ const TITLES: Record<SectionId, { title: string; sub: string }> = {
     title: "Scheduling",
     sub: "How work is spaced and mixed. The defaults follow the evidence — change them if you know why.",
   },
+  account: {
+    title: "Account & sync",
+    sub: "Keep progress and preferences synchronized across your devices.",
+  },
   data: {
     title: "Data & backup",
-    sub: "Everything is stored in this browser. Nothing is sent anywhere.",
+    sub: "Export a private backup or manage the copy stored on this device.",
   },
   shortcuts: { title: "Shortcuts", sub: "Every key the app listens for." },
   about: { title: "About", sub: "What's in the library, and what this is." },
 };
+
+function AccountPanel({ progress, onProgress }: { progress: Progress; onProgress: (progress: Progress) => void }) {
+  const account = useAccount();
+  const { settings, replaceAll } = useSettings();
+  const [mode, setMode] = useState<"login" | "signup">("login");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [notice, setNotice] = useState("");
+
+  const apply = (snapshot: Awaited<ReturnType<typeof account.pull>>) => {
+    if (!snapshot) return;
+    onProgress(mergeProgress(progress, snapshot.progress));
+    replaceAll(snapshot.settings);
+  };
+  const authenticate = async () => {
+    setBusy(true);
+    setNotice("");
+    try {
+      const snapshot = await account[mode](email, password);
+      apply(snapshot);
+      setPassword("");
+      setNotice(snapshot
+        ? "Signed in and merged this device with your cloud progress."
+        : "Account ready. This device will sync automatically.");
+    } catch {
+      // The provider exposes the server's useful error below.
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  if (account.state === "loading") {
+    return <div className="card"><p className="muted">Checking your account…</p></div>;
+  }
+  if (account.state === "authenticated") {
+    return (
+      <div className="card account-card">
+        <span className="badge"><Icon name="checkCircle" size={13} /> Cloud sync on</span>
+        <h2 className="section">{account.email}</h2>
+        <p className="field-help">Progress and preferences save automatically after changes. Passwords are salted and hashed; learning data stays in a private Hyzr store.</p>
+        {notice && <p className="account-notice" role="status">{notice}</p>}
+        {account.error && <p className="account-error" role="alert">{account.error}</p>}
+        <div className="row wrap" style={{ gap: 8, marginTop: 14 }}>
+          <button disabled={busy} onClick={() => {
+            setBusy(true);
+            void account.push(progress, settings)
+              .then(time => setNotice(time ? `Synced ${new Date(time).toLocaleTimeString()}.` : "Sync will retry automatically."))
+              .finally(() => setBusy(false));
+          }}><Icon name="refresh" size={14} /> Sync now</button>
+          <button disabled={busy} onClick={() => {
+            setBusy(true);
+            void account.pull().then(snapshot => {
+              apply(snapshot);
+              if (snapshot) setNotice("Cloud progress merged into this device.");
+            }).finally(() => setBusy(false));
+          }}><Icon name="download" size={14} /> Restore cloud copy</button>
+          <button className="ghost" onClick={() => void account.logout()}><Icon name="x" size={14} /> Sign out</button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="card account-card">
+      <div className="account-mode" role="tablist" aria-label="Account action">
+        <button role="tab" aria-selected={mode === "login"} onClick={() => setMode("login")}>Sign in</button>
+        <button role="tab" aria-selected={mode === "signup"} onClick={() => setMode("signup")}>Create account</button>
+      </div>
+      <p className="field-help">A Hyzr account keeps course progress, streaks, mastery, and preferences available on every device.</p>
+      <label className="account-input">Email<input type="email" autoComplete="email" value={email} onChange={event => setEmail(event.target.value)} /></label>
+      <label className="account-input">Password<input type="password" minLength={10} autoComplete={mode === "login" ? "current-password" : "new-password"} value={password} onChange={event => setPassword(event.target.value)} onKeyDown={event => { if (event.key === "Enter") void authenticate(); }} /></label>
+      {account.error && <p className="account-error" role="alert">{account.error}</p>}
+      {account.state === "offline" && <p className="account-error">Cloud sync is offline. Your local progress is still safe.</p>}
+      <button className="primary" disabled={busy || !email || password.length < 10} onClick={() => void authenticate()}>{busy ? "Working…" : mode === "login" ? "Sign in" : "Create account"}</button>
+      <p className="tiny muted">Use at least 10 characters. Hyzr never stores the original password.</p>
+    </div>
+  );
+}
 
 // ------------------------------------------------------------ controls
 
@@ -1093,6 +1180,11 @@ export default function Settings({
             </>
           ) : null}
 
+          {/* ----------------------------------------------- account */}
+          {section === "account" ? (
+            <AccountPanel progress={progress} onProgress={onProgress} />
+          ) : null}
+
           {/* -------------------------------------------------- data */}
           {section === "data" ? (
             <>
@@ -1241,14 +1333,14 @@ export default function Settings({
                   skills, and only the second one gets you through an interview.
                 </p>
                 <p className="field-help" style={{ maxWidth: "62ch" }}>
-                  Everything runs locally. Your code executes in a sandboxed
-                  worker in this tab, your progress never leaves this device,
-                  and the app works with the network off.
+                  Lessons and Run execute locally and continue to work offline.
+                  If you create an account, progress and preferences are also
+                  copied to Hyzr's private sync store for your other devices.
                 </p>
                 <div className="row" style={{ marginTop: 14, gap: 8 }}>
                   <span className="badge">Version 0.1.0</span>
                   <span className="badge">Offline-first</span>
-                  <span className="badge">No account</span>
+                  <span className="badge">Optional cloud sync</span>
                 </div>
                 <button className="small" style={{ marginTop: 16 }} onClick={onReplayTour}>
                   <Icon name="sparkles" size={15} /> Replay guided tour
