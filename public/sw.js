@@ -1,5 +1,5 @@
-const CACHE_VERSION = "hyzr-code-v10";
-const APP_SHELL = ["/", "/manifest.webmanifest", "/hyzr-mark.png"];
+const CACHE_VERSION = "hyzr-code-v11";
+const APP_SHELL = ["/", "/manifest.webmanifest", "/favicon.png"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(caches.open(CACHE_VERSION).then((cache) => cache.addAll(APP_SHELL)));

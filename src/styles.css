@@ -175,9 +175,9 @@
 :root[data-theme="light"] .access-brand-mark { filter:invert(1); }
 .tour-mark img { display:block; width:18px; height:18px; object-fit:contain; }
 .tour-mark { display:grid; place-items:center; overflow:hidden; }
-.sidebar-beta { display:flex; align-items:center; gap:9px; width:calc(100% - 24px); margin:0 12px 12px; padding:9px 10px; border:1px solid color-mix(in srgb,var(--accent) 28%,var(--border)); border-radius:7px; background:var(--accent-soft); color:var(--text); text-align:left; }
-.sidebar-beta:hover { background:var(--selected); border-color:var(--border-strong); }
-.sidebar-beta .ico { color:var(--accent); flex:none; }
+.sidebar-beta { display:flex; align-items:center; gap:9px; width:calc(100% - 24px); margin:8px 12px 0; padding:11px 10px 10px; border:0; border-top:1px solid var(--border-soft); border-radius:0; background:transparent; color:var(--text); text-align:left; }
+.sidebar-beta:hover { background:var(--hover); }
+.sidebar-beta .ico { color:var(--text-muted); flex:none; }
 .sidebar-beta span { display:flex; flex-direction:column; gap:2px; min-width:0; }
 .sidebar-beta strong { font:550 11px/1.2 var(--sans); }
 .sidebar-beta small { color:var(--text-muted); font:10px/1.2 var(--sans); }

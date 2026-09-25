@@ -8,8 +8,8 @@
   "theme_color": "#090a0b",
   "icons": [
     {
-      "src": "/hyzr-mark.png",
-      "sizes": "1280x1280",
+      "src": "/favicon.png",
+      "sizes": "64x64",
       "type": "image/png",
       "purpose": "any"
     }
