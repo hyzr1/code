@@ -51,7 +51,7 @@ export default function BetaAccessGate({ children }: { children: ReactNode }) {
   return (
     <main className="access-gate">
       <section className="access-card" aria-labelledby="access-title">
-        <div className="access-brand"><span className="brand-bars" aria-hidden="true"><i /><i /><i /><i /></span><strong>Hyzr Code</strong></div>
+        <div className="access-brand"><img className="access-brand-mark" src="/hyzr-mark.png" alt="Hyzr Code" /></div>
         <div className="access-icon"><Icon name="lock" size={21} /></div>
         <span className="access-kicker">Private beta</span>
         <h1 id="access-title">Your path starts here.</h1>

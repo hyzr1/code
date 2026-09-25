@@ -14,16 +14,16 @@
   --ws-submit-bg: #e8f5ee;
 }
 :root[data-theme="dark"] .problem-shell {
-  --ws-canvas: #17181c;
-  --ws-panel: #202126;
-  --ws-header: #28292f;
-  --ws-field: #2c2d34;
-  --ws-line: #34353e;
-  --ws-muted: #a0a3b1;
-  --ws-active: #363741;
-  --ws-text: #eeeef3;
-  --ws-code: #eeeef3;
-  --ws-accent: #b6a4ed;
+  --ws-canvas: #090a0b;
+  --ws-panel: #111214;
+  --ws-header: #17191c;
+  --ws-field: #0d0e10;
+  --ws-line: #292b2f;
+  --ws-muted: #969ba5;
+  --ws-active: #1e2024;
+  --ws-text: #f0f1f2;
+  --ws-code: #f0f1f2;
+  --ws-accent: #9aa0aa;
   --ws-submit: #63d8a0;
   --ws-submit-bg: #25372f;
 }

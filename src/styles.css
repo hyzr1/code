@@ -124,17 +124,17 @@
 :root[data-theme="dark"] {
   /* #181817 is a near-neutral
      with a trace of warmth, considerably darker than a generic slate. */
-  --bg: #1b1b1d;
-  --bg-sidebar: #1b1b1d;
-  --surface: #232326;
-  --surface-2: #2b2b2e;
-  --surface-3: #323236;
-  --surface-inset: #151517;
+  --bg: #090a0b;
+  --bg-sidebar: #0b0c0d;
+  --surface: #111214;
+  --surface-2: #17191c;
+  --surface-3: #1e2024;
+  --surface-inset: #0d0e10;
 
   --border: #35353300;
-  --border: #383836;
-  --border-soft: #2e2e2c;
-  --border-strong: #4a4a47;
+  --border: #292b2f;
+  --border-soft: #202226;
+  --border-strong: #3a3d42;
 
   --text: #f5f4ef;
   --text-2: #dedbd3;
@@ -161,9 +161,18 @@
   --btn-primary-hover: #e6e4dd;
   --btn-primary-fg: #1f1e1d;
 
-  --hover: rgba(255, 253, 245, 0.055);
-  --selected: rgba(255, 253, 245, 0.09);
+  --hover: rgba(255, 255, 255, 0.045);
+  --selected: rgba(255, 255, 255, 0.075);
 }
+
+/* The mark is white artwork for dark surfaces; keep it legible on the light
+   theme without introducing a second wordmark or a colored logo variant. */
+.brand-mark { display:block; width:28px; height:28px; object-fit:contain; flex:none; }
+.brand-lockup .brand-mark { width:30px; height:30px; }
+.sidebar.collapsed .brand-lockup .brand-mark { width:27px; height:27px; }
+.access-brand-mark { display:block; width:42px; height:42px; object-fit:contain; }
+:root[data-theme="light"] .brand-mark,
+:root[data-theme="light"] .access-brand-mark { filter:invert(1); }
 
 /* ---------------------------------------------------------- accents */
 
@@ -255,6 +264,13 @@
   --accent: #e8749b;
   --accent-hover: #ee8bab;
   --accent-fg: #2a0d18;
+}
+
+/* Keep dark mode architectural: accents mark actions and state, while panels
+   stay neutral instead of picking up a colored wash. */
+:root[data-theme="dark"] {
+  --accent-soft: rgba(255,255,255,.065);
+  --accent-line: rgba(255,255,255,.22);
 }
 
 /* legacy aliases — older views still reference these */

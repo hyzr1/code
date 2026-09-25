@@ -12,7 +12,7 @@ import { conceptIdsFor } from "../engine/scheduler";
 import { todayKey } from "../engine/storage";
 import { useSettings } from "../settings";
 import { ACTIVE_SWE_PREPARATION_LEVEL, COURSE_BY_ID } from "../content/courses";
-import { DayRing, Heatmap, Mark, StreakLabel } from "./Brand";
+import { DayRing, Heatmap, StreakLabel } from "./Brand";
 import Icon, { type IconName } from "./Icon";
 import type { Route } from "../routing";
 export type { Route } from "../routing";
@@ -151,8 +151,7 @@ export default function Sidebar({
           }
           aria-label="Go to home"
         >
-          <Mark size={collapsed ? 20 : 21} />
-          {!collapsed ? <div className="wordmark">Hyzr Code</div> : null}
+          <img className="brand-mark" src="/hyzr-mark.png" alt="Hyzr Code" />
         </button>
         <button
           onClick={() =>
