@@ -42,10 +42,10 @@ import { highlightSelectionMatches, search, searchKeymap } from "@codemirror/sea
 import { useSettings } from "../settings";
 import type { CourseLanguage } from "../types";
 
-/** VS Code Dark+, so the colours match the editor you actually use. The code
- *  surface stays dark in both themes — every editor people know is dark, and a
- *  light code pane reads as a document rather than somewhere to type. */
-const theme = EditorView.theme(
+/** VS Code Dark+ for dark mode and a crisp GitHub-like paper theme for light
+ *  mode. Keeping the editor in the selected theme prevents a split-screen
+ *  page from looking like two unrelated products. */
+const darkTheme = EditorView.theme(
   {
     "&": { backgroundColor: "#1e1e1e", color: "#d4d4d4" },
     ".cm-content": { caretColor: "#aeafad", padding: "10px 0" },
@@ -92,6 +92,40 @@ const theme = EditorView.theme(
     ".cm-searchMatch.cm-searchMatch-selected": { backgroundColor: "#9e6a03" },
   },
   { dark: true },
+);
+
+const lightTheme = EditorView.theme(
+  {
+    "&": { backgroundColor: "#ffffff", color: "#24292f" },
+    ".cm-content": { caretColor: "#24292f", padding: "10px 0" },
+    ".cm-cursor, .cm-dropCursor": { borderLeftColor: "#24292f", borderLeftWidth: "2px" },
+    "&.cm-focused .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection":
+      { backgroundColor: "#add6ff" },
+    ".cm-selectionMatch": { backgroundColor: "#fff2b8" },
+    ".cm-gutters": {
+      backgroundColor: "#ffffff",
+      color: "#8c959f",
+      border: "none",
+      paddingRight: "6px",
+    },
+    ".cm-activeLine": { backgroundColor: "#f4f6f8" },
+    ".cm-activeLineGutter": { backgroundColor: "#f4f6f8", color: "#57606a" },
+    ".cm-matchingBracket, &.cm-focused .cm-matchingBracket": {
+      backgroundColor: "transparent",
+      outline: "1px solid #8c959f",
+      color: "inherit",
+    },
+    ".cm-foldPlaceholder": { backgroundColor: "#eaeef2", border: "none", color: "#24292f" },
+    ".cm-tooltip": { backgroundColor: "#ffffff", border: "1px solid #d0d7de", borderRadius: "5px" },
+    ".cm-tooltip-autocomplete > ul > li": { padding: "3px 8px", fontFamily: "var(--mono)", fontSize: "13px" },
+    ".cm-tooltip-autocomplete > ul > li[aria-selected]": { backgroundColor: "#0969da", color: "#ffffff" },
+    ".cm-completionIcon": { paddingRight: "14px", opacity: 0.7 },
+    ".cm-completionDetail": { color: "#0969da", fontStyle: "normal", marginLeft: "8px" },
+    ".cm-panels": { backgroundColor: "#f6f8fa", color: "#24292f" },
+    ".cm-searchMatch": { backgroundColor: "#fff2b8" },
+    ".cm-searchMatch.cm-searchMatch-selected": { backgroundColor: "#ffd33d" },
+  },
+  { dark: false },
 );
 
 
@@ -293,6 +327,7 @@ export default function Editor({
     prefs.highlightActiveLine,
     prefs.tabSize,
     language,
+    settings.appearance.theme,
   ].join("|");
 
   useEffect(() => {
@@ -313,7 +348,7 @@ export default function Editor({
       indentUnit.of(" ".repeat(prefs.tabSize)),
       language === "python" ? pythonSupport() : javascript(),
       syntaxHighlighting(codeHighlight),
-      theme,
+      settings.appearance.theme === "dark" ? darkTheme : lightTheme,
       EditorState.readOnly.of(readOnly),
       EditorView.updateListener.of((update) => {
         if (!update.docChanged) return;

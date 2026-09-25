@@ -22,7 +22,7 @@ createRoot(document.getElementById("root")!).render(
         <AccountProvider>
           <TypingProvider>
             <ToastProvider>
-              <Suspense fallback={<main className="boot-screen" aria-label="Loading Hyzr Code"><span className="boot-mark" /> <strong>Hyzr Code</strong></main>}>
+              <Suspense fallback={<main className="boot-screen" aria-label="Loading Hyzr Code" />}>
                 <App />
               </Suspense>
             </ToastProvider>

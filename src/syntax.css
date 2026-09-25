@@ -1,10 +1,22 @@
-.syntax-keyword { color:#569cd6; }
-.syntax-control { color:#c586c0; }
-.syntax-type { color:#4ec9b0; }
-.syntax-function { color:#dcdcaa; }
-.syntax-variable, .syntax-punctuation { color:#d4d4d4; }
-.syntax-string { color:#ce9178; }
-.syntax-number { color:#b5cea8; }
-.syntax-comment { color:#7b9b69; font-style:italic; }
-.syntax-escape { color:#d7ba7d; }
-.syntax-type.syntax-variable { color:#4ec9b0; }
+.syntax-keyword { color:#0550ae; }
+.syntax-control { color:#cf222e; }
+.syntax-type { color:#116329; }
+.syntax-function { color:#8250df; }
+.syntax-variable, .syntax-punctuation { color:#24292f; }
+.syntax-string { color:#0a3069; }
+.syntax-number { color:#953800; }
+.syntax-comment { color:#6e7781; font-style:italic; }
+.syntax-escape { color:#953800; }
+.syntax-type.syntax-variable { color:#116329; }
+
+:root[data-theme="dark"] .syntax-keyword { color:#569cd6; }
+:root[data-theme="dark"] .syntax-control { color:#c586c0; }
+:root[data-theme="dark"] .syntax-type { color:#4ec9b0; }
+:root[data-theme="dark"] .syntax-function { color:#dcdcaa; }
+:root[data-theme="dark"] .syntax-variable,
+:root[data-theme="dark"] .syntax-punctuation { color:#d4d4d4; }
+:root[data-theme="dark"] .syntax-string { color:#ce9178; }
+:root[data-theme="dark"] .syntax-number { color:#b5cea8; }
+:root[data-theme="dark"] .syntax-comment { color:#7b9b69; }
+:root[data-theme="dark"] .syntax-escape { color:#d7ba7d; }
+:root[data-theme="dark"] .syntax-type.syntax-variable { color:#4ec9b0; }

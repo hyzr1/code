@@ -1,5 +1,5 @@
-import { lazy, Suspense, useCallback, useEffect, useState } from "react";
-import type { Progress } from "./types";
+import { lazy, Suspense, useCallback, useEffect, useLayoutEffect, useState } from "react";
+import type { Course, Progress } from "./types";
 import {
   CONCEPT_BY_ID,
   LESSON_BY_ID,
@@ -25,7 +25,7 @@ import Dashboard from "./components/Dashboard";
 import ConceptView from "./components/ConceptView";
 import type { ProblemOutcome } from "./components/ProblemView";
 import { useSettings } from "./settings";
-import OnboardingTour, { hasSeenOnboarding } from "./components/OnboardingTour";
+import OnboardingTour from "./components/OnboardingTour";
 import { courseFromPath, pathForRoute, routeFromPath, routeTitle } from "./routing";
 import { useAccount } from "./account";
 import { trackPageView } from "./monitoring";
@@ -62,7 +62,9 @@ export default function App() {
   const [route, setRoute] = useState<Route>(() => routeFromPath());
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [paletteOpen, setPaletteOpen] = useState(false);
-  const [tourOpen, setTourOpen] = useState(() => !hasSeenOnboarding());
+  // The tour remains available from the sidebar, but never interrupts a page
+  // refresh or a first visit with a modal.
+  const [tourOpen, setTourOpen] = useState(false);
 
   const isMobile = useMediaQuery(MOBILE);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -94,17 +96,33 @@ export default function App() {
     if (path !== location.pathname) history[replace ? "replaceState" : "pushState"]({}, "", path);
   }, [settings.learning.course]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const linkedCourse = courseFromPath();
     if (linkedCourse && linkedCourse !== settings.learning.course) {
       update("learning", { course: linkedCourse });
     }
-  }, [settings.learning.course, update]);
+    // The URL is the source of truth only while the initial deep link loads.
+    // Course changes after mount update the URL atomically below.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
-    const onPopState = () => setRoute(routeFromPath());
+    const onPopState = () => {
+      setRoute(routeFromPath());
+      const linkedCourse = courseFromPath();
+      if (linkedCourse && linkedCourse !== settings.learning.course) {
+        update("learning", { course: linkedCourse });
+      }
+    };
     addEventListener("popstate", onPopState);
     return () => removeEventListener("popstate", onPopState);
+  }, [settings.learning.course, update]);
+
+  const changeCourse = useCallback((course: Course) => {
+    const next: Route = { name: "course" };
+    const path = pathForRoute(next, course);
+    setRoute(next);
+    if (path !== location.pathname) history.pushState({}, "", path);
   }, []);
 
   useEffect(() => {
@@ -302,6 +320,7 @@ export default function App() {
           <div className="page">
             <CourseView
               progress={progress}
+              onCourseChange={changeCourse}
               onOpen={(id) => go({ name: "lesson", id })}
               onToggleComplete={(id) =>
                 commit((draft) => {

@@ -27,3 +27,23 @@ test("course and problem URLs are directly loadable and preserve browser history
   if (testInfo.project.name === "mobile") await page.getByRole("tab", { name: "Problem" }).click();
   await expect(page.getByRole("heading", { name: "Two Sum", exact: true })).toBeVisible();
 });
+
+test("course picker switches to machine learning without route feedback", async ({ page }) => {
+  const errors: string[] = [];
+  page.on("pageerror", error => errors.push(error.message));
+
+  await page.goto("/courses/python");
+  await page.getByRole("button", { name: "Course: Python" }).click();
+  await page.getByRole("option", { name: /Machine Learning/ }).click();
+
+  await expect(page).toHaveURL(/\/courses\/machine-learning$/);
+  await expect(page.getByRole("heading", { name: "Machine Learning", exact: true })).toBeVisible();
+  await page.waitForTimeout(500);
+  await expect(page).toHaveURL(/\/courses\/machine-learning$/);
+  expect(errors).toEqual([]);
+
+  await page.getByRole("button", { name: "Course: Machine Learning" }).click();
+  await page.getByRole("option", { name: /^PY Python/ }).click();
+  await expect(page).toHaveURL(/\/courses\/python$/);
+  await expect(page.getByRole("heading", { name: "Python", exact: true })).toBeVisible();
+});

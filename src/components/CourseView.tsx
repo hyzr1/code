@@ -1,5 +1,5 @@
 import { Fragment } from "react";
-import type { Progress } from "../types";
+import type { Course, Progress } from "../types";
 import {
   LESSON_BY_ID,
   currentLessonForCourse,
@@ -15,10 +15,12 @@ import Icon from "./Icon";
 
 export default function CourseView({
   progress,
+  onCourseChange,
   onOpen,
   onToggleComplete,
 }: {
   progress: Progress;
+  onCourseChange: (course: Course) => void;
   onOpen: (lessonId: string) => void;
   onToggleComplete: (lessonId: string) => void;
 }) {
@@ -57,7 +59,7 @@ export default function CourseView({
       <header className="course-overview prep-roadmap">
         <div className="course-heading-row">
           <div><span className="product-eyebrow">Courses</span><h1>{courseMeta.label}</h1></div>
-          <div className="course-switcher"><LanguagePicker /></div>
+          <div className="course-switcher"><LanguagePicker onChange={onCourseChange} /></div>
         </div>
         <p>{courseMeta.detail}</p>
         <div className="course-facts"><span><Icon name="book" size={15} />{availableLessons.length} lessons</span><span><Icon name="layers" size={15} />{modules.length} modules</span><span><Icon name="checkCircle" size={15} />{doneCount} completed</span></div>

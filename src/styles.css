@@ -74,21 +74,21 @@
   /* Sidebar and page are the *same* colour. The only separation is a hairline
      border — a two-tone split reads as two apps stuck together. */
   /* Unbleached stock: a touch cooler and greyer than parchment. */
-  --bg: #f6f6f3;
-  --bg-sidebar: #f6f6f3;
+  --bg: #f7f8fa;
+  --bg-sidebar: #ffffff;
   --surface: #ffffff;
-  --surface-2: #efefeb;
-  --surface-3: #e6e6e1;
-  --surface-inset: #f1f1ed;
+  --surface-2: #f2f3f5;
+  --surface-3: #e8eaee;
+  --surface-inset: #f6f7f9;
 
-  --border: #e0e0d9;
-  --border-soft: #e9e9e3;
-  --border-strong: #cfcfc6;
+  --border: #dfe2e7;
+  --border-soft: #e9ebef;
+  --border-strong: #c7cbd3;
 
-  --text: #14130f;
-  --text-2: #2b2a25;
-  --text-muted: #5d5b52;
-  --text-faint: #8d8a80;
+  --text: #181a1f;
+  --text-2: #30343b;
+  --text-muted: #606671;
+  --text-faint: #8a919d;
 
   --shadow-sm: 0 1px 2px rgba(40, 38, 30, 0.06);
   --shadow-md: 0 2px 8px rgba(40, 38, 30, 0.08),
@@ -5985,9 +5985,9 @@ button { transition:background .15s,color .15s,border-color .15s; }
 .example-values dd { margin:0 0 12px; white-space:pre-wrap; overflow-wrap:anywhere; font:12px/1.7 var(--mono); }
 .example-values dd:last-child { margin:0; }
 .example-values code { background:none; padding:0; border:0; color:var(--text-2); }
-.practice-panel-title { background:#272a30; min-height:40px; }
+.practice-panel-title { background:var(--surface-2); min-height:40px; }
 .editor-tools select { font-size:11px; width:62px; }
-.editor-tools select option { background:#272a30; color:#eef0f5; }
+.editor-tools select option { background:var(--surface); color:var(--text); }
 .editor-tools button { width:32px; height:29px; border-radius:5px; }
 .practice-editor-meta { padding:7px 14px; }
 .practice-tests pre { background:var(--surface-inset); padding:12px 14px; border:0; border-radius:6px; }
@@ -6100,9 +6100,10 @@ button { transition:background .15s,color .15s,border-color .15s; }
 @media(max-width:380px) { .board-toolbox { gap:0; padding:4px; }.board-toolbox button { width:24px; }.board-toolbox button .ico { width:17px; } }
 
 /* Fast, quiet transitions while route-level bundles load. */
-.boot-screen,.route-loading { min-height:100dvh; display:grid; place-content:center; justify-items:center; gap:12px; background:var(--bg); color:var(--text); font:600 14px var(--sans); }
+.boot-screen { min-height:100dvh; background:var(--bg); }
+.route-loading { min-height:100%; display:grid; place-content:center; justify-items:center; gap:12px; background:var(--bg); color:var(--text-muted); font:500 14px var(--sans); }
 .boot-mark { width:28px; height:22px; background:linear-gradient(90deg,var(--text-faint) 0 12%,transparent 12% 23%,var(--text-faint) 23% 39%,transparent 39% 50%,var(--text-faint) 50% 70%,transparent 70% 81%,var(--text-faint) 81%); clip-path:polygon(0 35%,12% 35%,12% 100%,0 100%,23% 0,39% 0,39% 100%,23% 100%,50% 22%,70% 22%,70% 100%,50% 100%,81% 48%,100% 48%,100% 100%,81% 100%); }
-.route-loading { min-height:240px; color:var(--text-muted); font-weight:500; }
+.route-loading { min-height:240px; }
 .route-loading::before { content:""; width:22px; height:22px; border:2px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:route-spin .7s linear infinite; }
 @keyframes route-spin { to { transform:rotate(360deg); } }
 
