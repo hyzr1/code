@@ -175,8 +175,8 @@
 :root[data-theme="light"] .access-brand-mark { filter:invert(1); }
 .tour-mark img { display:block; width:18px; height:18px; object-fit:contain; }
 .tour-mark { display:grid; place-items:center; overflow:hidden; }
-.sidebar-beta { display:flex; align-items:center; gap:9px; width:calc(100% - 24px); margin:8px 12px 0; padding:11px 10px 10px; border:0; border-top:1px solid var(--border-soft); border-radius:0; background:transparent; color:var(--text); text-align:left; }
-.sidebar-beta:hover { background:var(--hover); }
+.sidebar-beta { display:flex; align-items:center; justify-content:center; gap:9px; width:calc(100% + 24px); min-height:64px; margin:-10px -12px 10px; padding:14px 24px; border:0; border-radius:0; background:var(--surface); color:var(--text); text-align:left; }
+.sidebar-beta:hover { background:var(--surface-2); }
 .sidebar-beta .ico { color:var(--text-muted); flex:none; }
 .sidebar-beta span { display:flex; flex-direction:column; gap:2px; min-width:0; }
 .sidebar-beta strong { font:550 11px/1.2 var(--sans); }
@@ -6154,8 +6154,8 @@ button { transition:background .15s,color .15s,border-color .15s; }
 
 /* Beta access is product chrome, not a promotional card. Keep the global
    button treatment from lifting it into a bright block in the sidebar. */
-.sidebar-beta { background:transparent !important; border:0 !important; border-top:1px solid var(--border-soft) !important; box-shadow:none !important; }
-.sidebar-beta:hover { background:var(--hover) !important; }
+.sidebar-beta { background:var(--surface) !important; border:0 !important; box-shadow:none !important; }
+.sidebar-beta:hover { background:var(--surface-2) !important; }
 .sidebar-beta:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
 
 /* Private beta entry. It is a page, not a modal, so first paint stays calm. */
