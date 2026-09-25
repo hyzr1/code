@@ -1,6 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Icon from "./Icon";
-import { Mark } from "./Brand";
 
 const STORAGE_KEY = "unwashed.onboarding.v1";
 
@@ -45,6 +44,12 @@ const STEPS: TourStep[] = [
     title: "Find anything without digging through menus",
     body: "Open Quick find or press Ctrl K from anywhere. Search lessons, problems, concepts, settings, and your next recommended action.",
     selector: '[data-tour="search"]',
+  },
+  {
+    eyebrow: "Private beta",
+    title: "Lock in lifetime free access",
+    body: "If you have an invite code, use Beta access in the sidebar once to become a certified beta learner. Your free access stays with you for the life of Hyzr Code.",
+    selector: '[data-tour="beta-access"]',
   },
   {
     eyebrow: "You are ready",
@@ -196,7 +201,7 @@ export default function OnboardingTour({
         aria-describedby="tour-body"
       >
         <div className="tour-topline">
-          <div className="tour-mark"><Mark size={18} /></div>
+          <div className="tour-mark"><img src="/hyzr-mark.png" alt="" /></div>
           <span>{step.eyebrow}</span>
           <button className="ghost tiny" onClick={finish}>Skip tour</button>
         </div>

@@ -173,6 +173,23 @@
 .access-brand-mark { display:block; width:42px; height:42px; object-fit:contain; }
 :root[data-theme="light"] .brand-mark,
 :root[data-theme="light"] .access-brand-mark { filter:invert(1); }
+.tour-mark img { display:block; width:18px; height:18px; object-fit:contain; }
+.tour-mark { display:grid; place-items:center; overflow:hidden; }
+.sidebar-beta { display:flex; align-items:center; gap:9px; width:calc(100% - 24px); margin:0 12px 12px; padding:9px 10px; border:1px solid color-mix(in srgb,var(--accent) 28%,var(--border)); border-radius:7px; background:var(--accent-soft); color:var(--text); text-align:left; }
+.sidebar-beta:hover { background:var(--selected); border-color:var(--border-strong); }
+.sidebar-beta .ico { color:var(--accent); flex:none; }
+.sidebar-beta span { display:flex; flex-direction:column; gap:2px; min-width:0; }
+.sidebar-beta strong { font:550 11px/1.2 var(--sans); }
+.sidebar-beta small { color:var(--text-muted); font:10px/1.2 var(--sans); }
+.sidebar.collapsed .sidebar-beta { width:36px; height:34px; justify-content:center; margin:0 auto 10px; padding:0; }
+.beta-badge { display:inline-flex; align-items:center; height:17px; padding:0 5px; border:1px solid var(--border-strong); border-radius:4px; color:var(--text-muted); font:650 8px/1 var(--mono); letter-spacing:.08em; }
+.beta-access-form { margin-top:18px; }
+.beta-access-form label { display:block; margin-bottom:7px; color:var(--text-muted); font-size:11px; }
+.beta-access-form .access-field { display:flex; gap:8px; }
+.beta-access-form input { flex:1; min-width:0; }
+.beta-access-footer { gap:10px; align-items:center; }
+.beta-access-footer > span:first-child { color:var(--text-faint); font-size:10px; }
+.beta-certified { display:inline-flex; align-items:center; gap:6px; color:var(--pass)!important; font-size:11px!important; }
 
 /* ---------------------------------------------------------- accents */
 

@@ -4,13 +4,13 @@
   "description": "Interactive Python, DSA, and machine-learning courses for coding interviews.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#111217",
-  "theme_color": "#111217",
+  "background_color": "#090a0b",
+  "theme_color": "#090a0b",
   "icons": [
     {
-      "src": "/favicon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
+      "src": "/hyzr-mark.png",
+      "sizes": "1280x1280",
+      "type": "image/png",
       "purpose": "any"
     }
   ]

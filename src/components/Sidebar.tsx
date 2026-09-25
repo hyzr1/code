@@ -24,6 +24,7 @@ interface Props {
   onSettings: () => void;
   onSearch: () => void;
   onTour: () => void;
+  onBetaAccess: () => void;
   onClose?: () => void;
   mobile?: boolean;
   open?: boolean;
@@ -36,6 +37,7 @@ export default function Sidebar({
   onSettings,
   onSearch,
   onTour,
+  onBetaAccess,
   onClose,
   mobile = false,
   open = false,
@@ -152,6 +154,7 @@ export default function Sidebar({
           aria-label="Go to home"
         >
           <img className="brand-mark" src="/hyzr-mark.png" alt="Hyzr Code" />
+          {!collapsed ? <span className="beta-badge">BETA</span> : null}
         </button>
         <button
           onClick={() =>
@@ -326,6 +329,10 @@ export default function Sidebar({
       </div>
 
       <div className="sidebar-foot">
+        <button className="sidebar-beta" onClick={onBetaAccess} data-tour="beta-access" title={collapsed ? "Beta access" : undefined} aria-label="Beta access">
+          <Icon name="shield" size={16} />
+          {!collapsed ? <span><strong>Beta access</strong><small>Lock in lifetime free</small></span> : null}
+        </button>
         {!collapsed ? (
           <>
             <div className="sidebar-today">

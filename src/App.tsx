@@ -26,6 +26,7 @@ import ConceptView from "./components/ConceptView";
 import type { ProblemOutcome } from "./components/ProblemView";
 import { useSettings } from "./settings";
 import OnboardingTour from "./components/OnboardingTour";
+import BetaAccessPrompt from "./access";
 import { courseFromPath, pathForRoute, routeFromPath, routeTitle } from "./routing";
 import { useAccount } from "./account";
 import { trackPageView } from "./monitoring";
@@ -68,6 +69,7 @@ export default function App() {
   // The tour remains available from the sidebar, but never interrupts a page
   // refresh or a first visit with a modal.
   const [tourOpen, setTourOpen] = useState(false);
+  const [betaAccessOpen, setBetaAccessOpen] = useState(false);
 
   const isMobile = useMediaQuery(MOBILE);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -260,6 +262,7 @@ export default function App() {
         onSettings={() => setSettingsOpen(true)}
         onSearch={() => setPaletteOpen(true)}
         onTour={startTour}
+        onBetaAccess={() => setBetaAccessOpen(true)}
         onClose={() => setDrawerOpen(false)}
         mobile={isMobile}
         open={drawerOpen}
@@ -443,6 +446,7 @@ export default function App() {
       </Suspense>
 
       <OnboardingTour open={tourOpen} onClose={() => setTourOpen(false)} />
+      <BetaAccessPrompt open={betaAccessOpen} onClose={() => setBetaAccessOpen(false)} />
     </div>
   );
 }

@@ -32,7 +32,7 @@ function secret(): string {
 }
 
 function accessToken(id: string): string {
-  const payload = Buffer.from(JSON.stringify({ id, exp: Date.now() + 180 * 86_400_000 })).toString("base64url");
+  const payload = Buffer.from(JSON.stringify({ id, exp: Date.now() + 100 * 365 * 86_400_000 })).toString("base64url");
   const signature = createHmac("sha256", secret()).update(payload).digest("base64url");
   return `${payload}.${signature}`;
 }
@@ -93,7 +93,7 @@ export async function POST(request: Request): Promise<Response> {
       access: "private", allowOverwrite: true, contentType: "application/json", cacheControlMaxAge: 60,
     });
     return json({ access: true }, 200, {
-      "set-cookie": `${COOKIE}=${accessToken(id)}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${180 * 86_400}`,
+      "set-cookie": `${COOKIE}=${accessToken(id)}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${100 * 365 * 86_400}`,
     });
   } catch (error) {
     console.error("Beta access redemption failed", error);

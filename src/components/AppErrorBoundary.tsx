@@ -1,5 +1,4 @@
 import { Component, type ErrorInfo, type ReactNode } from "react";
-import { Mark } from "./Brand";
 import { captureException } from "../monitoring";
 
 interface State {
@@ -27,7 +26,7 @@ export default class AppErrorBoundary extends Component<
     return (
       <main className="fatal-screen">
         <section className="fatal-card" role="alert">
-          <div className="fatal-mark"><Mark size={23} /></div>
+          <div className="fatal-mark"><img src="/hyzr-mark.png" alt="" /></div>
           <span className="badge">Recovery mode</span>
           <h1>This screen hit an unexpected error</h1>
           <p>

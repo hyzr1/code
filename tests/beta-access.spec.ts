@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("beta gate validates an invite before opening the platform", async ({ page }, testInfo) => {
+test("beta access is optional and can be redeemed from the sidebar", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name === "mobile", "Desktop covers the access transaction.");
   let allowed = false;
   await page.route("**/api/access", async route => {
@@ -11,11 +11,13 @@ test("beta gate validates an invite before opening the platform", async ({ page 
     return route.fulfill({ json: { access: true } });
   });
   await page.goto("/");
-  await expect(page.getByRole("heading", { name: "Your path starts here." })).toBeVisible();
-  await page.getByLabel("Access code").fill("wrong");
-  await page.getByRole("button", { name: "Enter beta" }).click();
-  await expect(page.getByRole("alert")).toHaveText("That access code is not valid");
-  await page.getByLabel("Access code").fill("HYZR-TEST-PASS");
-  await page.getByRole("button", { name: "Enter beta" }).click();
   await expect(page.getByRole("heading", { name: "Python", exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "Beta access" }).click();
+  await expect(page.getByRole("heading", { name: "Lock in lifetime free access." })).toBeVisible();
+  await page.getByLabel("Beta access code").fill("wrong");
+  await page.getByRole("button", { name: "Redeem code" }).click();
+  await expect(page.getByRole("alert")).toHaveText("That access code is not valid");
+  await page.getByLabel("Beta access code").fill("HYZR-TEST-PASS");
+  await page.getByRole("button", { name: "Redeem code" }).click();
+  await expect(page.getByRole("heading", { name: "You’re beta certified." })).toBeVisible();
 });
