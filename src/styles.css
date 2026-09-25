@@ -126,10 +126,10 @@
      steps instead of blue/grey slabs, so the canvas remains the visual anchor. */
   --bg: #050607;
   --bg-sidebar: #070809;
-  --surface: #0b0c0e;
-  --surface-2: #101113;
-  --surface-3: #15171a;
-  --surface-inset: #08090a;
+  --surface: #08090a;
+  --surface-2: #0b0c0e;
+  --surface-3: #0f1012;
+  --surface-inset: #060708;
 
   --border: #35353300;
   --border: #202226;
@@ -162,7 +162,7 @@
   --btn-primary-fg: #1f1e1d;
 
   --hover: rgba(255, 255, 255, 0.035);
-  --selected: rgba(255, 255, 255, 0.055);
+  --selected: rgba(255, 255, 255, 0.025);
 }
 
 /* The mark is white artwork for dark surfaces; keep it legible on the light
@@ -5927,8 +5927,8 @@ button.submit-button:hover { background:#1d754a; }
 /* Product surfaces: quiet chrome, clear hierarchy, consistent controls. */
 :root { --display: var(--sans); --sidebar-w: 236px; }
 :root[data-theme="dark"] {
-  --bg:#050607; --bg-sidebar:#070809; --surface:#0b0c0e; --surface-2:#101113;
-  --surface-3:#15171a; --surface-inset:#08090a; --border:#202226;
+  --bg:#050607; --bg-sidebar:#070809; --surface:#08090a; --surface-2:#0b0c0e;
+  --surface-3:#0f1012; --surface-inset:#060708; --border:#202226;
   --border-soft:#17191c; --text:#eef0f5; --text-2:#d9dde6;
   --text-muted:#a4aab7; --text-faint:#828b9b; --code-bg:#08090a;
 }
@@ -5976,7 +5976,7 @@ button { transition:background .15s,color .15s,border-color .15s; }
 .problem-plan-label { font:600 11px var(--sans); letter-spacing:.04em; text-transform:none; }
 .problem-collections { display:flex; align-items:center; gap:5px; padding:5px; border:1px solid var(--border-soft); border-radius:9px; background:var(--surface); }
 .problem-collections>button { flex:1; min-width:0; min-height:38px; padding:8px 12px; border:1px solid transparent; background:transparent; font-size:12px; border-radius:6px; }
-.problem-collections>button.on { background:var(--selected); border-color:color-mix(in srgb,var(--accent) 40%,transparent); box-shadow:none; color:var(--text); }
+.problem-collections>button.on { background:transparent; border-color:color-mix(in srgb,var(--accent) 40%,transparent); box-shadow:none; color:var(--text); }
 .problem-collections>button b { font-size:10px; padding:2px 5px; border-radius:4px; background:var(--bg); }
 .collection-progress { flex-direction:row; align-items:center; gap:6px; white-space:nowrap; padding:8px 12px; }
 .collection-progress strong { font:600 13px var(--sans); color:var(--pass); }
@@ -5986,7 +5986,7 @@ button { transition:background .15s,color .15s,border-color .15s; }
 .library-search input { border:0; outline:0; box-shadow:none; width:100%; min-width:0; height:36px; padding:0; background:transparent; font-size:12px; }
 .library-filters select { max-width:190px; min-width:0; height:38px; border-radius:7px; font-size:12px; background:var(--surface); }
 .library-result-count { font-size:11px; white-space:nowrap; color:var(--text-faint); margin-left:6px; }
-.problem-topic-head { padding:13px 18px; background:var(--surface-2); }
+.problem-topic-head { padding:13px 18px; background:var(--surface); }
 .problem-topic-head span { font-size:12px; font-weight:650; }
 .problem-topic-head small { font-size:10px; }
 .problem-library .lesson-row { gap:12px; min-height:49px; background:transparent; }
@@ -6059,7 +6059,7 @@ button { transition:background .15s,color .15s,border-color .15s; }
 .filter-trigger { width:100%; display:flex; align-items:center; gap:9px; height:38px; padding:0 12px; font-size:12px; border:1px solid var(--border); background:var(--surface); border-radius:7px; }
 .filter-trigger>span { flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; text-align:left; }
 .filter-trigger>.ico { color:var(--text-muted); flex-shrink:0; }
-.filter-trigger[aria-expanded=true] { border-color:var(--accent); background:var(--surface-2); }
+.filter-trigger[aria-expanded=true] { border-color:var(--accent); background:var(--surface); }
 .filter-popover { position:absolute; right:0; top:calc(100% + 8px); z-index:40; width:280px; max-width:calc(100vw - 32px); max-height:340px; overflow:auto; padding:6px; background:var(--surface); border:1px solid var(--border); border-radius:10px; box-shadow:0 16px 40px #0005; }
 .filter-caption { padding:7px 10px 10px; color:var(--text-faint); font:500 10px var(--sans); text-transform:uppercase; letter-spacing:.07em; }
 .filter-popover button { display:flex; align-items:center; justify-content:space-between; gap:12px; width:100%; min-height:34px; height:auto; padding:8px 10px; background:transparent; border:0; border-radius:5px; color:var(--text-muted); font:400 12px var(--sans); text-align:left; }
