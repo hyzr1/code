@@ -29,12 +29,14 @@ import OnboardingTour from "./components/OnboardingTour";
 import { courseFromPath, pathForRoute, routeFromPath, routeTitle } from "./routing";
 import { useAccount } from "./account";
 import { trackPageView } from "./monitoring";
+import { SYSTEM_DESIGN_BY_ID } from "./content/systemDesign";
 
 const LessonView = lazy(() => import("./components/LessonView"));
 const SessionView = lazy(() => import("./components/SessionView"));
 const Settings = lazy(() => import("./components/Settings"));
 const CommandPalette = lazy(() => import("./components/CommandPalette"));
 const ProblemView = lazy(() => import("./components/ProblemView"));
+const SystemDesignView = lazy(() => import("./components/SystemDesignView"));
 const TypeHome = lazy(() => import("./components/typing/TypeHome"));
 const TypeCourse = lazy(() => import("./components/typing/TypeCourse"));
 const TypeLesson = lazy(() => import("./components/typing/TypeLesson"));
@@ -45,6 +47,7 @@ const TITLES: Record<Route["name"], string> = {
   lesson: "Course",
   problems: "Problems",
   problem: "Problems",
+  systemDesign: "Problems",
   session: "Daily session",
   progress: "Progress",
   concept: "Progress",
@@ -237,6 +240,8 @@ export default function App() {
       ? lesson.title
       : route.name === "problem"
         ? (PROBLEM_BY_ID.get(route.id)?.title ?? "")
+        : route.name === "systemDesign"
+          ? (SYSTEM_DESIGN_BY_ID.get(route.id)?.title ?? "")
         : route.name === "concept"
           ? (CONCEPT_BY_ID.get(route.id)?.title ?? "")
           : "";
@@ -344,7 +349,19 @@ export default function App() {
           <ProblemsView
             progress={progress}
             onOpen={(id) => go({ name: "problem", id })}
+            onOpenSystemDesign={(id) => go({ name: "systemDesign", id })}
           />
+        ) : route.name === "systemDesign" ? (
+          <div className="page system-design-route">
+            {SYSTEM_DESIGN_BY_ID.get(route.id) ? <SystemDesignView
+              question={SYSTEM_DESIGN_BY_ID.get(route.id)!}
+              complete={Boolean(progress.cleared[route.id])}
+              onToggleComplete={() => commit(draft => {
+                if (draft.cleared[route.id]) delete draft.cleared[route.id];
+                else draft.cleared[route.id] = "L3";
+              })}
+            /> : <div className="empty">No such systems design question.</div>}
+          </div>
         ) : route.name === "progress" ? (
           <div className="page">
             <Dashboard

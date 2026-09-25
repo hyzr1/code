@@ -37,7 +37,8 @@
     "check:teaching-depth": "node scripts/check-teaching-depth.mjs",
     "check:interview-cases": "node scripts/check-interview-cases.mjs",
     "check:performance": "node scripts/check-build-budget.mjs",
-    "judge:publish": "npm run check:bundle && node scripts/publish-judge-catalog.mjs"
+    "judge:publish": "npm run check:bundle && node scripts/publish-judge-catalog.mjs",
+    "beta:codes": "node scripts/issue-beta-codes.mjs"
   },
   "dependencies": {
     "@codemirror/autocomplete": "^6.20.3",

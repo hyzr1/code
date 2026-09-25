@@ -1,4 +1,4 @@
-const CACHE_VERSION = "hyzr-code-v8";
+const CACHE_VERSION = "hyzr-code-v9";
 const APP_SHELL = ["/", "/manifest.webmanifest", "/favicon.svg"];
 
 self.addEventListener("install", (event) => {

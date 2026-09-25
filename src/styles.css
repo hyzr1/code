@@ -6118,3 +6118,25 @@ button { transition:background .15s,color .15s,border-color .15s; }
 .account-notice,.account-error { margin:12px 0 0; padding:9px 11px; border-radius:6px; font-size:12px; }
 .account-notice { color:var(--pass); background:var(--pass-bg); }
 .account-error { color:var(--fail); background:var(--fail-bg); }
+
+/* Private beta entry. It is a page, not a modal, so first paint stays calm. */
+.access-check { min-height:100dvh; background:#101114; }
+.access-gate { min-height:100dvh; display:grid; place-items:center; padding:24px; background:
+  radial-gradient(circle at 50% 18%,#28243b 0,transparent 34%),#101114; color:#f3f4f7; }
+.access-card { width:min(100%,480px); padding:38px; border:1px solid #30323a; border-radius:14px; background:#18191e; box-shadow:0 32px 90px #0008; }
+.access-brand { display:flex; align-items:center; gap:10px; margin-bottom:54px; font-size:15px; letter-spacing:-.02em; }
+.access-brand .brand-bars { display:flex; align-items:flex-end; gap:3px; height:18px; }
+.access-brand .brand-bars i { display:block; width:3px; border-radius:2px; background:#858896; }.access-brand .brand-bars i:nth-child(1){height:16px}.access-brand .brand-bars i:nth-child(2){height:12px}.access-brand .brand-bars i:nth-child(3){height:8px}.access-brand .brand-bars i:nth-child(4){height:5px}
+.access-icon { width:42px; height:42px; display:grid; place-items:center; margin-bottom:20px; border:1px solid #403856; border-radius:10px; color:#b9a5f6; background:#272333; }
+.access-kicker { display:block; margin-bottom:8px; color:#a997e3; font:600 11px/1.4 var(--sans); letter-spacing:.08em; text-transform:uppercase; }
+.access-card h1 { margin:0 0 12px; color:#fff; font:650 30px/1.18 var(--sans); letter-spacing:-.04em; }
+.access-card>p { margin:0 0 30px; color:#a9acb7; font:400 14px/1.7 var(--sans); }
+.access-card form label { display:block; margin-bottom:8px; color:#c7c9d0; font:550 11px var(--sans); }
+.access-field { display:flex; gap:8px; }
+.access-field input { min-width:0; flex:1; height:42px; padding:0 13px; border:1px solid #3b3d46; border-radius:7px; outline:0; background:#111216; color:#f4f4f6; font:600 13px var(--mono); letter-spacing:.06em; text-transform:uppercase; }
+.access-field input:focus { border-color:#967ce5; box-shadow:0 0 0 3px #8064dc26; }
+.access-field button { height:42px; padding:0 15px; flex-shrink:0; border:0; border-radius:7px; background:#8064dc; color:#fff; }
+.access-field button:hover { background:#8e73e1; }.access-field button:disabled { opacity:.45; cursor:not-allowed; }
+.access-error { margin-top:10px; padding:9px 11px; border-radius:6px; color:#ffaaa4; background:#3a2020; font-size:12px; }
+.access-card>small { display:block; margin-top:18px; color:#747884; font-size:10px; }
+@media(max-width:560px) { .access-gate{padding:0}.access-card{min-height:100dvh;width:100%;padding:30px 22px;border:0;border-radius:0}.access-brand{margin-bottom:72px}.access-field{flex-direction:column}.access-field button{width:100%} }

@@ -9,6 +9,7 @@ import Icon from "./Icon";
 import { trackFit } from "../content/tracks";
 import { ACTIVE_SWE_PREPARATION_LEVEL, trackForCourse } from "../content/courses";
 import { problemFitsPreparation } from "../content/companies";
+import { SYSTEM_DESIGN_QUESTIONS } from "../content/systemDesign";
 
 /** Internal ids are for the scheduler, not the reader. */
 function conceptLabels(ids: string[]): string {
@@ -32,7 +33,7 @@ function band(problem: Problem) {
 }
 
 type Filter = "recommended" | "all" | "todo" | "done" | "cold";
-type Collection = "neetcode250" | "neetcode150" | "blind75" | "all";
+type Collection = "neetcode250" | "neetcode150" | "blind75" | "systems" | "all";
 
 const FILTERS: { id: Filter; label: string }[] = [
   { id: "recommended", label: "For you" },
@@ -46,15 +47,18 @@ const COLLECTIONS: { id: Collection; label: string; count?: number }[] = [
   { id: "neetcode250", label: "NeetCode 250", count: 250 },
   { id: "neetcode150", label: "NeetCode 150", count: 150 },
   { id: "blind75", label: "Blind 75", count: 75 },
+  { id: "systems", label: "Systems Design", count: SYSTEM_DESIGN_QUESTIONS.length },
   { id: "all", label: "All practice" },
 ];
 
 export default function ProblemsView({
   progress,
   onOpen,
+  onOpenSystemDesign,
 }: {
   progress: Progress;
   onOpen: (id: string) => void;
+  onOpenSystemDesign: (id: string) => void;
 }) {
   const [filter, setFilter] = useState<Filter>("all");
   const [collection, setCollection] = useState<Collection>("neetcode250");
@@ -82,6 +86,7 @@ export default function ProblemsView({
   const shown = all.filter((problem) => {
     const cleared = progress.cleared[problem.id];
     if (topic && problem.pattern !== topic) return false;
+    if (collection === "systems") return false;
     if (collection !== "all" && !problem.lists?.includes(collection)) return false;
     if (filter === "recommended" && collection === "all" && trackFit(problem, track) < 2) return false;
     if (filter === "recommended" && preparationLevel && !problemFitsPreparation(problem, preparationLevel)) return false;
@@ -95,49 +100,67 @@ export default function ProblemsView({
     return true;
   });
 
-  const collectionProblems = all.filter(problem => collection === "all" || problem.lists?.includes(collection));
-  const patterns = [...new Set(collectionProblems.map((p) => p.pattern).filter(Boolean))];
-  const solved = collectionProblems.filter(problem => progress.cleared[problem.id]).length;
+  const systemShown = SYSTEM_DESIGN_QUESTIONS.filter(question => {
+    if (collection !== "systems") return false;
+    if (topic && question.category !== topic) return false;
+    const cleared = Boolean(progress.cleared[question.id]);
+    if (filter === "todo" && cleared) return false;
+    if ((filter === "done" || filter === "cold") && !cleared) return false;
+    if (query && !`${question.title} ${question.category}`.toLowerCase().includes(query.toLowerCase())) return false;
+    return true;
+  });
+  const collectionProblems = collection === "systems" ? [] : all.filter(problem => collection === "all" || problem.lists?.includes(collection));
+  const patterns = collection === "systems"
+    ? [...new Set(SYSTEM_DESIGN_QUESTIONS.map(question => question.category))]
+    : [...new Set(collectionProblems.map((p) => p.pattern).filter(Boolean))];
+  const solved = collection === "systems"
+    ? SYSTEM_DESIGN_QUESTIONS.filter(question => progress.cleared[question.id]).length
+    : collectionProblems.filter(problem => progress.cleared[problem.id]).length;
+  const resultCount = collection === "systems" ? systemShown.length : shown.length;
+  const collectionTotal = collection === "systems" ? SYSTEM_DESIGN_QUESTIONS.length : collectionProblems.length;
+  const progressFilters = collection === "systems"
+    ? FILTERS.filter(option => option.id === "all" || option.id === "todo" || option.id === "done")
+    : FILTERS;
 
   return (
     <div className="page problem-library">
       <div className="page-head">
         <div className="row spread wrap" style={{ gap: 16 }}>
           <div>
-            <h1>DSA Interview Prep</h1>
+            <h1>Technical Interview Prep</h1>
             <p className="small muted" style={{ margin: "-4px 0 0" }}>
-              Follow the learning path in order. Each pattern prepares you for the next one.
+              Master coding patterns and systems design in a deliberate interview-ready order.
             </p>
           </div>
         </div>
-        <div className="library-summary"><span><Icon name="code" size={15} /> Python 3</span><span><Icon name="layers" size={15} /> {patterns.length} patterns</span><span><Icon name="checkCircle" size={15} /> {solved} solved</span></div>
+        <div className="library-summary"><span><Icon name={collection === "systems" ? "database" : "code"} size={15} /> {collection === "systems" ? "Architecture" : "Python 3"}</span><span><Icon name="layers" size={15} /> {patterns.length} {collection === "systems" ? "categories" : "patterns"}</span><span><Icon name="checkCircle" size={15} /> {solved} {collection === "systems" ? "completed" : "solved"}</span></div>
       </div>
 
       <div className="problem-plan-label"><Icon name="route" size={16} /><span>Choose a study plan</span></div>
       <div className="problem-collections" aria-label="Study plans">
-        {COLLECTIONS.map(option => <button key={option.id} className={collection === option.id ? "on" : ""} onClick={() => { setCollection(option.id); setFilter("all"); setTopic(""); }}>
+        {COLLECTIONS.map(option => <button key={option.id} className={collection === option.id ? "on" : ""} onClick={() => { setCollection(option.id); setFilter("all"); setTopic(""); setQuery(""); }}>
           <span>{option.label}</span>{option.count ? <b>{option.count}</b> : null}
         </button>)}
-        <div className="collection-progress"><strong>{solved}</strong><span>of {collectionProblems.length} solved</span></div>
+        <div className="collection-progress"><strong>{solved}</strong><span>of {collectionTotal} {collection === "systems" ? "completed" : "solved"}</span></div>
       </div>
 
       <div className="library-filters">
           <label className="library-search"><Icon name="search" size={16} />
           <input
             type="text"
-            placeholder="Search problems and patterns…"
+            placeholder={collection === "systems" ? "Search systems and categories…" : "Search problems and patterns…"}
             aria-label="Search problems"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
           </label>
           <FilterMenu label="Filter by topic" icon="layers" value={topic} onChange={setTopic} options={[{value:"",label:"All topics"}, ...patterns.map(pattern => ({value:pattern!,label:pattern!}))]} />
-          <FilterMenu label="Filter by progress" icon="checkCircle" value={filter} onChange={value => setFilter(value as Filter)} options={FILTERS.map(option => ({value:option.id,label:option.label === "All" ? "All progress" : option.label}))} />
-          <span className="library-result-count">{shown.length} problems</span>
+          <FilterMenu label="Filter by progress" icon="checkCircle" value={filter} onChange={value => setFilter(value as Filter)} options={progressFilters.map(option => ({value:option.id,label:option.label === "All" ? "All progress" : option.label === "Cleared" ? "Completed" : option.label}))} />
+          <span className="library-result-count">{resultCount} {collection === "systems" ? "questions" : "problems"}</span>
       </div>
 
       <div className="card flush">
-        {shown.length === 0 ? (
+        {resultCount === 0 ? (
           <EmptyState
             title={query ? "No problems match that" : "Nothing here yet"}
             detail={
@@ -159,6 +182,22 @@ export default function ProblemsView({
               </button>
             ) : null}
           </EmptyState>
+        ) : collection === "systems" ? (
+          systemShown.map((question, index) => {
+            const cleared = Boolean(progress.cleared[question.id]);
+            const startsTopic = index === 0 || systemShown[index - 1]?.category !== question.category;
+            const tone = question.difficulty === "Foundation" ? "var(--pass)" : question.difficulty === "Intermediate" ? "var(--warn)" : "var(--fail)";
+            return <div key={question.id} className="problem-path-item">
+              {startsTopic ? <div className="problem-topic-head"><span><Icon name="database" size={16}/>{question.category}</span><small>{SYSTEM_DESIGN_QUESTIONS.filter(item => item.category === question.category && progress.cleared[item.id]).length} / {SYSTEM_DESIGN_QUESTIONS.filter(item => item.category === question.category).length} completed</small></div> : null}
+              <button className="lesson-row system-design-row" onClick={() => onOpenSystemDesign(question.id)} style={{borderRadius:0,borderTop:index===0?"none":"1px solid var(--border-soft)",padding:"11px 18px",marginBottom:0,height:"auto"}}>
+                <span className="tick"><Icon name={cleared ? "checkCircle" : "circle"} style={{color:cleared?"var(--pass)":"var(--text-faint)"}}/></span>
+                <span className="problem-order">{String(index + 1).padStart(2,"0")}</span>
+                <span className="row-main"><span className="lesson-title"><Icon name="database" size={15}/>{question.title}</span><span className="lesson-goal">Requirements · APIs · data model · scale · failure modes</span></span>
+                <span className="row meta"><span className="badge">{question.category}</span><span className="row tiny" style={{gap:6,minWidth:92,color:"var(--text-muted)"}}><span style={{width:6,height:6,borderRadius:"50%",background:tone}}/>{question.difficulty}</span><span className="tiny dim" style={{minWidth:74,textAlign:"right"}}>{cleared?"Completed":`${question.minutes} min`}</span></span>
+                <Icon name="next" size={15} className="problem-row-arrow"/>
+              </button>
+            </div>;
+          })
         ) : (
           shown.map((problem, i) => {
             const cleared = progress.cleared[problem.id];

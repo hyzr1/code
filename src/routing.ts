@@ -5,6 +5,7 @@ export type Route =
   | { name: "lesson"; id: string }
   | { name: "problems" }
   | { name: "problem"; id: string }
+  | { name: "systemDesign"; id: string }
   | { name: "session" }
   | { name: "progress" }
   | { name: "concept"; id: string }
@@ -47,6 +48,7 @@ export function routeFromPath(pathname = location.pathname): Route {
   }
   if (/^\/courses(?:\/[^/]+)?$/.test(clean) || clean === "/") return { name: "course" };
   if ((match = /^\/problems\/(.+)$/.exec(clean))) return { name: "problem", id: decoded(match[1]) };
+  if ((match = /^\/system-design\/(.+)$/.exec(clean))) return { name: "systemDesign", id: decoded(match[1]) };
   if (clean === "/problems") return { name: "problems" };
   if (clean === "/practice/daily") return { name: "session" };
   if (clean === "/progress") return { name: "progress" };
@@ -65,6 +67,7 @@ export function pathForRoute(route: Route, course: Course): string {
     case "lesson": return `${coursePath}/lessons/${segment(route.id)}`;
     case "problems": return "/problems";
     case "problem": return `/problems/${segment(route.id)}`;
+    case "systemDesign": return `/system-design/${segment(route.id)}`;
     case "session": return "/practice/daily";
     case "progress": return "/progress";
     case "concept": return `/concepts/${segment(route.id)}`;
@@ -88,6 +91,7 @@ export function routeTitle(route: Route, detail?: string): string {
     typeTest: "Speed Test",
     lesson: "Lesson",
     problem: "Problem",
+    systemDesign: "System Design",
     concept: "Concept",
     typeLesson: "Typing Lesson",
   }[route.name];

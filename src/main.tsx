@@ -6,6 +6,7 @@ import { ToastProvider } from "./components/Toast";
 import AppErrorBoundary from "./components/AppErrorBoundary";
 import { AccountProvider } from "./account";
 import { initMonitoring } from "./monitoring";
+import BetaAccessGate from "./access";
 import "@fontsource-variable/inter/wght.css";
 import "./styles.css";
 import "./components/typing/typing.css";
@@ -19,6 +20,7 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <AppErrorBoundary>
       <SettingsProvider>
+        <BetaAccessGate>
         <AccountProvider>
           <TypingProvider>
             <ToastProvider>
@@ -28,6 +30,7 @@ createRoot(document.getElementById("root")!).render(
             </ToastProvider>
           </TypingProvider>
         </AccountProvider>
+        </BetaAccessGate>
       </SettingsProvider>
     </AppErrorBoundary>
   </StrictMode>,

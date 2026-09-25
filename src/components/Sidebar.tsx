@@ -268,7 +268,7 @@ export default function Sidebar({
           <>
             {!collapsed ? <div className="nav-label">Interview practice</div> : null}
             {item(
-              route.name === "problems" || route.name === "problem",
+              route.name === "problems" || route.name === "problem" || route.name === "systemDesign",
               "target",
               "Problems",
               () => go({ name: "problems" }),
