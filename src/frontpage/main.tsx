@@ -1,8 +1,11 @@
 import { StrictMode, useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
-import Sculpture from "./Sculpture";
+import Network from "./Network";
+import Preferences from "./Preferences";
+
 import "@fontsource-variable/inter/wght.css";
 import "./frontpage.css";
+import "./editorial.css";
 
 function Arrow({ diagonal = false }: { diagonal?: boolean }) {
   return (
@@ -254,6 +257,11 @@ function Frontpage() {
         Math.min(1, -rect.top / (rect.height - innerHeight)),
       );
       setChapter(Math.min(2, Math.floor(p * 3)));
+      document.documentElement.style.setProperty("--story-shift", String(p));
+      document.documentElement.style.setProperty(
+        "--hero-shift",
+        `${Math.min(scrollY, innerHeight) * 0.18}px`,
+      );
       document.documentElement.style.setProperty(
         "--page-progress",
         String(
@@ -269,7 +277,10 @@ function Frontpage() {
     addEventListener("resize", scroll);
     update();
     const escape = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setMenu(false);
+      if (e.key === "Escape") {
+        setMenu(false);
+        document.querySelector(".nav-explore")?.removeAttribute("open");
+      }
     };
     addEventListener("keydown", escape);
     return () => {
@@ -290,18 +301,55 @@ function Frontpage() {
       <header className="front-nav">
         <a className="brand" href="/frontpage" aria-label="Hyzr Code home">
           <img src="/hyzr-mark.png" alt="" />
+          <span className="brand-name">
+            hyzr<span>code</span>
+          </span>
           <span className="beta-label">BETA</span>
         </a>
         <nav
           aria-label="Main navigation"
           className={menu ? "nav-links open" : "nav-links"}
         >
+          <details className="nav-explore">
+            <summary>
+              Explore <span>⌄</span>
+            </summary>
+            <div className="mega-menu">
+              <div className="mega-lead">
+                <span className="eyebrow">THE CURRICULUM</span>
+                <h3>
+                  Find your next
+                  <br />
+                  challenge.
+                </h3>
+                <a
+                  href="#paths"
+                  onClick={(e) => {
+                    e.currentTarget.closest("details")?.removeAttribute("open");
+                    setMenu(false);
+                  }}
+                >
+                  All learning paths <Arrow />
+                </a>
+              </div>
+              <div className="mega-paths">
+                {paths.map((p) => (
+                  <a key={p.n} href={p.href}>
+                    <span>{p.n}</span>
+                    <div>
+                      <strong>{p.name}</strong>
+                      <p>{p.desc}</p>
+                    </div>
+                    <Arrow diagonal />
+                  </a>
+                ))}
+              </div>
+            </div>
+          </details>
           <a href="#experience" onClick={() => setMenu(false)}>
-            The experience
+            How it works
           </a>
-          <a href="#paths" onClick={() => setMenu(false)}>
-            Learning paths
-          </a>
+          <a href="/problems">Practice</a>
           <a
             href="https://github.com/hyzr1/code"
             target="_blank"
@@ -311,7 +359,7 @@ function Frontpage() {
           </a>
         </nav>
         <a className="nav-launch" href="/courses/python">
-          Enter the platform <Arrow />
+          Start learning <Arrow />
         </a>
         <button
           className="menu-toggle"
@@ -325,19 +373,20 @@ function Frontpage() {
       <main id="main">
         <section className="hero">
           <div className="hero-grid" />
-          <Sculpture paused={paused} />
+          <Network paused={paused} />
           <div className="hero-content">
             <div className="eyebrow">
-              <span className="status-dot" /> A NEW WAY TO LEARN TO CODE
+              <span className="status-dot" /> THE OPEN LEARNING PLATFORM
             </div>
             <h1>
-              Don’t just know.
+              Learn to think.
               <br />
-              <span>Understand.</span>
+              <span>Then build anything.</span>
             </h1>
             <p>
-              Make the leap from following along
-              <br className="desktop-break" /> to figuring it out.
+              Python, algorithms, and machine learning.
+              <br className="desktop-break" /> Learn how they work. Put them to
+              work.
             </p>
             <div className="hero-actions">
               <a className="button button-light" href="/courses/python">
@@ -348,7 +397,7 @@ function Frontpage() {
               </a>
             </div>
             <div className="hero-footnote">
-              FREE TO EXPLORE. BUILT FOR YOUR CURIOSITY.
+              VISUAL LESSONS. REAL CODE. YOUR PACE.
             </div>
           </div>
           <div className="hero-floor">
@@ -358,7 +407,7 @@ function Frontpage() {
             <button onClick={() => setPaused(!paused)} aria-pressed={paused}>
               {paused ? "▷ Play motion" : "Ⅱ Pause motion"}
             </button>
-            <span>CODE. CONNECT. CREATE.</span>
+            <span>INDEPENDENTLY BUILT / OPEN SOURCE</span>
           </div>
         </section>
         <div className="discipline-strip">
@@ -376,18 +425,18 @@ function Frontpage() {
             01 — THE EXPERIENCE
           </div>
           <h2 data-reveal>
-            Less passive watching.
+            See the concept.
             <br />
-            <span>More lightbulb moments.</span>
+            <span>Work through the details.</span>
           </h2>
           <div className="intro-bottom" data-reveal>
             <span className="intro-symbol">↳</span>
             <p>
-              A concept isn’t yours because you’ve seen it.
+              Follow an explanation, experiment with the code,
               <br />
-              It becomes yours when you can use it.
+              and test what you remember.
               <br />
-              Everything here is built around that moment.
+              One workspace connects the whole process.
             </p>
           </div>
         </section>
@@ -437,11 +486,11 @@ function Frontpage() {
         </section>
         <section className="personal section-shell">
           <div className="personal-copy" data-reveal>
-            <div className="eyebrow">YOUR MIND. YOUR SETTINGS.</div>
+            <div className="eyebrow">A WORKSPACE THAT ADAPTS TO YOU.</div>
             <h2>
-              Learning isn’t
+              Change the format.
               <br />
-              one-size-fits-all.
+              Keep the substance.
             </h2>
             <p>
               Watch it. Read it. Hear it. Change the voice, the pace, the
@@ -451,23 +500,8 @@ function Frontpage() {
               Find your way in <Arrow />
             </a>
           </div>
-          <div className="personal-art" aria-hidden="true" data-reveal>
-            <div className="orbital orbital-one" />
-            <div className="orbital orbital-two" />
-            <div className="orbital orbital-three" />
-            <div className="personal-core">you</div>
-            <span className="orbit-label label-a">
-              Aa <small>TYPOGRAPHY</small>
-            </span>
-            <span className="orbit-label label-b">
-              ▥ <small>VOICE</small>
-            </span>
-            <span className="orbit-label label-c">
-              1.0× <small>PACE</small>
-            </span>
-            <span className="orbit-label label-d">
-              ◐ <small>APPEARANCE</small>
-            </span>
+          <div data-reveal>
+            <Preferences />
           </div>
         </section>
         <section className="paths section-shell" id="paths">
@@ -475,9 +509,9 @@ function Frontpage() {
             <div>
               <div className="eyebrow">02 — FOLLOW YOUR CURIOSITY</div>
               <h2>
-                Start somewhere.
+                Choose your starting point.
                 <br />
-                <span>Go somewhere else entirely.</span>
+                <span>Build from first principles.</span>
               </h2>
             </div>
             <p>
@@ -510,14 +544,12 @@ function Frontpage() {
         <section className="closing section-shell">
           <div className="closing-grid" />
           <div className="eyebrow" data-reveal>
-            LESS FRICTION. MORE POSSIBILITY.
+            A PLACE TO LEARN. A REASON TO KEEP GOING.
           </div>
           <h2 data-reveal>
-            Your next
+            The next thing you build.
             <br />
-            “I get it.”
-            <br />
-            <span>Starts here.</span>
+            <span>Starts with what you know.</span>
           </h2>
           <a className="button button-light" href="/courses/python" data-reveal>
             Build your understanding <Arrow />
@@ -526,22 +558,57 @@ function Frontpage() {
         </section>
       </main>
       <footer className="front-footer">
-        <a className="brand" href="/frontpage" aria-label="Hyzr Code home">
-          <img src="/hyzr-mark.png" alt="" />
-          <span>Built for the way you think.</span>
-        </a>
-        <div>
-          <a
-            href="https://github.com/hyzr1/code"
-            target="_blank"
-            rel="noreferrer"
-          >
-            GitHub <Arrow diagonal />
-          </a>
-          <a href="https://hyzr.ai" target="_blank" rel="noreferrer">
-            Made by Hyzr <Arrow diagonal />
-          </a>
+        <div className="footer-top">
+          <div className="footer-statement">
+            <img src="/hyzr-mark.png" alt="Hyzr" />
+            <h3>
+              Technical education.
+              <br />
+              Open to everyone.
+            </h3>
+            <a href="/courses/python">
+              Enter the platform <Arrow />
+            </a>
+          </div>
+          <div className="footer-column">
+            <h4>LEARN</h4>
+            <a href="/courses/python">Python</a>
+            <a href="/courses/dsa">Algorithms</a>
+            <a href="/courses/machine-learning">Machine learning</a>
+          </div>
+          <div className="footer-column">
+            <h4>PRACTICE</h4>
+            <a href="/problems">Interview problems</a>
+            <a href="/practice/daily">Daily sessions</a>
+            <a href="/typing">Code typing</a>
+            <a href="/progress">Your progress</a>
+          </div>
+          <div className="footer-column">
+            <h4>HYZR</h4>
+            <a href="https://hyzr.ai" target="_blank" rel="noreferrer">
+              About the project <Arrow diagonal />
+            </a>
+            <a
+              href="https://github.com/hyzr1/code"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Source code <Arrow diagonal />
+            </a>
+            <a href="#main">Back to top ↑</a>
+          </div>
+        </div>
+        <div className="footer-wordmark" aria-hidden="true">
+          hyzr code
+        </div>
+        <div className="footer-bottom">
           <span>© {new Date().getFullYear()} HYZR CODE</span>
+          <span>
+            <i /> INDEPENDENT SOFTWARE. SHARED KNOWLEDGE.
+          </span>
+          <button onClick={() => setPaused(!paused)}>
+            {paused ? "Enable motion ↗" : "Reduce motion ↘"}
+          </button>
         </div>
       </footer>
     </div>
@@ -555,5 +622,8 @@ createRoot(document.getElementById("root")!).render(
 
 // Refresh an existing app worker so it recognizes the separate landing-page shell.
 if ("serviceWorker" in navigator && import.meta.env.PROD) {
-  navigator.serviceWorker.getRegistration().then(registration => registration?.update()).catch(() => {});
+  navigator.serviceWorker
+    .getRegistration()
+    .then((registration) => registration?.update())
+    .catch(() => {});
 }
