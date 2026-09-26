@@ -444,3 +444,153 @@
 .motion-paused .study-progress i {
   animation-play-state: paused;
 }
+/* Centered, typography-led black opening. */
+.front-nav {
+  background: #080808;
+  color: #eee;
+  border-bottom-color: #242424;
+}
+.front-nav .brand img {
+  filter: none;
+}
+.nav-links {
+  color: #d0d0d0;
+}
+.nav-links a:hover {
+  color: #fff;
+}
+.nav-launch {
+  background: #f1f1ed;
+  color: #101010;
+}
+.nav-launch:hover {
+  background: #fff;
+}
+.mega-menu {
+  background: #111;
+  color: #eee;
+  border-bottom-color: #333;
+  box-shadow: 0 24px 35px #0005;
+}
+.mega-lead .eyebrow {
+  color: #93938d;
+}
+.mega-paths > a {
+  border-color: #333;
+}
+.mega-paths strong {
+  color: #eee;
+}
+.mega-paths p {
+  color: #999;
+}
+.mega-paths > a:hover strong {
+  color: #fff;
+}
+.hero {
+  background: #080808;
+  color: #f1f1ef;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 760px;
+  height: calc(100svh - 30px);
+  max-height: 1000px;
+  padding: 160px 6% 130px;
+  text-align: center;
+}
+.hero-content {
+  width: 100%;
+  max-width: 1160px;
+}
+.hero .eyebrow {
+  justify-content: center;
+  color: #a0a09a;
+}
+.hero .status-dot {
+  background: #ccc;
+}
+.hero h1 {
+  font-size: clamp(60px, 7.4vw, 112px);
+  margin: 30px 0;
+  line-height: 1.04;
+}
+.hero h1 span {
+  color: #8d8d89;
+}
+.hero-content > p {
+  margin-inline: auto;
+  max-width: 570px;
+  color: #aaa;
+  font-size: 17px;
+}
+.hero-actions {
+  justify-content: center;
+  margin-top: 34px;
+}
+.hero .button-light {
+  background: #eee;
+  color: #111;
+}
+.hero .text-link {
+  color: #ddd;
+  border-color: #444;
+}
+.hero-floor {
+  color: #888;
+  border-color: #252525;
+}
+.hero-floor button,
+.hero-floor > a,
+.hero-floor .scroll-mark {
+  color: #999;
+}
+@media (max-width: 1000px) {
+  .hero {
+    min-height: 700px;
+  }
+  .hero h1 {
+    font-size: clamp(58px, 8vw, 90px);
+  }
+}
+@media (max-width: 700px) {
+  .menu-toggle {
+    color: #eee;
+  }
+  .nav-links {
+    background: #111;
+    color: #eee;
+    border-color: #333;
+  }
+  .nav-links > a {
+    border-color: #333;
+  }
+  .hero {
+    height: auto;
+    min-height: 700px;
+    padding: 150px 6% 130px;
+    gap: 0;
+  }
+  .hero-content {
+    padding: 0;
+  }
+  .hero h1 {
+    font-size: clamp(42px, 10.5vw, 68px);
+    margin: 26px 0;
+    letter-spacing: -0.065em;
+  }
+  .hero-content > p {
+    font-size: 14px;
+    max-width: 340px;
+  }
+  .hero .eyebrow {
+    font-size: 8px;
+  }
+  .hero-actions {
+    gap: 24px;
+    margin-top: 30px;
+  }
+  .hero-floor {
+    height: 60px;
+  }
+}
