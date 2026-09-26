@@ -76,6 +76,16 @@ type FlowPair = { model: [string, string, string]; trap: [string, string, string
 /** Topic-specific stories keep a shared diagram grammar without teaching every
  * lesson with the same three generic boxes. */
 const TOPIC_FLOWS: Record<string, FlowPair> = {
+  "math.atom.1": { model: ["allowed x", "function rule", "attained y"], trap: ["forbidden x", "undefined rule", "no output"] },
+  "math.atom.2": { model: ["parent graph", "shift / reflect", "new graph"], trap: ["many x", "same y", "no inverse"] },
+  "math.atom.3": { model: ["inner g(x)", "outer f", "f(g(x))"], trap: ["set h = 0", "divide by h", "undefined"] },
+  "math.atom.4": { model: ["angle in radians", "unit circle", "sin / cos"], trap: ["radian input", "degree mode", "wrong value"] },
+  "math.atom.5": { model: ["exponential", "apply log", "solve exponent"], trap: ["log of sum", "split terms", "false rule"] },
+  "math.atom.6": { model: ["original domain", "valid factor", "same nearby values"], trap: ["cancel factor", "forget hole", "wrong domain"] },
+  "math.atom.7": { model: ["x near a", "outputs settle", "limit L"], trap: ["sample points", "guess only", "not a proof"] },
+  "math.atom.8": { model: ["left approach", "compare right", "same limit"], trap: ["different sides", "average them", "false limit"] },
+  "math.atom.9": { model: ["known limits", "check denominator", "combine"], trap: ["zero over zero", "substitute anyway", "invalid result"] },
+  "math.atom.10": { model: ["factor or conjugate", "simplify nearby", "take limit"], trap: ["cancel at hole", "fill point silently", "wrong domain"] },
   "algo.scale": { model: ["10 inputs", "45 comparisons", "fine"], trap: ["1M inputs", "500B comparisons", "not viable"] },
   "algo.operation-count": { model: ["mark operation", "count repeats", "derive total"], trap: ["count lines", "miss hidden scan", "wrong cost"] },
   "algo.asymptotics": { model: ["exact count", "dominant term", "growth class"], trap: ["loose bound", "no case", "weak claim"] },

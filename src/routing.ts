@@ -19,6 +19,7 @@ const COURSE_SLUGS: Record<Course, string> = {
   python: "python",
   algo: "dsa",
   ml: "machine-learning",
+  math: "mathematics",
 };
 
 const SLUG_COURSES: Record<string, Course> = {
@@ -27,6 +28,8 @@ const SLUG_COURSES: Record<string, Course> = {
   algorithms: "algo",
   ml: "ml",
   "machine-learning": "ml",
+  math: "math",
+  mathematics: "math",
 };
 
 const segment = (value: string) => encodeURIComponent(value);

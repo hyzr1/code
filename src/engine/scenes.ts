@@ -459,6 +459,7 @@ function stageSupports(text: string, code: string, section: string): boolean {
 }
 
 const VISUALS: [RegExp, VisualKind][] = [
+  [/^math\.atom\.(?:[1-9]|10)$/, "function"],
   [/algo\.(?:scale|operation-count|asymptotics|growth-classes|dominant-growth|space-cost|amortized-cost|analysis-cases)/, "complexity"],
   [/ml\.(?:vector-operations|dot-product-geometry|norm-families)/, "ml"],
   [/algo\.(?:call-stack|recurrences|recursion-trees|recursion-vs-iteration|tail-recursion)/, "recursion"],
@@ -770,7 +771,7 @@ function placeVisuals(scenes: Scene[], atom: Atom): Scene[] {
       !nextExplicitlyReferencesVisual &&
       section.includes("idea, step by step");
     const trapCandidate =
-      !trapPlaced && !scene.code && section.includes("mistake to avoid");
+      !trapPlaced && !scene.code && (section.includes("mistake to avoid") || section.includes("common mistake"));
     if (!explicitlyReferenced && !modelCandidate && !trapCandidate) return scene;
 
     const visualVariant = trapCandidate ? "trap" as const : "model" as const;
