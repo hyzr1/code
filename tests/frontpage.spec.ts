@@ -108,7 +108,7 @@ test("frontpage remains usable without canvas", async ({ page }) => {
       null) as typeof HTMLCanvasElement.prototype.getContext;
   });
   await page.goto("/frontpage/");
-  await expect(page.locator(".hero-study")).toBeVisible();
+  await expect(page.locator(".hero-content")).toBeVisible();
   await expect(page.locator(".hero canvas")).toHaveCount(0);
   await page.getByRole("button", { name: "Pause motion" }).click();
   await expect(page.getByRole("button", { name: "Play motion" })).toBeVisible();
