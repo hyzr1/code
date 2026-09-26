@@ -102,11 +102,10 @@ export default function Network({ paused }: { paused: boolean }) {
             if ((i + j) % 4 === 0) {
               const x = a.x + (b.x - a.x) * p,
                 y = a.y + (b.y - a.y) * p;
-              const glow = ctx.createRadialGradient(x, y, 0, x, y, 8);
-              glow.addColorStop(0, "rgba(255,255,255,.9)");
-              glow.addColorStop(1, "rgba(255,255,255,0)");
-              ctx.fillStyle = glow;
-              ctx.fillRect(x - 8, y - 8, 16, 16);
+              ctx.fillStyle = "rgba(255,255,255,.8)";
+              ctx.beginPath();
+              ctx.arc(x, y, 1.4, 0, Math.PI * 2);
+              ctx.fill();
             }
           }
       nodes.forEach((layer, l) =>

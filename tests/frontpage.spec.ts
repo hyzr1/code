@@ -74,6 +74,14 @@ test("frontpage story, examples, navigation and reduced motion work", async ({
   await expect(page.locator(".answer-feedback")).toContainText("Exactly");
   await page.getByRole("button", { name: "Light", exact: true }).click();
   await expect(page.locator(".preference-lab")).toHaveClass(/light/);
+  await page.getByRole("button", { name: "Code", exact: true }).click();
+  await expect(page.locator(".lab-preview .syntax-keyword").first()).toHaveText(
+    "def",
+  );
+  await page.getByRole("button", { name: "Increase playback pace" }).click();
+  await expect(page.locator("#preview-speed")).toHaveValue("1.25");
+  await page.getByRole("button", { name: "Decrease playback pace" }).click();
+  await expect(page.locator("#preview-speed")).toHaveValue("1");
   await page.getByRole("button", { name: "Text", exact: true }).click();
   await expect(page.locator(".lab-preview")).toContainText(
     "A function takes an input",
