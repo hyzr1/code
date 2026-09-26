@@ -10,6 +10,8 @@
     }
   },
   "rewrites": [
+    { "source": "/frontpage", "destination": "/frontpage/index.html" },
+    { "source": "/frontpage/", "destination": "/frontpage/index.html" },
     { "source": "/courses/:path*", "destination": "/index.html" },
     { "source": "/problems/:path*", "destination": "/index.html" },
     { "source": "/practice/:path*", "destination": "/index.html" },

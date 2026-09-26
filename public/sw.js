@@ -1,4 +1,4 @@
-const CACHE_VERSION = "hyzr-code-v12";
+const CACHE_VERSION = "hyzr-code-v13";
 const APP_SHELL = ["/", "/manifest.webmanifest", "/favicon.png"];
 
 self.addEventListener("install", (event) => {
@@ -27,13 +27,18 @@ self.addEventListener("fetch", (event) => {
   if (url.origin !== self.location.origin) return;
 
   if (request.mode === "navigate") {
+    // The marketing preview has its own HTML entry; never cache it as the app shell.
+    const shellKey = /^\/frontpage(?:\/|$)/.test(url.pathname) ? "/frontpage/" : "/";
     event.respondWith(
       fetch(request)
         .then((response) => {
-          if (response.ok) caches.open(CACHE_VERSION).then((cache) => cache.put("/", response.clone()));
+          if (response.ok) {
+            const copy = response.clone();
+            event.waitUntil(caches.open(CACHE_VERSION).then((cache) => cache.put(shellKey, copy)));
+          }
           return response;
         })
-        .catch(() => caches.match("/")),
+        .catch(() => caches.match(shellKey)),
     );
     return;
   }
