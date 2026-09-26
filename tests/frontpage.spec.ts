@@ -1,18 +1,32 @@
 import { expect, test } from "@playwright/test";
 
-test("landing preview does not overwrite the offline course shell", async ({ page, isMobile }) => {
+test("landing preview does not overwrite the offline course shell", async ({
+  page,
+  isMobile,
+}) => {
   test.skip(isMobile, "Service worker cache contract is covered on desktop");
   await page.goto("/");
-  await page.evaluate(async () => { await navigator.serviceWorker.ready; });
+  await page.evaluate(async () => {
+    await navigator.serviceWorker.ready;
+  });
   await page.reload();
   await page.goto("/frontpage/");
-  await expect(page.getByRole("heading", { level: 1 })).toContainText("Understand.");
-  await expect.poll(() => page.evaluate(async () => {
-    const cache = await caches.open("hyzr-code-v13");
-    const root = await cache.match("/");
-    const landing = await cache.match("/frontpage/");
-    return { root: (await root?.text())?.includes("Learn Python, DSA"), landing: (await landing?.text())?.includes("Build understanding.") };
-  })).toEqual({ root: true, landing: true });
+  await expect(page.getByRole("heading", { level: 1 })).toContainText(
+    "Learn to think.",
+  );
+  await expect
+    .poll(() =>
+      page.evaluate(async () => {
+        const cache = await caches.open("hyzr-code-v13");
+        const root = await cache.match("/");
+        const landing = await cache.match("/frontpage/");
+        return {
+          root: (await root?.text())?.includes("Learn Python, DSA"),
+          landing: (await landing?.text())?.includes("Build understanding."),
+        };
+      }),
+    )
+    .toEqual({ root: true, landing: true });
 });
 
 test("frontpage story, examples, navigation and reduced motion work", async ({
@@ -24,7 +38,7 @@ test("frontpage story, examples, navigation and reduced motion work", async ({
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto("/frontpage/");
   await expect(page.getByRole("heading", { level: 1 })).toContainText(
-    "Understand.",
+    "Learn to think.",
   );
   await expect(
     page.getByRole("button", { name: "Play motion" }),
@@ -58,6 +72,18 @@ test("frontpage story, examples, navigation and reduced motion work", async ({
   await expect(page.locator(".answer-feedback")).toContainText("Try again");
   await page.getByRole("button", { name: /items.append/ }).click();
   await expect(page.locator(".answer-feedback")).toContainText("Exactly");
+  await page.getByRole("button", { name: "Light", exact: true }).click();
+  await expect(page.locator(".preference-lab")).toHaveClass(/light/);
+  await page.getByRole("button", { name: "Text", exact: true }).click();
+  await expect(page.locator(".lab-preview")).toContainText(
+    "A function takes an input",
+  );
+  if (!isMobile) {
+    await page.locator(".nav-explore summary").click();
+    await expect(page.locator(".mega-menu")).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(page.locator(".mega-menu")).not.toBeVisible();
+  }
   await expect(page.locator(".path-row")).toHaveCount(3);
   await expect(page.locator(".path-row").nth(2)).toHaveAttribute(
     "href",
@@ -68,16 +94,16 @@ test("frontpage story, examples, navigation and reduced motion work", async ({
   expect(errors).toEqual([]);
 });
 
-test("frontpage remains usable without WebGL", async ({ page }) => {
+test("frontpage remains usable without canvas", async ({ page }) => {
   await page.addInitScript(() => {
     HTMLCanvasElement.prototype.getContext = (() =>
       null) as typeof HTMLCanvasElement.prototype.getContext;
   });
   await page.goto("/frontpage/");
-  await expect(page.locator(".sculpture-fallback")).toBeVisible();
+  await expect(page.locator(".network-fallback")).toBeVisible();
   await page.getByRole("button", { name: "Pause motion" }).click();
   await expect(page.getByRole("button", { name: "Play motion" })).toBeVisible();
   await expect(
-    page.getByRole("link", { name: "Start learning", exact: true }),
+    page.getByRole("link", { name: "Start learning", exact: true }).last(),
   ).toBeVisible();
 });
