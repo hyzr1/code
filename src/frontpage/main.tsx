@@ -1,6 +1,6 @@
 import { StrictMode, useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
-import Network from "./Network";
+
 import CodeSample from "./CodeSample";
 import Preferences from "./Preferences";
 
@@ -8,6 +8,7 @@ import "@fontsource-variable/inter/wght.css";
 import "./frontpage.css";
 import "./editorial.css";
 import "./demo-polish.css";
+import "./opening.css";
 
 function Arrow({ diagonal = false }: { diagonal?: boolean }) {
   return (
@@ -299,10 +300,6 @@ function Frontpage() {
       <header className="front-nav">
         <a className="brand" href="/frontpage" aria-label="Hyzr Code home">
           <img src="/hyzr-mark.png" alt="" />
-          <span className="brand-name">
-            hyzr<span>code</span>
-          </span>
-          <span className="beta-label">BETA</span>
         </a>
         <nav
           aria-label="Main navigation"
@@ -310,7 +307,18 @@ function Frontpage() {
         >
           <details className="nav-explore">
             <summary>
-              Explore <span>⌄</span>
+              Courses{" "}
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                aria-hidden="true"
+              >
+                <path d="m6 9 6 6 6-6" />
+              </svg>
             </summary>
             <div className="mega-menu">
               <div className="mega-lead">
@@ -370,32 +378,99 @@ function Frontpage() {
       </header>
       <main id="main">
         <section className="hero">
-          <div className="hero-grid" />
-          <Network paused={paused} />
           <div className="hero-content">
             <div className="eyebrow">
-              <span className="status-dot" /> THE OPEN LEARNING PLATFORM
+              <span className="status-dot" /> A NEW WAY TO UNDERSTAND
             </div>
             <h1>
-              Learn to think.
+              Understand deeply.
               <br />
-              <span>Then build anything.</span>
+              <span>Build without limits.</span>
             </h1>
             <p>
-              Python, algorithms, and machine learning.
-              <br className="desktop-break" /> Learn how they work. Put them to
-              work.
+              From your first line of Python to machine learning.
+              <br className="desktop-break" /> See the ideas. Write the code.
+              Make it yours.
             </p>
             <div className="hero-actions">
               <a className="button button-light" href="/courses/python">
                 Start learning <Arrow />
               </a>
-              <a className="text-link" href="#experience">
-                Explore the experience <span>↓</span>
+              <a className="text-link" href="#paths">
+                Explore courses <Arrow diagonal />
               </a>
             </div>
-            <div className="hero-footnote">
-              VISUAL LESSONS. REAL CODE. YOUR PACE.
+          </div>
+          <div
+            className="hero-study"
+            aria-label="Visual lesson preview: the derivative of a curve"
+          >
+            <div className="study-top">
+              <span>IDEAS, IN MOTION</span>
+              <span>01 — THE DERIVATIVE</span>
+            </div>
+            <svg
+              className="study-graph"
+              viewBox="0 0 600 470"
+              role="img"
+              aria-label="A parabola with a tangent showing its slope at a point"
+            >
+              <defs>
+                <pattern
+                  id="graph-grid"
+                  width="40"
+                  height="40"
+                  patternUnits="userSpaceOnUse"
+                >
+                  <path d="M40 0H0V40" fill="none" stroke="#ffffff0d" />
+                </pattern>
+              </defs>
+              <rect width="600" height="470" fill="url(#graph-grid)" />
+              <path d="M40 370H560M120 430V30" stroke="#ffffff30" fill="none" />
+              <text x="549" y="395">
+                x
+              </text>
+              <text x="95" y="45">
+                y
+              </text>
+              <path
+                d="M80 362 Q300 450 520 76"
+                fill="none"
+                stroke="#eee"
+                strokeWidth="2"
+              />
+              <g className="study-tangent">
+                <path
+                  d="M240 402 490 162"
+                  stroke="#a4a4a4"
+                  strokeWidth="1.5"
+                  strokeDasharray="5 5"
+                />
+                <circle cx="365" cy="282" r="7" fill="#fafafa" />
+                <circle
+                  cx="365"
+                  cy="282"
+                  r="19"
+                  fill="none"
+                  stroke="#ffffff40"
+                />
+              </g>
+              <text x="335" y="100" className="graph-formula">
+                dy / dx
+              </text>
+            </svg>
+            <div className="study-caption">
+              <span>
+                See what a rate of change
+                <br />
+                actually looks like.
+              </span>
+              <span className="study-play" aria-hidden="true">
+                ↗
+              </span>
+            </div>
+            <div className="study-progress">
+              <i />
             </div>
           </div>
           <div className="hero-floor">
@@ -405,7 +480,7 @@ function Frontpage() {
             <button onClick={() => setPaused(!paused)} aria-pressed={paused}>
               {paused ? "▷ Play motion" : "Ⅱ Pause motion"}
             </button>
-            <span>INDEPENDENTLY BUILT / OPEN SOURCE</span>
+            <span>PYTHON / ALGORITHMS / MACHINE LEARNING</span>
           </div>
         </section>
         <div className="discipline-strip">

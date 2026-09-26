@@ -12,7 +12,7 @@ test("landing preview does not overwrite the offline course shell", async ({
   await page.reload();
   await page.goto("/frontpage/");
   await expect(page.getByRole("heading", { level: 1 })).toContainText(
-    "Learn to think.",
+    "Understand deeply.",
   );
   await expect
     .poll(() =>
@@ -38,7 +38,7 @@ test("frontpage story, examples, navigation and reduced motion work", async ({
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto("/frontpage/");
   await expect(page.getByRole("heading", { level: 1 })).toContainText(
-    "Learn to think.",
+    "Understand deeply.",
   );
   await expect(
     page.getByRole("button", { name: "Play motion" }),
@@ -108,7 +108,8 @@ test("frontpage remains usable without canvas", async ({ page }) => {
       null) as typeof HTMLCanvasElement.prototype.getContext;
   });
   await page.goto("/frontpage/");
-  await expect(page.locator(".network-fallback")).toBeVisible();
+  await expect(page.locator(".hero-study")).toBeVisible();
+  await expect(page.locator(".hero canvas")).toHaveCount(0);
   await page.getByRole("button", { name: "Pause motion" }).click();
   await expect(page.getByRole("button", { name: "Play motion" })).toBeVisible();
   await expect(
