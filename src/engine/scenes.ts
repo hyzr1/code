@@ -427,9 +427,25 @@ export function buildScenes(atom: Atom): Scene[] {
     });
   }
 
+  // Keep conventional notation in Math captions, but speak it as mathematics.
+  // The shared narrator uses an arrow for generic diagrams ("means"), which
+  // misreads a limit such as x → 0 as "x means zero".
+  const mathNarration = (value: string) => value
+    .replace(/\b([A-Za-z])\s*→\s*([A-Za-z0-9]+)⁻/g, "$1 approaches $2 from the left")
+    .replace(/\b([A-Za-z])\s*→\s*([A-Za-z0-9]+)⁺/g, "$1 approaches $2 from the right")
+    .replace(/\b([A-Za-z])\s*→\s*/g, "$1 approaches ")
+    .replace(/ε/g, "epsilon")
+    .replace(/δ/g, "delta")
+    .replace(/π/g, "pi")
+    .replace(/θ/g, "theta")
+    .replace(/≤/g, " less than or equal to ")
+    .replace(/≥/g, " greater than or equal to ");
   const enriched = scenes
     .filter((s) => s.caption || s.code)
-    .map((scene) => enrichScene(scene, atom));
+    .map((scene) => enrichScene(
+      atom.id.startsWith("math.") ? { ...scene, narration: mathNarration(scene.narration) } : scene,
+      atom,
+    ));
   return placeVisuals(enriched, atom);
 }
 
@@ -459,7 +475,7 @@ function stageSupports(text: string, code: string, section: string): boolean {
 }
 
 const VISUALS: [RegExp, VisualKind][] = [
-  [/^math\.atom\.(?:[1-9]|10)$/, "function"],
+  [/^math\.atom\.(?:[1-9]|1[0-6])$/, "function"],
   [/algo\.(?:scale|operation-count|asymptotics|growth-classes|dominant-growth|space-cost|amortized-cost|analysis-cases)/, "complexity"],
   [/ml\.(?:vector-operations|dot-product-geometry|norm-families)/, "ml"],
   [/algo\.(?:call-stack|recurrences|recursion-trees|recursion-vs-iteration|tail-recursion)/, "recursion"],

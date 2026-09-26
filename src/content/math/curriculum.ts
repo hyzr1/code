@@ -60,12 +60,31 @@ export const MATH_MODULES: CourseModule[] = specifications.map(([part, partTitle
   return { id, part, partTitle, title, summary, lessonIds: topics.map((_, lessonIndex) => `${id}.l${lessonIndex + 1}`), course: "math", language: "python" };
 });
 
+const releasedGoals: Record<string, string> = {
+  "math.m1.l1": "Determine a function's domain and range, including excluded inputs and attained endpoints.",
+  "math.m1.l2": "Predict graph transformations and find an inverse on a one-to-one domain.",
+  "math.m1.l3": "Compose functions in the right order and simplify a difference quotient without setting its denominator to zero.",
+  "math.m1.l4": "Use radians and the unit circle to reason about trigonometric values and signs.",
+  "math.m1.l5": "Solve exponential equations with logarithms and distinguish valid log laws from tempting false ones.",
+  "math.m1.l6": "Keep domain restrictions intact while factoring, rationalizing, and checking algebraic work.",
+  "math.m2.l1": "Estimate a limit from nearby values, then explain why a table alone is not a proof.",
+  "math.m2.l2": "Compute left and right approaches separately and decide when a two-sided limit exists.",
+  "math.m2.l3": "Apply limit laws only when their hypotheses hold, especially for quotients.",
+  "math.m2.l4": "Resolve a zero-over-zero form by factoring or rationalizing and identify a removable hole.",
+  "math.m2.l5": "Determine the sign of each one-sided infinite limit and locate vertical asymptotes.",
+  "math.m2.l6": "Compare leading powers to find far-field limits and horizontal asymptotes.",
+  "math.m2.l7": "Prove limits with squeezing and derive the standard trigonometric limit in radians.",
+  "math.m2.l8": "Check continuity at a point and use the intermediate value theorem to prove a root exists.",
+  "math.m2.l9": "Choose an explicit delta for every epsilon and write a complete linear-limit proof.",
+  "math.m2.l10": "Choose an appropriate technique for mixed limits and state precisely what behavior you established.",
+};
+
 export const MATH_LESSONS: Lesson[] = specifications.flatMap(([, , , , topics], index) =>
   topics.map((title, lessonIndex) => ({
     id: `math.m${index + 1}.l${lessonIndex + 1}`,
     moduleId: `math.m${index + 1}`,
     title,
-    goal: `Explain ${title.toLowerCase()} and work through a complete example before moving on.`,
+    goal: releasedGoals[`math.m${index + 1}.l${lessonIndex + 1}`] ?? `Explain ${title.toLowerCase()} and work through a complete example before moving on.`,
     repIds: [],
     problemIds: [],
     language: "python",

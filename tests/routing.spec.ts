@@ -54,10 +54,16 @@ test("mathematics route opens the first authored lesson and marks later topics a
 
   await page.goto("/courses/mathematics");
   await expect(page.getByRole("heading", { name: "Mathematics", exact: true })).toBeVisible();
-  await expect(page.locator(".course-facts")).toContainText("10 lessons");
+  await expect(page.locator(".course-facts")).toContainText("16 lessons");
   await expect(page.locator(".lesson-row.planned").first()).toContainText("Coming soon");
   await page.getByRole("button", { name: "Start the course" }).click();
   await expect(page).toHaveURL(/\/courses\/mathematics\/lessons\/math\.m1\.l1$/);
   await expect(page.getByText("Functions, domains, and ranges", { exact: true }).first()).toBeVisible();
+  await page.goto("/courses/mathematics/lessons/math.m2.l10");
+  await expect(page.getByText("Mixed limit and continuity problems", { exact: true }).first()).toBeVisible();
+  await page.goto("/courses/mathematics/lessons/math.m2.l5");
+  await page.getByRole("button", { name: "Next", exact: true }).click();
+  await page.getByRole("button", { name: "Next", exact: true }).click();
+  await expect(page.getByRole("img", { name: /vertical asymptote: the two sides grow/ })).toBeVisible();
   expect(errors).toEqual([]);
 });
