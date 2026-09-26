@@ -4,6 +4,9 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   plugins: [react()],
   build: {
+    rollupOptions: {
+      input: { app: "index.html", frontpage: "frontpage/index.html" },
+    },
     manifest: true,
     // Large curricula and coding runtimes are loaded behind route boundaries.
     // The budget check guards the small startup shell independently.
