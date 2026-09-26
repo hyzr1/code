@@ -594,3 +594,139 @@
     height: 60px;
   }
 }
+/* Match the course app's 30px mark, 12–13px controls and 6px corners. */
+.frontpage {
+  --action-height: 36px;
+  --action-radius: 6px;
+  --action-font: 12px;
+}
+.front-nav {
+  height: 68px;
+  gap: 32px;
+}
+.front-nav .brand img {
+  width: 30px;
+  height: 30px;
+}
+.nav-links {
+  gap: 26px;
+  font-size: 13px;
+}
+.nav-explore summary {
+  padding: 24px 0;
+}
+.nav-explore summary svg {
+  width: 12px;
+  height: 12px;
+}
+.mega-menu {
+  top: 67px;
+  padding-top: 32px;
+  padding-bottom: 36px;
+}
+.mega-lead h3 {
+  font-size: 30px;
+}
+.mega-lead > a {
+  font-size: 12px;
+}
+.mega-paths strong {
+  font-size: 16px;
+}
+.mega-paths p {
+  font-size: 12px;
+}
+.mega-paths > a {
+  padding: 16px 0;
+}
+.frontpage .nav-launch,
+.frontpage .button-light,
+.frontpage .hero .button-light,
+.frontpage .run-row button {
+  height: var(--action-height);
+  min-height: var(--action-height);
+  padding: 0 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  border: 1px solid transparent;
+  border-radius: var(--action-radius);
+  font-size: var(--action-font);
+  font-weight: 500;
+  line-height: 1.2;
+  background: #f0f0ed;
+  color: #151515;
+  white-space: nowrap;
+  transition:
+    background 0.2s,
+    transform 0.2s;
+}
+.frontpage .nav-launch:hover,
+.frontpage .button-light:hover,
+.frontpage .hero .button-light:hover,
+.frontpage .run-row button:hover {
+  background: #fff;
+  transform: translateY(-1px);
+}
+.frontpage .button-light:before {
+  border-radius: inherit;
+}
+.frontpage .nav-launch svg,
+.frontpage .button-light svg {
+  width: 16px;
+  height: 16px;
+}
+.frontpage .run-row button span {
+  margin-left: 0;
+}
+.hero-actions .text-link {
+  font-size: 12px;
+}
+.front-nav .menu-toggle {
+  font-size: 23px;
+  width: 32px;
+  height: 36px;
+}
+@media (max-width: 700px) {
+  .front-nav {
+    height: 64px;
+    gap: 16px;
+  }
+  .front-nav .brand img {
+    width: 28px;
+    height: 28px;
+  }
+  .nav-links {
+    top: 63px;
+    max-height: calc(100svh - 64px);
+    font-size: 14px;
+  }
+  .nav-links > a {
+    padding: 14px 0;
+  }
+  .nav-explore summary {
+    padding: 14px 0;
+  }
+  .mega-menu {
+    padding: 10px 0 18px;
+  }
+  .mega-paths strong {
+    font-size: 14px;
+  }
+  .mega-paths p {
+    font-size: 11px;
+  }
+  .frontpage .nav-launch {
+    gap: 12px;
+    padding-inline: 13px;
+  }
+  .frontpage .run-row button {
+    font-size: 11px;
+    padding-inline: 12px;
+    gap: 10px;
+  }
+  .hero {
+    padding-top: 132px;
+  }
+}
