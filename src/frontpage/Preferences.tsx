@@ -1,4 +1,5 @@
 import { useState } from "react";
+import CodeSample from "./CodeSample";
 
 export default function Preferences() {
   const [theme, setTheme] = useState("dark");
@@ -26,7 +27,10 @@ export default function Preferences() {
             <span>output</span>
           </div>
         ) : format === "Code" ? (
-          <pre>{"def double(x):\n    return x * 2\n\ndouble(4)  # 8"}</pre>
+          <CodeSample
+            file="functions.py"
+            source={"def double(x):\n    return x * 2\n\ndouble(4)  # 8"}
+          />
         ) : (
           <p>
             A function takes an input, applies a set of instructions, and
@@ -38,36 +42,61 @@ export default function Preferences() {
         </div>
       </div>
       <div className="lab-control">
-        <span>Lesson format</span>
-        <div>
+        <span>
+          Lesson format<small>Choose how to explore the idea</small>
+        </span>
+        <div
+          className="segmented-control"
+          role="group"
+          aria-label="Lesson format"
+        >
           {["Visual", "Code", "Text"].map((f) => (
             <button
               key={f}
               aria-pressed={format === f}
               onClick={() => setFormat(f)}
             >
+              <span aria-hidden="true">
+                {f === "Visual" ? "◫" : f === "Code" ? "‹›" : "≡"}
+              </span>
               {f}
             </button>
           ))}
         </div>
       </div>
       <div className="lab-control">
-        <span>Appearance</span>
-        <div>
+        <span>
+          Appearance<small>Set the tone of your workspace</small>
+        </span>
+        <div
+          className="segmented-control theme-control"
+          role="group"
+          aria-label="Preview appearance"
+        >
           {["dark", "light"].map((t) => (
             <button
               key={t}
               aria-pressed={theme === t}
               onClick={() => setTheme(t)}
             >
+              <span aria-hidden="true" className={`theme-swatch ${t}`} />
               {t === "dark" ? "Dark" : "Light"}
             </button>
           ))}
         </div>
       </div>
       <div className="lab-control">
-        <label htmlFor="preview-speed">Playback pace</label>
-        <div>
+        <label htmlFor="preview-speed">
+          Playback pace<small>Move at a comfortable speed</small>
+        </label>
+        <div className="pace-control">
+          <button
+            aria-label="Decrease playback pace"
+            disabled={speed <= 0.5}
+            onClick={() => setSpeed((s) => Math.max(0.5, s - 0.25))}
+          >
+            −
+          </button>
           <input
             id="preview-speed"
             aria-label="Preview playback pace"
@@ -76,9 +105,19 @@ export default function Preferences() {
             max="2"
             step="0.25"
             value={speed}
+            style={{
+              background: `linear-gradient(to right, #d4d4d4 ${((speed - 0.5) / 1.5) * 100}%, #383838 ${((speed - 0.5) / 1.5) * 100}%)`,
+            }}
             onChange={(e) => setSpeed(Number(e.target.value))}
           />
-          <output>{speed.toFixed(2)}×</output>
+          <button
+            aria-label="Increase playback pace"
+            disabled={speed >= 2}
+            onClick={() => setSpeed((s) => Math.min(2, s + 0.25))}
+          >
+            +
+          </button>
+          <output htmlFor="preview-speed">{Number(speed.toFixed(2))}×</output>
         </div>
       </div>
     </div>

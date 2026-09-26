@@ -1,11 +1,13 @@
 import { StrictMode, useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import Network from "./Network";
+import CodeSample from "./CodeSample";
 import Preferences from "./Preferences";
 
 import "@fontsource-variable/inter/wght.css";
 import "./frontpage.css";
 import "./editorial.css";
+import "./demo-polish.css";
 
 function Arrow({ diagonal = false }: { diagonal?: boolean }) {
   return (
@@ -186,22 +188,18 @@ function Demo({ chapter }: { chapter: number }) {
               </div>
             ) : (
               <div className="code-demo">
-                <div className="code-file">
-                  sequence.py <span>PYTHON 3</span>
-                </div>
-                <pre>
-                  <code>
-                    <span className="code-muted">
-                      # Build a sequence. See what happens.
-                    </span>
-                    {
-                      "\nnumbers = [2, 4, 8, 16]\nnumbers.append(32)\n\nfor number in numbers:\n    print(number)"
-                    }
-                  </code>
-                </pre>
+                <CodeSample
+                  file="sequence.py"
+                  source={
+                    "# Build a sequence, one element at a time.\nnumbers = [2, 4, 8, 16]\nnumbers.append(32)\n\nfor number in numbers:\n    print(number)"
+                  }
+                />
                 <div className="run-row">
                   <span aria-live="polite">
-                    {ran ? "2  4  8  16  32" : "Output appears here"}
+                    <small>CONSOLE</small>
+                    {ran
+                      ? "2  4  8  16  32"
+                      : "Run the example to see its output."}
                   </span>
                   <button onClick={() => setRan(true)}>
                     Run example <span>▷</span>
