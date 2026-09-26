@@ -53,6 +53,7 @@
     "@lezer/highlight": "^1.2.1",
     "@mlc-ai/web-llm": "^0.2.84",
     "@vercel/blob": "^2.8.0",
+    "gsap": "^3.15.0",
     "kokoro-js": "^1.2.1",
     "pyodide": "^314.0.3",
     "react": "^19.2.8",

@@ -1,0 +1,77 @@
+.hero-atmosphere {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: -1;
+  mask-image: linear-gradient(black 55%, transparent 100%);
+}
+.atmosphere-beam {
+  position: absolute;
+  width: 65vw;
+  height: 100%;
+  top: -40%;
+  left: -20%;
+  background: linear-gradient(90deg, transparent, #ffffff09, transparent);
+  transform: rotate(-32deg);
+  filter: blur(30px);
+}
+.atmosphere-beam:nth-child(2) {
+  left: 50%;
+  top: -15%;
+  background: linear-gradient(90deg, transparent, #ffffff0d, transparent);
+  transform: rotate(32deg);
+}
+.atmosphere-grain {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(#ffffff28 0.6px, transparent 0.8px);
+  background-size: 20px 20px;
+  opacity: 0.26;
+  mask-image: radial-gradient(ellipse, transparent 22%, black 80%);
+}
+.hero-content {
+  position: relative;
+  z-index: 1;
+}
+.gsap-ready [data-reveal] {
+  transition: none;
+  transform: none;
+}
+.gsap-ready .path-row {
+  transition: border-color 0.2s;
+}
+.frontpage .text-link svg,
+.frontpage .mega-paths svg {
+  transition: transform 0.25s;
+}
+.frontpage .text-link:hover svg,
+.frontpage .mega-paths a:hover svg {
+  transform: translate(3px, -2px);
+}
+.frontpage .nav-links > a {
+  position: relative;
+}
+.frontpage .nav-links > a:after {
+  content: "";
+  position: absolute;
+  bottom: -7px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s;
+}
+.frontpage .nav-links > a:hover:after {
+  transform: scaleX(1);
+}
+.motion-paused .hero-atmosphere {
+  opacity: 0.5;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-atmosphere {
+    opacity: 0.4;
+  }
+}

@@ -116,3 +116,27 @@ test("frontpage remains usable without canvas", async ({ page }) => {
     page.getByRole("link", { name: "Start learning", exact: true }).last(),
   ).toBeVisible();
 });
+
+test("GSAP motion can be paused without hiding content", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  const errors: string[] = [];
+  page.on("pageerror", (e) => errors.push(e.message));
+  await page.goto("/frontpage/");
+  await expect(page.locator(".frontpage")).toHaveClass(/gsap-ready/);
+  await expect(page.locator(".hero-content h1")).toBeVisible();
+  await page
+    .getByRole("button", { name: "Pause motion", exact: false })
+    .first()
+    .click();
+  await expect(page.locator(".frontpage")).not.toHaveClass(/gsap-ready/);
+  await page.locator("#paths").scrollIntoViewIfNeeded();
+  await expect(page.locator(".path-row").first()).toBeVisible();
+  await page.getByRole("link", { name: "Build your understanding" }).click();
+  await expect(page).toHaveURL(/\/courses\/python$/);
+  const primary = page.locator(".course-resume>button");
+  await expect(primary).toBeVisible();
+  expect(await primary.evaluate((e) => getComputedStyle(e).borderRadius)).toBe(
+    "6px",
+  );
+  expect(errors).toEqual([]);
+});

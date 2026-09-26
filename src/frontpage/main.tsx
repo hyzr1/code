@@ -9,6 +9,8 @@ import "./frontpage.css";
 import "./editorial.css";
 import "./demo-polish.css";
 import "./opening.css";
+import "./motion.css";
+import "../actions.css";
 
 function Arrow({ diagonal = false }: { diagonal?: boolean }) {
   return (
@@ -229,6 +231,43 @@ function Frontpage() {
   const [chapter, setChapter] = useState(0);
   const story = useRef<HTMLElement>(null);
   useEffect(() => {
+    if (paused) return;
+    let disposed = false;
+    let cleanup: (() => void) | undefined;
+    import("./motion")
+      .then(({ startMotion }) => {
+        if (!disposed)
+          cleanup = startMotion(
+            document.querySelector<HTMLElement>(".frontpage")!,
+          );
+      })
+      .catch(() => {
+        /* Keep the static page usable if the motion chunk cannot load. */
+      });
+    return () => {
+      disposed = true;
+      cleanup?.();
+    };
+  }, [paused]);
+  useEffect(() => {
+    if (paused) return;
+    let disposed = false;
+    let cleanup: (() => void) | undefined;
+    import("./motion")
+      .then(({ animateChapter }) => {
+        if (!disposed)
+          cleanup = animateChapter(
+            document.querySelector<HTMLElement>(".frontpage")!,
+          );
+      })
+      .catch(() => {});
+    return () => {
+      disposed = true;
+      cleanup?.();
+    };
+  }, [chapter, paused]);
+
+  useEffect(() => {
     const media = matchMedia("(prefers-reduced-motion: reduce)");
     const change = () => setPaused(media.matches);
     media.addEventListener("change", change);
@@ -378,6 +417,11 @@ function Frontpage() {
       </header>
       <main id="main">
         <section className="hero">
+          <div className="hero-atmosphere" aria-hidden="true">
+            <div className="atmosphere-beam" />
+            <div className="atmosphere-beam" />
+            <div className="atmosphere-grain" />
+          </div>
           <div className="hero-content">
             <div className="eyebrow">
               <span className="status-dot" /> A NEW WAY TO UNDERSTAND
