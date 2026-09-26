@@ -552,3 +552,8 @@ createRoot(document.getElementById("root")!).render(
     <Frontpage />
   </StrictMode>,
 );
+
+// Refresh an existing app worker so it recognizes the separate landing-page shell.
+if ("serviceWorker" in navigator && import.meta.env.PROD) {
+  navigator.serviceWorker.getRegistration().then(registration => registration?.update()).catch(() => {});
+}

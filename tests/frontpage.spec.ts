@@ -1,5 +1,20 @@
 import { expect, test } from "@playwright/test";
 
+test("landing preview does not overwrite the offline course shell", async ({ page, isMobile }) => {
+  test.skip(isMobile, "Service worker cache contract is covered on desktop");
+  await page.goto("/");
+  await page.evaluate(async () => { await navigator.serviceWorker.ready; });
+  await page.reload();
+  await page.goto("/frontpage/");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("Understand.");
+  await expect.poll(() => page.evaluate(async () => {
+    const cache = await caches.open("hyzr-code-v13");
+    const root = await cache.match("/");
+    const landing = await cache.match("/frontpage/");
+    return { root: (await root?.text())?.includes("Learn Python, DSA"), landing: (await landing?.text())?.includes("Build understanding.") };
+  })).toEqual({ root: true, landing: true });
+});
+
 test("frontpage story, examples, navigation and reduced motion work", async ({
   page,
   isMobile,
