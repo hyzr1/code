@@ -30,6 +30,7 @@ export default function CourseView({
   const preparationLevel = course === "swe" ? ACTIVE_SWE_PREPARATION_LEVEL : undefined;
   const lessons = lessonsForCourse(course, preparationLevel);
   const availableLessons = lessons.filter(lessonIsReady);
+  const plannedCount = lessons.length - availableLessons.length;
   const visibleLessonIds = new Set(lessons.map((lesson) => lesson.id));
   const modules = modulesForCourse(course, preparationLevel);
   const next = currentLessonForCourse(progress, course, preparationLevel);
@@ -63,12 +64,13 @@ export default function CourseView({
         </div>
         <p>{courseMeta.detail}</p>
         <div className="course-facts"><span><Icon name="book" size={15} />{availableLessons.length} lessons</span><span><Icon name="layers" size={15} />{modules.length} modules</span><span><Icon name="checkCircle" size={15} />{doneCount} completed</span></div>
+        {course === "math" && <p className="course-prerequisite">A paced sequence inspired by UCSC MATH 19A/19B, then undergraduate and graduate mathematics. {plannedCount} later lessons are mapped but not yet released. Work the examples and exercises before advancing; this is not academic credit or a compressed degree.</p>}
         {course === "swe" && <div className="frontier-path-pillars" aria-label="Course preparation pillars"><div>Python engineering</div><div>Technical interviews</div><div>Systems reasoning</div></div>}
         {courseMeta.assumesPython && <span className="course-prerequisite">Prerequisite: Python fundamentals</span>}
       </header>
       <section className="course-resume" aria-label="Next lesson">
         <div className="resume-icon"><Icon name="play" size={20} /></div>
-        <div className="resume-copy"><span className="product-eyebrow">{next ? "Next lesson" : "Course complete"}</span><h2>{next?.title ?? "Every available lesson is complete"}</h2><p>{next?.goal ?? "Return to any module to review what you learned."}</p></div>
+        <div className="resume-copy"><span className="product-eyebrow">{next ? "Next lesson" : plannedCount ? "Current lessons complete" : "Course complete"}</span><h2>{next?.title ?? "Every available lesson is complete"}</h2><p>{next?.goal ?? "Return to any module to review what you learned."}</p></div>
         {next && <button className="primary" onClick={() => onOpen(next.id)}>{doneCount ? "Continue" : "Start the course"}<Icon name="arrowRight" size={15} /></button>}
       </section>
       <div className="curriculum-heading"><h2>Curriculum</h2><span>{doneCore} / {availableCoreLessons.length} lessons completed{masteryCount ? ` · ${masteryCount} optional` : ""}</span></div>

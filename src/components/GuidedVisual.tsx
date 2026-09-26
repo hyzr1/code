@@ -4,6 +4,50 @@ const BOXES = [2, 7, 1, 8, 3, 6];
 
 type Variant = "model" | "trap";
 
+function LimitPlot({ topic, variant }: { topic: string; variant: Variant }) {
+  const hole = topic === "math.atom.7" || topic === "math.atom.10";
+  const jump = topic === "math.atom.8";
+  const vertical = topic === "math.atom.11";
+  const title = hole ? "A removable hole: nearby values approach L even when f(a) is missing"
+    : jump ? "A jump: left and right approaches disagree"
+    : vertical ? "A vertical asymptote: the two sides grow in opposite directions"
+    : "A horizontal asymptote: far-right values approach L";
+  return (
+    <div className={`guided-visual math-plot ${variant}`}>
+      <svg viewBox="0 0 280 120" role="img" aria-label={title}>
+        <line className="axis" x1="18" y1="100" x2="264" y2="100" />
+        <line className="axis" x1="30" y1="10" x2="30" y2="109" />
+        {hole ? <>
+          <path className="curve" d="M34 92 L250 22" />
+          <circle className="hole" cx="142" cy="57" r="5" />
+          <line className="guide" x1="142" y1="57" x2="142" y2="100" />
+          <text x="147" y="109">a</text><text x="151" y="53">L</text>
+        </> : null}
+        {jump ? <>
+          <path className="curve" d="M35 78 L139 57" />
+          <path className="curve" d="M141 35 L252 22" />
+          <circle className="hole" cx="140" cy="57" r="5" />
+          <circle className="point" cx="140" cy="35" r="4" />
+          <line className="guide" x1="140" y1="35" x2="140" y2="100" />
+          <text x="145" y="109">a</text>
+        </> : null}
+        {vertical ? <>
+          <line className="guide" x1="140" y1="10" x2="140" y2="110" />
+          <path className="curve" d="M38 59 C84 67 114 91 129 116" />
+          <path className="curve" d="M151 5 C165 40 201 52 253 58" />
+          <text x="145" y="109">a</text>
+        </> : null}
+        {!hole && !jump && !vertical ? <>
+          <line className="guide" x1="33" y1="43" x2="258" y2="43" />
+          <path className="curve" d="M35 86 C85 69 116 57 151 51 S214 45 256 43" />
+          <text x="251" y="38">L</text>
+        </> : null}
+      </svg>
+      <span>{variant === "trap" ? "Check both sides and the point separately" : title}</span>
+    </div>
+  );
+}
+
 function Flow({
   kind,
   variant,
@@ -76,6 +120,22 @@ type FlowPair = { model: [string, string, string]; trap: [string, string, string
 /** Topic-specific stories keep a shared diagram grammar without teaching every
  * lesson with the same three generic boxes. */
 const TOPIC_FLOWS: Record<string, FlowPair> = {
+  "math.atom.1": { model: ["allowed x", "function rule", "attained y"], trap: ["forbidden x", "undefined rule", "no output"] },
+  "math.atom.2": { model: ["parent graph", "shift / reflect", "new graph"], trap: ["many x", "same y", "no inverse"] },
+  "math.atom.3": { model: ["inner g(x)", "outer f", "f(g(x))"], trap: ["set h = 0", "divide by h", "undefined"] },
+  "math.atom.4": { model: ["angle in radians", "unit circle", "sin / cos"], trap: ["radian input", "degree mode", "wrong value"] },
+  "math.atom.5": { model: ["exponential", "apply log", "solve exponent"], trap: ["log of sum", "split terms", "false rule"] },
+  "math.atom.6": { model: ["original domain", "valid factor", "same nearby values"], trap: ["cancel factor", "forget hole", "wrong domain"] },
+  "math.atom.7": { model: ["x near a", "outputs settle", "limit L"], trap: ["sample points", "guess only", "not a proof"] },
+  "math.atom.8": { model: ["left approach", "compare right", "same limit"], trap: ["different sides", "average them", "false limit"] },
+  "math.atom.9": { model: ["known limits", "check denominator", "combine"], trap: ["zero over zero", "substitute anyway", "invalid result"] },
+  "math.atom.10": { model: ["factor or conjugate", "simplify nearby", "take limit"], trap: ["cancel at hole", "fill point silently", "wrong domain"] },
+  "math.atom.11": { model: ["near forbidden x", "check each sign", "unbounded output"], trap: ["zero denominator", "ignore side", "false finite limit"] },
+  "math.atom.12": { model: ["largest power", "divide each term", "long-run ratio"], trap: ["horizontal line", "treat as barrier", "wrong conclusion"] },
+  "math.atom.13": { model: ["lower bound", "trapped expression", "upper bound"], trap: ["oscillation", "guess a value", "no proof"] },
+  "math.atom.14": { model: ["defined value", "nearby limit", "equal at point"], trap: ["opposite signs", "skip continuity", "false root"] },
+  "math.atom.15": { model: ["choose ε", "construct δ", "prove implication"], trap: ["one example", "claim every ε", "incomplete proof"] },
+  "math.atom.16": { model: ["classify obstacle", "use valid method", "state behavior"], trap: ["see 0/0", "stop early", "wrong answer"] },
   "algo.scale": { model: ["10 inputs", "45 comparisons", "fine"], trap: ["1M inputs", "500B comparisons", "not viable"] },
   "algo.operation-count": { model: ["mark operation", "count repeats", "derive total"], trap: ["count lines", "miss hidden scan", "wrong cost"] },
   "algo.asymptotics": { model: ["exact count", "dominant term", "growth class"], trap: ["loose bound", "no case", "weak claim"] },
@@ -152,6 +212,9 @@ export default function GuidedVisual({
   variant?: Variant;
   topic?: string;
 }) {
+  if (topic && ["math.atom.7", "math.atom.8", "math.atom.10", "math.atom.11", "math.atom.12"].includes(topic)) {
+    return <LimitPlot topic={topic} variant={variant} />;
+  }
   const flow = (topic && TOPIC_FLOWS[topic]) || FLOWS[kind];
   if (flow) return <Flow kind={kind} variant={variant} labels={flow[variant]} />;
 

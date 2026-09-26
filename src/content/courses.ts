@@ -6,8 +6,8 @@ import type { PreparationLevel } from "./companies";
 export const ACTIVE_SWE_PREPARATION_LEVEL: PreparationLevel = 5;
 
 /**
- * The released Python, DSA, and ML paths. Empty catalogs are never presented
- * as playable courses.
+ * The released Python, DSA, ML, and mathematics paths. Empty catalogs are
+ * never presented as playable courses.
  */
 export interface CourseOption {
   id: Course;
@@ -59,6 +59,14 @@ export const COURSES: CourseOption[] = [
     detail: "Learn the math, models, and systems behind practical machine learning. Assumes Python.",
     accent: "#2f9668",
     assumesPython: true,
+  },
+  {
+    id: "math",
+    label: "Mathematics",
+    shortLabel: "MTH",
+    detail: "A deliberate path from calculus through the mathematics of ML and graduate research. Start with fully taught MATH 19A lessons; later units are mapped as they are authored.",
+    accent: "#aa8bdc",
+    assumesPython: false,
   },
 ];
 
