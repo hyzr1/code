@@ -94,10 +94,14 @@ test("frontpage story, examples, navigation and reduced motion work", async ({
     await page.keyboard.press("Escape");
     await expect(page.locator(".mega-menu")).not.toBeVisible();
   }
-  await expect(page.locator(".path-row")).toHaveCount(3);
+  await expect(page.locator(".path-row")).toHaveCount(4);
   await expect(page.locator(".path-row").nth(2)).toHaveAttribute(
     "href",
     "/courses/machine-learning",
+  );
+  await expect(page.locator(".path-row").nth(3)).toHaveAttribute(
+    "href",
+    "/courses/mathematics",
   );
   await page.getByRole("link", { name: "Build your understanding" }).click();
   await expect(page).toHaveURL(/\/courses\/python$/);
@@ -152,6 +156,32 @@ test("landing and courses share the saved appearance", async ({ page }) => {
   await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
   await page.goto("/");
   await expect(page.locator(".frontpage")).toHaveClass(/theme-light/);
+});
+
+test("frontpage header keeps theme and mobile navigation usable", async ({
+  page,
+  isMobile,
+}) => {
+  await page.goto("/");
+  await expect(page.locator(".theme-toggle svg")).toHaveCount(1);
+  await expect(page.locator(".theme-toggle")).toHaveCSS(
+    "height",
+    isMobile ? "42px" : "38px",
+  );
+  if (isMobile) {
+    await page.getByRole("button", { name: "Open menu" }).click();
+    await expect(page.locator(".mobile-nav-launch")).toBeVisible();
+    await expect(page.locator(".mobile-nav-label")).toHaveText(
+      "EXPLORE HYZR CODE",
+    );
+    await page.getByRole("button", { name: "Switch to light theme" }).click();
+    await expect(page.locator(".nav-links.open")).toHaveCSS(
+      "background-color",
+      "rgb(248, 248, 245)",
+    );
+  } else {
+    await expect(page.locator(".mobile-nav-launch")).toBeHidden();
+  }
 });
 
 test("GSAP motion can be paused without hiding content", async ({ page }) => {

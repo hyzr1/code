@@ -87,6 +87,14 @@ const paths = [
     href: "/courses/machine-learning",
     art: "ml",
   },
+  {
+    n: "04",
+    name: "Mathematics",
+    desc: "From calculus and proofs to the language of machine learning.",
+    tags: "CALCULUS / LINEAR ALGEBRA / ADVANCED MATH",
+    href: "/courses/mathematics",
+    art: "math",
+  },
 ];
 
 function Demo({ chapter }: { chapter: number }) {
@@ -362,6 +370,14 @@ function Frontpage() {
       cancelAnimationFrame(raf);
     };
   }, []);
+  useEffect(() => {
+    if (!menu || !matchMedia("(max-width: 700px)").matches) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [menu]);
   return (
     <div
       className={`frontpage theme-${theme} ${paused ? "motion-paused" : ""}`}
@@ -378,6 +394,7 @@ function Frontpage() {
           aria-label="Main navigation"
           className={menu ? "nav-links open" : "nav-links"}
         >
+          <span className="mobile-nav-label">EXPLORE HYZR CODE</span>
           <details className="nav-explore">
             <summary>
               Courses{" "}
@@ -436,6 +453,9 @@ function Frontpage() {
           >
             Open source <Arrow diagonal />
           </a>
+          <a className="mobile-nav-launch" href="/courses/python">
+            Start learning <Arrow />
+          </a>
         </nav>
         <button
           className="theme-toggle"
@@ -444,7 +464,31 @@ function Frontpage() {
           aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
           title={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
         >
-          <span aria-hidden="true">{theme === "dark" ? "☀" : "☾"}</span>
+          {theme === "dark" ? (
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="4" />
+              <path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42" />
+            </svg>
+          ) : (
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M20.4 15.6A8.8 8.8 0 0 1 8.4 3.6 8.8 8.8 0 1 0 20.4 15.6Z" />
+            </svg>
+          )}
         </button>
         <a className="nav-launch" href="/courses/python">
           Start learning <Arrow />
@@ -455,7 +499,29 @@ function Frontpage() {
           aria-expanded={menu}
           onClick={() => setMenu(!menu)}
         >
-          {menu ? "−" : "+"}
+          {menu ? (
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+              aria-hidden="true"
+            >
+              <path d="M5 5 19 19M19 5 5 19" />
+            </svg>
+          ) : (
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+              aria-hidden="true"
+            >
+              <path d="M4 7h16M4 12h16M4 17h16" />
+            </svg>
+          )}
         </button>
       </header>
       <main id="main">
@@ -495,7 +561,7 @@ function Frontpage() {
             <button onClick={() => setPaused(!paused)} aria-pressed={paused}>
               {paused ? "▷ Play motion" : "Ⅱ Pause motion"}
             </button>
-            <span>PYTHON / ALGORITHMS / MACHINE LEARNING</span>
+            <span>PYTHON / ALGORITHMS / MATHEMATICS / MACHINE LEARNING</span>
           </div>
         </section>
         <div className="discipline-strip">
@@ -504,8 +570,8 @@ function Frontpage() {
             <br />A WORLD TO UNDERSTAND.
           </span>
           <div>
-            Python <i>+</i> Algorithms <i>+</i> Machine learning <i>+</i>{" "}
-            Systems design
+            Python <i>+</i> Algorithms <i>+</i> Mathematics <i>+</i> Machine
+            learning <i>+</i> Systems design
           </div>
         </div>
         <section className="intro section-shell" id="experience">
@@ -663,6 +729,7 @@ function Frontpage() {
             <a href="/courses/python">Python</a>
             <a href="/courses/dsa">Algorithms</a>
             <a href="/courses/machine-learning">Machine learning</a>
+            <a href="/courses/mathematics">Mathematics</a>
           </div>
           <div className="footer-column">
             <h4>PRACTICE</h4>
