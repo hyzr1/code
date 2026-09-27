@@ -13,7 +13,7 @@ test("account settings support sign-up and show synchronized state", async ({ pa
     return route.fulfill({ json: { ok: true, updatedAt: Date.now() } });
   });
 
-  await page.goto("/");
+  await page.goto("/courses/python");
   if (testInfo.project.name === "mobile") await page.getByLabel("Open menu").click();
   await page.getByLabel("Settings and preparation profile").click();
   await page.getByRole("button", { name: "Account & sync" }).click();

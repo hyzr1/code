@@ -1,5 +1,5 @@
-const CACHE_VERSION = "hyzr-code-v13";
-const APP_SHELL = ["/", "/manifest.webmanifest", "/favicon.png"];
+const CACHE_VERSION = "hyzr-code-v14";
+const APP_SHELL = ["/", "/courses/python", "/manifest.webmanifest", "/favicon.png"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(caches.open(CACHE_VERSION).then((cache) => cache.addAll(APP_SHELL)));
@@ -27,8 +27,8 @@ self.addEventListener("fetch", (event) => {
   if (url.origin !== self.location.origin) return;
 
   if (request.mode === "navigate") {
-    // The marketing preview has its own HTML entry; never cache it as the app shell.
-    const shellKey = /^\/frontpage(?:\/|$)/.test(url.pathname) ? "/frontpage/" : "/";
+    // The public home page and course app have separate HTML entry points.
+    const shellKey = url.pathname === "/" || /^\/frontpage(?:\/|$)/.test(url.pathname) ? "/" : "/courses/python";
     event.respondWith(
       fetch(request)
         .then((response) => {

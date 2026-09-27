@@ -12,6 +12,12 @@ import "./opening.css";
 import "./motion.css";
 import "../actions.css";
 
+if ("serviceWorker" in navigator && import.meta.env.PROD) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/sw.js").catch(() => {});
+  });
+}
+
 function Arrow({ diagonal = false }: { diagonal?: boolean }) {
   return (
     <svg
@@ -337,7 +343,7 @@ function Frontpage() {
       </a>
       <div className="page-progress" />
       <header className="front-nav">
-        <a className="brand" href="/frontpage" aria-label="Hyzr Code home">
+        <a className="brand" href="/" aria-label="Hyzr Code home">
           <img src="/hyzr-mark.png" alt="" />
         </a>
         <nav

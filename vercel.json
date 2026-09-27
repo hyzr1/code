@@ -12,12 +12,12 @@
   "rewrites": [
     { "source": "/frontpage", "destination": "/frontpage/index.html" },
     { "source": "/frontpage/", "destination": "/frontpage/index.html" },
-    { "source": "/courses/:path*", "destination": "/index.html" },
-    { "source": "/problems/:path*", "destination": "/index.html" },
-    { "source": "/practice/:path*", "destination": "/index.html" },
-    { "source": "/progress", "destination": "/index.html" },
-    { "source": "/concepts/:path*", "destination": "/index.html" },
-    { "source": "/typing/:path*", "destination": "/index.html" }
+    { "source": "/courses/:path*", "destination": "/app/index.html" },
+    { "source": "/problems/:path*", "destination": "/app/index.html" },
+    { "source": "/practice/:path*", "destination": "/app/index.html" },
+    { "source": "/progress", "destination": "/app/index.html" },
+    { "source": "/concepts/:path*", "destination": "/app/index.html" },
+    { "source": "/typing/:path*", "destination": "/app/index.html" }
   ],
   "headers": [
     {
