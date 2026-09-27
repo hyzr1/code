@@ -119,6 +119,41 @@ test("frontpage remains usable without canvas", async ({ page }) => {
   ).toBeVisible();
 });
 
+test("landing and courses share the saved appearance", async ({ page }) => {
+  await page.goto("/");
+  await page.evaluate(() => {
+    localStorage.setItem(
+      "forge.settings.v1",
+      JSON.stringify({ appearance: { theme: "dark", accent: "violet" } }),
+    );
+  });
+  await page.reload();
+  await expect(page.locator(".frontpage")).toHaveClass(/theme-dark/);
+  await expect(page.locator(".paths")).toHaveCSS(
+    "background-color",
+    "rgb(16, 17, 17)",
+  );
+  await page.getByRole("button", { name: "Switch to light theme" }).click();
+  await expect(page.locator(".frontpage")).toHaveClass(/theme-light/);
+  await expect(page.locator(".paths")).toHaveCSS(
+    "background-color",
+    "rgb(243, 243, 240)",
+  );
+  expect(
+    await page.evaluate(() =>
+      JSON.parse(localStorage.getItem("forge.settings.v1")!),
+    ),
+  ).toMatchObject({ appearance: { theme: "light", accent: "violet" } });
+  await page
+    .getByRole("link", { name: "Start learning", exact: true })
+    .first()
+    .click();
+  await expect(page).toHaveURL(/\/courses\/python$/);
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+  await page.goto("/");
+  await expect(page.locator(".frontpage")).toHaveClass(/theme-light/);
+});
+
 test("GSAP motion can be paused without hiding content", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "no-preference" });
   const errors: string[] = [];

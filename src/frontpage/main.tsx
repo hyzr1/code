@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 
 import CodeSample from "./CodeSample";
 import Preferences from "./Preferences";
+import { readTheme, saveTheme, type ResolvedTheme } from "./theme";
 
 import "@fontsource-variable/inter/wght.css";
 import "./frontpage.css";
@@ -10,6 +11,7 @@ import "./editorial.css";
 import "./demo-polish.css";
 import "./opening.css";
 import "./motion.css";
+import "./theme.css";
 import "../actions.css";
 
 if ("serviceWorker" in navigator && import.meta.env.PROD) {
@@ -231,6 +233,30 @@ function Demo({ chapter }: { chapter: number }) {
 
 function Frontpage() {
   const [menu, setMenu] = useState(false);
+  const [theme, setTheme] = useState<ResolvedTheme>(readTheme);
+  const changeTheme = (next: ResolvedTheme) => {
+    saveTheme(next);
+    setTheme(next);
+  };
+  useEffect(() => {
+    const sync = () => setTheme(readTheme());
+    const system = matchMedia("(prefers-color-scheme: dark)");
+    addEventListener("storage", sync);
+    addEventListener("pageshow", sync);
+    system.addEventListener("change", sync);
+    return () => {
+      removeEventListener("storage", sync);
+      removeEventListener("pageshow", sync);
+      system.removeEventListener("change", sync);
+    };
+  }, []);
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    document.documentElement.style.colorScheme = theme;
+    document
+      .querySelector('meta[name="theme-color"]')
+      ?.setAttribute("content", theme === "dark" ? "#080808" : "#f3f3f0");
+  }, [theme]);
   const [paused, setPaused] = useState(
     () => matchMedia("(prefers-reduced-motion: reduce)").matches,
   );
@@ -337,7 +363,9 @@ function Frontpage() {
     };
   }, []);
   return (
-    <div className={`frontpage ${paused ? "motion-paused" : ""}`}>
+    <div
+      className={`frontpage theme-${theme} ${paused ? "motion-paused" : ""}`}
+    >
       <a className="skip-link" href="#main">
         Skip to content
       </a>
@@ -409,6 +437,15 @@ function Frontpage() {
             Open source <Arrow diagonal />
           </a>
         </nav>
+        <button
+          className="theme-toggle"
+          type="button"
+          onClick={() => changeTheme(theme === "dark" ? "light" : "dark")}
+          aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
+          title={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
+        >
+          <span aria-hidden="true">{theme === "dark" ? "☀" : "☾"}</span>
+        </button>
         <a className="nav-launch" href="/courses/python">
           Start learning <Arrow />
         </a>
@@ -552,7 +589,7 @@ function Frontpage() {
             </a>
           </div>
           <div data-reveal>
-            <Preferences />
+            <Preferences theme={theme} onThemeChange={changeTheme} />
           </div>
         </section>
         <section className="paths section-shell" id="paths">

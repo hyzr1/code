@@ -1,0 +1,330 @@
+.front-nav .theme-toggle {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  margin-left: auto;
+  border: 1px solid #555;
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+  background: transparent;
+  color: inherit;
+  font-size: 19px;
+  line-height: 1;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
+}
+.front-nav .theme-toggle:hover {
+  background: #ffffff16;
+  border-color: #aaa;
+}
+.front-nav .nav-links {
+  margin-right: 0;
+}
+.frontpage.theme-dark .paths {
+  background: #101111;
+  color: #f1f1ed;
+}
+.frontpage.theme-dark .paths .eyebrow,
+.frontpage.theme-dark .paths-heading > p,
+.frontpage.theme-dark .path-copy p {
+  color: #a4a6a3;
+}
+.frontpage.theme-dark .paths h2 span {
+  color: #858984;
+}
+.frontpage.theme-dark .path-row {
+  border-color: #333735 !important;
+}
+.frontpage.theme-dark .path-number,
+.frontpage.theme-dark .path-copy > span {
+  color: #969a96;
+}
+.frontpage.theme-dark .path-arrow {
+  border-color: #585c59;
+}
+.frontpage.theme-dark .path-row:hover .path-arrow {
+  background: #e9eae6;
+  color: #101111;
+}
+.frontpage.theme-dark .python i {
+  background: #242724;
+  border-color: #777b77;
+}
+.frontpage.theme-dark .python i:nth-child(7) {
+  background: linear-gradient(130deg, #777b77, #222 70%);
+}
+.frontpage.theme-dark .algo i,
+.frontpage.theme-dark .ml i {
+  border-color: #888c88;
+}
+
+html[data-theme="light"],
+html[data-theme="light"] body {
+  background: #f3f3f0;
+}
+.frontpage.theme-light {
+  color: #171918;
+  background: #f3f3f0;
+  --btn-primary: #171918;
+  --btn-primary-fg: #f8f8f5;
+}
+.frontpage.theme-light .front-nav,
+.frontpage.theme-light .mega-menu,
+.frontpage.theme-light .nav-links {
+  background: #f8f8f5;
+  color: #171918;
+  border-color: #d7d9d4;
+}
+.frontpage.theme-light .front-nav .brand img,
+.frontpage.theme-light .footer-statement > img {
+  filter: invert(1);
+}
+.frontpage.theme-light .nav-links > a,
+.frontpage.theme-light .mega-paths > a {
+  border-color: #d7d9d4;
+}
+.frontpage.theme-light .nav-links a:hover,
+.frontpage.theme-light .mega-paths > a:hover strong {
+  color: #555a57;
+}
+.frontpage.theme-light .mega-paths strong {
+  color: #171918;
+}
+.frontpage.theme-light .mega-paths p,
+.frontpage.theme-light .mega-lead .eyebrow {
+  color: #656b67;
+}
+.frontpage.theme-light .front-nav .theme-toggle {
+  border-color: #c8cbc6;
+}
+.frontpage.theme-light .front-nav .theme-toggle:hover {
+  background: #e8eae5;
+  border-color: #888e89;
+}
+.frontpage.theme-light .menu-toggle {
+  color: #171918;
+}
+.frontpage.theme-light .hero {
+  background: #f3f3f0;
+  color: #171918;
+}
+.frontpage.theme-light .hero h1 span {
+  color: #777d78;
+  background-image: linear-gradient(
+    115deg,
+    #353a36 20%,
+    #858b85 45%,
+    #353a36 70%
+  );
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.frontpage.theme-light .nav-launch,
+.frontpage.theme-light .hero .button-light,
+.frontpage.theme-light .closing .button-light {
+  background: #171918;
+  color: #f8f8f5;
+}
+.frontpage.theme-light .nav-launch:hover,
+.frontpage.theme-light .hero .button-light:hover,
+.frontpage.theme-light .closing .button-light:hover {
+  background: #333a34;
+}
+.frontpage.theme-light .hero .eyebrow,
+.frontpage.theme-light .hero-content > p,
+.frontpage.theme-light .hero-floor,
+.frontpage.theme-light .hero-floor button,
+.frontpage.theme-light .hero-floor > a {
+  color: #616862;
+}
+.frontpage.theme-light .hero .status-dot {
+  background: #171918;
+}
+.frontpage.theme-light .hero .text-link {
+  color: #171918;
+  border-color: #a9afaa;
+}
+.frontpage.theme-light .hero-floor {
+  border-color: #cdd1cb;
+}
+.frontpage.theme-light .hero-atmosphere {
+  opacity: 0.16;
+}
+.frontpage.theme-light .hero-atmosphere .atmosphere-beam {
+  background: linear-gradient(90deg, transparent, #2224, transparent);
+}
+.frontpage.theme-light .discipline-strip,
+.frontpage.theme-light .intro,
+.frontpage.theme-light .personal {
+  background: #e9ebe7;
+  color: #171918;
+}
+.frontpage.theme-light .discipline-strip > div {
+  color: #242825;
+}
+.frontpage.theme-light .intro h2 span,
+.frontpage.theme-light .personal h2 span {
+  color: #777d78;
+}
+.frontpage.theme-light .intro-bottom p,
+.frontpage.theme-light .personal-copy > p {
+  color: #5f6660;
+}
+.frontpage.theme-light .story {
+  background: radial-gradient(ellipse at 80% 50%, #f5f6f2, #e9ebe7 70%);
+  color: #171918;
+  border-color: #d5d9d3;
+}
+.frontpage.theme-light .chapter-copy > p {
+  color: #5f6660;
+}
+.frontpage.theme-light .chapter-track button {
+  color: #727973;
+}
+.frontpage.theme-light .chapter-track button span {
+  background: #abb1aa;
+}
+.frontpage.theme-light .chapter-track button span.active {
+  background: #171918;
+}
+.frontpage.theme-light .demo-window,
+.frontpage.theme-light .preference-lab {
+  background: #fbfbf8;
+  color: #171918;
+  border-color: #cbd0c9;
+  box-shadow: 0 24px 65px #727a7130;
+}
+.frontpage.theme-light .demo-top,
+.frontpage.theme-light .demo-tabs,
+.frontpage.theme-light .demo-bottom,
+.frontpage.theme-light .lab-heading,
+.frontpage.theme-light .lab-control {
+  border-color: #d9ddd7;
+}
+.frontpage.theme-light .demo-top,
+.frontpage.theme-light .demo-breadcrumb,
+.frontpage.theme-light .demo-bottom,
+.frontpage.theme-light .lab-heading,
+.frontpage.theme-light .array-caption {
+  color: #626b63;
+}
+.frontpage.theme-light .demo-tabs button[aria-pressed="true"] {
+  color: #171918;
+  border-color: #171918;
+}
+.frontpage.theme-light .demo-pill,
+.frontpage.theme-light .array > div,
+.frontpage.theme-light .answers button {
+  border-color: #c9cec7;
+}
+.frontpage.theme-light .array > div,
+.frontpage.theme-light .array .array-new,
+.frontpage.theme-light .answers button {
+  background: #f0f2ed;
+  color: #171918;
+}
+.frontpage.theme-light .answers button.selected {
+  background: #dfe5dd;
+  border-color: #626b63;
+}
+.frontpage.theme-light .lesson-timeline {
+  background: #d2d8d0;
+}
+.frontpage.theme-light .lesson-timeline > span,
+.frontpage.theme-light .lesson-timeline > i {
+  background: #303831;
+}
+.frontpage.theme-light .sample-editor {
+  --code-text: #29312b;
+  --code-comment: #64736a;
+  --code-keyword: #734b9c;
+  --code-number: #9c561f;
+  --code-function: #2d6689;
+  --code-punctuation: #59645d;
+  background: #f8f9f6;
+  border-color: #d4dad2;
+}
+.frontpage.theme-light .sample-toolbar,
+.frontpage.theme-light .run-row {
+  background: #f0f2ee;
+  color: #29312b;
+  border-color: #d4dad2;
+}
+.frontpage.theme-light .sample-toolbar,
+.frontpage.theme-light .run-row > span,
+.frontpage.theme-light .lab-control {
+  color: #424c44;
+}
+.frontpage.theme-light .sample-gutter,
+.frontpage.theme-light .run-row small {
+  color: #6e7a70;
+}
+.frontpage.theme-light .preference-lab .lab-preview {
+  background: #f8f9f6;
+}
+.frontpage.theme-light
+  .preference-lab
+  .lab-control
+  button[aria-pressed="true"] {
+  background: #e1e6df;
+  color: #171918;
+  border-color: #aeb8ad;
+}
+.frontpage.theme-light .personal {
+  border-color: #d5d9d3;
+}
+.frontpage.theme-light .paths {
+  background: #f3f3f0;
+  color: #171918;
+}
+.frontpage.theme-light .closing {
+  background: #e9ebe7;
+  color: #171918;
+  border-color: #d5d9d3;
+}
+.frontpage.theme-light .closing h2 span {
+  color: #777d78;
+}
+.frontpage.theme-light .front-footer {
+  background: #f3f3f0;
+  color: #171918;
+  border-color: #d5d9d3;
+}
+.frontpage.theme-light .footer-statement > a,
+.frontpage.theme-light .footer-column a {
+  color: #505851;
+}
+.frontpage.theme-light .footer-column h4,
+.frontpage.theme-light .front-footer > .footer-bottom,
+.frontpage.theme-light .footer-bottom button {
+  color: #646c65;
+}
+.frontpage.theme-light .front-footer > .footer-wordmark {
+  color: #d6dad3;
+}
+.frontpage.theme-light .front-footer:hover > .footer-wordmark {
+  color: #c3c9c0;
+}
+.frontpage.theme-light .front-footer > .footer-bottom {
+  border-color: #d5d9d3;
+}
+.frontpage.theme-light button:focus-visible,
+.frontpage.theme-light a:focus-visible {
+  outline-color: #171918;
+}
+
+@media (max-width: 700px) {
+  .front-nav .theme-toggle {
+    width: 32px;
+    height: 36px;
+    font-size: 17px;
+  }
+  .front-nav .nav-links.open {
+    background: #111;
+  }
+  .frontpage.theme-light .front-nav .nav-links.open {
+    background: #f8f8f5;
+  }
+}

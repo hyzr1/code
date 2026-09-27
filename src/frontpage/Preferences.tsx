@@ -1,8 +1,14 @@
 import { useState } from "react";
 import CodeSample from "./CodeSample";
+import type { ResolvedTheme } from "./theme";
 
-export default function Preferences() {
-  const [theme, setTheme] = useState("dark");
+export default function Preferences({
+  theme,
+  onThemeChange,
+}: {
+  theme: ResolvedTheme;
+  onThemeChange: (theme: ResolvedTheme) => void;
+}) {
   const [format, setFormat] = useState("Visual");
   const [speed, setSpeed] = useState(1);
   return (
@@ -77,7 +83,7 @@ export default function Preferences() {
             <button
               key={t}
               aria-pressed={theme === t}
-              onClick={() => setTheme(t)}
+              onClick={() => onThemeChange(t as ResolvedTheme)}
             >
               <span aria-hidden="true" className={`theme-swatch ${t}`} />
               {t === "dark" ? "Dark" : "Light"}
