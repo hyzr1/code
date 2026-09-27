@@ -10,6 +10,7 @@ import "@fontsource-variable/inter/wght.css";
 import "./styles.css";
 import "./components/typing/typing.css";
 import "./product.css";
+import "./actions.css";
 import "./workspace.css";
 
 const App = lazy(() => import("./App"));

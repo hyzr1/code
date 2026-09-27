@@ -18,7 +18,7 @@ test("the narrated lesson stays synchronized and within the mobile viewport", as
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
 
-  await page.goto("/");
+  await page.goto("/courses/python");
   await page.getByRole("button", { name: "Start the course", exact: true }).click();
   await expect(page.getByText(/Watch · 1 of/)).toBeVisible();
 
@@ -70,7 +70,7 @@ test("natural narration uses matching assets and resumes from the paused word", 
     };
   });
 
-  await page.goto("/");
+  await page.goto("/courses/python");
   // Reproduce the production failure: an older service worker has cached the
   // mutable manifest and lecture URL. The new player must bypass both entries
   // and still reach the correctly versioned recording.
@@ -141,7 +141,7 @@ test("loads the course without runtime errors", async ({ page, isMobile }) => {
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
 
-  await page.goto("/");
+  await page.goto("/courses/python");
   await expect(page).toHaveTitle(/Hyzr Code/);
   await expect(page.getByText("Hyzr Code", { exact: true }).first()).toBeVisible();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
@@ -160,7 +160,7 @@ test("the courses page offers Python, DSA, machine learning, and mathematics", a
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
 
-  await page.goto("/");
+  await page.goto("/courses/python");
   await expect(page.getByRole("heading", { name: "Python", exact: true })).toBeVisible();
   await expect(page.locator(".course-switcher")).toBeVisible();
   await page.locator(".course-switcher .language-trigger").click();
@@ -190,7 +190,7 @@ test("portfolio projects stay archived and absent from the live course", async (
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
 
-  await page.goto("/");
+  await page.goto("/courses/python");
   await expect(page.locator(".project-gallery, .project-card")).toHaveCount(0);
   await expect(page.locator(".portfolio-checkpoint, .portfolio-dialog")).toHaveCount(0);
   await expect(page.getByRole("button", { name: /View projects/ })).toHaveCount(0);
@@ -207,7 +207,7 @@ test("the course selector fills every responsive layout without overflow", async
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
 
-  await page.goto("/");
+  await page.goto("/courses/python");
 
   for (const width of [320, 390, 479, 480, 540, 700, 760, 900, 1064, 1280, 1440]) {
     await page.setViewportSize({ width, height: 900 });

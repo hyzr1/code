@@ -1,0 +1,450 @@
+.sample-editor {
+  --code-text: #dce2ea;
+  --code-comment: #7f8998;
+  --code-keyword: #c5a5f5;
+  --code-number: #e9b888;
+  --code-function: #a4c9ef;
+  --code-punctuation: #9da7b5;
+  background: #0d0f12;
+  border: 1px solid #2a2d32;
+  border-radius: 8px;
+  overflow: hidden;
+  text-align: left;
+}
+.sample-toolbar {
+  height: 40px;
+  padding: 0 16px;
+  background: #15171b;
+  border-bottom: 1px solid #282b30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font:
+    10px Consolas,
+    monospace;
+  color: #a1a9b5;
+}
+.sample-toolbar > span {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.sample-toolbar b {
+  font-size: 14px;
+  color: #808c9d;
+  font-weight: 400;
+}
+.sample-toolbar i {
+  font-style: normal;
+  color: #8a939f;
+  border: 1px solid #353a42;
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-size: 8px;
+}
+.sample-editor pre,
+.lab-preview .sample-editor pre,
+.code-demo .sample-editor pre {
+  margin: 0;
+  padding: 19px 0;
+  overflow: auto;
+  font:
+    12px/1.95 "Cascadia Code",
+    Consolas,
+    monospace;
+  color: var(--code-text);
+  min-height: 0;
+  tab-size: 4;
+}
+.sample-line {
+  display: flex;
+  min-width: max-content;
+  padding-right: 20px;
+}
+.sample-gutter {
+  width: 42px;
+  flex-shrink: 0;
+  text-align: right;
+  padding-right: 15px;
+  color: #596270;
+  user-select: none;
+}
+.sample-line > span:last-child {
+  white-space: pre;
+}
+.syntax-keyword {
+  color: var(--code-keyword);
+}
+.syntax-comment {
+  color: var(--code-comment);
+}
+.syntax-function {
+  color: var(--code-function);
+}
+.syntax-number {
+  color: var(--code-number);
+}
+.syntax-punctuation {
+  color: var(--code-punctuation);
+}
+.syntax-plain {
+  color: var(--code-text);
+}
+.code-demo {
+  margin-top: 20px;
+}
+.run-row {
+  background: #121417;
+  border: 1px solid #2a2d32;
+  border-radius: 7px;
+  margin-top: 10px;
+  padding: 13px 15px;
+  min-height: 64px;
+}
+.run-row > span {
+  display: grid;
+  gap: 7px;
+  color: #b9c3d1;
+  font-size: 11px;
+}
+.run-row small {
+  font: 7px monospace;
+  letter-spacing: 0.12em;
+  color: #78818d;
+}
+.run-row button {
+  border-radius: 5px;
+  font-size: 10px;
+  padding: 10px 14px;
+  white-space: nowrap;
+}
+.demo-window {
+  transform: none !important;
+  border-radius: 12px;
+}
+.story-display:before {
+  display: none;
+}
+.demo-tabs button {
+  font-size: 12px;
+}
+.demo-heading h3 {
+  font-size: 23px;
+}
+.demo-heading .demo-pill {
+  font-size: 7px;
+}
+.demo-body {
+  padding: 28px;
+}
+.preference-lab {
+  border-radius: 12px;
+  overflow: hidden;
+  transform: none;
+  border-color: #353535;
+}
+.lab-heading {
+  height: 48px;
+  align-items: center;
+  background: #191919;
+  font-size: 8px;
+}
+.lab-preview {
+  padding: 26px;
+  min-height: 320px;
+}
+.lab-preview h3 {
+  font-size: 28px;
+  margin: 16px 0 24px;
+}
+.lab-preview .sample-editor pre {
+  font-size: 11px;
+  padding-block: 13px;
+}
+.lab-preview .sample-toolbar {
+  height: 33px;
+  font-size: 9px;
+}
+.lab-preview .sample-gutter {
+  width: 34px;
+  padding-right: 12px;
+}
+.lab-control {
+  padding: 20px 22px;
+  min-height: 83px;
+  background: #171717;
+  gap: 18px;
+}
+.lab-control > span,
+.lab-control > label {
+  font-size: 11px;
+  color: #d5d5d5;
+  line-height: 1.4;
+}
+.lab-control small {
+  display: block;
+  font-size: 9px;
+  color: #858585;
+  margin-top: 6px;
+}
+.lab-control > .segmented-control {
+  background: #0c0c0c;
+  border: 1px solid #303030;
+  border-radius: 7px;
+  padding: 4px;
+  gap: 3px;
+}
+.lab-control .segmented-control button {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  padding: 8px 11px;
+  color: #919191;
+  font-size: 10px;
+  transition:
+    background 0.15s,
+    color 0.15s;
+}
+.lab-control .segmented-control button:hover {
+  color: white;
+  background: #1c1c1c;
+}
+.lab-control .segmented-control button[aria-pressed="true"] {
+  background: #303030;
+  border-color: #4a4a4a;
+  color: #fafafa;
+  box-shadow: 0 1px 4px #0005;
+}
+.segmented-control button > span:not(.theme-swatch) {
+  font-size: 14px;
+  line-height: 1;
+}
+.theme-swatch {
+  width: 11px;
+  height: 11px;
+  display: block;
+  border-radius: 50%;
+  border: 1px solid #888;
+}
+.theme-swatch.light {
+  background: #eee;
+}
+.theme-swatch.dark {
+  background: #141414;
+}
+.lab-control > .pace-control {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.pace-control button {
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border: 1px solid #383838;
+  border-radius: 5px;
+  background: #222;
+  color: #ccc;
+  font-size: 15px;
+}
+.pace-control button:hover {
+  background: #333;
+}
+.pace-control button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.lab-control .pace-control input {
+  appearance: none;
+  -webkit-appearance: none;
+  height: 3px;
+  border-radius: 5px;
+  outline-offset: 7px;
+  width: 80px;
+  margin: 0;
+  cursor: pointer;
+}
+.pace-control input::-webkit-slider-thumb {
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  background: #eee;
+  border: 2px solid #171717;
+  box-shadow: 0 0 0 1px #777;
+  border-radius: 50%;
+  transition: box-shadow 0.15s;
+}
+.pace-control input::-moz-range-thumb {
+  width: 9px;
+  height: 9px;
+  background: #eee;
+  border: 2px solid #171717;
+  box-shadow: 0 0 0 1px #777;
+  border-radius: 50%;
+}
+.pace-control input:hover::-webkit-slider-thumb {
+  box-shadow: 0 0 0 4px #ffffff15;
+}
+.lab-control output {
+  border: 1px solid #383838;
+  background: #0f0f0f;
+  padding: 6px 7px;
+  border-radius: 5px;
+  width: 46px;
+  text-align: center;
+  font-size: 10px;
+  color: #ddd;
+}
+.preference-lab.light .sample-editor {
+  --code-text: #293343;
+  --code-comment: #677385;
+  --code-keyword: #7541a4;
+  --code-number: #986022;
+  --code-function: #24649b;
+  --code-punctuation: #687487;
+  background: #fff;
+  border-color: #d6d9dd;
+}
+.preference-lab.light .sample-toolbar {
+  background: #f1f2f4;
+  border-color: #d6d9dd;
+  color: #566170;
+}
+.preference-lab.light .sample-gutter {
+  color: #8c95a0;
+}
+.preference-lab.light .sample-toolbar i {
+  border-color: #c8cdd4;
+  color: #66717e;
+}
+@media (max-width: 1000px) {
+  .lab-control {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .lab-control > .segmented-control,
+  .lab-control > .pace-control {
+    margin-left: auto;
+  }
+  .sample-editor pre,
+  .code-demo .sample-editor pre {
+    font-size: 10px;
+  }
+  .demo-heading h3 {
+    font-size: 18px;
+  }
+}
+@media (max-width: 700px) {
+  .demo-body {
+    padding: 17px;
+  }
+  .demo-heading h3 {
+    font-size: 15px;
+  }
+  .demo-tabs button {
+    font-size: 10px;
+  }
+  .demo-heading .demo-pill {
+    font-size: 5px;
+  }
+  .code-demo {
+    margin-top: 13px;
+  }
+  .sample-toolbar {
+    height: 32px;
+    font-size: 8px;
+    padding-inline: 12px;
+  }
+  .sample-editor pre,
+  .code-demo .sample-editor pre {
+    font-size: 9px;
+    padding-block: 12px;
+    line-height: 1.9;
+  }
+  .sample-gutter {
+    width: 29px;
+    padding-right: 9px;
+  }
+  .run-row {
+    padding: 10px;
+    min-height: 58px;
+    gap: 8px;
+  }
+  .run-row > span {
+    font-size: 8px;
+    max-width: 170px;
+    line-height: 1.5;
+  }
+  .run-row small {
+    font-size: 6px;
+  }
+  .run-row button {
+    font-size: 8px;
+    padding: 8px 10px;
+  }
+  .run-row button span {
+    margin-left: 5px;
+  }
+  .lab-preview {
+    padding: 21px;
+    min-height: 315px;
+  }
+  .lab-preview h3 {
+    font-size: 26px;
+  }
+  .lab-control {
+    padding: 17px;
+    min-height: 90px;
+    gap: 12px;
+  }
+  .lab-control > span,
+  .lab-control > label {
+    font-size: 11px;
+  }
+  .lab-control small {
+    font-size: 8px;
+  }
+  .lab-control > .segmented-control,
+  .lab-control > .pace-control {
+    margin-left: 0;
+  }
+  .lab-control .segmented-control button {
+    padding: 8px 10px;
+    font-size: 10px;
+  }
+  .lab-control > .pace-control {
+    margin-left: auto;
+  }
+  .lab-control .pace-control input {
+    width: 70px;
+  }
+  .lab-control output {
+    width: 40px;
+    padding-inline: 4px;
+  }
+}
+@media (max-height: 730px) and (max-width: 700px) {
+  .demo-body {
+    padding: 10px 14px;
+  }
+  .sample-editor pre,
+  .code-demo .sample-editor pre {
+    font-size: 8px;
+    line-height: 1.65;
+    padding-block: 8px;
+  }
+  .sample-toolbar {
+    height: 26px;
+  }
+  .run-row {
+    min-height: 45px;
+    padding: 7px 10px;
+  }
+  .demo-heading h3 {
+    font-size: 13px;
+  }
+}

@@ -19,7 +19,7 @@ async function openAlgo(page: import("@playwright/test").Page) {
 test("ships the exact interview collections and responsive practice workspace", async ({ page }, testInfo) => {
   const errors: string[] = [];
   page.on("pageerror", error => errors.push(error.message));
-  await page.goto("/");
+  await page.goto("/courses/python");
   await openAlgo(page);
   await expect(page.getByRole("button", { name: "NeetCode 250 250" })).toHaveClass(/on/);
   await expect(page.locator(".lesson-row")).toHaveCount(250);
@@ -58,7 +58,7 @@ test("runs and submits Python against examples and hidden cases", async ({ page 
   await page.addInitScript(() => {
     localStorage.setItem("hyzr.draft.v2.py.nc.two-sum", "class Solution:\n    def twoSum(self, nums, target):\n        seen = {}\n        for i, value in enumerate(nums):\n            if target - value in seen:\n                return [i, seen[target - value]]\n            seen[value] = i");
   });
-  await page.goto("/");
+  await page.goto("/courses/python");
   await openAlgo(page);
   await page.getByRole("button", { name: "Blind 75 75" }).click();
   await page.getByRole("button", { name: "Two Sum", exact: false }).first().click();
@@ -72,7 +72,7 @@ test("runs and submits Python against examples and hidden cases", async ({ page 
 
 test("rejects example-only answers and preserves submission details", async ({ page }, testInfo) => {
   await page.addInitScript(() => localStorage.setItem("hyzr.draft.v2.py.nc.concatenation-of-array", "class Solution:\n    def getConcatenation(self, nums):\n        if nums == [1,2,1]: return [1,2,1,1,2,1]\n        if nums == [1,3,2,1]: return [1,3,2,1,1,3,2,1]\n        return []"));
-  await page.goto("/");
+  await page.goto("/courses/python");
   await openAlgo(page);
   await page.getByRole("button", { name: /Concatenation of Array/ }).click();
   await page.getByRole("button", { name: "Run", exact:true }).click();

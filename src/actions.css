@@ -1,0 +1,92 @@
+/* Shared primary actions: landing and course app. Semantic colors follow app theme. */
+:root {
+  --action-radius: 6px;
+  --action-height: 36px;
+  --action-font: 12px;
+}
+.frontpage :is(.nav-launch, .button-light, .run-row button),
+button.primary,
+.course-resume > button {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  min-height: var(--action-height);
+  border-radius: var(--action-radius);
+  font-size: var(--action-font);
+  font-weight: 500;
+  transition:
+    background 0.2s,
+    box-shadow 0.2s,
+    transform 0.2s;
+}
+.frontpage :is(.nav-launch, .button-light, .run-row button) {
+  background: var(--btn-primary, #f5f4ef);
+  color: var(--btn-primary-fg, #151515);
+}
+.frontpage :is(.nav-launch, .button-light, .run-row button)::after,
+button.primary::after,
+.course-resume > button::after {
+  content: "";
+  position: absolute;
+  inset: -60% -30%;
+  pointer-events: none;
+  background: linear-gradient(
+    110deg,
+    transparent 35%,
+    #ffffff70 50%,
+    transparent 65%
+  );
+  transform: translateX(-110%) skewX(-15deg);
+  transition: transform 0.6s ease;
+  z-index: 1;
+}
+.frontpage :is(.nav-launch, .button-light, .run-row button):hover::after,
+button.primary:hover:not(:disabled)::after,
+.course-resume > button:hover::after {
+  transform: translateX(110%) skewX(-15deg);
+}
+.frontpage :is(.nav-launch, .button-light, .run-row button):hover,
+button.primary:hover:not(:disabled),
+.course-resume > button:hover {
+  box-shadow: 0 3px 14px #ffffff14;
+  transform: translateY(-1px);
+}
+.frontpage :is(.nav-launch, .button-light, .run-row button):active,
+button.primary:active:not(:disabled),
+.course-resume > button:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+.frontpage :is(.nav-launch, .button-light, .run-row button) svg,
+button.primary svg,
+.course-resume > button svg {
+  transition: transform 0.2s;
+}
+.frontpage :is(.nav-launch, .button-light, .run-row button):hover svg,
+button.primary:hover:not(:disabled) svg,
+.course-resume > button:hover svg {
+  transform: translateX(3px);
+}
+.frontpage .button-light:before {
+  display: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .frontpage :is(.nav-launch, .button-light, .run-row button),
+  button.primary,
+  .course-resume > button {
+    transition: none;
+  }
+  .frontpage :is(.nav-launch, .button-light, .run-row button)::after,
+  button.primary::after,
+  .course-resume > button::after {
+    display: none;
+  }
+  .frontpage :is(.nav-launch, .button-light, .run-row button):hover,
+  button.primary:hover:not(:disabled),
+  .course-resume > button:hover,
+  .frontpage :is(.nav-launch, .button-light, .run-row button):hover svg,
+  button.primary:hover:not(:disabled) svg,
+  .course-resume > button:hover svg {
+    transform: none;
+  }
+}
