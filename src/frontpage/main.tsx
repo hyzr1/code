@@ -362,6 +362,14 @@ function Frontpage() {
       cancelAnimationFrame(raf);
     };
   }, []);
+  useEffect(() => {
+    if (!menu || !matchMedia("(max-width: 700px)").matches) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [menu]);
   return (
     <div
       className={`frontpage theme-${theme} ${paused ? "motion-paused" : ""}`}
@@ -378,6 +386,7 @@ function Frontpage() {
           aria-label="Main navigation"
           className={menu ? "nav-links open" : "nav-links"}
         >
+          <span className="mobile-nav-label">EXPLORE HYZR CODE</span>
           <details className="nav-explore">
             <summary>
               Courses{" "}
@@ -436,6 +445,9 @@ function Frontpage() {
           >
             Open source <Arrow diagonal />
           </a>
+          <a className="mobile-nav-launch" href="/courses/python">
+            Start learning <Arrow />
+          </a>
         </nav>
         <button
           className="theme-toggle"
@@ -444,7 +456,31 @@ function Frontpage() {
           aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
           title={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
         >
-          <span aria-hidden="true">{theme === "dark" ? "☀" : "☾"}</span>
+          {theme === "dark" ? (
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="4" />
+              <path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42" />
+            </svg>
+          ) : (
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M20.4 15.6A8.8 8.8 0 0 1 8.4 3.6 8.8 8.8 0 1 0 20.4 15.6Z" />
+            </svg>
+          )}
         </button>
         <a className="nav-launch" href="/courses/python">
           Start learning <Arrow />
@@ -455,7 +491,29 @@ function Frontpage() {
           aria-expanded={menu}
           onClick={() => setMenu(!menu)}
         >
-          {menu ? "−" : "+"}
+          {menu ? (
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+              aria-hidden="true"
+            >
+              <path d="M5 5 19 19M19 5 5 19" />
+            </svg>
+          ) : (
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+              aria-hidden="true"
+            >
+              <path d="M4 7h16M4 12h16M4 17h16" />
+            </svg>
+          )}
         </button>
       </header>
       <main id="main">
