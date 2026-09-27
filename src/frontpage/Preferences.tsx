@@ -112,7 +112,9 @@ export default function Preferences({
             step="0.25"
             value={speed}
             style={{
-              background: `linear-gradient(to right, #d4d4d4 ${((speed - 0.5) / 1.5) * 100}%, #383838 ${((speed - 0.5) / 1.5) * 100}%)`,
+              background: theme === "light"
+                ? `linear-gradient(to right, #344639 ${((speed - 0.5) / 1.5) * 100}%, #cbd5ca ${((speed - 0.5) / 1.5) * 100}%)`
+                : `linear-gradient(to right, #d4d4d4 ${((speed - 0.5) / 1.5) * 100}%, #383838 ${((speed - 0.5) / 1.5) * 100}%)`,
             }}
             onChange={(e) => setSpeed(Number(e.target.value))}
           />
