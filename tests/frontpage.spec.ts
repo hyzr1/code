@@ -180,6 +180,57 @@ test("frontpage header keeps theme and mobile navigation usable", async ({
   }
 });
 
+test("light landing theme reaches preview surfaces and controls", async ({
+  page,
+}) => {
+  await page.goto("/");
+  if (await page.locator(".frontpage.theme-dark").count()) {
+    await page.getByRole("button", { name: "Switch to light theme" }).click();
+  }
+  await expect(page.locator(".frontpage")).toHaveClass(/theme-light/);
+  await expect(page.locator(".lab-control").first()).toHaveCSS(
+    "background-color",
+    "rgb(244, 246, 241)",
+  );
+  const getColors = () => page.evaluate(() => {
+    const rgb = (selector: string, property: "backgroundColor" | "color") => {
+      const node = document.querySelector(selector);
+      if (!node) throw new Error(`Missing ${selector}`);
+      return getComputedStyle(node)[property]
+        .match(/\d+/g)!
+        .slice(0, 3)
+        .map(Number);
+    };
+    return {
+      surfaces: [
+        ".lab-heading",
+        ".lab-preview",
+        ".lab-control",
+        ".segmented-control",
+        ".pace-control button",
+        ".pace-control output",
+        ".array > div",
+      ].map((selector) => rgb(selector, "backgroundColor")),
+      title: rgb(".lab-preview h3", "color"),
+      label: rgb(".lab-control > span", "color"),
+    };
+  });
+  await expect.poll(async () => {
+    const colors = await getColors();
+    return colors.surfaces.every((channels) => channels.every((c) => c >= 215));
+  }, { timeout: 15000 }).toBe(true);
+  const colors = await getColors();
+  expect(colors.surfaces.every((channels) => channels.every((c) => c >= 215))).toBe(true);
+  expect(colors.title.every((c) => c < 100)).toBe(true);
+  expect(colors.label.every((c) => c < 110)).toBe(true);
+
+  await page.getByRole("group", { name: "Lesson format" }).getByRole("button", { name: "Code" }).click();
+  await expect(page.locator(".preference-lab .sample-editor")).toHaveCSS(
+    "background-color",
+    "rgb(248, 249, 246)",
+  );
+});
+
 test("GSAP motion can be paused without hiding content", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "no-preference" });
   const errors: string[] = [];
