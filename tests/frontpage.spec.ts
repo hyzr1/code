@@ -1,32 +1,34 @@
 import { expect, test } from "@playwright/test";
 
-test("landing preview does not overwrite the offline course shell", async ({
+test("home landing and course app keep separate offline shells", async ({
   page,
   isMobile,
 }) => {
   test.skip(isMobile, "Service worker cache contract is covered on desktop");
-  await page.goto("/");
+  await page.goto("/courses/python");
   await page.evaluate(async () => {
     await navigator.serviceWorker.ready;
   });
   await page.reload();
-  await page.goto("/frontpage/");
+  await page.goto("/");
   await expect(page.getByRole("heading", { level: 1 })).toContainText(
     "Understand deeply.",
   );
   await expect
     .poll(() =>
       page.evaluate(async () => {
-        const cache = await caches.open("hyzr-code-v13");
-        const root = await cache.match("/");
-        const landing = await cache.match("/frontpage/");
+        const cache = await caches.open("hyzr-code-v14");
+        const landing = await cache.match("/");
+        const course = await cache.match("/courses/python");
         return {
-          root: (await root?.text())?.includes("Learn Python, DSA"),
-          landing: (await landing?.text())?.includes("Build understanding."),
+          landing: (await landing?.text())?.includes(
+            "Learn to Code with Interactive Lessons",
+          ),
+          course: (await course?.text())?.includes("Learn Python, DSA"),
         };
       }),
     )
-    .toEqual({ root: true, landing: true });
+    .toEqual({ landing: true, course: true });
 });
 
 test("frontpage story, examples, navigation and reduced motion work", async ({
@@ -36,7 +38,7 @@ test("frontpage story, examples, navigation and reduced motion work", async ({
   await page.emulateMedia({ reducedMotion: "reduce" });
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
-  await page.goto("/frontpage/");
+  await page.goto("/");
   await expect(page.getByRole("heading", { level: 1 })).toContainText(
     "Understand deeply.",
   );
@@ -107,7 +109,7 @@ test("frontpage remains usable without canvas", async ({ page }) => {
     HTMLCanvasElement.prototype.getContext = (() =>
       null) as typeof HTMLCanvasElement.prototype.getContext;
   });
-  await page.goto("/frontpage/");
+  await page.goto("/");
   await expect(page.locator(".hero-content")).toBeVisible();
   await expect(page.locator(".hero canvas")).toHaveCount(0);
   await page.getByRole("button", { name: "Pause motion" }).click();
@@ -121,7 +123,7 @@ test("GSAP motion can be paused without hiding content", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "no-preference" });
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
-  await page.goto("/frontpage/");
+  await page.goto("/");
   await expect(page.locator(".frontpage")).toHaveClass(/gsap-ready/);
   await expect(page.locator(".hero-content h1")).toBeVisible();
   await page

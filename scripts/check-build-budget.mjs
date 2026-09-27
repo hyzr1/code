@@ -8,7 +8,7 @@ if (!fs.existsSync(manifestPath)) {
   process.exit(1);
 }
 const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
-const entry = manifest["index.html"];
+const entry = manifest["app/index.html"];
 if (!entry) throw new Error("Could not find the browser entry in the Vite manifest");
 
 const size = (file) => fs.statSync(path.join(root, "dist", file)).size;
@@ -23,7 +23,7 @@ const entryBytes = (item, visited = new Set()) => {
   return size(item.file) + (item.imports ?? []).reduce((sum, key) => sum + entryBytes(manifest[key], visited), 0);
 };
 check("startup JavaScript", entryBytes(entry), 240 * 1024);
-const frontpage = manifest["frontpage/index.html"];
+const frontpage = manifest["index.html"];
 if (frontpage) check("frontpage JavaScript", entryBytes(frontpage), 240 * 1024);
 for (const css of entry.css ?? []) check("startup CSS", size(css), 220 * 1024);
 

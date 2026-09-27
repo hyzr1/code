@@ -1,11 +1,39 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
+// Match production rewrites when developing or previewing the two HTML entries.
+const courseRoute =
+  /^\/(?:courses|problems|practice|concepts|typing)(?:\/|$)|^\/progress\/?$/;
+const courseEntry = (
+  req: { url?: string },
+  _res: unknown,
+  next: () => void,
+) => {
+  if (req && courseRoute.test((req.url ?? "").split("?")[0]))
+    req.url = "/app/index.html";
+  if (next) next();
+};
+
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    {
+      name: "course-html-entry",
+      configureServer: (server) => {
+        server.middlewares.use(courseEntry);
+      },
+      configurePreviewServer: (server) => {
+        server.middlewares.use(courseEntry);
+      },
+    },
+    react(),
+  ],
   build: {
     rollupOptions: {
-      input: { app: "index.html", frontpage: "frontpage/index.html" },
+      input: {
+        home: "index.html",
+        app: "app/index.html",
+        frontpage: "frontpage/index.html",
+      },
     },
     manifest: true,
     // Large curricula and coding runtimes are loaded behind route boundaries.

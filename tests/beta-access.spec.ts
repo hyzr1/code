@@ -10,7 +10,7 @@ test("beta access is optional and can be redeemed from the sidebar", async ({ pa
     allowed = true;
     return route.fulfill({ json: { access: true } });
   });
-  await page.goto("/");
+  await page.goto("/courses/python");
   await expect(page.getByRole("heading", { name: "Python", exact: true })).toBeVisible();
   await page.getByRole("button", { name: "Beta access" }).click();
   await expect(page.getByRole("heading", { name: "Lock in lifetime free access." })).toBeVisible();
