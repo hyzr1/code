@@ -79,7 +79,7 @@ test("mathematics route opens the first authored lesson and marks later topics a
   await expect(
     page.getByRole("heading", { name: "Mathematics", exact: true }),
   ).toBeVisible();
-  await expect(page.locator(".course-facts")).toContainText("117 lessons");
+  await expect(page.locator(".course-facts")).toContainText("164 lessons");
   await expect(page.locator(".lesson-row.planned").first()).toContainText(
     "Coming soon",
   );

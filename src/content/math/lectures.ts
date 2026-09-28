@@ -12,6 +12,12 @@ import { MATH_MULTIVARIABLE_ADVANCED } from "./multivariable-advanced";
 import { MATH_VECTOR_CALCULUS } from "./vector-calculus";
 import { MATH_LINEAR_ALGEBRA_FOUNDATIONS } from "./linear-algebra-foundations";
 import { MATH_LINEAR_ALGEBRA_SPECTRAL } from "./linear-algebra-spectral";
+import { MATH_DIFFERENTIAL_EQUATIONS } from "./differential-equations";
+import { MATH_PROOF_FOUNDATIONS } from "./proof-foundations";
+import { MATH_COMBINATORICS } from "./combinatorics";
+import { MATH_PROBABILITY } from "./probability";
+import { MATH_STATISTICS } from "./statistics";
+import { MATH_OPTIMIZATION_INFORMATION } from "./optimization-information";
 
 export type MathLecture = {
   lesson: string;
@@ -950,6 +956,12 @@ const lectures: MathLecture[] = [
   ...MATH_VECTOR_CALCULUS,
   ...MATH_LINEAR_ALGEBRA_FOUNDATIONS,
   ...MATH_LINEAR_ALGEBRA_SPECTRAL,
+  ...MATH_DIFFERENTIAL_EQUATIONS,
+  ...MATH_PROOF_FOUNDATIONS,
+  ...MATH_COMBINATORICS,
+  ...MATH_PROBABILITY,
+  ...MATH_STATISTICS,
+  ...MATH_OPTIMIZATION_INFORMATION,
 ];
 
 const questions = (spec: MathLecture): LectureQuestion[] =>
