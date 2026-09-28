@@ -27,6 +27,13 @@ import { MATH_ADVANCED_OPTIMIZATION } from "./advanced-optimization";
 import { MATH_MEASURE_THEORY } from "./measure-theory";
 import { MATH_FUNCTIONAL_ANALYSIS } from "./functional-analysis";
 import { MATH_TOPOLOGY_MANIFOLDS } from "./topology-manifolds";
+import { MATH_DIFFERENTIAL_GEOMETRY } from "./differential-geometry";
+import { MATH_GRADUATE_PROBABILITY } from "./graduate-probability";
+import { MATH_STOCHASTIC_PROCESSES } from "./stochastic-processes";
+import { MATH_LEARNING_THEORY } from "./learning-theory";
+import { MATH_GRADUATE_ALGEBRA } from "./graduate-algebra";
+import { MATH_INVERSE_SPECTRAL } from "./inverse-spectral";
+import { MATH_RESEARCH_APPRENTICESHIP } from "./research-apprenticeship";
 
 export type MathLecture = {
   lesson: string;
@@ -980,6 +987,13 @@ const lectures: MathLecture[] = [
   ...MATH_MEASURE_THEORY,
   ...MATH_FUNCTIONAL_ANALYSIS,
   ...MATH_TOPOLOGY_MANIFOLDS,
+  ...MATH_DIFFERENTIAL_GEOMETRY,
+  ...MATH_GRADUATE_PROBABILITY,
+  ...MATH_STOCHASTIC_PROCESSES,
+  ...MATH_LEARNING_THEORY,
+  ...MATH_GRADUATE_ALGEBRA,
+  ...MATH_INVERSE_SPECTRAL,
+  ...MATH_RESEARCH_APPRENTICESHIP,
 ];
 
 const questions = (spec: MathLecture): LectureQuestion[] =>
