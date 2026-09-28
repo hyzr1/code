@@ -18,6 +18,9 @@ import { MATH_COMBINATORICS } from "./combinatorics";
 import { MATH_PROBABILITY } from "./probability";
 import { MATH_STATISTICS } from "./statistics";
 import { MATH_OPTIMIZATION_INFORMATION } from "./optimization-information";
+import { MATH_REAL_ANALYSIS } from "./real-analysis";
+import { MATH_ABSTRACT_ALGEBRA } from "./abstract-algebra";
+import { MATH_COMPLEX_ANALYSIS } from "./complex-analysis";
 
 export type MathLecture = {
   lesson: string;
@@ -962,6 +965,9 @@ const lectures: MathLecture[] = [
   ...MATH_PROBABILITY,
   ...MATH_STATISTICS,
   ...MATH_OPTIMIZATION_INFORMATION,
+  ...MATH_REAL_ANALYSIS,
+  ...MATH_ABSTRACT_ALGEBRA,
+  ...MATH_COMPLEX_ANALYSIS,
 ];
 
 const questions = (spec: MathLecture): LectureQuestion[] =>
