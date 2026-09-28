@@ -6,7 +6,7 @@ export const MATH_GRADUATE_PROBABILITY: MathLecture[] = [
     lesson: "math.m31.l1", title: "Probability spaces and random variables",
     premise: "A probability model is a measure space of total mass one, and a random variable is a measurable map out of it.",
     idea: "A probability space (Ω,F,P) has a sigma-algebra F and P(Ω)=1. An event belongs to F; P is countably additive on disjoint events. A real random variable X is F-to-Borel measurable, so {X≤x} is an event for every x. Its law is the pushforward P_X(B)=P(X∈B). Different underlying sample spaces can produce the same law, but joint dependence requires a shared model. Independence of variables means P(X∈A,Y∈B)=P_X(A)P_Y(B) for all measurable A,B, not merely zero covariance.",
-    worked: "Roll a fair die with Ω={1,...,6}, all subsets measurable, and X=1 if the result is even. Then P_X({1})=3/6 and P_X({0})=3/6. A second variable Y indicating divisibility by three is not independent of X: P(X=1,Y=1)=1/6 whereas P(X=1)P(Y=1)=1/2·1/3=1/6 here, so check all combinations; for this particular die they actually are independent.",
+    worked: "Roll a fair die with Ω={1,...,6}, all subsets measurable, and X=1 if the result is even. Then P_X({1})=3/6 and P_X({0})=3/6. A second indicator Y of divisibility by three is independent of X: P(X=1,Y=1)=1/6 equals P(X=1)P(Y=1)=1/2·1/3. For two binary indicators, the other event pairs follow by subtraction.",
     interpretation: "The pushforward describes one variable; independence is a statement about its joint law with another.",
     trap: "Do not infer independence from one matching event pair or from uncorrelatedness alone.",
     practice: "On a fair die, let X indicate even and Z indicate result at most three. Are X and Z independent?",

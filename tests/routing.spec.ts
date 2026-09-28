@@ -69,7 +69,7 @@ test("course picker switches to machine learning without route feedback", async 
   ).toBeVisible();
 });
 
-test("mathematics route opens the first authored lesson and marks later topics as planned", async ({
+test("mathematics route opens authored lessons from foundations through the research capstone", async ({
   page,
 }) => {
   const errors: string[] = [];
@@ -80,9 +80,7 @@ test("mathematics route opens the first authored lesson and marks later topics a
     page.getByRole("heading", { name: "Mathematics", exact: true }),
   ).toBeVisible();
   await expect(page.locator(".course-facts")).toContainText("292 lessons");
-  await expect(page.locator(".lesson-row.planned").first()).toContainText(
-    "Coming soon",
-  );
+  await expect(page.locator(".lesson-row.planned")).toHaveCount(0);
   await page.getByRole("button", { name: "Start the course" }).click();
   await expect(page).toHaveURL(
     /\/courses\/mathematics\/lessons\/math\.m1\.l1$/,
@@ -135,6 +133,10 @@ test("mathematics route opens the first authored lesson and marks later topics a
   await page.goto("/courses/mathematics/lessons/math.m11.l9");
   await expect(
     page.getByText("Lagrange multipliers and constrained extrema", { exact: true }).first(),
+  ).toBeVisible();
+  await page.goto("/courses/mathematics/lessons/math.m36.l8");
+  await expect(
+    page.getByText("Open-problem capstone and advisor feedback", { exact: true }).first(),
   ).toBeVisible();
   await page.goto("/courses/mathematics/lessons/math.m3.l4");
   await page.getByRole("button", { name: "Next", exact: true }).click();
