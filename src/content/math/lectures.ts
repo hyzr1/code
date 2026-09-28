@@ -24,6 +24,9 @@ import { MATH_COMPLEX_ANALYSIS } from "./complex-analysis";
 import { MATH_ADVANCED_APPLIED } from "./advanced-applied";
 import { MATH_PARTIAL_DIFFERENTIAL_EQUATIONS } from "./partial-differential-equations";
 import { MATH_ADVANCED_OPTIMIZATION } from "./advanced-optimization";
+import { MATH_MEASURE_THEORY } from "./measure-theory";
+import { MATH_FUNCTIONAL_ANALYSIS } from "./functional-analysis";
+import { MATH_TOPOLOGY_MANIFOLDS } from "./topology-manifolds";
 
 export type MathLecture = {
   lesson: string;
@@ -974,6 +977,9 @@ const lectures: MathLecture[] = [
   ...MATH_ADVANCED_APPLIED,
   ...MATH_PARTIAL_DIFFERENTIAL_EQUATIONS,
   ...MATH_ADVANCED_OPTIMIZATION,
+  ...MATH_MEASURE_THEORY,
+  ...MATH_FUNCTIONAL_ANALYSIS,
+  ...MATH_TOPOLOGY_MANIFOLDS,
 ];
 
 const questions = (spec: MathLecture): LectureQuestion[] =>
