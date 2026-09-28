@@ -13,8 +13,14 @@
  */
 import { ATOMS, buildScenes, focusedLinesAt } from "../.check/content.mjs";
 
-const BACKREF =
+// Bare "above", "below", and "earlier" are useful spatial cues in Python code
+// lessons. In mathematics they usually describe inequalities, graphs, limits,
+// or sequence order, so only explicit references to prior displayed material
+// should trigger the stage check there.
+const PYTHON_BACKREF =
   /\b(above|below|earlier|previously|the previous|as we saw|that example|this example|the first statement|the second statement|the last line|that line|this code|the code above|the snippet)\b/i;
+const MATH_BACKREF =
+  /\b(as we saw|the previous (?:slide|scene|example|statement)|the (?:code|snippet|example|statement|diagram|figure) (?:above|below)|(?:above|below) (?:we|you) (?:saw|showed|wrote)|this code|the snippet)\b/i;
 
 /** Phrases that read as backward references but aren't spatial. */
 const BENIGN = /\b(above all|above zero|above some|above the threshold|above it|nothing below it|cross that line|earlier one)\b/i;
@@ -23,14 +29,15 @@ const violations = [];
 
 for (const atom of ATOMS) {
   const scenes = buildScenes(atom);
+  const backref = atom.id.startsWith("math.atom.") ? MATH_BACKREF : PYTHON_BACKREF;
 
   scenes.forEach((scene, i) => {
     if (scene.kind !== "text") return;
-    if (!BACKREF.test(scene.caption)) return;
+    if (!backref.test(scene.caption)) return;
     if (BENIGN.test(scene.caption)) return;
     if (scene.code) return; // the thing it points at is on screen
 
-    const phrase = BACKREF.exec(scene.caption)?.[0];
+    const phrase = backref.exec(scene.caption)?.[0];
     violations.push(
       `${atom.id} · scene ${i + 1}/${scenes.length}\n    says "${phrase}" with nothing on the stage\n    "${scene.caption.slice(0, 110)}${scene.caption.length > 110 ? "…" : ""}"`,
     );
