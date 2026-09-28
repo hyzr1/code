@@ -21,6 +21,9 @@ import { MATH_OPTIMIZATION_INFORMATION } from "./optimization-information";
 import { MATH_REAL_ANALYSIS } from "./real-analysis";
 import { MATH_ABSTRACT_ALGEBRA } from "./abstract-algebra";
 import { MATH_COMPLEX_ANALYSIS } from "./complex-analysis";
+import { MATH_ADVANCED_APPLIED } from "./advanced-applied";
+import { MATH_PARTIAL_DIFFERENTIAL_EQUATIONS } from "./partial-differential-equations";
+import { MATH_ADVANCED_OPTIMIZATION } from "./advanced-optimization";
 
 export type MathLecture = {
   lesson: string;
@@ -968,6 +971,9 @@ const lectures: MathLecture[] = [
   ...MATH_REAL_ANALYSIS,
   ...MATH_ABSTRACT_ALGEBRA,
   ...MATH_COMPLEX_ANALYSIS,
+  ...MATH_ADVANCED_APPLIED,
+  ...MATH_PARTIAL_DIFFERENTIAL_EQUATIONS,
+  ...MATH_ADVANCED_OPTIMIZATION,
 ];
 
 const questions = (spec: MathLecture): LectureQuestion[] =>
