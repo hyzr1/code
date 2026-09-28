@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 
 test.beforeEach(async({page})=>{
  await page.addInitScript(()=>{localStorage.setItem('unwashed.onboarding.v1','complete');localStorage.setItem('forge.settings.v1',JSON.stringify({appearance:{mode:'algo',theme:'dark'},learning:{course:'algo',language:'python'},watch:{autoplay:false,muted:true,engine:'system'}}));});
- await page.goto('/');
+ await page.goto('/courses/python');
  if((page.viewportSize()?.width??1000)<=860) await page.getByLabel('Open menu').click();
  await page.getByTitle('Algo').click();
 });

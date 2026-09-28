@@ -6,7 +6,7 @@ test('consistent syntax, centered actions, and distinct argument fields', async 
     localStorage.setItem('forge.settings.v1', JSON.stringify({ appearance: { mode: 'algo', theme: 'dark' }, learning: { course: 'algo', language: 'python' }, watch: { autoplay: false, muted: true, engine: 'system' } }));
     localStorage.setItem('hyzr.draft.v2.py.nc.valid-anagram', 'class Solution:\n    def isAnagram(self, s: str, t: str) -> bool:\n        # str is a type, but this is a comment\n        note = "str"\n        return sorted(s) == sorted(t)');
   });
-  await page.goto('/');
+  await page.goto('/courses/python');
   const mobile = info.project.name === 'mobile';
   if (mobile) await page.getByLabel('Open menu').click();
   await page.getByTitle('Algo', { exact: true }).click();

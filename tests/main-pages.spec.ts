@@ -1,7 +1,7 @@
 import {test,expect} from '@playwright/test';
 test('main pages share readable type and responsive navigation',async({page},info)=>{
  await page.addInitScript(()=>{localStorage.setItem('unwashed.onboarding.v1','complete');localStorage.setItem('forge.settings.v1',JSON.stringify({appearance:{theme:'dark',reducedMotion:true},watch:{autoplay:false,muted:true,engine:'system'}}));});
- await page.goto('/');await page.evaluate(()=>document.fonts.ready);
+ await page.goto('/courses/python');await page.evaluate(()=>document.fonts.ready);
  await expect(page.locator('.course-overview h1')).toHaveCSS('font-family',/Inter/);
  await expect(page.locator('.course-module[open]')).toHaveCount(1);
  const second=page.locator('.course-module').nth(1);
@@ -14,6 +14,6 @@ test('main pages share readable type and responsive navigation',async({page},inf
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
  await navigate('Type',true);await expect(page.getByRole('heading',{name:'Typing practice'})).toBeVisible();await page.screenshot({path:info.outputPath('typing.png'),animations:'disabled'});
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
- await navigate('Algo',true);await expect(page.getByRole('heading',{name:'DSA Interview Prep'})).toBeVisible();await page.screenshot({path:info.outputPath('problems.png'),animations:'disabled'});
+ await navigate('Algo',true);await expect(page.getByRole('heading',{name:'Technical Interview Prep'})).toBeVisible();await page.screenshot({path:info.outputPath('problems.png'),animations:'disabled'});
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
 });
