@@ -686,6 +686,147 @@ const releasedGoals: Record<string, string> = {
     "Interpret second and higher derivatives in motion and verify changes in concavity.",
   "math.m4.l9":
     "Choose and combine derivative rules in a multi-step expression and verify the result.",
+  "math.m5.l1":
+    "Verify the hypotheses of Rolle's and the mean value theorems, then find a matching interior slope.",
+  "math.m5.l2":
+    "Use a first-derivative sign chart to identify increasing intervals and local extrema.",
+  "math.m5.l3":
+    "Test concavity on intervals and verify an actual sign change at each inflection point.",
+  "math.m5.l4":
+    "Choose a conclusive extremum test and explain what to do when the second-derivative test fails.",
+  "math.m5.l5":
+    "Model an objective under constraints and compare all feasible candidates for an absolute optimum.",
+  "math.m5.l6":
+    "Differentiate a time-dependent relationship before substituting a snapshot and interpret the signed rate.",
+  "math.m5.l7":
+    "Construct a tangent-line approximation and distinguish differential estimates from exact changes.",
+  "math.m5.l8":
+    "Combine domain, limits, first and second derivative charts into a consistent graph sketch.",
+  "math.m5.l9":
+    "Build and check a model with derivatives, feasible boundaries, units, and approximation limits.",
+  "math.m6.l1":
+    "Recover a family of antiderivatives and use an initial condition to select one function.",
+  "math.m6.l2":
+    "Construct a Riemann sum and distinguish its signed limit from geometric area.",
+  "math.m6.l3":
+    "Use bound reversal, splitting, linearity, and symmetry without losing signs.",
+  "math.m6.l4":
+    "Differentiate accumulation functions, including moving upper and lower limits.",
+  "math.m6.l5":
+    "Evaluate a definite integral with an antiderivative and separate signed integral from area.",
+  "math.m6.l6":
+    "Perform substitution with a matching inner derivative and transformed bounds.",
+  "math.m6.l7":
+    "Recover motion from velocity and distinguish displacement from total distance.",
+  "math.m6.l8":
+    "Interpret integrals as changes to an initial quantity with correct signs and units.",
+  "math.m7.l1":
+    "Set up nonnegative strip integrals for area between curves, splitting where their order changes.",
+  "math.m7.l2":
+    "Derive cross-sectional area before integrating a volume by slices or disks.",
+  "math.m7.l3":
+    "Choose washers or shells from a labeled axis, radius, and representative strip.",
+  "math.m7.l4":
+    "Distinguish average value from total physical accumulation and track units.",
+  "math.m7.l5":
+    "Model variable-force work as force times infinitesimal displacement.",
+  "math.m7.l6":
+    "Construct an application integral from a representative slice with correct bounds and units.",
+  "math.m8.l1":
+    "Apply integration by parts and verify the resulting antiderivative by differentiation.",
+  "math.m8.l2":
+    "Use derivative pairs and trigonometric identities to reduce trigonometric integrals.",
+  "math.m8.l3":
+    "Choose a trigonometric substitution with a valid sign branch and return to the original variable.",
+  "math.m8.l4":
+    "Decompose rational functions into partial fractions while preserving excluded inputs.",
+  "math.m8.l5":
+    "Compute numerical integral estimates and justify a smoothness-based error bound.",
+  "math.m8.l6":
+    "Select an integration method from the integrand's structure and verify the result.",
+  "math.m9.l1":
+    "Define an infinite-interval integral as a limit and classify power-law tails.",
+  "math.m9.l2":
+    "Split integrals at unbounded points and test every one-sided limit.",
+  "math.m9.l3":
+    "Use direct or limit comparison with a positive benchmark in the correct direction.",
+  "math.m9.l4":
+    "Apply the epsilon definition of sequence convergence and use subsequences to detect failure.",
+  "math.m9.l5":
+    "Prove a recursive sequence is monotone and bounded before solving for its limit.",
+  "math.m9.l6":
+    "Classify multiple improper endpoints with separate justified comparisons.",
+  "math.m10.l1":
+    "Define a series through partial sums and apply the necessary term-limit test correctly.",
+  "math.m10.l2":
+    "Sum geometric and telescoping series from finite partial-sum formulas.",
+  "math.m10.l3":
+    "Apply integral and direct comparison tests to positive series with checked hypotheses.",
+  "math.m10.l4":
+    "Use a positive finite ratio limit to compare a series with a known benchmark.",
+  "math.m10.l5":
+    "Apply ratio and root tests to suitable terms and recognize their inconclusive boundary.",
+  "math.m10.l6":
+    "Prove alternating-series convergence and bound truncation error by the first omitted term.",
+  "math.m10.l7":
+    "Distinguish absolute from conditional convergence using separate magnitude and signed tests.",
+  "math.m10.l8":
+    "Find a power series radius and test both endpoints independently.",
+  "math.m10.l9":
+    "Construct a Taylor polynomial from derivative data at a specified center.",
+  "math.m10.l10":
+    "Use a valid derivative bound to certify a Taylor approximation error.",
+  "math.m10.l11":
+    "Choose and justify complementary tests for a mixed series problem.",
+  "math.m11.l1":
+    "Use dot and cross products to construct lines and planes with geometric meaning.",
+  "math.m11.l2":
+    "Differentiate parametrized curves and compute speed, tangent direction, and arc length.",
+  "math.m11.l3":
+    "Disprove multivariable limits with conflicting paths and prove them with uniform bounds.",
+  "math.m11.l4":
+    "Compute partial derivatives and interpret a nonzero gradient as a level-set normal.",
+  "math.m11.l5":
+    "Compute a unit-direction derivative and construct a tangent plane from first partials.",
+  "math.m11.l6":
+    "Apply the multivariable chain rule through every changing input or Jacobian factor.",
+  "math.m11.l7":
+    "Build first- and second-order Taylor models using the gradient and Hessian.",
+  "math.m11.l8":
+    "Classify nondegenerate critical points and handle inconclusive Hessian tests honestly.",
+  "math.m11.l9":
+    "Solve regular constrained-extremum candidates and compare feasible values.",
+  "math.m11.l10":
+    "Check the implicit-function hypothesis and differentiate the resulting local branch.",
+  "math.m12.l1": "Describe a planar region by slices and evaluate its double integral in either valid order.",
+  "math.m12.l2": "Convert a circular-region integral to polar coordinates with the radial area factor.",
+  "math.m12.l3": "Set up a triple integral from a solid's bounds and use cylindrical coordinates correctly.",
+  "math.m12.l4": "Transform a region, integrand, and area element using an absolute Jacobian determinant.",
+  "math.m12.l5": "Test singular and unbounded planar integrals by explicit limiting arguments.",
+  "math.m12.l6": "Parametrize an oriented curve and distinguish work integrals from scalar arc-length integrals.",
+  "math.m12.l7": "Find a potential function, check its domain, and compute path-independent work.",
+  "math.m12.l8": "Apply Green's theorem with all boundary components and correct orientation.",
+  "math.m12.l9": "Compute scalar surface area and oriented flux from a surface parametrization.",
+  "math.m12.l10": "Relate circulation to normal curl through a compatible spanning surface.",
+  "math.m12.l11": "Relate outward closed-surface flux to volume divergence and account for caps.",
+  "math.m12.l12": "Recognize the boundary-integral principle behind the vector-calculus theorems.",
+  "math.m13.l1": "Row-reduce a linear system and distinguish unique, inconsistent, and free-variable outcomes.",
+  "math.m13.l2": "Test span, subspace closure, and independence with linear combinations.",
+  "math.m13.l3": "Find a basis and represent vectors with unique coordinates in it.",
+  "math.m13.l4": "Compute a linear map's kernel and image and interpret injectivity and surjectivity.",
+  "math.m13.l5": "Use rank-nullity to account for all input dimensions.",
+  "math.m13.l6": "Compose matrix maps in the correct order and invert a full-rank square map.",
+  "math.m13.l7": "Interpret determinant as signed volume scale and identify singular maps.",
+  "math.m13.l8": "Compute inner products, norms, and angles, and apply orthogonality correctly.",
+  "math.m14.l1": "Derive the normal equations and interpret fitted values as orthogonal projections.",
+  "math.m14.l2": "Factor independent columns into orthonormal Q and triangular R for stable solving.",
+  "math.m14.l3": "Find eigenvalues and nonzero eigenvectors and interpret invariant directions.",
+  "math.m14.l4": "Decide whether an eigenbasis exists and use it to compute matrix powers.",
+  "math.m14.l5": "Use the symmetric spectral theorem to read a matrix's quadratic geometry.",
+  "math.m14.l6": "Interpret the SVD as orthogonal direction changes and nonnegative stretches.",
+  "math.m14.l7": "Classify quadratic forms and solve a positive-definite quadratic optimization problem.",
+  "math.m14.l8": "Distinguish problem conditioning from algorithm stability and compute a singular-value ratio.",
+  "math.m14.l9": "Center data, identify principal directions from SVD, and avoid leakage.",
 };
 
 export const MATH_LESSONS: Lesson[] = specifications.flatMap(

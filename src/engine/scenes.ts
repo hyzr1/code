@@ -516,7 +516,7 @@ function stageSupports(text: string, code: string, section: string): boolean {
 }
 
 const VISUALS: [RegExp, VisualKind][] = [
-  [/^math\.atom\.(?:[1-9]|1[0-9]|2[0-9]|3[0-2])$/, "function"],
+  [/^math\.atom\.(?:[1-9]|[1-9][0-9]|10[0-9]|11[0-7])$/, "function"],
   [
     /algo\.(?:scale|operation-count|asymptotics|growth-classes|dominant-growth|space-cost|amortized-cost|analysis-cases)/,
     "complexity",

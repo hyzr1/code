@@ -79,7 +79,7 @@ test("mathematics route opens the first authored lesson and marks later topics a
   await expect(
     page.getByRole("heading", { name: "Mathematics", exact: true }),
   ).toBeVisible();
-  await expect(page.locator(".course-facts")).toContainText("32 lessons");
+  await expect(page.locator(".course-facts")).toContainText("117 lessons");
   await expect(page.locator(".lesson-row.planned").first()).toContainText(
     "Coming soon",
   );
@@ -107,6 +107,34 @@ test("mathematics route opens the first authored lesson and marks later topics a
     page
       .getByText("Mixed-rule differentiation workshop", { exact: true })
       .first(),
+  ).toBeVisible();
+  await page.goto("/courses/mathematics/lessons/math.m5.l5");
+  await expect(
+    page.getByText("Optimization with constraints", { exact: true }).first(),
+  ).toBeVisible();
+  await page.goto("/courses/mathematics/lessons/math.m6.l6");
+  await expect(
+    page.getByText("Substitution and change of variables", { exact: true }).first(),
+  ).toBeVisible();
+  await page.goto("/courses/mathematics/lessons/math.m7.l3");
+  await expect(
+    page.getByText("Washers and shells", { exact: true }).first(),
+  ).toBeVisible();
+  await page.goto("/courses/mathematics/lessons/math.m8.l5");
+  await expect(
+    page.getByText("Numerical integration and error", { exact: true }).first(),
+  ).toBeVisible();
+  await page.goto("/courses/mathematics/lessons/math.m9.l5");
+  await expect(
+    page.getByText("Monotone bounded sequences", { exact: true }).first(),
+  ).toBeVisible();
+  await page.goto("/courses/mathematics/lessons/math.m10.l10");
+  await expect(
+    page.getByText("Taylor series and approximation error", { exact: true }).first(),
+  ).toBeVisible();
+  await page.goto("/courses/mathematics/lessons/math.m11.l9");
+  await expect(
+    page.getByText("Lagrange multipliers and constrained extrema", { exact: true }).first(),
   ).toBeVisible();
   await page.goto("/courses/mathematics/lessons/math.m3.l4");
   await page.getByRole("button", { name: "Next", exact: true }).click();

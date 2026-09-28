@@ -1,5 +1,17 @@
 import type { Atom, Concept, LectureQuestion } from "../../types";
 import { MATH_RULE_LECTURES } from "./rules";
+import { MATH_DERIVATIVE_APPLICATIONS } from "./derivative-applications";
+import { MATH_INTEGRAL_LECTURES } from "./integrals";
+import { MATH_INTEGRATION_APPLICATIONS } from "./integration-applications";
+import { MATH_INTEGRATION_METHODS } from "./integration-methods";
+import { MATH_CONVERGENCE_LECTURES } from "./convergence";
+import { MATH_SERIES_BASICS } from "./series-basics";
+import { MATH_SERIES_ADVANCED } from "./series-advanced";
+import { MATH_MULTIVARIABLE_FOUNDATIONS } from "./multivariable-foundations";
+import { MATH_MULTIVARIABLE_ADVANCED } from "./multivariable-advanced";
+import { MATH_VECTOR_CALCULUS } from "./vector-calculus";
+import { MATH_LINEAR_ALGEBRA_FOUNDATIONS } from "./linear-algebra-foundations";
+import { MATH_LINEAR_ALGEBRA_SPECTRAL } from "./linear-algebra-spectral";
 
 export type MathLecture = {
   lesson: string;
@@ -926,6 +938,18 @@ const lectures: MathLecture[] = [
     ],
   },
   ...MATH_RULE_LECTURES,
+  ...MATH_DERIVATIVE_APPLICATIONS,
+  ...MATH_INTEGRAL_LECTURES,
+  ...MATH_INTEGRATION_APPLICATIONS,
+  ...MATH_INTEGRATION_METHODS,
+  ...MATH_CONVERGENCE_LECTURES,
+  ...MATH_SERIES_BASICS,
+  ...MATH_SERIES_ADVANCED,
+  ...MATH_MULTIVARIABLE_FOUNDATIONS,
+  ...MATH_MULTIVARIABLE_ADVANCED,
+  ...MATH_VECTOR_CALCULUS,
+  ...MATH_LINEAR_ALGEBRA_FOUNDATIONS,
+  ...MATH_LINEAR_ALGEBRA_SPECTRAL,
 ];
 
 const questions = (spec: MathLecture): LectureQuestion[] =>
