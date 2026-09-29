@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 test('visual surfaces and usable editor controls', async ({page}, info) => {
  await page.addInitScript(()=>{localStorage.setItem('unwashed.onboarding.v1','complete');localStorage.setItem('forge.settings.v1',JSON.stringify({appearance:{theme:'dark'},watch:{autoplay:false,muted:true,engine:'system'}}));});
- await page.goto('/');
+ await page.goto('/courses/python');
  await page.screenshot({path:info.outputPath('course.png')});
  if((page.viewportSize()?.width??1000)<=860) await page.getByLabel('Open menu').click();
  await page.getByTitle('Algo').click();

@@ -1,7 +1,7 @@
 # Hyzr Code
 
 [Hyzr Code](https://code.hyzr.ai) is an interactive learning platform for
-Python, data structures and algorithms, machine learning, and coding interview
+Python, mathematics, data structures and algorithms, machine learning, and coding interview
 preparation. It pairs clear instruction with deliberate practice so learners
 can build fluency, recognize patterns, and solve problems under pressure.
 
@@ -14,6 +14,7 @@ Built and maintained by Hyzr.
 | **Python** | Language fundamentals through practical, production-ready software engineering. |
 | **Data Structures & Algorithms** | An ordered interview-prep path, including NeetCode 250, NeetCode 150, Blind 75, and systems design study plans. |
 | **Machine Learning** | The mathematics, models, and systems needed to build practical ML projects. |
+| **Mathematics** | A paced roadmap from calculus through the mathematical foundations of ML and graduate study. The first MATH 19A lessons are authored; later topics are marked as upcoming until their lectures and practice are ready. |
 
 The DSA workspace includes a fast local Python runner for examples, a hardened
 server-side judge for hidden submission checks, progressive hints, reference

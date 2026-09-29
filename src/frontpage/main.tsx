@@ -87,6 +87,14 @@ const paths = [
     href: "/courses/machine-learning",
     art: "ml",
   },
+  {
+    n: "04",
+    name: "Mathematics",
+    desc: "From calculus and proofs to the language of machine learning.",
+    tags: "CALCULUS / LINEAR ALGEBRA / ADVANCED MATH",
+    href: "/courses/mathematics",
+    art: "math",
+  },
 ];
 
 function Demo({ chapter }: { chapter: number }) {
@@ -553,7 +561,7 @@ function Frontpage() {
             <button onClick={() => setPaused(!paused)} aria-pressed={paused}>
               {paused ? "▷ Play motion" : "Ⅱ Pause motion"}
             </button>
-            <span>PYTHON / ALGORITHMS / MACHINE LEARNING</span>
+            <span>PYTHON / ALGORITHMS / MATHEMATICS / MACHINE LEARNING</span>
           </div>
         </section>
         <div className="discipline-strip">
@@ -562,8 +570,8 @@ function Frontpage() {
             <br />A WORLD TO UNDERSTAND.
           </span>
           <div>
-            Python <i>+</i> Algorithms <i>+</i> Machine learning <i>+</i>{" "}
-            Systems design
+            Python <i>+</i> Algorithms <i>+</i> Mathematics <i>+</i> Machine
+            learning <i>+</i> Systems design
           </div>
         </div>
         <section className="intro section-shell" id="experience">
@@ -721,6 +729,7 @@ function Frontpage() {
             <a href="/courses/python">Python</a>
             <a href="/courses/dsa">Algorithms</a>
             <a href="/courses/machine-learning">Machine learning</a>
+            <a href="/courses/mathematics">Mathematics</a>
           </div>
           <div className="footer-column">
             <h4>PRACTICE</h4>

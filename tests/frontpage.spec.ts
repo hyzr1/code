@@ -94,10 +94,14 @@ test("frontpage story, examples, navigation and reduced motion work", async ({
     await page.keyboard.press("Escape");
     await expect(page.locator(".mega-menu")).not.toBeVisible();
   }
-  await expect(page.locator(".path-row")).toHaveCount(3);
+  await expect(page.locator(".path-row")).toHaveCount(4);
   await expect(page.locator(".path-row").nth(2)).toHaveAttribute(
     "href",
     "/courses/machine-learning",
+  );
+  await expect(page.locator(".path-row").nth(3)).toHaveAttribute(
+    "href",
+    "/courses/mathematics",
   );
   await page.getByRole("link", { name: "Build your understanding" }).click();
   await expect(page).toHaveURL(/\/courses\/python$/);

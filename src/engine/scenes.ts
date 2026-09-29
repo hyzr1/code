@@ -97,10 +97,13 @@ export function splitLong(text: string): string[] {
     const index = protectedCode.push(value) - 1;
     return `\u0000c${index}\u0000`;
   });
-  const protectedText = codeProtectedText.replace(/\b(?:e\.g\.|i\.e\.)|\.{3}/gi, (value) => {
-    const index = protectedMarks.push(value) - 1;
-    return `\u0000e${index}\u0000`;
-  });
+  const protectedText = codeProtectedText.replace(
+    /\b(?:e\.g\.|i\.e\.)|\.{3}/gi,
+    (value) => {
+      const index = protectedMarks.push(value) - 1;
+      return `\u0000e${index}\u0000`;
+    },
+  );
   // Full stops are not the only natural slide boundary. Long explanations
   // often use a semicolon, colon, or comma to introduce the next beat. Treat
   // each of those as a candidate, then pack candidates back together up to
@@ -108,15 +111,17 @@ export function splitLong(text: string): string[] {
   // two-word tail on its own slide.
   const parts = protectedText
     .split(/(?<=[.!?;:,])\s+/)
-    .map((part) => part
-      .replace(
-        /\u0000e(\d+)\u0000/g,
-        (_all, index) => protectedMarks[Number(index)],
-      )
-      .replace(
-        /\u0000c(\d+)\u0000/g,
-        (_all, index) => protectedCode[Number(index)],
-      ));
+    .map((part) =>
+      part
+        .replace(
+          /\u0000e(\d+)\u0000/g,
+          (_all, index) => protectedMarks[Number(index)],
+        )
+        .replace(
+          /\u0000c(\d+)\u0000/g,
+          (_all, index) => protectedCode[Number(index)],
+        ),
+    );
   const chunks: string[] = [];
   let current: string[] = [];
   let count = 0;
@@ -127,7 +132,11 @@ export function splitLong(text: string): string[] {
     // the loop when you've measured.**" — and cutting between them orphans the
     // markers, so the reader shows a literal `**` and the narrator says
     // "star times". Only break where every span is closed.
-    if (count + length > MAX_WORDS && current.length && closed(current.join(" "))) {
+    if (
+      count + length > MAX_WORDS &&
+      current.length &&
+      closed(current.join(" "))
+    ) {
       chunks.push(current.join(" "));
       current = [];
       count = 0;
@@ -154,7 +163,8 @@ export function splitLong(text: string): string[] {
 
 /** True when no emphasis or code span is left hanging open. */
 function closed(text: string): boolean {
-  const pairs = (pattern: RegExp) => (text.match(pattern) ?? []).length % 2 === 0;
+  const pairs = (pattern: RegExp) =>
+    (text.match(pattern) ?? []).length % 2 === 0;
   // Asterisks inside complete inline-code spans are multiplication or unpacking,
   // not Markdown emphasis. Counting them as markup can suppress every later
   // pacing boundary in a worked trace such as `offset = (page - 1) * size`.
@@ -285,25 +295,31 @@ export function buildScenes(atom: Atom): Scene[] {
     // the narration has moved on to `int("3")`). Walkthrough sections are
     // intentionally line-by-line and retain their example throughout; other
     // prose must share an explicit code span, identifier, or reference cue.
-    const blockText = block.kind === "p"
-      ? block.text
-      : block.kind === "list"
-        ? block.items.join(" ")
-        : block.kind === "table"
-          ? [...block.headers, ...block.rows.flat()].join(" ")
-          : "";
+    const blockText =
+      block.kind === "p"
+        ? block.text
+        : block.kind === "list"
+          ? block.items.join(" ")
+          : block.kind === "table"
+            ? [...block.headers, ...block.rows.flat()].join(" ")
+            : "";
     const nextBlock = blocks[i + 1];
-    const nextBlockText = nextBlock?.kind === "p"
-      ? nextBlock.text
-      : nextBlock?.kind === "list"
-        ? nextBlock.items.join(" ")
-        : nextBlock?.kind === "table"
-          ? [...nextBlock.headers, ...nextBlock.rows.flat()].join(" ")
-          : "";
+    const nextBlockText =
+      nextBlock?.kind === "p"
+        ? nextBlock.text
+        : nextBlock?.kind === "list"
+          ? nextBlock.items.join(" ")
+          : nextBlock?.kind === "table"
+            ? [...nextBlock.headers, ...nextBlock.rows.flat()].join(" ")
+            : "";
     const upcomingSupportsStage = Boolean(
       stage && nextBlockText && stageSupports(nextBlockText, stage, section),
     );
-    if (!stage && parkedStage && stageSupports(blockText, parkedStage, section)) {
+    if (
+      !stage &&
+      parkedStage &&
+      stageSupports(blockText, parkedStage, section)
+    ) {
       stage = parkedStage;
       stageFresh = false;
     } else if (
@@ -402,7 +418,7 @@ export function buildScenes(atom: Atom): Scene[] {
         kind: "text",
         caption: chunk,
         section,
-        code: showStage ? stage ?? undefined : undefined,
+        code: showStage ? (stage ?? undefined) : undefined,
         codeIsNew: showStage ? stageFresh : false,
         narration: plainText(chunk),
       });
@@ -415,7 +431,10 @@ export function buildScenes(atom: Atom): Scene[] {
   // content keeps preparation and retrieval separate, but this guard protects
   // every existing and future lecture from the same visible repetition.
   const normalizeForDuplicateCheck = (value: string) =>
-    plainText(value).toLocaleLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
+    plainText(value)
+      .toLocaleLowerCase()
+      .replace(/[^\p{L}\p{N}]+/gu, " ")
+      .trim();
   const recallKey = normalizeForDuplicateCheck(atom.recall);
   const previousKey = normalizeForDuplicateCheck(scenes.at(-1)?.caption ?? "");
   if (recallKey !== previousKey) {
@@ -427,20 +446,58 @@ export function buildScenes(atom: Atom): Scene[] {
     });
   }
 
+  // Keep conventional notation in Math captions, but speak it as mathematics.
+  // The shared narrator uses an arrow for generic diagrams ("means"), which
+  // misreads a limit such as x → 0 as "x means zero".
+  const mathNarration = (value: string) =>
+    value
+      .replace(
+        /\b([A-Za-z])\s*→\s*([A-Za-z0-9]+)⁻/g,
+        "$1 approaches $2 from the left",
+      )
+      .replace(
+        /\b([A-Za-z])\s*→\s*([A-Za-z0-9]+)⁺/g,
+        "$1 approaches $2 from the right",
+      )
+      .replace(/→\s*\+?infinity/gi, " tends to positive infinity")
+      .replace(/→\s*-infinity/gi, " tends to negative infinity")
+      .replace(/\b([A-Za-z])\s*→\s*/g, "$1 approaches ")
+      .replace(/ε/g, "epsilon")
+      .replace(/δ/g, "delta")
+      .replace(/π/g, "pi")
+      .replace(/θ/g, "theta")
+      .replace(/≤/g, " less than or equal to ")
+      .replace(/≥/g, " greater than or equal to ");
   const enriched = scenes
     .filter((s) => s.caption || s.code)
-    .map((scene) => enrichScene(scene, atom));
+    .map((scene) =>
+      enrichScene(
+        atom.id.startsWith("math.")
+          ? { ...scene, narration: mathNarration(scene.narration) }
+          : scene,
+        atom,
+      ),
+    );
   return placeVisuals(enriched, atom);
 }
 
 const STAGE_REFERENCE =
   /\b(?:above|below|example|output|result)\b|\b(?:first|second|third|fourth|final|next)\s+(?:line|statement|expression|call|step)\b/i;
 const STAGE_STOP_WORDS = new Set([
-  "class", "false", "none", "print", "python", "return", "true", "value", "values",
+  "class",
+  "false",
+  "none",
+  "print",
+  "python",
+  "return",
+  "true",
+  "value",
+  "values",
 ]);
 
 function stageSupports(text: string, code: string, section: string): boolean {
-  if (section.toLocaleLowerCase().includes("walk through an example")) return true;
+  if (section.toLocaleLowerCase().includes("walk through an example"))
+    return true;
   const normalizedCode = code.replace(/\s+/g, " ");
   const spans = [...text.matchAll(/`([^`]+)`/g)]
     .map((match) => match[1].replace(/\s+/g, " ").trim())
@@ -459,37 +516,89 @@ function stageSupports(text: string, code: string, section: string): boolean {
 }
 
 const VISUALS: [RegExp, VisualKind][] = [
-  [/algo\.(?:scale|operation-count|asymptotics|growth-classes|dominant-growth|space-cost|amortized-cost|analysis-cases)/, "complexity"],
+    [/^math\.atom\.(?:[1-9]|[1-9][0-9]|1[0-9][0-9]|2[01][0-9]|22[0-9]|23[0-9]|24[0-9]|25[0-9]|26[0-9]|27[0-9]|28[0-9]|29[0-2])$/, "function"],
+  [
+    /algo\.(?:scale|operation-count|asymptotics|growth-classes|dominant-growth|space-cost|amortized-cost|analysis-cases)/,
+    "complexity",
+  ],
   [/ml\.(?:vector-operations|dot-product-geometry|norm-families)/, "ml"],
-  [/algo\.(?:call-stack|recurrences|recursion-trees|recursion-vs-iteration|tail-recursion)/, "recursion"],
+  [
+    /algo\.(?:call-stack|recurrences|recursion-trees|recursion-vs-iteration|tail-recursion)/,
+    "recursion",
+  ],
   [/algo\.constraints/, "complexity"],
-  [/algo\.(?:examples-first|optimize-method|invariants|edge-cases|dry-running|communication)/, "decision"],
-  [/algo\.(?:dynamic-arrays|in-place-arrays|cyclic-placement|immutable-strings)/, "list"],
+  [
+    /algo\.(?:examples-first|optimize-method|invariants|edge-cases|dry-running|communication)/,
+    "decision",
+  ],
+  [
+    /algo\.(?:dynamic-arrays|in-place-arrays|cyclic-placement|immutable-strings)/,
+    "list",
+  ],
   [/algo\.(?:prefix-sums-guided|difference-arrays|prefix-sums-2d)/, "prefix"],
-  [/algo\.(?:hash-maps-sets-guided|frequency-counting|grouping-by-key|default-writeback|composite-keys|set-operations-guided)/, "hash"],
+  [
+    /algo\.(?:hash-maps-sets-guided|frequency-counting|grouping-by-key|default-writeback|composite-keys|set-operations-guided)/,
+    "hash",
+  ],
   [/algo\.(?:opposing-pointers-guided|read-write-pointers)/, "pointers"],
-  [/algo\.(?:fixed-window-guided|variable-window-guided|window-hash-map)/, "window"],
-  [/algo\.(?:stack-guided|queue-deque-guided|monotonic-stack-guided|stack-queue-conversions)/, "stack"],
+  [
+    /algo\.(?:fixed-window-guided|variable-window-guided|window-hash-map)/,
+    "window",
+  ],
+  [
+    /algo\.(?:stack-guided|queue-deque-guided|monotonic-stack-guided|stack-queue-conversions)/,
+    "stack",
+  ],
   [/algo\.monotonic-deque-guided/, "window"],
-  [/algo\.(?:linked-list-foundations|dummy-heads|linked-list-reversal|fast-slow-lists|merge-partition-lists)/, "pointers"],
+  [
+    /algo\.(?:linked-list-foundations|dummy-heads|linked-list-reversal|fast-slow-lists|merge-partition-lists)/,
+    "pointers",
+  ],
   [/algo\.lru-cache-guided/, "hash"],
-  [/algo\.(?:comparison-sorts|merge-sort-guided|quick-sort-guided|noncomparison-sorts)/, "pipeline"],
+  [
+    /algo\.(?:comparison-sorts|merge-sort-guided|quick-sort-guided|noncomparison-sorts)/,
+    "pipeline",
+  ],
   [/algo\.quickselect-guided/, "pointers"],
   [/algo\.(?:sort-keys-comparators|sort-stability-guided)/, "decision"],
-  [/algo\.(?:binary-search-exact|binary-search-bounds|binary-search-answer)/, "decision"],
+  [
+    /algo\.(?:binary-search-exact|binary-search-bounds|binary-search-answer)/,
+    "decision",
+  ],
   [/algo\.binary-search-shaped/, "pointers"],
-  [/algo\.(?:tree-anatomy|tree-dfs|tree-bfs|tree-divide-conquer|tree-path-depth|tree-serialization)/, "tree"],
+  [
+    /algo\.(?:tree-anatomy|tree-dfs|tree-bfs|tree-divide-conquer|tree-path-depth|tree-serialization)/,
+    "tree",
+  ],
   [/algo\.(?:bst-invariant|bst-inorder|bst-balancing|bst-ranges)/, "tree"],
-  [/algo\.(?:binary-heap|heap-operations|heap-sort-guided|heap-top-k|two-heaps|k-way-merge)/, "heap"],
+  [
+    /algo\.(?:binary-heap|heap-operations|heap-sort-guided|heap-top-k|two-heaps|k-way-merge)/,
+    "heap",
+  ],
   [/algo\.(?:trie-foundations|trie-applications)/, "tree"],
-  [/algo\.(?:graph-representations|grid-graphs|graph-bfs|graph-dfs|graph-components|graph-cycles|graph-bipartite)/, "graph"],
-  [/algo\.(?:topological-order-guided|dsu-foundations|dsu-applications|strong-components|bridges-articulation)/, "graph"],
-  [/algo\.(?:dijkstra-guided|zero-one-bfs|bellman-ford-guided|floyd-warshall-guided|a-star-guided|mst-comparison)/, "graph"],
-  [/algo\.(?:max-flow-guided|bipartite-matching-guided|euler-hamilton|two-sat-guided)/, "graph"],
+  [
+    /algo\.(?:graph-representations|grid-graphs|graph-bfs|graph-dfs|graph-components|graph-cycles|graph-bipartite)/,
+    "graph",
+  ],
+  [
+    /algo\.(?:topological-order-guided|dsu-foundations|dsu-applications|strong-components|bridges-articulation)/,
+    "graph",
+  ],
+  [
+    /algo\.(?:dijkstra-guided|zero-one-bfs|bellman-ford-guided|floyd-warshall-guided|a-star-guided|mst-comparison)/,
+    "graph",
+  ],
+  [
+    /algo\.(?:max-flow-guided|bipartite-matching-guided|euler-hamilton|two-sat-guided)/,
+    "graph",
+  ],
   // Backtracking is a decision tree: subsets and arrangements are recursion,
   // while the template, constraint checks, and pruning are choices.
   [/algo\.(?:subset-generation|permutations-combinations)/, "recursion"],
-  [/algo\.(?:backtracking-template|constraint-search|search-pruning)/, "decision"],
+  [
+    /algo\.(?:backtracking-template|constraint-search|search-pruning)/,
+    "decision",
+  ],
   // Greedy is a sequence of committed choices; intervals and Huffman have
   // their own natural pictures.
   [/algo\.(?:greedy-choice|greedy-exchange|greedy-pitfalls)/, "decision"],
@@ -500,16 +609,25 @@ const VISUALS: [RegExp, VisualKind][] = [
   [/algo\.(?:divide-conquer-shape|fast-exponentiation)/, "recursion"],
   [/algo\.master-theorem/, "complexity"],
   [/algo\.cross-boundary-merge/, "pipeline"],
-  [/ml\.(?:matrices|matrix-multiplication|transpose-identity-inverse|span-basis-rank|eigenvectors|determinant-trace|svd|matrix-decompositions|orthogonality-least-squares)/, "ml"],
+  [
+    /ml\.(?:matrices|matrix-multiplication|transpose-identity-inverse|span-basis-rank|eigenvectors|determinant-trace|svd|matrix-decompositions|orthogonality-least-squares)/,
+    "ml",
+  ],
   [/ml\.exponents-logs-sums/, "complexity"],
   [/ml\.(?:derivatives-rules|taylor-approximations)/, "function"],
   [/ml\.(?:partials-gradient|convexity|constrained-optimization)/, "decision"],
   [/ml\.chain-rule/, "pipeline"],
   [/ml\.(?:jacobians-hessians|matrix-calculus)/, "ml"],
   [/ml\.(?:sample-spaces-events|mle-map)/, "decision"],
-  [/ml\.(?:conditional-independence|bayes-guided|key-distributions|joint-marginal-conditional|monte-carlo-guided)/, "probability"],
+  [
+    /ml\.(?:conditional-independence|bayes-guided|key-distributions|joint-marginal-conditional|monte-carlo-guided)/,
+    "probability",
+  ],
   [/ml\.random-variables-guided/, "function"],
-  [/ml\.(?:expectation-variance-covariance|gaussian-guided|multivariate-gaussian)/, "ml"],
+  [
+    /ml\.(?:expectation-variance-covariance|gaussian-guided|multivariate-gaussian)/,
+    "ml",
+  ],
   // Unsupervised learning. Clustering is a grouping decision, the mixture and
   // anomaly lessons reason about density, and the projection lessons are
   // geometric transformations of the feature space.
@@ -518,7 +636,10 @@ const VISUALS: [RegExp, VisualKind][] = [
   [/ml\.(?:pca-guided|manifold-visualization)/, "ml"],
   // Evaluation. Metric choice and thresholds are decisions, curves and
   // calibration are probabilistic, and split design is a pipeline concern.
-  [/ml\.(?:metrics-precision-recall|confusion-thresholds|imbalanced-data)/, "decision"],
+  [
+    /ml\.(?:metrics-precision-recall|confusion-thresholds|imbalanced-data)/,
+    "decision",
+  ],
   [/ml\.(?:roc-pr-auc|probability-calibration)/, "probability"],
   [/ml\.regression-metrics/, "ml"],
   [/ml\.grouped-time-validation/, "pipeline"],
@@ -532,17 +653,29 @@ const VISUALS: [RegExp, VisualKind][] = [
   [/algo\.(?:dp-memo-table|dp-one-dimension|kadane)/, "dp"],
   // Training: autodiff is a graph walk, the rest is the network itself.
   [/ml\.reverse-mode-autodiff/, "graph"],
-  [/ml\.(?:forward-pass|deep-loss-functions|backpropagation|training-loop)/, "ml"],
+  [
+    /ml\.(?:forward-pass|deep-loss-functions|backpropagation|training-loop)/,
+    "ml",
+  ],
   // The classic recurrences are all table fills over one or two sequences.
-  [/algo\.(?:knapsack|coin-change|longest-increasing-subsequence|edit-distance|subset-sum)/, "dp"],
+  [
+    /algo\.(?:knapsack|coin-change|longest-increasing-subsequence|edit-distance|subset-sum)/,
+    "dp",
+  ],
   // Optimizers are decisions about step size; the rest is training machinery.
-  [/ml\.(?:gradient-descent-variants|learning-rate-schedules|second-order-methods)/, "decision"],
+  [
+    /ml\.(?:gradient-descent-variants|learning-rate-schedules|second-order-methods)/,
+    "decision",
+  ],
   [/ml\.(?:momentum|adaptive-optimizers)/, "ml"],
   // Grid and string tables are still table fills, two dimensions wide.
   [/algo\.(?:grid-paths|grid-obstacles|matrix-region-dp|string-dp)/, "dp"],
   // Stability lessons are diagnostic decisions; the rest is network machinery.
   [/ml\.(?:gradient-stability|debugging-training)/, "decision"],
-  [/ml\.(?:weight-initialization|normalization-layers|neural-regularization)/, "ml"],
+  [
+    /ml\.(?:weight-initialization|normalization-layers|neural-regularization)/,
+    "ml",
+  ],
   // Advanced DP: tree states are tree-shaped, the rest are table fills.
   [/algo\.tree-dp/, "tree"],
   [/algo\.(?:interval-dp|bitmask-dp|digit-dp|dp-optimizations)/, "dp"],
@@ -564,9 +697,15 @@ const VISUALS: [RegExp, VisualKind][] = [
   [/ml\.(?:query-key-value|attention-masks|attention-scaling)/, "decision"],
   [/ml\.(?:scaled-dot-product|multi-head-attention)/, "ml"],
   // Number theory is arithmetic reasoning rather than a data structure.
-  [/algo\.(?:gcd-euclid|sieve|modular-arithmetic|combinatorics|expected-value)/, "complexity"],
+  [
+    /algo\.(?:gcd-euclid|sieve|modular-arithmetic|combinatorics|expected-value)/,
+    "complexity",
+  ],
   // Bit work is arithmetic on a fixed row of positions.
-  [/algo\.(?:bitwise-operators|bit-tricks|subset-enumeration|xor-properties)/, "binary"],
+  [
+    /algo\.(?:bitwise-operators|bit-tricks|subset-enumeration|xor-properties)/,
+    "binary",
+  ],
   // Text representation: tokenization is a pipeline, the vectors are ML.
   [/ml\.tokenization/, "pipeline"],
   [/ml\.(?:embeddings|contextual-embeddings)/, "ml"],
@@ -576,42 +715,90 @@ const VISUALS: [RegExp, VisualKind][] = [
   // Transformers: stack choice is a decision, shapes are complexity arithmetic.
   [/ml\.transformer-stacks/, "decision"],
   [/ml\.transformer-shapes/, "complexity"],
-  [/ml\.(?:positional-representations|transformer-block|transformer-implementation)/, "ml"],
+  [
+    /ml\.(?:positional-representations|transformer-block|transformer-implementation)/,
+    "ml",
+  ],
   // Language modelling: perplexity is a measurement decision.
   [/ml\.perplexity/, "decision"],
   [/ml\.(?:language-modeling-objective|ngram-models)/, "ml"],
   // Query decomposition: tree-shaped structures versus array-block ones.
-  [/algo\.(?:segment-tree|lazy-propagation|lowest-common-ancestor|heavy-light|persistent-structures)/, "tree"],
-  [/algo\.(?:fenwick-tree|sparse-table|sqrt-decomposition|mos-algorithm)/, "pointers"],
+  [
+    /algo\.(?:segment-tree|lazy-propagation|lowest-common-ancestor|heavy-light|persistent-structures)/,
+    "tree",
+  ],
+  [
+    /algo\.(?:fenwick-tree|sparse-table|sqrt-decomposition|mos-algorithm)/,
+    "pointers",
+  ],
   // Games are decisions over positions; matrix powers are table arithmetic.
   [/algo\.(?:game-theory|minimax-memoized)/, "decision"],
   [/algo\.matrix-exponentiation/, "dp"],
   // Pretraining: objectives are ML machinery, adaptation is a decision.
   [/ml\.pretrain-finetune/, "decision"],
-  [/ml\.(?:masked-language-modeling|autoregressive-pretraining|text-to-text)/, "ml"],
+  [
+    /ml\.(?:masked-language-modeling|autoregressive-pretraining|text-to-text)/,
+    "ml",
+  ],
   // Interview judgement and LLM usage are decisions; estimation is complexity.
   [/algo\.cost-estimation/, "complexity"],
   [/algo\.(?:problem-patterns|choosing-approaches)/, "decision"],
-  [/ml\.(?:prompting|decoding-strategies|demonstrations|retrieval-augmented-generation)/, "decision"],
+  [
+    /ml\.(?:prompting|decoding-strategies|demonstrations|retrieval-augmented-generation)/,
+    "decision",
+  ],
   [/ml\.vector-search/, "pipeline"],
   // Interview execution is decision-making; reinforcement learning is ML.
-  [/algo\.(?:time-budgeting|clean-first-pass|live-testing|recovering-when-stuck)/, "decision"],
-  [/ml\.(?:markov-decision-process|model-free-control|model-based-offline-rl)/, "decision"],
+  [
+    /algo\.(?:time-budgeting|clean-first-pass|live-testing|recovering-when-stuck)/,
+    "decision",
+  ],
+  [
+    /ml\.(?:markov-decision-process|model-free-control|model-based-offline-rl)/,
+    "decision",
+  ],
   [/ml\.(?:bellman-equations|value-iteration)/, "dp"],
-  [/ml\.(?:deep-q-networks|policy-gradients|actor-critic|proximal-policy-optimization)/, "ml"],
+  [
+    /ml\.(?:deep-q-networks|policy-gradients|actor-critic|proximal-policy-optimization)/,
+    "ml",
+  ],
   // Interview communication is decision-making; generative models are ML.
-  [/algo\.(?:narrating-tradeoffs|follow-ups|coding-adjacent-design|company-families|practice-loop)/, "decision"],
+  [
+    /algo\.(?:narrating-tradeoffs|follow-ups|coding-adjacent-design|company-families|practice-loop)/,
+    "decision",
+  ],
   [/ml\.guidance/, "decision"],
-  [/ml\.(?:variational-autoencoders|generative-adversarial-networks|normalizing-flows|diffusion-models)/, "ml"],
+  [
+    /ml\.(?:variational-autoencoders|generative-adversarial-networks|normalizing-flows|diffusion-models)/,
+    "ml",
+  ],
   // Balanced trees and tree decompositions are all tree-shaped.
-  [/algo\.(?:treaps|splay-trees|balanced-bst-internals|order-statistics-trees)/, "tree"],
-  [/algo\.(?:heavy-light-queries|centroid-decomposition|euler-tour|link-cut-trees)/, "tree"],
-  [/algo\.(?:persistent-segment-trees|wavelet-trees|merge-sort-trees|sqrt-trees)/, "tree"],
+  [
+    /algo\.(?:treaps|splay-trees|balanced-bst-internals|order-statistics-trees)/,
+    "tree",
+  ],
+  [
+    /algo\.(?:heavy-light-queries|centroid-decomposition|euler-tour|link-cut-trees)/,
+    "tree",
+  ],
+  [
+    /algo\.(?:persistent-segment-trees|wavelet-trees|merge-sort-trees|sqrt-trees)/,
+    "tree",
+  ],
   [/ml\.(?:vision-language|image-video-generation|speech-audio)/, "ml"],
   [/ml\.(?:graph-networks|recommendation|time-series)/, "ml"],
-  [/algo\.(?:fast-transforms|chinese-remainder|mobius-inversion)/, "complexity"],
-  [/algo\.(?:gf2-linear-algebra|generating-functions|inclusion-exclusion)/, "complexity"],
-  [/ml\.(?:data-pipelines|training-clusters|accelerator-utilization)/, "system"],
+  [
+    /algo\.(?:fast-transforms|chinese-remainder|mobius-inversion)/,
+    "complexity",
+  ],
+  [
+    /algo\.(?:gf2-linear-algebra|generating-functions|inclusion-exclusion)/,
+    "complexity",
+  ],
+  [
+    /ml\.(?:data-pipelines|training-clusters|accelerator-utilization)/,
+    "system",
+  ],
   [/ml\.(?:checkpointing|data-validation)/, "system"],
   [/algo\.(?:dinic|min-cost-flow|general-matching)/, "graph"],
   [/algo\.(?:hopcroft-karp|flow-modeling)/, "graph"],
@@ -623,11 +810,17 @@ const VISUALS: [RegExp, VisualKind][] = [
   [/ml\.(?:retraining-pipelines|model-security)/, "system"],
   [/algo\.(?:convex-hull-trick|divide-conquer-dp|knuth-optimization)/, "dp"],
   [/algo\.(?:lagrangian-relaxation|sos-dp)/, "dp"],
-  [/algo\.(?:hull-algorithms|rotating-calipers|half-plane-intersection)/, "intervals"],
+  [
+    /algo\.(?:hull-algorithms|rotating-calipers|half-plane-intersection)/,
+    "intervals",
+  ],
   [/algo\.(?:segment-sweeps|delaunay-voronoi)/, "intervals"],
   [/ml\.(?:scaling-laws|emergent-behavior|data-curation)/, "ml"],
   [/ml\.(?:mixed-precision|gradient-checkpointing|data-parallelism)/, "system"],
-  [/ml\.(?:model-parallelism|sharded-training|collective-communication)/, "system"],
+  [
+    /ml\.(?:model-parallelism|sharded-training|collective-communication)/,
+    "system",
+  ],
   [/ml\.(?:flash-attention|long-context|position-schemes)/, "ml"],
   [/ml\.(?:mixture-of-experts|parameter-efficient-tuning)/, "ml"],
   [/ml\.(?:instruction-tuning|rlhf|direct-preference-optimization)/, "ml"],
@@ -636,7 +829,10 @@ const VISUALS: [RegExp, VisualKind][] = [
   [/ml\.(?:speculative-decoding|llm-serving|production-rag)/, "system"],
   [/ml\.(?:benchmarks-contamination|model-judges)/, "testing"],
   [/ml\.(?:hallucination-robustness|evaluation-statistics)/, "testing"],
-  [/ml\.(?:reading-reproduction|ablations-controls|statistical-rigor)/, "testing"],
+  [
+    /ml\.(?:reading-reproduction|ablations-controls|statistical-rigor)/,
+    "testing",
+  ],
   [/ml\.(?:research-communication|compute-aware-iteration)/, "testing"],
   [/ml\.(?:attribution-saliency|probing-representations)/, "ml"],
   [/ml\.(?:mechanistic-interpretability|activation-steering)/, "ml"],
@@ -688,20 +884,44 @@ const VISUALS: [RegExp, VisualKind][] = [
   [/^(performance|complexity)$/, "complexity"],
   [/^(asyncio|parallelism)$/, "concurrency"],
   [/^(method)$/, "decision"],
-  [/^(api-contracts|idempotency|cache-reasoning|capacity-estimation|caching)$/, "system"],
+  [
+    /^(api-contracts|idempotency|cache-reasoning|capacity-estimation|caching)$/,
+    "system",
+  ],
   [/^(ml-shapes|data-leakage|classification-metrics|gradient-descent)$/, "ml"],
   [/^(expected-value|bayes-rule|combinatorics|monte-carlo)$/, "probability"],
-  [/ml\.(?:estimators|descriptive|large-numbers|tests|bootstrap|entropy|cross-entropy|mutual-information)/, "probability"],
+  [
+    /ml\.(?:estimators|descriptive|large-numbers|tests|bootstrap|entropy|cross-entropy|mutual-information)/,
+    "probability",
+  ],
   [/ml\.multiple-testing/, "decision"],
-  [/ml\.numpy-(?:arrays|vectorization|linear-algebra|stability|random-generators)/, "ml"],
-  [/ml\.(?:pandas|data-cleaning|tabular-preprocessing|exploratory-analysis|plotting)/, "pipeline"],
+  [
+    /ml\.numpy-(?:arrays|vectorization|linear-algebra|stability|random-generators)/,
+    "ml",
+  ],
+  [
+    /ml\.(?:pandas|data-cleaning|tabular-preprocessing|exploratory-analysis|plotting)/,
+    "pipeline",
+  ],
   [/ml\.torch-(?:tensors|autograd|shapes|dataloaders|reproducibility)/, "ml"],
-  [/ml\.(?:experiment-tracking|profiling-bottlenecks|gpu-workflow|notebooks-pipelines)/, "pipeline"],
-  [/ml\.(?:learning-paradigms|examples-features-labels|baselines-formulation|split-discipline|generalization-fit|bias-variance-diagnosis|cross-validation-search)/, "ml"],
-  [/ml\.(?:linear-regression|regression-losses|logistic-regression|softmax-regression|linear-regularization|feature-pipelines)/, "function"],
+  [
+    /ml\.(?:experiment-tracking|profiling-bottlenecks|gpu-workflow|notebooks-pipelines)/,
+    "pipeline",
+  ],
+  [
+    /ml\.(?:learning-paradigms|examples-features-labels|baselines-formulation|split-discipline|generalization-fit|bias-variance-diagnosis|cross-validation-search)/,
+    "ml",
+  ],
+  [
+    /ml\.(?:linear-regression|regression-losses|logistic-regression|softmax-regression|linear-regularization|feature-pipelines)/,
+    "function",
+  ],
   [/ml\.(?:knn-guided|naive-bayes-guided|curse-dimensionality)/, "ml"],
   [/ml\.decision-trees-guided/, "tree"],
-  [/ml\.(?:bagging-random-forests|boosting-guided|gradient-boosted-trees|stacking-blending)/, "tree"],
+  [
+    /ml\.(?:bagging-random-forests|boosting-guided|gradient-boosted-trees|stacking-blending)/,
+    "tree",
+  ],
   [/ml\.(?:support-vector-machines|kernel-trick)/, "ml"],
   [/^(dict-iteration|collections)$/, "hash"],
   [/hashing|dicts|sets/, "hash"],
@@ -746,6 +966,7 @@ function placeVisuals(scenes: Scene[], atom: Atom): Scene[] {
 
   return scenes.map((scene, index) => {
     if (scene.kind !== "text") return scene;
+    if (visualCount >= 4) return scene;
     if (
       visualCount < 4 &&
       index === lastVisualIndex + 1 &&
@@ -763,17 +984,25 @@ function placeVisuals(scenes: Scene[], atom: Atom): Scene[] {
     }
     const section = scene.section.toLocaleLowerCase();
     const explicitlyReferenced = VISUAL_REFERENCE.test(scene.caption);
-    const nextExplicitlyReferencesVisual = VISUAL_REFERENCE.test(scenes[index + 1]?.caption ?? "");
+    const nextExplicitlyReferencesVisual = VISUAL_REFERENCE.test(
+      scenes[index + 1]?.caption ?? "",
+    );
     const modelCandidate =
       !modelPlaced &&
       !scene.code &&
       !nextExplicitlyReferencesVisual &&
       section.includes("idea, step by step");
     const trapCandidate =
-      !trapPlaced && !scene.code && section.includes("mistake to avoid");
-    if (!explicitlyReferenced && !modelCandidate && !trapCandidate) return scene;
+      !trapPlaced &&
+      !scene.code &&
+      (section.includes("mistake to avoid") ||
+        section.includes("common mistake"));
+    if (!explicitlyReferenced && !modelCandidate && !trapCandidate)
+      return scene;
 
-    const visualVariant = trapCandidate ? "trap" as const : "model" as const;
+    const visualVariant = trapCandidate
+      ? ("trap" as const)
+      : ("model" as const);
     if (visualVariant === "trap") trapPlaced = true;
     else modelPlaced = true;
     lastVisualIndex = index;
@@ -798,13 +1027,19 @@ function focusLines(scene: Scene): number[] | undefined {
     .filter((term) => /^[A-Za-z_]\w*$/.test(term) || /[()[\].]/.test(term));
   const matches = lines
     .map((line, index) =>
-      !isCommentLine(line) && terms.some((term) => line.includes(term)) ? index + 1 : 0,
+      !isCommentLine(line) && terms.some((term) => line.includes(term))
+        ? index + 1
+        : 0,
     )
     .filter(Boolean);
   if (matches.length) return [...new Set(matches)].slice(0, 3);
 
-  const ordinal = /\b(first|second|third|fourth)\b/i.exec(scene.caption)?.[1].toLowerCase();
-  const ordinalIndex = ordinal ? ["first", "second", "third", "fourth"].indexOf(ordinal) : -1;
+  const ordinal = /\b(first|second|third|fourth)\b/i
+    .exec(scene.caption)?.[1]
+    .toLowerCase();
+  const ordinalIndex = ordinal
+    ? ["first", "second", "third", "fourth"].indexOf(ordinal)
+    : -1;
   if (ordinalIndex >= 0) {
     // Authored references use the line numbers visible in the code panel, so
     // preserve physical numbering (including blank lines). If that exact line
@@ -814,13 +1049,15 @@ function focusLines(scene: Scene): number[] | undefined {
       return [ordinalIndex + 1];
     }
     const nextCode = lines.findIndex(
-      (line, index) => index >= ordinalIndex && line.trim() && !isCommentLine(line),
+      (line, index) =>
+        index >= ordinalIndex && line.trim() && !isCommentLine(line),
     );
     if (nextCode >= 0) return [nextCode + 1];
   }
 
-  const keyword = ["return", "if ", "for ", "while ", "yield", "raise"]
-    .find((word) => scene.caption.toLowerCase().includes(word.trim()));
+  const keyword = ["return", "if ", "for ", "while ", "yield", "raise"].find(
+    (word) => scene.caption.toLowerCase().includes(word.trim()),
+  );
   if (keyword) {
     const index = lines.findIndex(
       (line) => !isCommentLine(line) && line.includes(keyword.trim()),
@@ -828,7 +1065,9 @@ function focusLines(scene: Scene): number[] | undefined {
     if (index >= 0) return [index + 1];
   }
   if (scene.codeIsNew) {
-    const first = lines.findIndex((line) => line.trim() && !isCommentLine(line));
+    const first = lines.findIndex(
+      (line) => line.trim() && !isCommentLine(line),
+    );
     if (first >= 0) return [first + 1];
   }
   // Sticky code can remain visible while the narration discusses a broader
@@ -839,10 +1078,37 @@ function focusLines(scene: Scene): number[] | undefined {
 }
 
 const FOCUS_STOP_WORDS = new Set([
-  "about", "after", "again", "also", "and", "because", "before", "being",
-  "does", "each", "from", "into", "line", "local", "object", "same", "that",
-  "their", "then", "there", "these", "this", "through", "value", "what",
-  "when", "where", "which", "while", "with", "would",
+  "about",
+  "after",
+  "again",
+  "also",
+  "and",
+  "because",
+  "before",
+  "being",
+  "does",
+  "each",
+  "from",
+  "into",
+  "line",
+  "local",
+  "object",
+  "same",
+  "that",
+  "their",
+  "then",
+  "there",
+  "these",
+  "this",
+  "through",
+  "value",
+  "what",
+  "when",
+  "where",
+  "which",
+  "while",
+  "with",
+  "would",
 ]);
 
 /**
@@ -851,15 +1117,39 @@ const FOCUS_STOP_WORDS = new Set([
  * `print(...)`, even though the literal words do not appear in the code.
  */
 const FOCUS_SIGNALS: Array<{ prose: RegExp; code: RegExp }> = [
-  { prose: /\b(?:define|defines|definition|function)\b/i, code: /\b(?:def|function|class)\b|=>/ },
+  {
+    prose: /\b(?:define|defines|definition|function)\b/i,
+    code: /\b(?:def|function|class)\b|=>/,
+  },
   { prose: /\b(?:return|returns|returned)\b/i, code: /\breturn\b/ },
-  { prose: /\b(?:assign|assigns|assigned|assignment|bind|binds|bound)\b/i, code: /(?<![=!<>])=(?!=)/ },
-  { prose: /\b(?:display|displays|print|prints|output|outputs)\b/i, code: /\bprint\s*\(|console\.log\s*\(/ },
-  { prose: /\b(?:compare|compares|comparison|equal|equals)\b/i, code: /===|==|!=|<=|>=|<|>/ },
-  { prose: /\b(?:condition|branch|check|checks)\b/i, code: /\bif\b|\belse\b|\belif\b|\bswitch\b/ },
-  { prose: /\b(?:loop|loops|iterate|iterates|iteration)\b/i, code: /\bfor\b|\bwhile\b/ },
-  { prose: /\b(?:append|appends|add|adds|insert|inserts)\b/i, code: /\.append\s*\(|\.push\s*\(|\.add\s*\(|\.insert\s*\(/ },
-  { prose: /\b(?:raise|raises|throw|throws|error)\b/i, code: /\braise\b|\bthrow\b/ },
+  {
+    prose: /\b(?:assign|assigns|assigned|assignment|bind|binds|bound)\b/i,
+    code: /(?<![=!<>])=(?!=)/,
+  },
+  {
+    prose: /\b(?:display|displays|print|prints|output|outputs)\b/i,
+    code: /\bprint\s*\(|console\.log\s*\(/,
+  },
+  {
+    prose: /\b(?:compare|compares|comparison|equal|equals)\b/i,
+    code: /===|==|!=|<=|>=|<|>/,
+  },
+  {
+    prose: /\b(?:condition|branch|check|checks)\b/i,
+    code: /\bif\b|\belse\b|\belif\b|\bswitch\b/,
+  },
+  {
+    prose: /\b(?:loop|loops|iterate|iterates|iteration)\b/i,
+    code: /\bfor\b|\bwhile\b/,
+  },
+  {
+    prose: /\b(?:append|appends|add|adds|insert|inserts)\b/i,
+    code: /\.append\s*\(|\.push\s*\(|\.add\s*\(|\.insert\s*\(/,
+  },
+  {
+    prose: /\b(?:raise|raises|throw|throws|error)\b/i,
+    code: /\braise\b|\bthrow\b/,
+  },
   { prose: /\b(?:import|imports)\b/i, code: /\bimport\b|\brequire\s*\(/ },
 ];
 
@@ -901,7 +1191,10 @@ function isCommentLine(line: string): boolean {
 }
 
 /** Build eye-guidance cues from the same explanation the learner hears. */
-function timedFocusSteps(scene: Scene, fallback: number[] = []): FocusStep[] | undefined {
+function timedFocusSteps(
+  scene: Scene,
+  fallback: number[] = [],
+): FocusStep[] | undefined {
   if (!scene.code) return undefined;
   const caption = scene.caption ?? "";
   const captionSpeech = plainText(caption).replace(/\s+/g, " ").trim();
@@ -914,7 +1207,10 @@ function timedFocusSteps(scene: Scene, fallback: number[] = []): FocusStep[] | u
   const lines = scene.code.split("\n");
   if (!prose || !lines.some((line) => line.trim())) {
     return fallback.length
-      ? fallback.map((line, index) => ({ at: index / fallback.length, lines: [line] }))
+      ? fallback.map((line, index) => ({
+          at: index / fallback.length,
+          lines: [line],
+        }))
       : undefined;
   }
 
@@ -959,7 +1255,12 @@ function timedFocusSteps(scene: Scene, fallback: number[] = []): FocusStep[] | u
       }
       const lower = line.toLocaleLowerCase();
       for (const word of words) {
-        if (new RegExp(`\\b${word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "i").test(lower)) {
+        if (
+          new RegExp(
+            `\\b${word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`,
+            "i",
+          ).test(lower)
+        ) {
           score += 2;
         }
       }
@@ -968,7 +1269,10 @@ function timedFocusSteps(scene: Scene, fallback: number[] = []): FocusStep[] | u
       }
       // “call” is intentionally weak: many lines contain parentheses. It
       // breaks ties only after a name or a stronger conceptual signal matches.
-      if (/\b(?:call|calls|invoke|invokes)\b/i.test(fragment) && /[A-Za-z_]\w*\s*\(/.test(line)) {
+      if (
+        /\b(?:call|calls|invoke|invokes)\b/i.test(fragment) &&
+        /[A-Za-z_]\w*\s*\(/.test(line)
+      ) {
         score += 1;
       }
       return score;
@@ -982,7 +1286,7 @@ function timedFocusSteps(scene: Scene, fallback: number[] = []): FocusStep[] | u
     // relationship.
     if (best < 4) continue;
     const candidates = scores
-      .map((score, index) => score === best ? index : -1)
+      .map((score, index) => (score === best ? index : -1))
       .filter((index) => index >= 0);
     // “final/next/then” normally describes the later of two otherwise equal
     // lines; ordinary prose keeps reading order and takes the earlier one.
@@ -1001,7 +1305,10 @@ function timedFocusSteps(scene: Scene, fallback: number[] = []): FocusStep[] | u
   }
 
   if (!steps.length && fallback.length) {
-    return fallback.map((line, index) => ({ at: index / fallback.length, lines: [line] }));
+    return fallback.map((line, index) => ({
+      at: index / fallback.length,
+      lines: [line],
+    }));
   }
   if (!steps.length) return undefined;
   return steps;
@@ -1029,7 +1336,10 @@ export function focusedLinesAt(scene: Scene, progress: number): number[] {
  * Lets the tutor sync a generated slide's code to its spoken prose exactly the
  * way a lecture scene does.
  */
-export function focusStepsFor(narration: string, code: string): FocusStep[] | undefined {
+export function focusStepsFor(
+  narration: string,
+  code: string,
+): FocusStep[] | undefined {
   // Fallback = every non-blank line, so when the prose doesn't explicitly quote
   // a line the highlight still walks top-to-bottom through the code as the voice
   // reads — a gentle "reading through it" sync rather than no motion at all.
@@ -1045,17 +1355,22 @@ function traceItems(code?: string): string[] | undefined {
   const out: string[] = [];
   code.split("\n").forEach((line, index) => {
     const comment = /(?:\/\/|#)\s*(.+)$/.exec(line)?.[1]?.trim();
-    if (comment && !/^define|import/i.test(comment)) out.push(`Line ${index + 1}: ${comment}`);
+    if (comment && !/^define|import/i.test(comment))
+      out.push(`Line ${index + 1}: ${comment}`);
   });
   return out.length ? out.slice(0, 3) : undefined;
 }
 
 function guideFor(scene: Scene): string {
   const section = scene.section.toLowerCase();
-  if (section.includes("failure") || section.includes("trap")) return "Spot the failure";
+  if (section.includes("failure") || section.includes("trap"))
+    return "Spot the failure";
   if (section.includes("rule")) return "Keep this rule";
   if (section.includes("turn")) return "Retrieve, don't reread";
-  if (scene.code) return scene.codeIsNew ? "Read in execution order" : "Follow the highlighted line";
+  if (scene.code)
+    return scene.codeIsNew
+      ? "Read in execution order"
+      : "Follow the highlighted line";
   if (scene.kind === "section") return "New mental step";
   return "Hold the key relationship";
 }
@@ -1111,7 +1426,9 @@ export function holdSeconds(scene: Scene, rate: number): number {
   // Tiny bridge sentences and prerequisite labels otherwise flash by in about
   // two seconds. A human instructor naturally leaves a beat after saying
   // "Two tricks matter"; give short scenes that same breathing room.
-  const spokenWords = forSpeech(scene.narration).split(/\s+/).filter(Boolean).length;
+  const spokenWords = forSpeech(scene.narration)
+    .split(/\s+/)
+    .filter(Boolean).length;
   if (spokenWords > 0 && spokenWords < 6) hold += 1;
   if (scene.kind === "section") hold += 0.7;
   if (scene.kind === "title") hold += 0.4;
@@ -1123,7 +1440,8 @@ export function holdSeconds(scene: Scene, rate: number): number {
     hold += scene.codeIsNew === false ? lines * 0.14 : lines * 0.5;
   }
   if (scene.visualKind) hold += 0.8;
-  if (scene.traceItems?.length) hold += Math.min(1.2, scene.traceItems.length * 0.35);
+  if (scene.traceItems?.length)
+    hold += Math.min(1.2, scene.traceItems.length * 0.35);
 
   return Math.min(Math.max(hold / rate, 0.7), 8);
 }

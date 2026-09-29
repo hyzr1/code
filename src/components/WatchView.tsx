@@ -428,8 +428,8 @@ export default function WatchView({
         <>
       <div className="stage">
         <div className="stage-meta">
-          <div className="stage-section">{scene.section}</div>
-          <div className="stage-focus">{scene.focusLabel}</div>
+          <div className="stage-section" title={scene.section}>{scene.section}</div>
+          {scene.kind !== "title" && <div className="stage-focus">{scene.focusLabel}</div>}
         </div>
 
         <div className={`stage-body ${scene.kind}`} key={index}>

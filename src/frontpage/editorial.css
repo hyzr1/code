@@ -326,7 +326,7 @@
 }
 .path-list {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 24px;
 }
 .path-row {
@@ -370,6 +370,16 @@
 }
 .ml i {
   border-color: #666;
+}
+.math i {
+  width: 112px;
+  height: 72px;
+  border: 1px solid #777;
+  border-left-color: transparent;
+  border-right-color: transparent;
+  border-radius: 50%;
+  transform: translateY(calc(var(--i) * 9px - 27px)) rotate(-16deg)
+    scale(calc(1 - var(--i) * 0.045));
 }
 .path-copy h3 {
   font-size: 24px;
@@ -575,6 +585,7 @@
   }
   .path-list {
     gap: 20px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .path-copy h3 {
     font-size: 20px;
@@ -1144,4 +1155,7 @@
   text-align: center;
   line-height: 2;
 }
-.front-footer>.footer-wordmark{letter-spacing:-.065em;font-size:clamp(90px,19.4vw,320px)}
+.front-footer > .footer-wordmark {
+  letter-spacing: -0.065em;
+  font-size: clamp(90px, 19.4vw, 320px);
+}

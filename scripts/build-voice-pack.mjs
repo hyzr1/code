@@ -15,6 +15,8 @@ const VOICE = process.argv.includes("--voice")
   : "af_heart";
 const onlyIndex = process.argv.indexOf("--only");
 const ONLY = onlyIndex >= 0 ? process.argv[onlyIndex + 1] : null;
+const prefixIndex = process.argv.indexOf("--prefix");
+const PREFIX = prefixIndex >= 0 ? process.argv[prefixIndex + 1] : null;
 const languageIndex = process.argv.indexOf("--language");
 const LANGUAGE = languageIndex >= 0 ? process.argv[languageIndex + 1] : null;
 const shardIndexArg = process.argv.indexOf("--shard-index");
@@ -39,6 +41,8 @@ const content = await import(pathToFileURL(path.join(ROOT, ".check", "content.mj
 const { ATOMS, buildScenes, forSpeech } = content;
 let lectures = ONLY
   ? ATOMS.filter((atom) => atom.id === ONLY)
+  : PREFIX
+    ? ATOMS.filter((atom) => atom.id.startsWith(PREFIX))
   : LANGUAGE
     ? ATOMS.filter((atom) => (atom.language ?? "javascript") === LANGUAGE)
     : ATOMS;
@@ -179,17 +183,25 @@ if (DEFER_MANIFEST) {
 // A partial build still publishes one complete manifest. Existing metadata for
 // the other language is preserved while the selected language is rendered in
 // one model session.
-const allAtoms = ONLY || LANGUAGE || PUBLISH_ONLY || SHARD_COUNT > 1 ? ATOMS : lectures;
+const allAtoms = ONLY || LANGUAGE || PREFIX || PUBLISH_ONLY || SHARD_COUNT > 1 ? ATOMS : lectures;
+// A fresh checkout may have the published pack but no ignored local cache.
+// Preserve its validated cues while adding newly rendered lectures.
+let published = null;
+try {
+  published = JSON.parse(await readFile(path.join(PACK_ROOT, "manifest.json"), "utf8"));
+} catch { /* first pack build */ }
 const metas = [];
+const preserved = new Set();
 for (const atom of allAtoms) {
   try {
     metas.push(JSON.parse(await readFile(path.join(CACHE_ROOT, `${atom.id}.json`), "utf8")));
   } catch {
-    if (!ONLY) throw new Error(`Missing generated metadata for ${atom.id}`);
+    if (published?.lectures?.[atom.id]) preserved.add(atom.id);
+    else throw new Error(`Missing generated metadata for ${atom.id}`);
   }
 }
-const entries = {};
-const lectureManifest = {};
+const entries = Object.fromEntries(Object.entries(published?.entries ?? {}).filter(([, cue]) => preserved.has(cue.lecture)));
+const lectureManifest = Object.fromEntries([...preserved].map((id) => [id, published.lectures[id]]));
 for (const meta of metas) {
   lectureManifest[meta.lecture] = {
     file: meta.file,

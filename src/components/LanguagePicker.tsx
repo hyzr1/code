@@ -14,7 +14,7 @@ import type { Course } from "../types";
 import Icon from "./Icon";
 
 /**
- * Product selector for the live Python, DSA, and machine-learning paths.
+ * Product selector for the live learning paths.
  */
 export default function LanguagePicker({
   compact = false,
@@ -199,7 +199,7 @@ export default function LanguagePicker({
                   </button>
                 );
               })}
-              <p>Choose a path for Python fluency, interview-ready DSA, or practical machine learning.</p>
+              <p>Choose a path for Python, DSA, mathematics, or machine learning.</p>
             </div>,
             document.body,
           )

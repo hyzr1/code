@@ -99,6 +99,9 @@ for (const atom of lectures) {
     if (scene.visualKind) visualCount += 1;
     const where = `${atom.id} scene ${index + 1}/${scenes.length}`;
     const spoken = forSpeech(scene.narration);
+    if (atom.id.startsWith("math.") && /[→εδπθ]/.test(scene.narration)) {
+      fail(where, "math notation was not normalized for narration");
+    }
     const words = spoken.split(/\s+/).filter(Boolean);
 
     if (!spoken) fail(where, "silent scene");

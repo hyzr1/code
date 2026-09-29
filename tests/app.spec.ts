@@ -143,7 +143,7 @@ test("loads the course without runtime errors", async ({ page, isMobile }) => {
 
   await page.goto("/courses/python");
   await expect(page).toHaveTitle(/Hyzr Code/);
-  await expect(page.getByText("Hyzr Code", { exact: true }).first()).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Python", exact: true })).toBeVisible();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   await expect(page.locator("html")).toHaveAttribute("data-accent", "violet");
 
@@ -156,7 +156,7 @@ test("loads the course without runtime errors", async ({ page, isMobile }) => {
   expect(horizontalOverflow).toBe(false);
 });
 
-test("the courses page offers Python, DSA, and machine learning", async ({ page }) => {
+test("the courses page offers Python, DSA, machine learning, and mathematics", async ({ page }) => {
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
 
@@ -164,7 +164,7 @@ test("the courses page offers Python, DSA, and machine learning", async ({ page 
   await expect(page.getByRole("heading", { name: "Python", exact: true })).toBeVisible();
   await expect(page.locator(".course-switcher")).toBeVisible();
   await page.locator(".course-switcher .language-trigger").click();
-  await expect(page.locator(".language-option")).toHaveCount(3);
+  await expect(page.locator(".language-option")).toHaveCount(4);
   await expect(page.getByRole("option", { name: /Data Structures & Algorithms/ })).toBeVisible();
   await page.keyboard.press("Escape");
   await expect(page.locator(".frontier-path-pillars > div")).toHaveCount(3);

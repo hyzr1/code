@@ -1,7 +1,7 @@
 export type ConceptId = string;
 export type CourseLanguage = "javascript" | "python";
-/** The live Python, DSA, and machine-learning learning paths. */
-export type Course = "swe" | "python" | "algo" | "ml";
+/** The live learning paths. */
+export type Course = "swe" | "python" | "algo" | "ml" | "math";
 export type CareerTrack = "faang" | "swe" | "ml" | "quant";
 export type ExperienceLevel = "restarting" | "beginner" | "intermediate" | "advanced";
 export type CareerStage = "internship" | "new-grad" | "experienced";
