@@ -24,8 +24,8 @@ const specifications: ModuleSpec[] = [
   [
     1,
     "MATH 19A · differential calculus",
-    "Functions and mathematical language",
-    "Repair the algebra and function fluency on which calculus depends.",
+    "Precalculus foundations: functions and mathematical language",
+    "Work through the algebra, graphs, and trigonometry needed before calculus. This is preparation, not the full calculus course.",
     [
       "Functions, domains, and ranges",
       "Graphs, transformations, and inverse functions",

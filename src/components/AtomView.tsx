@@ -4,6 +4,9 @@ import { useSettings } from "../settings";
 import Markdown from "./Markdown";
 import WatchView from "./WatchView";
 import LectureCheck, { type LectureOutcome } from "./LectureCheck";
+import MathStudyView from "./MathStudyView";
+import { MATH_STUDY_GUIDES } from "../content/math/study-guides";
+import { MATH_LECTURE_BY_ATOM } from "../content/math/lectures";
 
 export type AtomMode = "watch" | "read" | "check";
 
@@ -27,13 +30,15 @@ export default function AtomView({
   onRequestReview?: () => void;
 }) {
   const { settings, update } = useSettings();
+  const mathLecture = MATH_LECTURE_BY_ATOM[atom.id];
+  const mathGuide = mathLecture ? MATH_STUDY_GUIDES[mathLecture.lesson] : undefined;
   const [mode, setMode] = useState<AtomMode>(
-    settings.watch.defaultMode,
+    mathGuide ? "read" : settings.watch.defaultMode,
   );
   const [attempted, setAttempted] = useState(false);
 
   const choose = (next: "watch" | "read") => {
-    update("watch", { defaultMode: next });
+    if (!mathLecture) update("watch", { defaultMode: next });
     setMode(next);
   };
 
@@ -58,16 +63,18 @@ export default function AtomView({
   return (
     <div className="atom">
       <div className="row spread" style={{ marginBottom: 6 }}>
-        <div className="step-kind">Lecture · {atom.readingSeconds}s</div>
+        <div className="step-kind">{mathGuide ? "Guided study" : `Lecture · ${atom.readingSeconds}s`}</div>
         <button className="ghost tiny" onClick={() => choose("watch")}>
           Watch it instead
         </button>
       </div>
       <h1>{atom.title}</h1>
 
-      <div className="prose">
-        <Markdown source={atom.body} language={atom.language} />
-      </div>
+      {mathGuide ? (
+        <MathStudyView guide={mathGuide} />
+      ) : (
+        <div className="prose"><Markdown source={atom.body} language={atom.language} /></div>
+      )}
 
       <div className="recall-box">
         <div className="label">Answer before you move on</div>

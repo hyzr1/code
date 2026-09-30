@@ -64,7 +64,7 @@ export const COURSES: CourseOption[] = [
     id: "math",
     label: "Mathematics",
     shortLabel: "MTH",
-    detail: "A deliberate path from calculus through the mathematics of ML and graduate research. Start with fully taught MATH 19A lessons; later units are mapped as they are authored.",
+    detail: "Study calculus with worked examples and practice through MATH 19A/19B. Advanced topics currently have concise overviews while full guides are developed.",
     accent: "#aa8bdc",
     assumesPython: false,
   },

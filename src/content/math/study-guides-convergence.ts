@@ -1,0 +1,64 @@
+import type { MathStudyGuide } from "./study-guides";
+
+export const MATH_CONVERGENCE_STUDY_GUIDES: Record<string, MathStudyGuide> = {
+  "math.m9.l1": {
+    opening: ["An integral to infinity is defined by a limit, not by plugging in an imaginary input called infinity. Compute ∫ from a to b for a finite b, then ask whether its value approaches a finite number as b grows.", "A function can shrink to zero and still have infinite accumulated area. The standard comparison is 1/xᵖ on [1, ∞): its integral converges if p > 1 and diverges if p ≤ 1."],
+    examples: [
+      { question: "Does ∫ from 1 to ∞ of 1/x² dx converge? Find its value.", approach: "Replace the upper bound with b, integrate, then take b → ∞.", steps: ["For finite b > 1, ∫ from 1 to b of x⁻² dx = [-1/x] from 1 to b = 1 - 1/b.", "As b → ∞, 1/b → 0, so the expression approaches 1.", "The improper integral converges and equals 1."], check: "Every finite partial area is below 1 and grows toward 1." },
+      { question: "Does ∫ from 1 to ∞ of 1/x dx converge?", approach: "Again use a finite upper bound before taking the limit.", steps: ["∫ from 1 to b of 1/x dx = [ln x] from 1 to b = ln b.", "As b → ∞, ln b grows without bound, so the integral diverges."], check: "Although 1/x → 0, the tail remains wide enough to accumulate endlessly." },
+    ], practice: [
+      { question: "Find ∫ from 2 to ∞ of x^(-3/2) dx.", hint: "An antiderivative is -2/√x.", solution: ["At finite b the value is -2/√b + 2/√2.", "As b → ∞, the first term vanishes, leaving √2. The integral converges."] },
+      { question: "For what p does ∫ from 1 to ∞ of 1/xᵖ converge?", hint: "Integrate x⁻ᵖ and inspect the b^(1-p) term.", solution: ["For p > 1, b^(1-p) → 0 and the integral has a finite limit.", "For p = 1 it grows like ln b; for p < 1 the power term grows. Convergence occurs exactly for p > 1."] },
+    ], takeaway: "Treat an infinite interval as a limit. Height approaching zero alone does not guarantee finite total area.",
+  },
+  "math.m9.l2": {
+    opening: ["An integral can be improper even on a short interval if the integrand blows up at an endpoint or inside. At a singular endpoint, integrate from a nearby legal point and then take a one-sided limit. At an interior singularity, split into two separate improper integrals; both must converge.", "Near zero, ∫ from 0 to 1 of x⁻ᵖ converges when p < 1, the opposite side of the p = 1 threshold from the infinite tail case. A symmetric cancellation of two divergent sides is not ordinary improper convergence."],
+    examples: [
+      { question: "Evaluate ∫ from 0 to 1 of 1/√x dx.", approach: "Start at ε > 0 because the integrand is undefined at 0.", steps: ["For ε > 0, ∫ from ε to 1 of x^(-1/2) dx = [2√x] from ε to 1 = 2 - 2√ε.", "As ε → 0+, √ε → 0, so the integral converges to 2."], check: "The graph becomes tall near 0, but the narrowing width keeps the total finite." },
+      { question: "Does ∫ from -1 to 1 of 1/x dx converge?", approach: "Zero is an interior singularity; split left and right and test independently.", steps: ["On the right, ∫ from ε to 1 of 1/x dx = -ln ε → +∞ as ε → 0+.", "On the left, ∫ from -1 to -ε of 1/x dx = ln ε → -∞.", "Neither side has a finite limit, so the ordinary improper integral diverges. Their symmetric cancellation is a different concept called principal value."], check: "Do not plug endpoints into ln|x| across x = 0 as though the function were continuous there." },
+    ], practice: [
+      { question: "Evaluate ∫ from 0 to 1 of x^(-2/3) dx.", hint: "Integrate from ε to 1, then send ε to 0+.", solution: ["An antiderivative is 3x^(1/3). Finite value is 3 - 3ε^(1/3).", "As ε → 0+, the value approaches 3, so the integral converges."] },
+      { question: "Does ∫ from 0 to 1 of 1/x dx converge?", hint: "Use ln x at a positive lower cutoff ε.", solution: ["∫ from ε to 1 of 1/x dx = -ln ε.", "This tends to +∞ as ε → 0+, so the integral diverges."] },
+    ], takeaway: "Check every singular side separately. Divergent left and right pieces do not cancel in an ordinary improper integral.",
+  },
+  "math.m9.l3": {
+    opening: ["Comparison lets you classify a positive improper integral without finding an antiderivative. If 0 ≤ f ≤ g on the troublesome tail and ∫g is finite, then ∫f is finite too. A smaller positive area fits under a known finite ceiling.", "If f/g approaches a positive finite constant, their tail sizes are comparable, so their integrals share a convergence classification. Check eventual positivity and focus on the troublesome endpoint rather than irrelevant finite sections."],
+    examples: [
+      { question: "Show ∫ from 1 to ∞ of 1/(x² + 1) dx converges by direct comparison.", approach: "Find a larger positive benchmark whose tail integral is known.", steps: ["For x ≥ 1, x² + 1 ≥ x² > 0, so 0 < 1/(x² + 1) ≤ 1/x².", "The benchmark ∫ from 1 to ∞ of 1/x² dx converges to 1.", "Therefore the smaller positive integral also converges."], check: "Being below a divergent benchmark would not have been enough; the benchmark must converge for this direction." },
+      { question: "Classify ∫ from 1 to ∞ of (3x + 2)/(x³ + 1) dx.", approach: "Compare its leading behavior with 1/x².", steps: ["The integrand is positive on [1, ∞). Divide it by 1/x²: x²(3x + 2)/(x³ + 1).", "Divide top and bottom by x³; the ratio approaches 3.", "A positive finite ratio means comparable tails. Since ∫1/x² converges, so does the given integral."], check: "The number 3 changes the scale, not the yes-or-no convergence classification." },
+    ], practice: [
+      { question: "Show ∫ from 1 to ∞ of 1/√(x² + 1) dx diverges by limit comparison.", hint: "Compare with 1/x.", solution: ["Divide by 1/x: x/√(x² + 1) = 1/√(1 + 1/x²) → 1.", "Since ∫ from 1 to ∞ of 1/x diverges, the given positive integral diverges too."] },
+      { question: "If 0 ≤ f ≤ g and ∫g diverges, can you conclude ∫f diverges?", hint: "Could f be much smaller than g?", solution: ["No. For x ≥ 1, 1/x² ≤ 1/x, but ∫1/x² converges while ∫1/x diverges.", "The inequality direction does not support that conclusion."] },
+    ], takeaway: "Compare positive tails in the direction that proves your claim; a finite positive ratio gives two-way classification.",
+  },
+  "math.m9.l4": {
+    opening: ["A sequence is an ordered list a₁, a₂, a₃, and so on. It converges to L if its terms eventually get and stay arbitrarily close to L. Formally, for every desired error ε > 0, there is an index N after which every term satisfies |aₙ - L| < ε.", "A few early terms do not determine the long-run limit. A bounded sequence need not converge: (-1)ⁿ always stays between -1 and 1 but keeps alternating. If a sequence converges, every subsequence must approach the same limit."],
+    examples: [
+      { question: "Find the limit of aₙ = (2n + 1)/(n + 3).", approach: "Divide numerator and denominator by n, then check the error.", steps: ["aₙ = (2 + 1/n)/(1 + 3/n). As n → ∞, 1/n and 3/n approach 0, so aₙ → 2.", "Subtract 2 exactly: aₙ - 2 = (2n + 1 - 2n - 6)/(n + 3) = -5/(n + 3).", "Thus |aₙ - 2| = 5/(n + 3). To make this < ε, choose a large enough N, for example any integer N > 5/ε."], check: "The explicit bound covers every later n, not just sampled terms." },
+      { question: "Does bₙ = (-1)ⁿ + 1/n converge?", approach: "Inspect even and odd subsequences.", steps: ["For even n, (-1)ⁿ = 1 and 1/n → 0, so bₙ → 1 along even indices.", "For odd n, (-1)ⁿ = -1, so bₙ → -1 along odd indices.", "One convergent sequence cannot have subsequences with two different limits. Therefore bₙ diverges."], check: "The shrinking 1/n term cannot remove the persistent ±1 alternation." },
+    ], practice: [
+      { question: "Find lim as n → ∞ of (5n² - 1)/(2n² + n).", hint: "Divide top and bottom by n².", solution: ["The expression becomes (5 - 1/n²)/(2 + 1/n).", "Both reciprocal terms vanish, so the limit is 5/2."] },
+      { question: "Is aₙ = (-1)ⁿ convergent because it is bounded?", hint: "Examine even and odd terms.", solution: ["No. Even terms are always 1 and odd terms always -1.", "They never settle near one common number, so the bounded sequence diverges."] },
+    ], takeaway: "Convergence means every sufficiently late term stays near one limit; boundedness and a few samples are not enough.",
+  },
+  "math.m9.l5": {
+    opening: ["A nondecreasing sequence that cannot rise past a fixed upper bound must converge. It moves in one direction inside a finite space. The analogous statement holds for a nonincreasing sequence bounded below.", "For a recursion, first prove the terms stay in a bounded interval and move monotonically. Only after that may you pass to the limit equation. Solving the fixed-point equation alone gives candidates, not proof of convergence."],
+    examples: [
+      { question: "Let a₁ = 0 and aₙ₊₁ = (aₙ + 2)/3. Prove convergence and find the limit.", approach: "Establish a bound and monotonicity before solving for L.", steps: ["If 0 ≤ aₙ ≤ 1, then 2/3 ≤ (aₙ + 2)/3 ≤ 1, so induction keeps every term in [0, 1].", "aₙ₊₁ - aₙ = (aₙ + 2)/3 - aₙ = 2(1 - aₙ)/3 ≥ 0. The sequence is nondecreasing.", "It is bounded above by 1, so it converges. Put L into the recursion: L = (L + 2)/3, hence 3L = L + 2 and L = 1."], check: "Early terms 0, 2/3, 8/9, ... rise toward 1." },
+      { question: "Why is a fixed point not enough to prove convergence?", approach: "Give a recursion that has a fixed point but oscillates.", steps: ["Consider aₙ₊₁ = -aₙ with a₁ = 1. The fixed-point equation L = -L has solution L = 0.", "The actual sequence is 1, -1, 1, -1, ... and does not converge.", "Therefore solving L = F(L) is valid only after another argument proves a limit exists."], check: "Neither the even nor the odd subsequence approaches the proposed fixed point 0." },
+    ], practice: [
+      { question: "If an increasing sequence is bounded above by 5, what can you conclude?", hint: "Apply monotone convergence, but do not assume the limit equals 5.", solution: ["It converges to some finite limit no greater than 5.", "The upper bound alone does not identify the exact limit; it could approach 3, for example."] },
+      { question: "For a₁ = 1 and aₙ₊₁ = (aₙ + 3)/2, guess the fixed point. What remains to prove?", hint: "Solve L = (L + 3)/2, then consider monotonicity and bounds.", solution: ["The fixed point is L = 3.", "To claim convergence, also show the sequence stays bounded (for example in [1, 3]) and is increasing; then the fixed-point step is justified."] },
+    ], takeaway: "Prove monotonicity and a bound first; use the fixed-point equation only after convergence is secured.",
+  },
+  "math.m9.l6": {
+    opening: ["A convergence problem may have more than one dangerous place. For an improper integral, list all infinite bounds and singular points, split the domain, and check each piece independently. One divergent piece makes the whole integral diverge.", "For a sequence, use dominant terms, subsequences, or monotone bounds. Do not use a test by name alone: say why its hypotheses hold and which conclusion it gives."],
+    examples: [
+      { question: "Does ∫ from 0 to ∞ of 1/(1 + x²) dx converge?", approach: "Split at 1, checking both the finite start and the infinite tail.", steps: ["The integrand is continuous on [0, 1], so that piece is finite.", "For x ≥ 1, 0 < 1/(1 + x²) ≤ 1/x², whose infinite integral converges. Thus the tail converges too.", "Both pieces converge. In fact, using antiderivative arctan x gives total value π/2."], check: "Near 0 the function stays near 1; there is no singularity there." },
+      { question: "Show ∫ from 0 to ∞ of x^(-1/2)/(1 + x) dx converges without finding its value.", approach: "Use different benchmarks at zero and infinity.", steps: ["On (0, 1], 1/(1 + x) ≤ 1, so the integrand is at most x^(-1/2). Its integral near zero converges.", "For x ≥ 1, 1 + x ≥ x, so the integrand is at most x^(-3/2). Its integral at infinity converges.", "Both improper pieces have finite limits, so the full integral converges."], check: "One benchmark would not automatically handle both endpoints; their troublesome behaviors differ." },
+    ], practice: [
+      { question: "Does ∫ from 0 to ∞ of 1/x dx converge?", hint: "Split at 1 and test both sides.", solution: ["Near zero, ∫ from ε to 1 of 1/x dx = -ln ε → ∞.", "At infinity, ∫ from 1 to b of 1/x dx = ln b → ∞. Both fail, so the full integral diverges."] },
+      { question: "If a sequence has even terms approaching 1 and odd terms approaching 2, can it converge?", hint: "What must every subsequence of a convergent sequence do?", solution: ["No. Convergence would force both subsequences to approach the same limit.", "Their different limits prove the full sequence diverges."] },
+    ], takeaway: "Identify every troublesome endpoint and prove each piece. One failing piece settles divergence.",
+  },
+};

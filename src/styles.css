@@ -1653,6 +1653,30 @@ kbd {
   color: var(--accent);
 }
 
+.math-study { font-size: calc(16px * var(--font-scale)); line-height: 1.72; color: var(--text-2); }
+.math-study-section { border-top: 1px solid var(--border-soft); margin-top: 32px; padding-top: 24px; }
+.math-study-kicker { color: var(--text-muted); font: 600 11px/1.4 var(--mono); letter-spacing: .1em; text-transform: uppercase; }
+.math-study h2 { color: var(--text); font: 600 calc(23px * var(--font-scale))/1.25 var(--display); margin: 8px 0 16px; }
+.math-study p { margin: 0 0 16px; }
+.math-example, .math-practice { border: 1px solid var(--border-soft); border-radius: var(--r-md); padding: 20px; margin: 18px 0; }
+.math-example-heading { display: flex; gap: 13px; align-items: baseline; }
+.math-example-heading > span { color: var(--text-muted); font: 600 11px var(--mono); }
+.math-study h3 { margin: 0 0 14px; color: var(--text); font: 600 calc(17px * var(--font-scale))/1.45 var(--sans); }
+.math-approach { color: var(--text-muted); }
+.math-study strong { color: var(--text); }
+.math-steps { list-style: none; counter-reset: math-step; padding: 0; margin: 22px 0; }
+.math-steps li { counter-increment: math-step; display: grid; grid-template-columns: 25px 1fr; gap: 12px; border-top: 1px solid var(--border-soft); padding: 13px 0; }
+.math-steps li::before { content: counter(math-step, decimal-leading-zero); color: var(--text-muted); font: 600 11px/2.5 var(--mono); }
+.math-check { border-top: 1px solid var(--border-soft); padding-top: 14px; }
+.math-practice label { display: block; margin-bottom: 7px; color: var(--text-muted); font: 600 11px var(--mono); text-transform: uppercase; letter-spacing: .07em; }
+.math-practice textarea { display: block; width: 100%; min-height: 86px; resize: vertical; padding: 12px; border: 1px solid var(--border); border-radius: var(--r-md); background: var(--surface-2); color: var(--text); font: 14px/1.5 var(--mono); }
+.math-practice textarea:focus { outline: 2px solid var(--accent); outline-offset: 2px; }
+.math-practice details { border-top: 1px solid var(--border-soft); padding: 12px 0 0; margin-top: 12px; }
+.math-practice summary { cursor: pointer; color: var(--text); font-weight: 600; }
+.math-practice details p, .math-practice details ol { margin: 12px 0 0; }
+.math-practice details li { margin-bottom: 8px; }
+.math-takeaway { border-left: 2px solid var(--accent); padding-left: 16px; margin-top: 28px !important; }
+
 /* Tables carry the summary comparisons — "which combinator when". They must
    scroll inside their own box rather than widening the page on a phone. */
 .table-scroll {

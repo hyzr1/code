@@ -1051,6 +1051,10 @@ ${spec.premise}`;
   };
 });
 
+export const MATH_LECTURE_BY_ATOM = Object.fromEntries(
+  lectures.map((spec, index) => [`math.atom.${index + 1}`, spec]),
+) as Record<string, MathLecture>;
+
 export const MATH_CONCEPTS: Concept[] = lectures.map((spec, index) => ({
   id: `math.concept.${index + 1}`,
   title: spec.title,
