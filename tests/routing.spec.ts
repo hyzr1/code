@@ -139,12 +139,14 @@ test("mathematics route opens authored lessons from foundations through the rese
     page.getByText("Open-problem capstone and advisor feedback", { exact: true }).first(),
   ).toBeVisible();
   await page.goto("/courses/mathematics/lessons/math.m3.l4");
+  await page.getByRole("button", { name: "Watch it instead" }).click();
   await page.getByRole("button", { name: "Next", exact: true }).click();
   await page.getByRole("button", { name: "Next", exact: true }).click();
   await expect(
     page.getByRole("img", { name: /continuous corner has different slopes/ }),
   ).toBeVisible();
   await page.goto("/courses/mathematics/lessons/math.m2.l5");
+  await page.getByRole("button", { name: "Watch it instead" }).click();
   await page.getByRole("button", { name: "Next", exact: true }).click();
   await page.getByRole("button", { name: "Next", exact: true }).click();
   await expect(

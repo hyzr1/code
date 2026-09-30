@@ -64,7 +64,7 @@ export default function CourseView({
         </div>
         <p>{courseMeta.detail}</p>
         <div className="course-facts"><span><Icon name="book" size={15} />{availableLessons.length} lessons</span><span><Icon name="layers" size={15} />{modules.length} modules</span><span><Icon name="checkCircle" size={15} />{doneCount} completed</span></div>
-        {course === "math" && <p className="course-prerequisite">A paced sequence inspired by UCSC MATH 19A/19B, then undergraduate and graduate mathematics. {plannedCount} later lessons are mapped but not yet released. Work the examples and exercises before advancing; this is not academic credit or a compressed degree.</p>}
+        {course === "math" && <p className="course-prerequisite">The MATH 19A/19B sequence has 78 guided lessons with worked steps and practice. Advanced units currently have concise overviews while deeper guides are developed. Work the problems before advancing; this is independent study, not university credit.</p>}
         {course === "swe" && <div className="frontier-path-pillars" aria-label="Course preparation pillars"><div>Python engineering</div><div>Technical interviews</div><div>Systems reasoning</div></div>}
         {courseMeta.assumesPython && <span className="course-prerequisite">Prerequisite: Python fundamentals</span>}
       </header>
